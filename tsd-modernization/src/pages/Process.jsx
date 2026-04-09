@@ -8,39 +8,163 @@ function ProcessStep({ s, i }) {
   return (
     <div ref={ref} style={{
       ...fadeStyle,
-      background: C.glass, border: `1px solid ${hover ? "rgba(255,255,255,0.12)" : C.glassBorder}`,
-      borderRadius: "20px", padding: "36px 28px", textAlign: "center",
-      backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
-      transition: "transform 0.3s ease, border-color 0.3s ease",
-      transform: hover ? "translateY(-4px)" : "translateY(0)",
+      position: "relative",
+      background: hover
+        ? "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))"
+        : C.glass,
+      border: `1px solid ${hover ? s.borderColor : C.glassBorder}`,
+      borderRadius: "24px",
+      padding: "36px 26px 32px",
+      textAlign: "center",
+      backdropFilter: "blur(14px)",
+      WebkitBackdropFilter: "blur(14px)",
+      transition: "transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, box-shadow 0.35s ease, background 0.35s ease",
+      transform: hover ? "translateY(-8px)" : "translateY(0)",
+      boxShadow: hover
+        ? `0 24px 60px ${s.glowColor}, 0 0 0 1px ${s.borderColor}`
+        : "0 4px 20px rgba(0,0,0,0.2)",
+      overflow: "hidden",
     }}
       onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+
+      {/* Corner gradient accent */}
       <div style={{
-        width: "48px", height: "48px", borderRadius: "14px",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        fontSize: "20px", fontWeight: 800, margin: "0 auto 20px", color: "#fff",
+        position: "absolute",
+        top: "-40px", right: "-40px",
+        width: "120px", height: "120px",
+        borderRadius: "50%",
         background: s.gradient,
-      }}>{s.num}</div>
-      <h4 style={{ fontSize: "18px", fontWeight: 700, marginBottom: "8px", color: C.text }}>{s.title}</h4>
-      <p style={{ fontSize: "14px", lineHeight: 1.6, color: C.textMuted }}>{s.desc}</p>
+        filter: "blur(40px)",
+        opacity: hover ? 0.35 : 0.15,
+        transition: "opacity 0.35s ease",
+        pointerEvents: "none",
+      }} />
+
+      <div style={{ position: "relative" }}>
+        {/* Icon above badge */}
+        <div style={{
+          fontSize: "22px",
+          marginBottom: "10px",
+          opacity: hover ? 1 : 0.75,
+          transition: "transform 0.35s ease, opacity 0.35s ease",
+          transform: hover ? "translateY(-2px) scale(1.08)" : "translateY(0) scale(1)",
+          filter: "grayscale(0)",
+        }}>{s.icon}</div>
+
+        {/* Number badge with glow ring */}
+        <div style={{
+          position: "relative",
+          width: "56px", height: "56px",
+          margin: "0 auto 18px",
+        }}>
+          <div style={{
+            position: "absolute", inset: "-8px",
+            borderRadius: "20px",
+            background: s.gradient,
+            opacity: hover ? 0.55 : 0.25,
+            filter: "blur(14px)",
+            transition: "opacity 0.35s ease",
+          }} />
+          <div style={{
+            position: "relative",
+            width: "100%", height: "100%",
+            borderRadius: "14px",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: "20px", fontWeight: 800, color: "#fff",
+            background: s.gradient,
+            boxShadow: "0 8px 20px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2)",
+            letterSpacing: "-0.5px",
+          }}>{s.num}</div>
+        </div>
+
+        <h4 style={{
+          fontSize: "19px", fontWeight: 700, marginBottom: "12px", color: C.text,
+          letterSpacing: "-0.2px",
+        }}>{s.title}</h4>
+
+        {/* Duration chip */}
+        <div style={{
+          display: "inline-block",
+          padding: "5px 12px",
+          borderRadius: "999px",
+          background: "rgba(255,255,255,0.04)",
+          border: `1px solid ${C.glassBorder}`,
+          fontSize: "10.5px",
+          fontWeight: 600,
+          letterSpacing: "1.2px",
+          textTransform: "uppercase",
+          color: C.textMuted,
+          marginBottom: "16px",
+        }}>{s.duration}</div>
+
+        <p style={{ fontSize: "14px", lineHeight: 1.65, color: C.textMuted, margin: 0 }}>{s.desc}</p>
+      </div>
     </div>
   );
 }
 
 export default function Process() {
   const steps = [
-    { num: "01", title: "Discovery", desc: "1-2 hour deep dive into your business, current tools, pain points, and goals.", gradient: C.gradient1 },
-    { num: "02", title: "Proposal", desc: "Within 48 hours, you receive a written proposal with fixed scope, timeline, and price.", gradient: C.gradient2 },
-    { num: "03", title: "Build", desc: "We build your solution in 2-4 weeks with weekly check-ins, feedback loops, and revisions.", gradient: "linear-gradient(135deg, #8b5cf6, #a78bfa)" },
-    { num: "04", title: "Handoff", desc: "Step-by-step guides, video tutorials, and a 2-week support window — you own it fully.", gradient: C.gradient3 },
+    {
+      num: "01", title: "Discovery", icon: "💡",
+      duration: "1–2 hours",
+      desc: "Deep dive into your business, current tools, pain points, and goals.",
+      gradient: C.gradient1,
+      borderColor: "rgba(124,92,252,0.45)",
+      glowColor: "rgba(124,92,252,0.28)",
+    },
+    {
+      num: "02", title: "Proposal", icon: "📋",
+      duration: "Within 48 hours",
+      desc: "You receive a written proposal with fixed scope, timeline, and price.",
+      gradient: C.gradient2,
+      borderColor: "rgba(14,165,233,0.45)",
+      glowColor: "rgba(14,165,233,0.28)",
+    },
+    {
+      num: "03", title: "Build", icon: "⚙️",
+      duration: "2–4 weeks",
+      desc: "We build your solution with weekly check-ins, feedback loops, and revisions.",
+      gradient: "linear-gradient(135deg, #8b5cf6, #a78bfa)",
+      borderColor: "rgba(139,92,246,0.45)",
+      glowColor: "rgba(139,92,246,0.28)",
+    },
+    {
+      num: "04", title: "Handoff", icon: "🚀",
+      duration: "2-week support",
+      desc: "Step-by-step guides, video tutorials, and a support window — you own it fully.",
+      gradient: C.gradient3,
+      borderColor: "rgba(245,158,11,0.45)",
+      glowColor: "rgba(245,158,11,0.28)",
+    },
   ];
   return (
     <PageShell>
       <div style={{ padding: "40px 48px", maxWidth: "1200px", margin: "0 auto", position: "relative" }}>
         <SectionHeader center label="How It Works" title="From Discovery to" titleAccent="Launch"
           sub="Our streamlined 4-phase process gets you from first conversation to fully operational — fast." />
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "24px" }}>
-          {steps.map((s, i) => <ProcessStep key={i} s={s} i={i} />)}
+
+        <div style={{ position: "relative" }}>
+          {/* Gradient connector line behind the row (desktop only) */}
+          <div className="process-connector" style={{
+            position: "absolute",
+            top: "118px",
+            left: "14%", right: "14%",
+            height: "2px",
+            background: "linear-gradient(90deg, rgba(124,92,252,0) 0%, rgba(124,92,252,0.5) 15%, rgba(14,165,233,0.5) 40%, rgba(139,92,246,0.5) 65%, rgba(245,158,11,0.5) 85%, rgba(245,158,11,0) 100%)",
+            zIndex: 0,
+            pointerEvents: "none",
+          }} />
+
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+            gap: "24px",
+            position: "relative",
+            zIndex: 1,
+          }}>
+            {steps.map((s, i) => <ProcessStep key={i} s={s} i={i} />)}
+          </div>
         </div>
       </div>
     </PageShell>

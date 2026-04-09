@@ -41,6 +41,7 @@ export default function App() {
           .hero-floating-cards { display: none !important; }
           .floating-logo { width: 180px !important; top: 16px !important; }
           .menu-button-wrap { top: 18px !important; right: 18px !important; }
+          .process-connector { display: none !important; }
         }
       `}</style>
       <BrowserRouter>
