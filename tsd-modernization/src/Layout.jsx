@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { C } from "./shared";
 
 const NAV_LINKS = [
+  { label: "Home", to: "/" },
   { label: "Services", to: "/services" },
   { label: "Why Us", to: "/why-us" },
   { label: "Process", to: "/process" },
@@ -96,6 +97,7 @@ function MenuButton() {
             <NavLink
               key={item.to}
               to={item.to}
+              end={item.to === "/"}
               style={({ isActive }) => ({
                 padding: "12px 16px",
                 borderRadius: "10px",
@@ -182,7 +184,7 @@ function Footer() {
       </Link>
 
       <div style={{ display: "flex", justifyContent: "center", gap: "28px", marginBottom: "32px", flexWrap: "wrap" }}>
-        {[...NAV_LINKS, { label: "Contact", to: "/contact" }].map((item) => (
+        {[...NAV_LINKS.filter((l) => l.to !== "/"), { label: "Contact", to: "/contact" }].map((item) => (
           <Link key={item.to} to={item.to} style={{
             color: C.textMuted, textDecoration: "none", fontSize: "14px", fontWeight: 500,
             cursor: "pointer", transition: "color 0.2s ease",
