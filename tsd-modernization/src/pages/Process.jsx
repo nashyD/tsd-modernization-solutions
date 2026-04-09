@@ -41,21 +41,11 @@ function ProcessStep({ s, i }) {
       }} />
 
       <div style={{ position: "relative" }}>
-        {/* Icon above badge */}
-        <div style={{
-          fontSize: "22px",
-          marginBottom: "10px",
-          opacity: hover ? 1 : 0.75,
-          transition: "transform 0.35s ease, opacity 0.35s ease",
-          transform: hover ? "translateY(-2px) scale(1.08)" : "translateY(0) scale(1)",
-          filter: "grayscale(0)",
-        }}>{s.icon}</div>
-
         {/* Number badge with glow ring */}
         <div style={{
           position: "relative",
           width: "56px", height: "56px",
-          margin: "0 auto 18px",
+          margin: "0 auto 20px",
         }}>
           <div style={{
             position: "absolute", inset: "-8px",
@@ -106,7 +96,7 @@ function ProcessStep({ s, i }) {
 export default function Process() {
   const steps = [
     {
-      num: "01", title: "Discovery", icon: "💡",
+      num: "01", title: "Discovery",
       duration: "1–2 hours",
       desc: "Deep dive into your business, current tools, pain points, and goals.",
       gradient: C.gradient1,
@@ -114,7 +104,7 @@ export default function Process() {
       glowColor: "rgba(124,92,252,0.28)",
     },
     {
-      num: "02", title: "Proposal", icon: "📋",
+      num: "02", title: "Proposal",
       duration: "Within 48 hours",
       desc: "You receive a written proposal with fixed scope, timeline, and price.",
       gradient: C.gradient2,
@@ -122,7 +112,7 @@ export default function Process() {
       glowColor: "rgba(14,165,233,0.28)",
     },
     {
-      num: "03", title: "Build", icon: "⚙️",
+      num: "03", title: "Build",
       duration: "2–4 weeks",
       desc: "We build your solution with weekly check-ins, feedback loops, and revisions.",
       gradient: "linear-gradient(135deg, #8b5cf6, #a78bfa)",
@@ -130,7 +120,7 @@ export default function Process() {
       glowColor: "rgba(139,92,246,0.28)",
     },
     {
-      num: "04", title: "Handoff", icon: "🚀",
+      num: "04", title: "Handoff",
       duration: "2-week support",
       desc: "Step-by-step guides, video tutorials, and a support window — you own it fully.",
       gradient: C.gradient3,
@@ -148,7 +138,7 @@ export default function Process() {
           {/* Gradient connector line behind the row (desktop only) */}
           <div className="process-connector" style={{
             position: "absolute",
-            top: "118px",
+            top: "65px",
             left: "14%", right: "14%",
             height: "2px",
             background: "linear-gradient(90deg, rgba(124,92,252,0) 0%, rgba(124,92,252,0.5) 15%, rgba(14,165,233,0.5) 40%, rgba(139,92,246,0.5) 65%, rgba(245,158,11,0.5) 85%, rgba(245,158,11,0) 100%)",
