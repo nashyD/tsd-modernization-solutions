@@ -29,17 +29,15 @@ export default function App() {
         @keyframes scrollDot { 0% { top: 8px; opacity: 1; } 100% { top: 22px; opacity: 0; } }
         @keyframes ripple { to { transform: scale(4); opacity: 0; } }
         @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes tsdFloatPulse {
+          0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.22; }
+          50% { transform: translate(-50%, calc(-50% - 12px)) scale(1.06); opacity: 0.42; }
+        }
 
         /* Mobile responsive */
         @media (max-width: 768px) {
-          .desktop-nav { display: none !important; }
-          .mobile-menu-btn { display: flex !important; flex-direction: column; }
           section { padding-left: 20px !important; padding-right: 20px !important; }
           nav { padding: 16px 20px !important; }
-        }
-        @media (min-width: 769px) {
-          .mobile-menu-btn { display: none !important; }
-          .mobile-menu { display: none !important; }
         }
       `}</style>
       <BrowserRouter>
