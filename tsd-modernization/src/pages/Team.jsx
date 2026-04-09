@@ -4,7 +4,7 @@ import PageShell from "./PageShell";
 export default function Team() {
   const team = [
     { initials: "ND", name: "Nash Davis", role: "CEO & Head of Modernization", school: "UNC Chapel Hill", bio: "AI and technology strategy. Leads technical delivery, client engagement, and custom solution architecture.", image: "/nash-davis.png" },
-    { initials: "BS", name: "Bishop Switzer", role: "COO — Operations", school: "UNC Wilmington", bio: "Operations and process management. Oversees project tracking, proposals, invoicing, and handoff documentation." },
+    { initials: "BS", name: "Bishop Switzer", role: "COO — Operations", school: "UNC Wilmington", bio: "Operations and process management. Oversees project tracking, proposals, invoicing, and handoff documentation.", image: "/bishop-switzer.jpg" },
     { initials: "GT", name: "Grant Tadlock", role: "CFO & Sales Lead", school: "UNC Charlotte", bio: "Financial planning and client acquisition. Drives sales pipeline, pricing strategy, and relationship development." },
   ];
   return (
