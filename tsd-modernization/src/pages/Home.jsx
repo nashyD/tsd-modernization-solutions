@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { C, useCountUp, GridBg, GradientOrbs, RippleButton } from "../shared";
 import {
   BoltIcon, CheckIcon, ClockIcon, TagIcon,
-  BuildingIcon, SparklesIcon, TrendingUpIcon,
+  BuildingIcon, SparklesIcon,
 } from "../icons";
 
 function FloatingCards() {
@@ -83,9 +83,9 @@ export default function Home() {
   });
 
   const [s1, r1] = useCountUp(50000);
-  const [s2, r2] = useCountUp(30);
+  const [s2, r2] = useCountUp(10);
   const [s3, r3] = useCountUp(48);
-  const [s4, r4] = useCountUp(95);
+  const r4 = useRef(null);
 
   return (
     <>
@@ -198,9 +198,9 @@ export default function Home() {
         gap: "20px", padding: "60px 48px", maxWidth: "1200px", margin: "0 auto",
       }}>
         <StatCard refProp={r1} val={`${s1.toLocaleString()}+`} label="Small Businesses in Charlotte" icon={<BuildingIcon size={32} />} />
-        <StatCard refProp={r2} val={`<${s2}%`} label="Have Adopted AI Tools" icon={<SparklesIcon size={32} />} />
+        <StatCard refProp={r2} val={`<${s2}%`} label="Have Integrated AI into Core Workflows" icon={<SparklesIcon size={32} />} />
         <StatCard refProp={r3} val={`${s3}hr`} label="Proposal Turnaround" icon={<BoltIcon size={32} />} />
-        <StatCard refProp={r4} val={`${s4}%+`} label="Gross Margin" icon={<TrendingUpIcon size={32} />} />
+        <StatCard refProp={r4} val="2-4 wk" label="Typical Project Time" icon={<ClockIcon size={32} />} />
       </div>
     </>
   );
