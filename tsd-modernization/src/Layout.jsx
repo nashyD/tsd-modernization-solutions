@@ -41,7 +41,7 @@ function MenuButton() {
           style={{
             display: "flex", flexDirection: "column", gap: "5px",
             alignItems: "center", justifyContent: "center",
-            background: menuOpen ? "rgba(139,92,246,0.2)" : "rgba(14,14,20,0.7)",
+            background: menuOpen ? `rgba(${C.accentRGB},0.2)` : "rgba(6,10,18,0.78)",
             backdropFilter: "blur(18px)",
             WebkitBackdropFilter: "blur(18px)",
             border: `1px solid ${menuOpen ? C.accentLight : C.glassBorder}`,
@@ -51,11 +51,11 @@ function MenuButton() {
             zIndex: 1001,
             transition: "all 0.25s ease",
             boxShadow: menuOpen
-              ? `0 0 0 4px rgba(139,92,246,0.15), 0 8px 30px rgba(0,0,0,0.4)`
-              : "0 8px 24px rgba(0,0,0,0.35)",
+              ? `0 0 0 4px rgba(${C.accentRGB},0.18), 0 8px 30px rgba(0,0,0,0.5)`
+              : "0 8px 24px rgba(0,0,0,0.45)",
           }}
-          onMouseEnter={(e) => { if (!menuOpen) e.currentTarget.style.background = "rgba(30,30,40,0.8)"; }}
-          onMouseLeave={(e) => { if (!menuOpen) e.currentTarget.style.background = "rgba(14,14,20,0.7)"; }}
+          onMouseEnter={(e) => { if (!menuOpen) e.currentTarget.style.background = `rgba(${C.accentRGB},0.1)`; }}
+          onMouseLeave={(e) => { if (!menuOpen) e.currentTarget.style.background = "rgba(6,10,18,0.78)"; }}
         >
           <div style={{
             width: "24px", height: "2px", background: C.text,
@@ -80,7 +80,7 @@ function MenuButton() {
           top: "calc(100% + 14px)",
           right: 0,
           minWidth: "240px",
-          background: "rgba(14,14,20,0.95)",
+          background: "rgba(6,10,18,0.96)",
           backdropFilter: "blur(24px)",
           WebkitBackdropFilter: "blur(24px)",
           border: `1px solid ${C.divider}`,
@@ -105,7 +105,7 @@ function MenuButton() {
                 color: isActive ? C.accentLight : C.textMuted,
                 textDecoration: "none",
                 transition: "all 0.2s ease",
-                background: isActive ? "rgba(139,92,246,0.12)" : "transparent",
+                background: isActive ? `rgba(${C.accentRGB},0.15)` : "transparent",
               })}
               onMouseEnter={(e) => {
                 if (e.currentTarget.getAttribute("aria-current") !== "page") {
@@ -115,7 +115,7 @@ function MenuButton() {
               }}
               onMouseLeave={(e) => {
                 const isActive = e.currentTarget.getAttribute("aria-current") === "page";
-                e.currentTarget.style.background = isActive ? "rgba(139,92,246,0.12)" : "transparent";
+                e.currentTarget.style.background = isActive ? `rgba(${C.accentRGB},0.15)` : "transparent";
                 e.currentTarget.style.color = isActive ? C.accentLight : C.textMuted;
               }}
             >{item.label}</NavLink>
@@ -154,11 +154,11 @@ function FloatingLogo() {
       }}
     >
       <img
-        src="/tsd-ms-logo.svg"
+        src={C.logoSrc}
         alt=""
         style={{
           width: "100%", display: "block",
-          filter: "drop-shadow(0 0 40px rgba(139,92,246,0.55)) drop-shadow(0 0 80px rgba(45,212,191,0.25))",
+          filter: `drop-shadow(0 0 40px rgba(${C.accentRGB},0.55)) drop-shadow(0 0 80px rgba(${C.accentRGB},0.25))`,
         }}
       />
     </div>
@@ -177,7 +177,7 @@ function Footer() {
         cursor: "pointer", marginBottom: "24px", display: "inline-block", textDecoration: "none",
       }}>
         <img
-          src="/tsd-ms-logo.svg"
+          src={C.logoSrc}
           alt="TSD Modernization Solutions"
           style={{ height: "140px", width: "auto", display: "block" }}
         />

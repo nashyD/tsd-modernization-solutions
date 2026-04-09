@@ -1,7 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
 // ─── Design System ─────────────────────────────────────────────────────────
-export const C = {
+// Two palettes are defined below. To swap themes, change the single
+// `export const C = ...` line at the bottom of this block.
+
+// Original purple / violet / teal palette.
+const PALETTE_LEGACY = {
   bg: "#0a0a0f",
   bgAlt: "#0e0e16",
   glass: "rgba(255,255,255,0.05)",
@@ -12,6 +16,7 @@ export const C = {
   textDim: "rgba(255,255,255,0.35)",
   accent: "#7c5cfc",
   accentLight: "#a78bfa",
+  accentRGB: "124,92,252",
   accentGlow: "rgba(124,92,252,0.4)",
   accentGlowStrong: "rgba(124,92,252,0.6)",
   cyan: "#06d6a0",
@@ -19,12 +24,50 @@ export const C = {
   pink: "#f472b6",
   pinkGlow: "rgba(244,114,182,0.25)",
   success: "#06d6a0",
+  navy: "#1e1b4b",
+  navyRGB: "30,27,75",
   gradient1: "linear-gradient(135deg, #7c5cfc 0%, #a78bfa 100%)",
   gradient2: "linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)",
   gradient3: "linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)",
+  gradient4: "linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)",
   gradientHero: "linear-gradient(135deg, #7c5cfc 0%, #a78bfa 40%, #06d6a0 100%)",
   divider: "rgba(255,255,255,0.06)",
+  logoSrc: "/tsd-ms-logo.svg",
 };
+
+// UNC Tar Heel Blue (Pantone 542) + Black.
+const PALETTE_TARHEEL = {
+  bg: "#000000",
+  bgAlt: "#060a12",
+  glass: "rgba(123,175,212,0.06)",
+  glassBorder: "rgba(123,175,212,0.18)",
+  glassHover: "rgba(123,175,212,0.12)",
+  text: "#f1f6fb",
+  textMuted: "rgba(241,246,251,0.58)",
+  textDim: "rgba(241,246,251,0.35)",
+  accent: "#7BAFD4",           // Carolina Blue
+  accentLight: "#9FCAE3",      // Lighter Carolina
+  accentRGB: "123,175,212",
+  accentGlow: "rgba(123,175,212,0.4)",
+  accentGlowStrong: "rgba(123,175,212,0.65)",
+  cyan: "#56B4E3",             // Sky blue (repurposed from teal)
+  cyanGlow: "rgba(86,180,227,0.3)",
+  pink: "#13294B",             // Carolina Navy (repurposed from pink)
+  pinkGlow: "rgba(19,41,75,0.4)",
+  success: "#7BAFD4",
+  navy: "#13294B",             // Carolina Navy
+  navyRGB: "19,41,75",
+  gradient1: "linear-gradient(135deg, #7BAFD4 0%, #9FCAE3 100%)",
+  gradient2: "linear-gradient(135deg, #56B4E3 0%, #13294B 100%)",
+  gradient3: "linear-gradient(135deg, #9FCAE3 0%, #4A90BF 100%)",
+  gradient4: "linear-gradient(135deg, #4A90BF 0%, #13294B 100%)",
+  gradientHero: "linear-gradient(135deg, #7BAFD4 0%, #9FCAE3 40%, #56B4E3 100%)",
+  divider: "rgba(123,175,212,0.12)",
+  logoSrc: "/tsd-ms-logo-tarheel.svg",
+};
+
+// Active theme. Change to PALETTE_LEGACY to revert.
+export const C = PALETTE_TARHEEL;
 
 // ─── Hooks ─────────────────────────────────────────────────────────────────
 export function useCountUp(end, duration = 2000) {

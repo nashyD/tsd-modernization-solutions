@@ -22,7 +22,7 @@ function FAQSection() {
           const isOpen = openIndex === i;
           return (
             <div key={i} style={{
-              background: C.glass, border: `1px solid ${isOpen ? "rgba(124,92,252,0.3)" : C.glassBorder}`,
+              background: C.glass, border: `1px solid ${isOpen ? `rgba(${C.accentRGB},0.3)` : C.glassBorder}`,
               borderRadius: "16px", overflow: "hidden",
               transition: "border-color 0.3s ease",
             }}>
@@ -71,7 +71,7 @@ function ContactForm() {
     fontFamily: "inherit",
   };
   const focusHandlers = {
-    onFocus: (e) => { e.target.style.borderColor = "rgba(124,92,252,0.4)"; e.target.style.background = "rgba(255,255,255,0.1)"; },
+    onFocus: (e) => { e.target.style.borderColor = `rgba(${C.accentRGB},0.4)`; e.target.style.background = "rgba(255,255,255,0.1)"; },
     onBlur: (e) => { e.target.style.borderColor = C.glassBorder; e.target.style.background = "rgba(255,255,255,0.06)"; },
   };
 
@@ -111,11 +111,11 @@ function ContactForm() {
       <div ref={ref} style={{
         ...fadeStyle,
         maxWidth: "800px", margin: "0 auto", position: "relative",
-        background: "linear-gradient(145deg, rgba(79,70,229,0.25), rgba(124,92,252,0.1))",
-        border: "1px solid rgba(124,92,252,0.3)",
+        background: `linear-gradient(145deg, rgba(${C.navyRGB},0.45), rgba(${C.accentRGB},0.1))`,
+        border: `1px solid rgba(${C.accentRGB},0.3)`,
         borderRadius: "32px", padding: "64px 48px",
         backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-        boxShadow: `0 25px 80px rgba(124,92,252,0.15)`,
+        boxShadow: `0 25px 80px rgba(${C.accentRGB},0.15)`,
       }}>
         <div style={{
           display: "flex", alignItems: "center", gap: "8px", justifyContent: "center",

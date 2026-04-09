@@ -17,7 +17,7 @@ function FloatingCards() {
     <div className="hero-floating-cards" style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none" }}>
       <div style={{ ...cardBase, top: "18%", right: "8%", animation: "cardFloat1 8s ease-in-out infinite", opacity: 0.7 }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <div style={iconBox("linear-gradient(135deg, #7c5cfc, #a78bfa)")}>&#9889;</div>
+          <div style={iconBox(C.gradient1)}>&#9889;</div>
           <div>
             <div style={{ fontSize: "11px", color: C.textMuted, fontWeight: 500 }}>AI Workflows</div>
             <div style={{ fontSize: "18px", fontWeight: 700, color: C.text }}>+340%</div>
@@ -26,7 +26,7 @@ function FloatingCards() {
       </div>
       <div style={{ ...cardBase, bottom: "22%", left: "6%", animation: "cardFloat2 10s ease-in-out infinite 2s", opacity: 0.6 }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <div style={iconBox("linear-gradient(135deg, #06d6a0, #34d399)")}>&#10003;</div>
+          <div style={iconBox(C.gradient3)}>&#10003;</div>
           <div>
             <div style={{ fontSize: "11px", color: C.textMuted, fontWeight: 500 }}>Tasks Automated</div>
             <div style={{ fontSize: "18px", fontWeight: 700, color: C.text }}>2,400+</div>
@@ -35,7 +35,7 @@ function FloatingCards() {
       </div>
       <div style={{ ...cardBase, top: "55%", right: "5%", animation: "cardFloat3 9s ease-in-out infinite 4s", opacity: 0.5 }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <div style={iconBox("linear-gradient(135deg, #f472b6, #f9a8d4)")}>&#128337;</div>
+          <div style={iconBox(C.gradient2)}>&#128337;</div>
           <div>
             <div style={{ fontSize: "11px", color: C.textMuted, fontWeight: 500 }}>Avg Response</div>
             <div style={{ fontSize: "18px", fontWeight: 700, color: C.text }}>&lt;2hr</div>
@@ -51,12 +51,12 @@ function StatCard({ refProp, val, label, icon }) {
   return (
     <div ref={refProp} style={{
       background: hover ? "rgba(255,255,255,0.07)" : C.glass,
-      border: `1px solid ${hover ? "rgba(124,92,252,0.3)" : C.glassBorder}`,
+      border: `1px solid ${hover ? `rgba(${C.accentRGB},0.3)` : C.glassBorder}`,
       borderRadius: "20px", padding: "32px 24px", textAlign: "center",
       backdropFilter: "blur(12px)",
       transition: "all 0.3s ease",
       transform: hover ? "translateY(-4px)" : "translateY(0)",
-      boxShadow: hover ? `0 8px 30px rgba(124,92,252,0.12)` : "none",
+      boxShadow: hover ? `0 8px 30px rgba(${C.accentRGB},0.12)` : "none",
     }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}>
@@ -160,7 +160,7 @@ export default function Home() {
               <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: C.textMuted, fontWeight: 500 }}>
                 <span style={{
                   width: "24px", height: "24px", borderRadius: "8px",
-                  background: "rgba(124,92,252,0.15)",
+                  background: `rgba(${C.accentRGB},0.15)`,
                   display: "inline-flex", alignItems: "center", justifyContent: "center",
                   fontSize: "12px", color: C.accentLight,
                 }} dangerouslySetInnerHTML={{ __html: item.icon }} />

@@ -17,17 +17,17 @@ export default function Team() {
             <GlassCard key={i} delay={i * 150} hoverGlow={C.accentGlow} enableTilt style={{ textAlign: "center" }}>
               <div style={{
                 width: "100px", height: "100px", borderRadius: "24px",
-                background: t.image ? "none" : "linear-gradient(135deg, rgba(124,92,252,0.2), rgba(6,214,160,0.1))",
-                border: `1px solid rgba(124,92,252,0.25)`,
+                background: t.image ? "none" : `linear-gradient(135deg, rgba(${C.accentRGB},0.2), rgba(${C.navyRGB},0.25))`,
+                border: `1px solid rgba(${C.accentRGB},0.25)`,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 fontSize: "36px", margin: "0 auto 20px", color: C.accentLight,
                 fontWeight: 700, overflow: "hidden",
-                boxShadow: "0 8px 32px rgba(124,92,252,0.1)",
+                boxShadow: `0 8px 32px rgba(${C.accentRGB},0.1)`,
                 position: "relative",
               }}>
                 <div style={{
                   position: "absolute", inset: "-3px", borderRadius: "27px",
-                  background: "linear-gradient(135deg, rgba(124,92,252,0.4), transparent, rgba(6,214,160,0.3))",
+                  background: `linear-gradient(135deg, rgba(${C.accentRGB},0.4), transparent, rgba(${C.navyRGB},0.4))`,
                   zIndex: -1, filter: "blur(6px)", opacity: 0.6,
                 }} />
                 {t.image ? (

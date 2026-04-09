@@ -33,13 +33,13 @@ export default function WhyUs() {
             <tbody>
               {comparisons.map((c, i) => (
                 <tr key={i} style={{
-                  background: c.featured ? "rgba(124,92,252,0.15)" : C.glass,
+                  background: c.featured ? `rgba(${C.accentRGB},0.15)` : C.glass,
                   borderRadius: "12px",
                 }}>
                   <td style={{
                     padding: "16px", fontWeight: 700, color: c.featured ? C.accentLight : C.text,
                     borderRadius: "12px 0 0 12px",
-                    border: c.featured ? "1px solid rgba(124,92,252,0.3)" : `1px solid ${C.glassBorder}`,
+                    border: c.featured ? `1px solid rgba(${C.accentRGB},0.3)` : `1px solid ${C.glassBorder}`,
                     borderRight: "none",
                   }}>
                     {c.type}
@@ -52,7 +52,7 @@ export default function WhyUs() {
                     <td key={j} style={{
                       padding: "16px", color: c.featured ? C.text : C.textMuted,
                       fontWeight: c.featured ? 600 : 400,
-                      border: c.featured ? "1px solid rgba(124,92,252,0.3)" : `1px solid ${C.glassBorder}`,
+                      border: c.featured ? `1px solid rgba(${C.accentRGB},0.3)` : `1px solid ${C.glassBorder}`,
                       borderLeft: "none",
                       borderRight: j < 3 ? "none" : undefined,
                       borderRadius: j === 3 ? "0 12px 12px 0" : undefined,

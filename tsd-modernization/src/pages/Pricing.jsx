@@ -10,21 +10,21 @@ function PricingTier({ t, i }) {
   return (
     <div ref={ref} style={{
       ...fadeStyle,
-      background: featured ? "linear-gradient(145deg, rgba(79,70,229,0.4), rgba(124,92,252,0.2))" : C.glass,
-      border: `1px solid ${featured ? "rgba(124,92,252,0.4)" : hover ? "rgba(255,255,255,0.12)" : C.glassBorder}`,
+      background: featured ? `linear-gradient(145deg, rgba(${C.navyRGB},0.55), rgba(${C.accentRGB},0.2))` : C.glass,
+      border: `1px solid ${featured ? `rgba(${C.accentRGB},0.4)` : hover ? "rgba(255,255,255,0.12)" : C.glassBorder}`,
       borderRadius: "24px", padding: "40px 32px", textAlign: "center",
       backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
       position: "relative",
       transition: "transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
       transform: hover ? `${featured ? "scale(1.03)" : ""} translateY(-6px)`.trim() : featured ? "scale(1.03)" : "none",
-      boxShadow: featured ? `0 20px 60px rgba(124,92,252,0.2)` : "none",
+      boxShadow: featured ? `0 20px 60px rgba(${C.accentRGB},0.22)` : "none",
     }}
       onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
       {featured && (
         <>
           <div style={{
             position: "absolute", inset: "-1px", borderRadius: "25px",
-            background: "linear-gradient(135deg, #7c5cfc, #a78bfa, #06d6a0, #7c5cfc)",
+            background: `linear-gradient(135deg, ${C.accent}, ${C.accentLight}, ${C.cyan}, ${C.accent})`,
             backgroundSize: "300% 300%",
             animation: "gradientShift 4s ease infinite",
             zIndex: -1, opacity: 0.6,
@@ -54,7 +54,7 @@ function PricingTier({ t, i }) {
           width: "100%", padding: "14px", borderRadius: "14px", fontSize: "15px",
           fontWeight: 600, border: "none", cursor: "pointer",
           background: featured ? "#fff" : C.gradient1,
-          color: featured ? "#4f46e5" : "#fff",
+          color: featured ? C.navy : "#fff",
           boxShadow: featured ? "0 4px 15px rgba(255,255,255,0.15)" : `0 4px 15px ${C.accentGlow}`,
           transition: "transform 0.2s ease",
         }}

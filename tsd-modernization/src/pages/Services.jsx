@@ -13,13 +13,13 @@ export default function Services() {
       icon: "&#128187;", title: "Website Creation & Redesign",
       desc: "Professional, conversion-focused websites with built-in SEO, chatbot integration, and comprehensive handoff documentation.",
       tags: ["Webflow", "WordPress", "SEO", "Analytics"],
-      gradient: C.gradient2, glow: "rgba(14,165,233,0.3)",
+      gradient: C.gradient2, glow: `rgba(${C.accentRGB},0.3)`,
     },
     {
       icon: "&#128200;", title: "Process Modernization",
       desc: "A structured tech audit and written roadmap that maps your operations, identifies bottlenecks, and prioritizes implementation.",
       tags: ["Tech Audit", "Roadmap", "ROI Analysis", "Training"],
-      gradient: C.gradient3, glow: "rgba(245,158,11,0.25)",
+      gradient: C.gradient3, glow: `rgba(${C.navyRGB},0.35)`,
     },
   ];
   return (
@@ -45,7 +45,7 @@ export default function Services() {
                   <span key={j} style={{
                     display: "inline-block", padding: "4px 12px", borderRadius: "8px",
                     fontSize: "12px", fontWeight: 600, marginRight: "8px", marginBottom: "8px",
-                    background: "rgba(124,92,252,0.1)", border: "1px solid rgba(124,92,252,0.2)",
+                    background: `rgba(${C.accentRGB},0.1)`, border: `1px solid rgba(${C.accentRGB},0.2)`,
                     color: C.accentLight,
                   }}>{tag}</span>
                 ))}
