@@ -14,7 +14,7 @@ function FloatingCards() {
     display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px",
   });
   return (
-    <div style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none" }}>
+    <div className="hero-floating-cards" style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none" }}>
       <div style={{ ...cardBase, top: "18%", right: "8%", animation: "cardFloat1 8s ease-in-out infinite", opacity: 0.7 }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <div style={iconBox("linear-gradient(135deg, #7c5cfc, #a78bfa)")}>&#9889;</div>

@@ -27,7 +27,7 @@ function MenuButton() {
   }, [menuOpen]);
 
   return (
-    <div style={{
+    <div className="menu-button-wrap" style={{
       position: "fixed",
       top: "24px", right: "32px",
       zIndex: 1000,
@@ -140,6 +140,7 @@ function FloatingLogo() {
   return (
     <div
       aria-hidden="true"
+      className="floating-logo"
       style={{
         position: "fixed",
         top: "12px", left: "50%",

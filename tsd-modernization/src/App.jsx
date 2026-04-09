@@ -38,6 +38,9 @@ export default function App() {
         @media (max-width: 768px) {
           section { padding-left: 20px !important; padding-right: 20px !important; }
           nav { padding: 16px 20px !important; }
+          .hero-floating-cards { display: none !important; }
+          .floating-logo { width: 180px !important; top: 16px !important; }
+          .menu-button-wrap { top: 18px !important; right: 18px !important; }
         }
       `}</style>
       <BrowserRouter>
