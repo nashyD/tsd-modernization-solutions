@@ -5,7 +5,7 @@ export default function PageShell({ children, showOrbs = true, minHeight = "100v
     <section style={{
       position: "relative",
       minHeight,
-      paddingTop: "120px",
+      paddingTop: "180px",
       paddingBottom: "80px",
       background: C.bg,
       overflow: "hidden",

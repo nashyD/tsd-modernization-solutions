@@ -146,7 +146,7 @@ function FloatingLogo() {
       style={{
         position: "fixed",
         top: "12px", left: "50%",
-        width: "280px",
+        width: "360px",
         pointerEvents: "none",
         zIndex: 999,
         animation: "tsdFloatPulse 6s ease-in-out infinite",

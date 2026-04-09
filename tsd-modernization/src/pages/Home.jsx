@@ -93,7 +93,7 @@ export default function Home() {
       <section id="hero" style={{
         position: "relative", minHeight: "100vh", background: C.bg,
         display: "flex", alignItems: "center", justifyContent: "center",
-        padding: "120px 24px 80px", overflow: "hidden",
+        padding: "180px 24px 80px", overflow: "hidden",
       }}>
         <GridBg />
         <GradientOrbs />
