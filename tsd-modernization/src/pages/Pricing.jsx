@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { C, useFadeIn, SectionHeader, RippleButton } from "../shared";
+import { CheckIcon } from "../icons";
 import PageShell from "./PageShell";
 
 function PricingTier({ t, i }) {
@@ -44,7 +45,7 @@ function PricingTier({ t, i }) {
       <div style={{ borderTop: `1px solid ${C.divider}`, paddingTop: "24px" }}>
         {t.features.map((f, j) => (
           <div key={j} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "14px", lineHeight: 1.6, padding: "8px 0", textAlign: "left", color: C.text }}>
-            <span style={{ color: C.success, fontSize: "16px" }}>&#10003;</span>
+            <span style={{ color: C.success, display: "inline-flex", flexShrink: 0 }}><CheckIcon size={16} /></span>
             <span>{f}</span>
           </div>
         ))}

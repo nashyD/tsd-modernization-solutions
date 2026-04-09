@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { C, useFadeIn, SectionHeader, RippleButton } from "../shared";
+import { CheckIcon } from "../icons";
 import PageShell from "./PageShell";
 
 function FAQSection() {
@@ -134,7 +135,7 @@ function ContactForm() {
             padding: "40px", borderRadius: "16px",
             background: "rgba(6,214,160,0.1)", border: "1px solid rgba(6,214,160,0.3)",
           }}>
-            <div style={{ fontSize: "48px", marginBottom: "16px" }}>&#10003;</div>
+            <div style={{ marginBottom: "16px", color: C.success, display: "flex", justifyContent: "center" }}><CheckIcon size={56} strokeWidth={2.5} /></div>
             <h3 style={{ fontSize: "24px", fontWeight: 700, color: C.text, marginBottom: "8px" }}>Thank you!</h3>
             <p style={{ color: C.textMuted, fontSize: "16px" }}>We'll be in touch within 24 hours to schedule your free tech audit.</p>
           </div>

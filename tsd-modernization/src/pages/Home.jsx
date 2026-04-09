@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { C, useCountUp, GridBg, GradientOrbs, RippleButton } from "../shared";
+import {
+  BoltIcon, CheckIcon, ClockIcon, TagIcon,
+  BuildingIcon, SparklesIcon, TrendingUpIcon,
+} from "../icons";
 
 function FloatingCards() {
   const cardBase = {
@@ -11,13 +15,13 @@ function FloatingCards() {
   };
   const iconBox = (bg) => ({
     width: "36px", height: "36px", borderRadius: "10px", background: bg,
-    display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px",
+    display: "flex", alignItems: "center", justifyContent: "center", color: "#fff",
   });
   return (
     <div className="hero-floating-cards" style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none" }}>
       <div style={{ ...cardBase, top: "18%", right: "8%", animation: "cardFloat1 8s ease-in-out infinite", opacity: 0.7 }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <div style={iconBox(C.gradient1)}>&#9889;</div>
+          <div style={iconBox(C.gradient1)}><BoltIcon size={18} /></div>
           <div>
             <div style={{ fontSize: "11px", color: C.textMuted, fontWeight: 500 }}>AI Workflows</div>
             <div style={{ fontSize: "18px", fontWeight: 700, color: C.text }}>+340%</div>
@@ -26,7 +30,7 @@ function FloatingCards() {
       </div>
       <div style={{ ...cardBase, bottom: "22%", left: "6%", animation: "cardFloat2 10s ease-in-out infinite 2s", opacity: 0.6 }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <div style={iconBox(C.gradient3)}>&#10003;</div>
+          <div style={iconBox(C.gradient3)}><CheckIcon size={18} /></div>
           <div>
             <div style={{ fontSize: "11px", color: C.textMuted, fontWeight: 500 }}>Tasks Automated</div>
             <div style={{ fontSize: "18px", fontWeight: 700, color: C.text }}>2,400+</div>
@@ -35,7 +39,7 @@ function FloatingCards() {
       </div>
       <div style={{ ...cardBase, top: "55%", right: "5%", animation: "cardFloat3 9s ease-in-out infinite 4s", opacity: 0.5 }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <div style={iconBox(C.gradient2)}>&#128337;</div>
+          <div style={iconBox(C.gradient2)}><ClockIcon size={18} /></div>
           <div>
             <div style={{ fontSize: "11px", color: C.textMuted, fontWeight: 500 }}>Avg Response</div>
             <div style={{ fontSize: "18px", fontWeight: 700, color: C.text }}>&lt;2hr</div>
@@ -60,7 +64,7 @@ function StatCard({ refProp, val, label, icon }) {
     }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}>
-      <div style={{ fontSize: "24px", marginBottom: "12px" }}>{icon}</div>
+      <div style={{ marginBottom: "12px", display: "flex", justifyContent: "center", color: C.accentLight }}>{icon}</div>
       <div style={{
         fontSize: "36px", fontWeight: 800, marginBottom: "4px",
         background: C.gradientHero, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
@@ -104,7 +108,7 @@ export default function Home() {
             color: C.accentLight, letterSpacing: "0.5px", textTransform: "uppercase",
             marginBottom: "36px",
           }}>
-            <span style={{ fontSize: "14px" }}>&#9889;</span>
+            <span style={{ display: "inline-flex", alignItems: "center" }}><BoltIcon size={14} /></span>
             Charlotte's Small Business Modernization Partner
           </div>
 
@@ -153,18 +157,20 @@ export default function Home() {
 
           <div style={{ ...fadeUp(600), marginTop: "56px", display: "flex", alignItems: "center", justifyContent: "center", gap: "32px", flexWrap: "wrap" }}>
             {[
-              { label: "Free consultation", icon: "&#10003;" },
-              { label: "48hr proposals", icon: "&#9889;" },
-              { label: "3-5x below agency rates", icon: "&#128176;" },
-            ].map((item, i) => (
+              { label: "Free consultation", Icon: CheckIcon },
+              { label: "48hr proposals", Icon: BoltIcon },
+              { label: "3-5x below agency rates", Icon: TagIcon },
+            ].map(({ label, Icon }, i) => (
               <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: C.textMuted, fontWeight: 500 }}>
                 <span style={{
                   width: "24px", height: "24px", borderRadius: "8px",
                   background: `rgba(${C.accentRGB},0.15)`,
                   display: "inline-flex", alignItems: "center", justifyContent: "center",
-                  fontSize: "12px", color: C.accentLight,
-                }} dangerouslySetInnerHTML={{ __html: item.icon }} />
-                {item.label}
+                  color: C.accentLight,
+                }}>
+                  <Icon size={14} />
+                </span>
+                {label}
               </div>
             ))}
           </div>
@@ -191,10 +197,10 @@ export default function Home() {
         display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
         gap: "20px", padding: "60px 48px", maxWidth: "1200px", margin: "0 auto",
       }}>
-        <StatCard refProp={r1} val={`${s1.toLocaleString()}+`} label="Small Businesses in Charlotte" icon={"\u{1F3E2}"} />
-        <StatCard refProp={r2} val={`<${s2}%`} label="Have Adopted AI Tools" icon={"\u{1F916}"} />
-        <StatCard refProp={r3} val={`${s3}hr`} label="Proposal Turnaround" icon={"\u26A1"} />
-        <StatCard refProp={r4} val={`${s4}%+`} label="Gross Margin" icon={"\u{1F4C8}"} />
+        <StatCard refProp={r1} val={`${s1.toLocaleString()}+`} label="Small Businesses in Charlotte" icon={<BuildingIcon size={32} />} />
+        <StatCard refProp={r2} val={`<${s2}%`} label="Have Adopted AI Tools" icon={<SparklesIcon size={32} />} />
+        <StatCard refProp={r3} val={`${s3}hr`} label="Proposal Turnaround" icon={<BoltIcon size={32} />} />
+        <StatCard refProp={r4} val={`${s4}%+`} label="Gross Margin" icon={<TrendingUpIcon size={32} />} />
       </div>
     </>
   );
