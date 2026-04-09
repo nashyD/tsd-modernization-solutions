@@ -11,7 +11,7 @@ const NAV_LINKS = [
   { label: "Team", to: "/team" },
 ];
 
-function Nav({ scrolled }) {
+function MenuButton() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -27,14 +27,10 @@ function Nav({ scrolled }) {
   }, [menuOpen]);
 
   return (
-    <nav style={{
-      position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
-      padding: "16px 48px", display: "flex", alignItems: "center", justifyContent: "flex-end",
-      background: scrolled ? "rgba(10,10,15,0.85)" : "rgba(10,10,15,0.6)",
-      backdropFilter: "blur(20px)",
-      WebkitBackdropFilter: "blur(20px)",
-      borderBottom: scrolled ? `1px solid ${C.divider}` : "1px solid transparent",
-      transition: "all 0.4s ease",
+    <div style={{
+      position: "fixed",
+      top: "24px", right: "32px",
+      zIndex: 1000,
     }}>
       <div style={{ position: "relative" }}>
         <button
@@ -44,17 +40,21 @@ function Nav({ scrolled }) {
           style={{
             display: "flex", flexDirection: "column", gap: "5px",
             alignItems: "center", justifyContent: "center",
-            background: menuOpen ? "rgba(139,92,246,0.15)" : "rgba(255,255,255,0.04)",
+            background: menuOpen ? "rgba(139,92,246,0.2)" : "rgba(14,14,20,0.7)",
+            backdropFilter: "blur(18px)",
+            WebkitBackdropFilter: "blur(18px)",
             border: `1px solid ${menuOpen ? C.accentLight : C.glassBorder}`,
             borderRadius: "12px",
             padding: "14px 18px",
             cursor: "pointer",
             zIndex: 1001,
             transition: "all 0.25s ease",
-            boxShadow: menuOpen ? `0 0 0 4px rgba(139,92,246,0.15)` : "none",
+            boxShadow: menuOpen
+              ? `0 0 0 4px rgba(139,92,246,0.15), 0 8px 30px rgba(0,0,0,0.4)`
+              : "0 8px 24px rgba(0,0,0,0.35)",
           }}
-          onMouseEnter={(e) => { if (!menuOpen) e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
-          onMouseLeave={(e) => { if (!menuOpen) e.currentTarget.style.background = "rgba(255,255,255,0.04)"; }}
+          onMouseEnter={(e) => { if (!menuOpen) e.currentTarget.style.background = "rgba(30,30,40,0.8)"; }}
+          onMouseLeave={(e) => { if (!menuOpen) e.currentTarget.style.background = "rgba(14,14,20,0.7)"; }}
         >
           <div style={{
             width: "24px", height: "2px", background: C.text,
@@ -132,7 +132,7 @@ function Nav({ scrolled }) {
           </Link>
         </div>
       </div>
-    </nav>
+    </div>
   );
 }
 
@@ -142,7 +142,7 @@ function FloatingLogo() {
       aria-hidden="true"
       style={{
         position: "fixed",
-        top: "96px", left: "50%",
+        top: "12px", left: "50%",
         width: "280px",
         pointerEvents: "none",
         zIndex: 999,
@@ -209,14 +209,7 @@ function Footer() {
 }
 
 export default function Layout() {
-  const [scrolled, setScrolled] = useState(false);
   const { pathname } = useLocation();
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   // Scroll to top on route change
   useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
@@ -227,8 +220,8 @@ export default function Layout() {
       margin: 0, padding: 0, overflowX: "hidden", background: C.bg, color: C.text,
       minHeight: "100vh",
     }}>
-      <Nav scrolled={scrolled} />
       <FloatingLogo />
+      <MenuButton />
       <Outlet />
       <Footer />
     </div>
