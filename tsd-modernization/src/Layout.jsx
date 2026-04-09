@@ -142,10 +142,10 @@ function FloatingLogo() {
       aria-hidden="true"
       style={{
         position: "fixed",
-        top: "50%", left: "50%",
-        width: "340px",
+        top: "96px", left: "50%",
+        width: "280px",
         pointerEvents: "none",
-        zIndex: 1,
+        zIndex: 999,
         animation: "tsdFloatPulse 6s ease-in-out infinite",
         willChange: "transform, opacity",
       }}
@@ -155,7 +155,7 @@ function FloatingLogo() {
         alt=""
         style={{
           width: "100%", display: "block",
-          filter: "drop-shadow(0 0 50px rgba(139,92,246,0.4)) drop-shadow(0 0 80px rgba(45,212,191,0.2))",
+          filter: "drop-shadow(0 0 40px rgba(139,92,246,0.55)) drop-shadow(0 0 80px rgba(45,212,191,0.25))",
         }}
       />
     </div>
