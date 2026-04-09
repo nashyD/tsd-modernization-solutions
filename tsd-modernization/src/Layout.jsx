@@ -35,7 +35,7 @@ function Nav({ scrolled }) {
         <img
           src="/tsd-ms-logo.svg"
           alt="TSD Modernization Solutions"
-          style={{ height: "56px", width: "auto", display: "block" }}
+          style={{ height: "96px", width: "auto", display: "block" }}
         />
       </Link>
 
@@ -130,7 +130,7 @@ function Footer() {
         <img
           src="/tsd-ms-logo.svg"
           alt="TSD Modernization Solutions"
-          style={{ height: "88px", width: "auto", display: "block" }}
+          style={{ height: "140px", width: "auto", display: "block" }}
         />
       </Link>
 
