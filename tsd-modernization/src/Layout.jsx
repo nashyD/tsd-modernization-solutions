@@ -28,12 +28,15 @@ function Nav({ scrolled }) {
       borderBottom: scrolled ? `1px solid ${C.divider}` : "1px solid transparent",
       transition: "all 0.4s ease",
     }}>
-      <Link to="/" style={{
-        fontSize: "22px", fontWeight: 800, letterSpacing: "-0.5px",
+      <Link to="/" aria-label="TSD Modernization Solutions — Home" style={{
+        display: "flex", alignItems: "center",
         cursor: "pointer", zIndex: 1001, textDecoration: "none",
       }}>
-        <span style={{ background: C.gradient1, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>TSD</span>
-        <span style={{ fontWeight: 400, color: C.textMuted }}> Modernization</span>
+        <img
+          src="/tsd-ms-logo.svg"
+          alt="TSD Modernization Solutions"
+          style={{ height: "56px", width: "auto", display: "block" }}
+        />
       </Link>
 
       {/* Desktop nav */}
@@ -121,12 +124,14 @@ function Footer() {
       color: C.textDim, borderTop: `1px solid ${C.divider}`,
       background: "rgba(0,0,0,0.2)",
     }}>
-      <Link to="/" style={{
-        fontSize: "24px", fontWeight: 800, letterSpacing: "-0.5px", cursor: "pointer",
-        marginBottom: "24px", display: "inline-block", textDecoration: "none",
+      <Link to="/" aria-label="TSD Modernization Solutions — Home" style={{
+        cursor: "pointer", marginBottom: "24px", display: "inline-block", textDecoration: "none",
       }}>
-        <span style={{ background: C.gradient1, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>TSD</span>
-        <span style={{ fontWeight: 400, color: C.textMuted }}> Modernization</span>
+        <img
+          src="/tsd-ms-logo.svg"
+          alt="TSD Modernization Solutions"
+          style={{ height: "88px", width: "auto", display: "block" }}
+        />
       </Link>
 
       <div style={{ display: "flex", justifyContent: "center", gap: "28px", marginBottom: "32px", flexWrap: "wrap" }}>
