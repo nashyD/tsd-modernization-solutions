@@ -31,7 +31,16 @@ export default function App() {
         @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes tsdFloatPulse {
           0%, 100% { transform: translate(-50%, 0) scale(1); opacity: 0.92; }
-          50% { transform: translate(-50%, -10px) scale(1.04); opacity: 1; }
+          50% { transform: translate(-50%, 0) scale(1.08); opacity: 1; }
+        }
+        @keyframes menuPulse {
+          0%, 100% { box-shadow: 0 8px 24px rgba(123,175,212,0.45), 0 0 0 0 rgba(123,175,212,0.55), 0 0 0 1px rgba(255,255,255,0.08); }
+          50% { box-shadow: 0 8px 24px rgba(123,175,212,0.6), 0 0 0 10px rgba(123,175,212,0), 0 0 0 1px rgba(255,255,255,0.08); }
+        }
+        @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes modalScaleIn {
+          from { opacity: 0; transform: scale(0.94) translateY(12px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         /* Mobile responsive */

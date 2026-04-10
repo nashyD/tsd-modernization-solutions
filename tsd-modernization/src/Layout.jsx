@@ -41,21 +41,22 @@ function MenuButton() {
           style={{
             display: "flex", flexDirection: "column", gap: "5px",
             alignItems: "center", justifyContent: "center",
-            background: menuOpen ? `rgba(${C.accentRGB},0.2)` : "rgba(6,10,18,0.78)",
+            background: menuOpen ? `rgba(${C.accentRGB},0.35)` : C.accent,
             backdropFilter: "blur(18px)",
             WebkitBackdropFilter: "blur(18px)",
-            border: `1px solid ${menuOpen ? C.accentLight : C.glassBorder}`,
+            border: `1px solid ${menuOpen ? C.accentLight : C.accentLight}`,
             borderRadius: "12px",
             padding: "14px 18px",
             cursor: "pointer",
             zIndex: 1001,
             transition: "all 0.25s ease",
             boxShadow: menuOpen
-              ? `0 0 0 4px rgba(${C.accentRGB},0.18), 0 8px 30px rgba(0,0,0,0.5)`
-              : "0 8px 24px rgba(0,0,0,0.45)",
+              ? `0 0 0 4px rgba(${C.accentRGB},0.25), 0 8px 30px rgba(0,0,0,0.5)`
+              : `0 8px 24px rgba(${C.accentRGB},0.45), 0 0 0 1px rgba(255,255,255,0.08)`,
+            animation: menuOpen ? "none" : "menuPulse 2.4s ease-in-out infinite",
           }}
-          onMouseEnter={(e) => { if (!menuOpen) e.currentTarget.style.background = `rgba(${C.accentRGB},0.1)`; }}
-          onMouseLeave={(e) => { if (!menuOpen) e.currentTarget.style.background = "rgba(6,10,18,0.78)"; }}
+          onMouseEnter={(e) => { if (!menuOpen) { e.currentTarget.style.background = C.accentLight; e.currentTarget.style.transform = "translateY(-1px)"; } }}
+          onMouseLeave={(e) => { if (!menuOpen) { e.currentTarget.style.background = C.accent; e.currentTarget.style.transform = "translateY(0)"; } }}
         >
           <div style={{
             width: "24px", height: "2px", background: C.text,
