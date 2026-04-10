@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 
 // ─── Design System ─────────────────────────────────────────────────────────
 // Two palettes are defined below. To swap themes, change the single
@@ -257,7 +258,7 @@ export function CardModal({ open, onClose, children }) {
 
   if (!open) return null;
 
-  return (
+  return createPortal(
     <div
       onClick={onClose}
       style={{
@@ -305,7 +306,8 @@ export function CardModal({ open, onClose, children }) {
         >&times;</button>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
