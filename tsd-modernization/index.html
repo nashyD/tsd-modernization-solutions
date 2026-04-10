@@ -32,6 +32,22 @@
     <meta name="twitter:title" content="TSD Modernization Solutions — AI, Websites & Automation for Charlotte Small Business" />
     <meta name="twitter:description" content="Affordable AI integration, custom website creation, and workflow automation for small businesses in the Charlotte metro area." />
     <meta name="twitter:image" content="https://tsd-ventures.com/og-image.png" />
+
+    <!-- Apply saved theme before paint to avoid a flash -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("tsd-theme");
+          if (t === "light" || t === "dark") {
+            document.documentElement.dataset.theme = t;
+          } else {
+            document.documentElement.dataset.theme = "dark";
+          }
+        } catch (e) {
+          document.documentElement.dataset.theme = "dark";
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

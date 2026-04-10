@@ -89,12 +89,12 @@ export default function Team() {
       school: "UNC Chapel Hill",
       bio: "AI and technology strategy. Leads technical delivery, client engagement, and custom solution architecture.",
       image: "/nash-davis.png",
-      fullBio: "[Placeholder] Nash leads TSD's technical vision and oversees every modernization project from kickoff to handoff. With deep expertise in AI integration, custom development, and solution architecture, he turns vague business problems into shipped, working software. Studying at UNC Chapel Hill.",
+      fullBio: "Nash leads TSD's technical development and oversees every modernization project from kickoff to handoff. With expertise in AI integration, custom development, and business architecture, he turns dated business problems into modern, flowing software. While currently a freshman, he is guaranteed admission to UNC Chapel Hill's Kenan Flagler Business School, where he intends to acquire his Bachelor's in Business Administration, concentrating on Entrepreneurship and Finance.",
       specialties: ["AI Integration", "Solution Architecture", "Client Strategy", "Technical Delivery"],
       email: "nash@tsd-ventures.com",
       socials: [
-        { label: "LinkedIn", handle: "[Placeholder] linkedin.com/in/nashdavis", url: "#" },
-        { label: "GitHub", handle: "[Placeholder] github.com/nashyD", url: "#" },
+        { label: "LinkedIn", handle: "linkedin.com/in/nashdavis", url: "https://www.linkedin.com/in/nashdavis" },
+        { label: "Instagram", handle: "@nashyd694", url: "https://www.instagram.com/nashyd694/" },
       ],
     },
     {
@@ -102,11 +102,12 @@ export default function Team() {
       school: "UNC Wilmington",
       bio: "Operations and process management. Oversees project tracking, proposals, invoicing, and handoff documentation.",
       image: "/bishop-switzer.jpg",
-      fullBio: "[Placeholder] Bishop keeps every TSD engagement on rails. From scoping and proposals to invoicing and documentation, he makes sure clients always know exactly where their project stands and what comes next. Studying at UNC Wilmington.",
+      fullBio: "As Chief Operations Officer, Bishop keeps every TSD engagement on track and on time. From scoping and proposals to invoicing and documentation, he makes sure clients always know exactly where their project stands and what comes next. Bishop is also the CEO of TSD Mobile Detailing, and has several years of experience in the field. He is intending on acquiring his Bachelor's in Business Administration from UNC Wilmington's Cameron School of Business.",
       specialties: ["Project Management", "Operations", "Process Design", "Client Communication"],
       email: "bishop@tsd-ventures.com",
       socials: [
-        { label: "LinkedIn", handle: "[Placeholder] linkedin.com/in/bishopswitzer", url: "#" },
+        { label: "LinkedIn", handle: "linkedin.com/in/bishopswitzer", url: "https://www.linkedin.com/in/bishopswitzer" },
+        { label: "Instagram", handle: "@bilshup", url: "https://www.instagram.com/bilshup/" },
       ],
     },
     {
@@ -114,11 +115,12 @@ export default function Team() {
       school: "UNC Charlotte",
       bio: "Financial planning and client acquisition. Drives sales pipeline, pricing strategy, and relationship development.",
       image: "/grant-tadlock.jpg",
-      fullBio: "[Placeholder] Grant runs TSD's sales pipeline and financial planning. He's the first person most clients meet, and the one who builds long-term relationships that turn one project into ongoing partnerships. Studying at UNC Charlotte.",
+      fullBio: "As Chief Financial Officer and Sales Lead, Grant runs TSD's sales pipeline and financial planning. He's the first person most clients meet, and the one who builds long-term relationships that turn one project into ongoing partnerships. Grant is currently studying Business Marketing at UNC Charlotte's Belk College of Business.",
       specialties: ["Sales", "Pricing Strategy", "Financial Planning", "Client Relationships"],
       email: "grant@tsd-ventures.com",
       socials: [
-        { label: "LinkedIn", handle: "[Placeholder] linkedin.com/in/granttadlock", url: "#" },
+        { label: "LinkedIn", handle: "linkedin.com/in/granttadlock", url: "https://www.linkedin.com/in/granttadlock" },
+        { label: "Instagram", handle: "@grant_tadlock", url: "https://www.instagram.com/grant_tadlock/" },
       ],
     },
   ];

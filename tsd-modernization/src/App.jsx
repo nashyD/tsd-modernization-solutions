@@ -17,8 +17,8 @@ export default function App() {
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
-        body { overflow-x: hidden; background: ${C.bg}; }
-        ::placeholder { color: rgba(255,255,255,0.35); }
+        body { overflow-x: hidden; background: ${C.bg}; color: ${C.text}; transition: background 0.3s ease, color 0.3s ease; }
+        ::placeholder { color: var(--c-placeholder); }
         @keyframes orbFloat1 { 0%,100% { transform: translate(0,0); } 33% { transform: translate(-30px,20px); } 66% { transform: translate(20px,-15px); } }
         @keyframes orbFloat2 { 0%,100% { transform: translate(0,0); } 33% { transform: translate(25px,-20px); } 66% { transform: translate(-15px,25px); } }
         @keyframes orbFloat3 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-20px,-20px); } }
@@ -34,8 +34,8 @@ export default function App() {
           50% { transform: translate(-50%, 0) scale(1.08); opacity: 1; }
         }
         @keyframes menuPulse {
-          0%, 100% { box-shadow: 0 8px 24px rgba(123,175,212,0.45), 0 0 0 0 rgba(123,175,212,0.55), 0 0 0 1px rgba(255,255,255,0.08); }
-          50% { box-shadow: 0 8px 24px rgba(123,175,212,0.6), 0 0 0 10px rgba(123,175,212,0), 0 0 0 1px rgba(255,255,255,0.08); }
+          0%, 100% { box-shadow: 0 8px 24px rgba(var(--c-accent-rgb),0.45), 0 0 0 0 rgba(var(--c-accent-rgb),0.55), 0 0 0 1px rgba(255,255,255,0.08); }
+          50% { box-shadow: 0 8px 24px rgba(var(--c-accent-rgb),0.6), 0 0 0 10px rgba(var(--c-accent-rgb),0), 0 0 0 1px rgba(255,255,255,0.08); }
         }
         @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes modalScaleIn {

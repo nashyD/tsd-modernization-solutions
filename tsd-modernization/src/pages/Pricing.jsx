@@ -112,10 +112,6 @@ function PricingTier({ t, i }) {
           onMouseLeave={(e) => (e.currentTarget.style.transform = "translateY(0)")}
         >{t.btn}</RippleButton>
       </Link>
-      <div style={{
-        marginTop: "16px", fontSize: "12px", fontWeight: 600, color: C.accentLight,
-        opacity: hover ? 1 : 0.6, transition: "opacity 0.3s ease",
-      }}>Click card for full details &rarr;</div>
     </div>
     <CardModal open={open} onClose={() => setOpen(false)}>
       <PricingModalContent t={t} />
