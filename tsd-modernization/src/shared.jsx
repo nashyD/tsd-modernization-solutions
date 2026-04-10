@@ -183,8 +183,9 @@ export function GradientOrbs() {
 }
 
 // ─── Glass Card (reusable with tilt) ──────────────────────────────────────
-export function GlassCard({ children, style, hoverGlow, delay = 0, enableTilt = false, ...props }) {
+export function GlassCard({ children, style, hoverGlow, delay = 0, enableTilt = false, expandable = false, expandedContent = null, ...props }) {
   const [hover, setHover] = useState(false);
+  const [open, setOpen] = useState(false);
   const [ref, fadeStyle] = useFadeIn(delay);
   const tilt = useTilt();
   const cardRef = useCallback((node) => {
@@ -192,24 +193,118 @@ export function GlassCard({ children, style, hoverGlow, delay = 0, enableTilt = 
     tilt.ref.current = node;
   }, [ref, tilt.ref]);
 
+  const isClickable = expandable && expandedContent;
+
   return (
-    <div ref={cardRef} style={{
-      background: C.glass,
-      border: `1px solid ${hover ? "rgba(255,255,255,0.12)" : C.glassBorder}`,
-      borderRadius: "24px", padding: "40px",
-      backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
-      transition: "border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease",
-      boxShadow: hover && hoverGlow ? `0 8px 40px ${hoverGlow}` : "0 4px 20px rgba(0,0,0,0.2)",
-      cursor: "default",
-      ...fadeStyle,
-      ...style,
-    }}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={(e) => { setHover(false); if (enableTilt) tilt.onMouseLeave(e); }}
-      onMouseMove={enableTilt ? tilt.onMouseMove : undefined}
-      {...props}
+    <>
+      <div ref={cardRef} style={{
+        background: C.glass,
+        border: `1px solid ${hover ? `rgba(${C.accentRGB},0.35)` : C.glassBorder}`,
+        borderRadius: "24px", padding: "40px",
+        backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+        transition: "border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease, background 0.3s ease",
+        boxShadow: hover && hoverGlow ? `0 8px 40px ${hoverGlow}` : "0 4px 20px rgba(0,0,0,0.2)",
+        cursor: isClickable ? "pointer" : "default",
+        position: "relative",
+        ...fadeStyle,
+        ...style,
+      }}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={(e) => { setHover(false); if (enableTilt) tilt.onMouseLeave(e); }}
+        onMouseMove={enableTilt ? tilt.onMouseMove : undefined}
+        onClick={isClickable ? () => setOpen(true) : undefined}
+        role={isClickable ? "button" : undefined}
+        tabIndex={isClickable ? 0 : undefined}
+        onKeyDown={isClickable ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setOpen(true); } } : undefined}
+        {...props}
+      >
+        {children}
+        {isClickable && (
+          <div style={{
+            position: "absolute", bottom: "16px", right: "20px",
+            fontSize: "12px", fontWeight: 600, color: C.accentLight,
+            opacity: hover ? 1 : 0.55, transition: "opacity 0.3s ease",
+            display: "flex", alignItems: "center", gap: "6px",
+            pointerEvents: "none",
+          }}>
+            <span>Click to expand</span>
+            <span style={{ fontSize: "16px", transform: hover ? "translateX(2px)" : "none", transition: "transform 0.2s ease" }}>&rarr;</span>
+          </div>
+        )}
+      </div>
+      {isClickable && (
+        <CardModal open={open} onClose={() => setOpen(false)}>
+          {expandedContent}
+        </CardModal>
+      )}
+    </>
+  );
+}
+
+// ─── Card Modal (lightbox overlay for expanded card content) ──────────────
+export function CardModal({ open, onClose, children }) {
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed", inset: 0, zIndex: 2000,
+        background: "rgba(4,8,16,0.72)",
+        backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: "40px 24px",
+        animation: "modalFadeIn 0.25s ease-out",
+        overflowY: "auto",
+      }}
+      role="dialog"
+      aria-modal="true"
     >
-      {children}
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          position: "relative",
+          maxWidth: "720px", width: "100%",
+          maxHeight: "calc(100vh - 80px)",
+          overflowY: "auto",
+          background: `linear-gradient(155deg, rgba(${C.navyRGB},0.92), rgba(10,14,24,0.96))`,
+          border: `1px solid rgba(${C.accentRGB},0.35)`,
+          borderRadius: "28px",
+          padding: "48px 48px 40px",
+          boxShadow: `0 30px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(${C.accentRGB},0.15), 0 0 80px rgba(${C.accentRGB},0.18)`,
+          animation: "modalScaleIn 0.32s cubic-bezier(0.16,1,0.3,1)",
+          color: C.text,
+        }}
+      >
+        <button
+          onClick={onClose}
+          aria-label="Close"
+          style={{
+            position: "absolute", top: "16px", right: "16px",
+            width: "40px", height: "40px", borderRadius: "12px",
+            background: "rgba(255,255,255,0.06)",
+            border: `1px solid ${C.glassBorder}`,
+            color: C.text, fontSize: "20px", lineHeight: 1,
+            cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+            transition: "background 0.2s ease, border-color 0.2s ease",
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = `rgba(${C.accentRGB},0.2)`; e.currentTarget.style.borderColor = C.accentLight; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.borderColor = C.glassBorder; }}
+        >&times;</button>
+        {children}
+      </div>
     </div>
   );
 }
