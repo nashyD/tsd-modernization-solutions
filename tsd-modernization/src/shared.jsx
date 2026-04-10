@@ -40,6 +40,10 @@ const PALETTE_DARK = {
   "--c-grid-line": "rgba(255,255,255,0.03)",
   "--c-placeholder": "rgba(255,255,255,0.35)",
   "--c-menu-panel": "rgba(6,10,18,0.96)",
+  "--c-modal-bg": "linear-gradient(155deg, rgba(19,41,75,0.92), rgba(10,14,24,0.96))",
+  "--c-modal-border": "rgba(123,175,212,0.35)",
+  "--c-modal-btn-bg": "rgba(255,255,255,0.06)",
+  "--c-modal-btn-hover": "rgba(123,175,212,0.2)",
 };
 
 // Carolina Blue light theme.
@@ -73,6 +77,10 @@ const PALETTE_LIGHT = {
   "--c-grid-line": "rgba(19,41,75,0.05)",
   "--c-placeholder": "rgba(10,15,26,0.38)",
   "--c-menu-panel": "rgba(247,250,252,0.96)",
+  "--c-modal-bg": "linear-gradient(155deg, rgba(255,255,255,0.99), rgba(241,245,249,0.99))",
+  "--c-modal-border": "rgba(44,125,160,0.4)",
+  "--c-modal-btn-bg": "rgba(19,41,75,0.06)",
+  "--c-modal-btn-hover": "rgba(44,125,160,0.18)",
 };
 
 // Inject the CSS variables exactly once.
@@ -352,11 +360,11 @@ export function CardModal({ open, onClose, children }) {
           maxWidth: "720px", width: "100%",
           maxHeight: "calc(100vh - 80px)",
           overflowY: "auto",
-          background: `linear-gradient(155deg, rgba(${C.navyRGB},0.92), rgba(10,14,24,0.96))`,
-          border: `1px solid rgba(${C.accentRGB},0.35)`,
+          background: "var(--c-modal-bg)",
+          border: `1px solid var(--c-modal-border)`,
           borderRadius: "28px",
           padding: "48px 48px 40px",
-          boxShadow: `0 30px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(${C.accentRGB},0.15), 0 0 80px rgba(${C.accentRGB},0.18)`,
+          boxShadow: `0 30px 100px rgba(0,0,0,0.45), 0 0 0 1px rgba(${C.accentRGB},0.15), 0 0 80px rgba(${C.accentRGB},0.18)`,
           animation: "modalScaleIn 0.32s cubic-bezier(0.16,1,0.3,1)",
           color: C.text,
         }}
@@ -367,14 +375,14 @@ export function CardModal({ open, onClose, children }) {
           style={{
             position: "absolute", top: "16px", right: "16px",
             width: "40px", height: "40px", borderRadius: "12px",
-            background: "rgba(255,255,255,0.06)",
+            background: "var(--c-modal-btn-bg)",
             border: `1px solid ${C.glassBorder}`,
             color: C.text, fontSize: "20px", lineHeight: 1,
             cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
             transition: "background 0.2s ease, border-color 0.2s ease",
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = `rgba(${C.accentRGB},0.2)`; e.currentTarget.style.borderColor = C.accentLight; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.borderColor = C.glassBorder; }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = "var(--c-modal-btn-hover)"; e.currentTarget.style.borderColor = C.accentLight; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = "var(--c-modal-btn-bg)"; e.currentTarget.style.borderColor = C.glassBorder; }}
         >&times;</button>
         {children}
       </div>
