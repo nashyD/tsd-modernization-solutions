@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
-import { C } from "./shared";
+import { C, useTheme, toggleTheme } from "./shared";
 
 const NAV_LINKS = [
   { label: "Home", to: "/" },
@@ -15,6 +15,7 @@ const NAV_LINKS = [
 function MenuButton() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
+  const theme = useTheme();
 
   // Close menu on route change
   useEffect(() => { setMenuOpen(false); }, [location.pathname]);
@@ -41,21 +42,22 @@ function MenuButton() {
           style={{
             display: "flex", flexDirection: "column", gap: "5px",
             alignItems: "center", justifyContent: "center",
-            background: menuOpen ? `rgba(${C.accentRGB},0.2)` : "rgba(6,10,18,0.78)",
+            background: menuOpen ? `rgba(${C.accentRGB},0.35)` : C.accent,
             backdropFilter: "blur(18px)",
             WebkitBackdropFilter: "blur(18px)",
-            border: `1px solid ${menuOpen ? C.accentLight : C.glassBorder}`,
+            border: `1px solid ${menuOpen ? C.accentLight : C.accentLight}`,
             borderRadius: "12px",
             padding: "14px 18px",
             cursor: "pointer",
             zIndex: 1001,
             transition: "all 0.25s ease",
             boxShadow: menuOpen
-              ? `0 0 0 4px rgba(${C.accentRGB},0.18), 0 8px 30px rgba(0,0,0,0.5)`
-              : "0 8px 24px rgba(0,0,0,0.45)",
+              ? `0 0 0 4px rgba(${C.accentRGB},0.25), 0 8px 30px rgba(0,0,0,0.5)`
+              : `0 8px 24px rgba(${C.accentRGB},0.45), 0 0 0 1px rgba(255,255,255,0.08)`,
+            animation: menuOpen ? "none" : "menuPulse 2.4s ease-in-out infinite",
           }}
-          onMouseEnter={(e) => { if (!menuOpen) e.currentTarget.style.background = `rgba(${C.accentRGB},0.1)`; }}
-          onMouseLeave={(e) => { if (!menuOpen) e.currentTarget.style.background = "rgba(6,10,18,0.78)"; }}
+          onMouseEnter={(e) => { if (!menuOpen) { e.currentTarget.style.background = C.accentLight; e.currentTarget.style.transform = "translateY(-1px)"; } }}
+          onMouseLeave={(e) => { if (!menuOpen) { e.currentTarget.style.background = C.accent; e.currentTarget.style.transform = "translateY(0)"; } }}
         >
           <div style={{
             width: "24px", height: "2px", background: C.text,
@@ -80,14 +82,14 @@ function MenuButton() {
           top: "calc(100% + 14px)",
           right: 0,
           minWidth: "240px",
-          background: "rgba(6,10,18,0.96)",
+          background: "var(--c-menu-panel)",
           backdropFilter: "blur(24px)",
           WebkitBackdropFilter: "blur(24px)",
           border: `1px solid ${C.divider}`,
           borderRadius: "16px",
           padding: "12px",
           display: "flex", flexDirection: "column", gap: "2px",
-          boxShadow: "0 20px 60px rgba(0,0,0,0.6)",
+          boxShadow: "0 20px 60px rgba(0,0,0,0.45)",
           opacity: menuOpen ? 1 : 0,
           transform: menuOpen ? "translateY(0)" : "translateY(-8px)",
           pointerEvents: menuOpen ? "auto" : "none",
@@ -109,7 +111,7 @@ function MenuButton() {
               })}
               onMouseEnter={(e) => {
                 if (e.currentTarget.getAttribute("aria-current") !== "page") {
-                  e.currentTarget.style.background = "rgba(255,255,255,0.05)";
+                  e.currentTarget.style.background = `rgba(${C.accentRGB},0.08)`;
                   e.currentTarget.style.color = C.text;
                 }
               }}
@@ -121,6 +123,56 @@ function MenuButton() {
             >{item.label}</NavLink>
           ))}
           <div style={{ height: "1px", background: C.divider, margin: "8px 4px" }} />
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+            style={{
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+              padding: "12px 16px", borderRadius: "10px",
+              background: "transparent",
+              border: `1px solid ${C.glassBorder}`,
+              color: C.text,
+              fontSize: "14px", fontWeight: 500,
+              cursor: "pointer",
+              transition: "background 0.2s ease, border-color 0.2s ease",
+              margin: "0 0 4px",
+              width: "100%",
+              textAlign: "left",
+              fontFamily: "inherit",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = `rgba(${C.accentRGB},0.1)`;
+              e.currentTarget.style.borderColor = C.accentLight;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.borderColor = C.glassBorder;
+            }}
+          >
+            <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <span aria-hidden="true" style={{ fontSize: "16px", lineHeight: 1 }}>
+                {theme === "dark" ? "\u2600" : "\u263D"}
+              </span>
+              <span>{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>
+            </span>
+            <span aria-hidden="true" style={{
+              position: "relative",
+              width: "34px", height: "20px", borderRadius: "20px",
+              background: theme === "dark" ? `rgba(${C.accentRGB},0.25)` : C.accent,
+              transition: "background 0.25s ease",
+              flexShrink: 0,
+            }}>
+              <span style={{
+                position: "absolute", top: "2px",
+                left: theme === "dark" ? "2px" : "16px",
+                width: "16px", height: "16px", borderRadius: "50%",
+                background: "#fff",
+                boxShadow: "0 1px 4px rgba(0,0,0,0.35)",
+                transition: "left 0.25s ease",
+              }} />
+            </span>
+          </button>
           <Link to="/contact" style={{ textDecoration: "none" }}>
             <div style={{
               padding: "13px 16px", borderRadius: "10px",
@@ -139,6 +191,8 @@ function MenuButton() {
 }
 
 function FloatingLogo() {
+  const theme = useTheme();
+  const src = theme === "light" ? C.logoSrcLight : C.logoSrc;
   return (
     <div
       aria-hidden="true"
@@ -154,7 +208,7 @@ function FloatingLogo() {
       }}
     >
       <img
-        src={C.logoSrc}
+        src={src}
         alt=""
         style={{
           width: "100%", display: "block",
@@ -166,18 +220,20 @@ function FloatingLogo() {
 }
 
 function Footer() {
+  const theme = useTheme();
+  const src = theme === "light" ? C.logoSrcLight : C.logoSrc;
   return (
     <footer style={{
       padding: "64px 48px 40px", textAlign: "center", fontSize: "14px",
       color: C.textDim, borderTop: `1px solid ${C.divider}`,
-      background: "rgba(0,0,0,0.2)",
+      background: theme === "light" ? "rgba(19,41,75,0.04)" : "rgba(0,0,0,0.2)",
       position: "relative", zIndex: 2,
     }}>
       <Link to="/" aria-label="TSD Modernization Solutions — Home" style={{
         cursor: "pointer", marginBottom: "24px", display: "inline-block", textDecoration: "none",
       }}>
         <img
-          src={C.logoSrc}
+          src={src}
           alt="TSD Modernization Solutions"
           style={{ height: "140px", width: "auto", display: "block" }}
         />

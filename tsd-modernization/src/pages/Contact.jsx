@@ -60,9 +60,10 @@ function FAQSection() {
 }
 
 function ContactForm() {
-  const [formData, setFormData] = useState({ name: "", email: "", business: "", message: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", business: "", message: "", botcheck: "" });
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
   const [ref, fadeStyle] = useFadeIn(0);
 
   const inputStyle = {
@@ -79,25 +80,32 @@ function ContactForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSending(true);
+    setError("");
     try {
-      const res = await fetch("https://formspree.io/f/xpwzgkvq", {
+      const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
+          access_key: "324d5bf7-1ecb-4da6-9e04-6626f782b082",
+          subject: `New tech audit request from ${formData.name || "website visitor"}`,
+          from_name: "TSD Modernization Solutions Website",
+          replyto: formData.email,
           name: formData.name,
           email: formData.email,
-          business: formData.business,
-          message: formData.message,
+          business: formData.business || "(not provided)",
+          message: formData.message || "(no message)",
+          botcheck: formData.botcheck,
         }),
       });
-      if (res.ok) {
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) {
         setSubmitted(true);
-        setFormData({ name: "", email: "", business: "", message: "" });
+        setFormData({ name: "", email: "", business: "", message: "", botcheck: "" });
       } else {
-        alert("Something went wrong. Please try again or email us directly.");
+        setError(data.message || "Something went wrong. Please try again or email us directly at nashdavis@tsd-ventures.com.");
       }
     } catch {
-      alert("Network error. Please check your connection and try again.");
+      setError("Network error. Please check your connection and try again.");
     }
     setSending(false);
   };
@@ -142,6 +150,16 @@ function ContactForm() {
         ) : (
           <form style={{ maxWidth: "560px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "16px" }}
             onSubmit={handleSubmit}>
+            <input
+              type="text"
+              name="botcheck"
+              value={formData.botcheck}
+              onChange={(e) => setFormData({ ...formData, botcheck: e.target.value })}
+              style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px", opacity: 0 }}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+            />
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
               <input style={inputStyle} type="text" placeholder="Your name" required value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })} {...focusHandlers} />
@@ -154,6 +172,13 @@ function ContactForm() {
               placeholder="Tell us about your business and what you're looking to modernize..."
               value={formData.message}
               onChange={(e) => setFormData({ ...formData, message: e.target.value })} {...focusHandlers} />
+            {error && (
+              <div style={{
+                padding: "14px 18px", borderRadius: "12px",
+                background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.35)",
+                color: "#fca5a5", fontSize: "14px", textAlign: "left", lineHeight: 1.5,
+              }}>{error}</div>
+            )}
             <RippleButton type="submit" style={{
               padding: "18px 44px", borderRadius: "16px", background: C.gradient1,
               color: "#fff", fontSize: "16px", fontWeight: 700, border: "none", cursor: "pointer",
