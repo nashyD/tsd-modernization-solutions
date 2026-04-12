@@ -15,7 +15,7 @@
   </defs>
 
   <!-- Dark rounded backdrop so the icon reads on light and dark browser chrome -->
-  <rect width="64" height="64" rx="12" fill="#05080f"/>
+  <rect width="64" height="64" fill="#05080f"/>
 
   <!-- Three parallelogram "prisms", overlapping, mirroring the hero logo -->
   <path d="M9 18 L31 18 L25 46 L3 46 Z" fill="url(#p1)"/>
