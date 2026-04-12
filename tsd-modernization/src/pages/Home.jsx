@@ -1,10 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { C, useCountUp, GridBg, GradientOrbs, RippleButton } from "../shared";
-import {
-  BoltIcon, CheckIcon, ClockIcon, TagIcon,
-  BuildingIcon, SparklesIcon,
-} from "../icons";
+import { C, GridBg, GradientOrbs, RippleButton } from "../shared";
+import { BoltIcon, CheckIcon, TagIcon } from "../icons";
 
 function FloatingCards() {
   const cardBase = {
@@ -97,7 +94,7 @@ export default function Home() {
       }}>
         <GridBg />
         <GradientOrbs />
-        <FloatingCards />
+        {/* floating stat cards removed — company launches summer 2026 */}
 
         <div style={{ position: "relative", zIndex: 2, maxWidth: "780px", textAlign: "center" }}>
           <div style={{
@@ -109,24 +106,24 @@ export default function Home() {
             marginBottom: "36px",
           }}>
             <span style={{ display: "inline-flex", alignItems: "center" }}><BoltIcon size={14} /></span>
-            Charlotte's Small Business Modernization Partner
+            Charlotte, NC &mdash; Summer 2026
           </div>
 
           <h1 style={{
             ...fadeUp(150), fontSize: "clamp(42px, 6.5vw, 78px)", fontWeight: 800,
             lineHeight: 1.05, letterSpacing: "-2.5px", color: C.text, marginBottom: "28px",
           }}>
-            Bring Your Business<br />
-            <span style={{ background: C.gradientHero, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Into the Future</span>
+            AI, websites, and<br />
+            <span style={{ background: C.gradientHero, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>automation for less</span>
           </h1>
 
           <p style={{
             ...fadeUp(300), fontSize: "clamp(16px, 2vw, 20px)", lineHeight: 1.65,
             color: C.textMuted, maxWidth: "560px", margin: "0 auto 48px",
           }}>
-            AI integration, custom websites, and workflow automation built
-            for small businesses in the Charlotte metro area. Real results,
-            transparent pricing, no corporate fluff.
+            We set up AI tools, build websites, and automate workflows
+            for small businesses around Charlotte &mdash; at prices 3&ndash;5x
+            below what agencies charge. Fixed quotes, no surprises.
           </p>
 
           <div style={{ ...fadeUp(450), display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
@@ -139,7 +136,7 @@ export default function Home() {
               }}
                 onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `0 0 50px ${C.accentGlow}, 0 12px 40px rgba(0,0,0,0.35)`; }}
                 onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = `0 0 30px ${C.accentGlow}, 0 8px 32px rgba(0,0,0,0.3)`; }}
-              >Book a Free Tech Audit &rarr;</RippleButton>
+              >Get a Free Quote &rarr;</RippleButton>
             </Link>
             <Link to="/services" style={{ textDecoration: "none" }}>
               <button style={{
@@ -151,7 +148,7 @@ export default function Home() {
               }}
                 onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.background = C.glassHover; }}
                 onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.background = C.glass; }}
-              >Explore Services</button>
+              >See What We Do</button>
             </Link>
           </div>
 
@@ -192,15 +189,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats */}
+      {/* Quick facts */}
       <div style={{
-        display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-        gap: "20px", padding: "60px 48px", maxWidth: "1200px", margin: "0 auto",
+        padding: "60px 48px", maxWidth: "800px", margin: "0 auto",
+        textAlign: "center",
       }}>
-        <StatCard refProp={r1} val={`${s1.toLocaleString()}+`} label="Small Businesses in Charlotte" icon={<BuildingIcon size={32} />} />
-        <StatCard refProp={r2} val={`<${s2}%`} label="Have Integrated AI into Core Workflows" icon={<SparklesIcon size={32} />} />
-        <StatCard refProp={r3} val={`${s3}hr`} label="Proposal Turnaround" icon={<BoltIcon size={32} />} />
-        <StatCard refProp={r4} val="2-4 wk" label="Typical Project Time" icon={<ClockIcon size={32} />} />
+        <p style={{ fontSize: "15px", lineHeight: 1.7, color: C.textMuted }}>
+          TSD Modernization Solutions is a division of TSD Ventures &mdash; three
+          college students from the Charlotte area running two businesses over
+          the summer of 2026. We keep overhead low so you get agency-quality
+          work at a fraction of the price.
+        </p>
       </div>
     </>
   );

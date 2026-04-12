@@ -12,8 +12,8 @@ export default function WhyUs() {
   return (
     <PageShell>
       <div style={{ padding: "40px 48px", maxWidth: "1200px", margin: "0 auto", position: "relative" }}>
-        <SectionHeader center label="Why Us" title="How We" titleAccent="Compare"
-          sub="We combine agency quality with startup speed and founder-level attention — at a fraction of the cost." />
+        <SectionHeader center label="Why Us" title="How we" titleAccent="stack up"
+          sub="We're cheaper and faster than agencies. Here's the honest comparison." />
         <div ref={ref} style={{ ...fadeStyle, overflowX: "auto" }}>
           <table style={{
             width: "100%", borderCollapse: "separate", borderSpacing: "0 8px",

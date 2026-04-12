@@ -16,8 +16,8 @@ function FAQSection() {
   const [ref, fadeStyle] = useFadeIn(0);
   return (
     <div style={{ padding: "80px 48px 40px", maxWidth: "800px", margin: "0 auto" }}>
-      <SectionHeader center label="FAQ" title="Common" titleAccent="Questions"
-        sub="Everything you need to know about working with TSD Modernization Solutions." />
+      <SectionHeader center label="FAQ" title="Common" titleAccent="questions"
+        sub="The stuff people usually ask before getting started." />
       <div ref={ref} style={{ ...fadeStyle, display: "flex", flexDirection: "column", gap: "12px" }}>
         {faqs.map((faq, i) => {
           const isOpen = openIndex === i;
@@ -132,10 +132,10 @@ function ContactForm() {
           textTransform: "uppercase", letterSpacing: "1.5px", marginBottom: "16px",
         }}>&#9670; Let's Talk</div>
         <h2 style={{ fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 800, letterSpacing: "-1px", marginBottom: "16px", color: C.text }}>
-          Ready to Modernize Your Business?
+          Let&rsquo;s talk about your project
         </h2>
         <p style={{ fontSize: "18px", lineHeight: 1.6, color: C.textMuted, maxWidth: "500px", margin: "0 auto 40px" }}>
-          Start with a free, no-obligation tech audit. We'll map your current operations and show you exactly where AI and automation can help.
+          Tell us what you need and we&rsquo;ll get back to you with a quote &mdash; usually within a day or two.
         </p>
 
         {submitted ? (
@@ -188,7 +188,7 @@ function ContactForm() {
               disabled={sending}
               onMouseEnter={(e) => { if (!sending) { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `0 12px 35px ${C.accentGlowStrong}`; } }}
               onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = `0 8px 25px ${C.accentGlow}`; }}
-            >{sending ? "Sending..." : "Book My Free Tech Audit \u2192"}</RippleButton>
+            >{sending ? "Sending..." : "Send Message \u2192"}</RippleButton>
           </form>
         )}
       </div>

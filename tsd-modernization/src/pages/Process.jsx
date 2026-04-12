@@ -131,8 +131,8 @@ export default function Process() {
   return (
     <PageShell>
       <div style={{ padding: "40px 48px", maxWidth: "1200px", margin: "0 auto", position: "relative" }}>
-        <SectionHeader center label="How It Works" title="From Discovery to" titleAccent="Launch"
-          sub="Our streamlined 4-phase process gets you from first conversation to fully operational — fast." />
+        <SectionHeader center label="How It Works" title="Four steps," titleAccent="start to finish"
+          sub="No mystery. Here's what happens after you reach out." />
 
         <div style={{ position: "relative" }}>
           {/* Gradient connector line behind the row (desktop only) */}

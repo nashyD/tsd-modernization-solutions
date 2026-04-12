@@ -87,9 +87,9 @@ export default function Team() {
     {
       initials: "ND", name: "Nash Davis", role: "CEO & Head of Modernization",
       school: "UNC Chapel Hill",
-      bio: "AI and technology strategy. Leads technical delivery, client engagement, and custom solution architecture.",
+      bio: "Runs the tech side \u2014 scopes projects, builds the software, makes sure clients understand what they\u2019re getting.",
       image: "/nash-davis.png",
-      fullBio: "Nash leads TSD's technical development and oversees every modernization project from kickoff to handoff. With expertise in AI integration, custom development, and business architecture, he turns dated business problems into modern, flowing software. While currently a freshman, he is guaranteed admission to UNC Chapel Hill's Kenan Flagler Business School, where he intends to acquire his Bachelor's in Business Administration, concentrating on Entrepreneurship and Finance.",
+      fullBio: "Nash runs the tech consulting side of TSD \u2014 scoping projects, building the software, and making sure clients actually understand what they\u2019re getting. He\u2019s a freshman at UNC Chapel Hill with guaranteed admission to Kenan-Flagler, where he\u2019ll study Entrepreneurship and Finance.",
       specialties: ["AI Integration", "Solution Architecture", "Client Strategy", "Technical Delivery"],
       email: "nash@tsd-ventures.com",
       socials: [
@@ -100,9 +100,9 @@ export default function Team() {
     {
       initials: "BS", name: "Bishop Switzer", role: "COO — Operations",
       school: "UNC Wilmington",
-      bio: "Operations and process management. Oversees project tracking, proposals, invoicing, and handoff documentation.",
+      bio: "Keeps the trains running \u2014 schedules, invoices, client updates, all of it.",
       image: "/bishop-switzer.jpg",
-      fullBio: "As Chief Operations Officer, Bishop keeps every TSD engagement on track and on time. From scoping and proposals to invoicing and documentation, he makes sure clients always know exactly where their project stands and what comes next. Bishop is also the CEO of TSD Mobile Detailing, and has several years of experience in the field. He is intending on acquiring his Bachelor's in Business Administration from UNC Wilmington's Cameron School of Business.",
+      fullBio: "Bishop keeps the trains running \u2014 schedules, invoices, client updates, all of it. He also heads up the detailing side of TSD Ventures, which he\u2019s been doing independently for a few years already. Studying Business Administration at UNC Wilmington\u2019s Cameron School of Business.",
       specialties: ["Project Management", "Operations", "Process Design", "Client Communication"],
       email: "bishop@tsd-ventures.com",
       socials: [
@@ -113,9 +113,9 @@ export default function Team() {
     {
       initials: "GT", name: "Grant Tadlock", role: "CFO & Sales Lead",
       school: "UNC Charlotte",
-      bio: "Financial planning and client acquisition. Drives sales pipeline, pricing strategy, and relationship development.",
+      bio: "Usually the first person you\u2019ll talk to. Handles sales, pricing, and the money side.",
       image: "/grant-tadlock.jpg",
-      fullBio: "As Chief Financial Officer and Sales Lead, Grant runs TSD's sales pipeline and financial planning. He's the first person most clients meet, and the one who builds long-term relationships that turn one project into ongoing partnerships. Grant is currently studying Business Marketing at UNC Charlotte's Belk College of Business.",
+      fullBio: "Grant is usually the first person you\u2019ll talk to. He handles sales, pricing, and the money side of things. If you\u2019ve gotten a quote from us, it probably came from him. Studying Business Marketing at UNC Charlotte\u2019s Belk College of Business.",
       specialties: ["Sales", "Pricing Strategy", "Financial Planning", "Client Relationships"],
       email: "grant@tsd-ventures.com",
       socials: [
@@ -127,8 +127,8 @@ export default function Team() {
   return (
     <PageShell>
       <div style={{ padding: "40px 48px", maxWidth: "1200px", margin: "0 auto" }}>
-        <SectionHeader center label="Meet the Team" title="Built by" titleAccent="Founders Who Care"
-          sub="Three UNC-system students combining technical expertise with genuine commitment to helping Charlotte businesses thrive." />
+        <SectionHeader center label="The Team" title="Who" titleAccent="we are"
+          sub="Three friends from the Charlotte area. We go to different UNC-system schools, but we grew up within 20 minutes of each other." />
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "32px" }}>
           {team.map((t, i) => (
             <GlassCard key={i} delay={i * 150} hoverGlow={C.accentGlow} enableTilt style={{ textAlign: "center" }}

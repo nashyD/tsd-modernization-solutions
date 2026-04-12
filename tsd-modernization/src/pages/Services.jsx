@@ -54,10 +54,10 @@ export default function Services() {
   const services = [
     {
       Icon: SparklesIcon, title: "AI Integration & Automation",
-      desc: "Deploy intelligent chatbots, automate repetitive workflows, and unlock AI-powered insights — so you can focus on running your business.",
+      desc: "Chatbots that answer customer questions, automations that handle the repetitive stuff, and dashboards that actually make sense.",
       tags: ["Chatbots", "Zapier", "AI Reports", "Scheduling"],
       gradient: C.gradient1, glow: C.accentGlow,
-      longDesc: "We help small businesses replace hours of manual work with smart, always-on AI tools. From customer-facing chatbots that answer FAQs 24/7 to back-office automations that handle scheduling, invoicing, and reporting: everything is built specifically around how your business already operates.",
+      longDesc: "We look at what you're doing manually and figure out what can be handed off to AI. FAQ chatbots, scheduling automation, invoicing workflows, reporting dashboards \u2014 built around how your business already runs, not some generic template.",
       included: [
         "Custom AI chatbot trained on your business",
         "Make automation workflows",
@@ -70,10 +70,10 @@ export default function Services() {
     },
     {
       Icon: MonitorIcon, title: "Website Creation & Redesign",
-      desc: "Professional, conversion-focused websites with built-in SEO, chatbot integration, and comprehensive handoff documentation.",
+      desc: "Clean, fast websites with SEO baked in. You get handoff docs so you can actually update it yourself after we\u2019re done.",
       tags: ["Webflow", "WordPress", "SEO", "Analytics"],
       gradient: C.gradient2, glow: `rgba(${C.accentRGB},0.3)`,
-      longDesc: "A modern website that does more than just exist. We build conversion-focused sites with mobile-first design, fast load times, baked-in SEO, and analytics so you can see exactly what's working. Every site comes with handoff documentation so you can edit content without needing us.",
+      longDesc: "We build sites that load fast, look good on phones, and show up in search results. Every site comes with written and video documentation so you can update content without calling us. Two weeks of post-launch support included.",
       included: [
         "5-8 page custom-designed website",
         "Mobile-first responsive build",
@@ -88,10 +88,10 @@ export default function Services() {
     },
     {
       Icon: TrendingUpIcon, title: "Process Modernization",
-      desc: "A structured tech audit and written roadmap that maps your operations, identifies bottlenecks, and prioritizes implementation.",
+      desc: "We sit down with you, map out how your business runs, and tell you what to fix first. Written roadmap, no obligation to hire us.",
       tags: ["Tech Audit", "Roadmap", "ROI Analysis", "Training"],
       gradient: C.gradient3, glow: `rgba(${C.navyRGB},0.35)`,
-      longDesc: "Sometimes the answer isn't more technology — it's the right technology in the right places. We sit down with you and map out every step of how your business currently runs, then build a written roadmap of what to fix first, what to fix later, and what to leave alone.",
+      longDesc: "Not everything needs AI. We walk through your operations, figure out where you\u2019re wasting time, and give you a prioritized list of what to change. You can hire us to do it or take the roadmap to someone else.",
       included: [
         "2-3 hour structured tech audit (in-person or remote)",
         "Written modernization roadmap",
@@ -106,8 +106,8 @@ export default function Services() {
   return (
     <PageShell>
       <div style={{ padding: "40px 48px", maxWidth: "1200px", margin: "0 auto" }}>
-        <SectionHeader center label="What We Do" title="Three Ways to" titleAccent="Modernize"
-          sub="From AI-powered customer service to complete website overhauls, we help Charlotte businesses work smarter — not harder." />
+        <SectionHeader center label="What We Do" title="Three things" titleAccent="we build"
+          sub="We keep it simple. Pick what you need, get a fixed quote, and we build it." />
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "32px" }}>
           {services.map((s, i) => (
             <GlassCard key={i} delay={i * 150} hoverGlow={s.glow} enableTilt
