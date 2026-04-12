@@ -57,7 +57,7 @@ function PricingTier({ t, i }) {
       backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
       position: "relative",
       transition: "transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
-      transform: hover ? `${featured ? "scale(1.03)" : ""} translateY(-6px)`.trim() : featured ? "scale(1.03)" : "none",
+      transform: hover ? "translateY(-6px)" : "none",
       boxShadow: featured ? `0 20px 60px rgba(${C.accentRGB},0.22)` : "none",
       cursor: "pointer",
     }}
@@ -126,29 +126,29 @@ export default function Pricing() {
       label: "Discovery", price: "$150-$250", range: "One-time engagement",
       features: ["2-3 hour structured tech audit", "Written modernization roadmap", "Tool & platform recommendations", "Priority sequence & estimated ROI", "No obligation to continue"],
       btn: "Book Tech Audit",
-      longDesc: "[Placeholder] The Discovery tier is the lowest-risk way to work with us. We sit down with you (in person or remote), map out how your business actually runs today, and deliver a written roadmap of where modernization will pay off — and where it won't.",
-      bestFor: "[Placeholder] Business owners who know something needs to change but aren't sure where to start. Also a great fit if you've been burned by an agency before and want a no-strings-attached second opinion.",
+      longDesc: "We sit down with you (in person or remote), map out how your business runs today, and deliver a written roadmap of what to modernize first \u2014 and what to leave alone.",
+      bestFor: "Business owners who know something needs to change but aren\u2019t sure where to start. No obligation to hire us after.",
     },
     {
       label: "Website + AI Bundle", price: "$1,000-$1,800", range: "Our most popular package",
       features: ["5-8 page professional website", "AI chatbot integration", "2 automation workflows", "SEO & analytics setup", "Comprehensive handoff docs", "2-week post-launch support"],
       btn: "Start Your Project", featured: true,
-      longDesc: "[Placeholder] Our flagship package and the one most clients land on. You get a brand-new conversion-focused website, an AI chatbot trained on your business, and two custom automation workflows — everything wired up and handed over with documentation you can actually use.",
-      bestFor: "[Placeholder] Established small businesses that need to look modern, capture leads 24/7, and stop wasting hours on repetitive admin. Service businesses, restaurants, dental practices, real estate, and trades all see strong ROI.",
+      longDesc: "A new website, an AI chatbot trained on your business, and two custom automation workflows \u2014 everything wired up and handed over with docs you can actually use.",
+      bestFor: "Small businesses that need a real web presence and want to stop doing repetitive admin by hand. Restaurants, dental practices, trades, real estate \u2014 most service businesses.",
     },
     {
       label: "Monthly Retainer", price: "$200-$500", range: "Per month, ongoing",
       features: ["Ongoing support & troubleshooting", "New automations & updates", "Performance monitoring", "Priority response time", "Monthly strategy check-in"],
       btn: "Learn More",
-      longDesc: "[Placeholder] After your initial project ships, the retainer keeps us on call for ongoing improvements, fixes, new automations, and strategic check-ins. Think of it as having a tech team without paying for one full-time.",
-      bestFor: "[Placeholder] Clients who've already worked with us on a project and want continuous improvement instead of one-and-done. Also good for businesses where things change often — new services, new staff, new tools.",
+      longDesc: "After your initial project ships, we stay on call for fixes, new automations, and monthly check-ins. Like having a tech team without hiring one.",
+      bestFor: "Clients who\u2019ve already done a project with us and want ongoing improvements instead of one-and-done.",
     },
   ];
   return (
     <PageShell>
       <div style={{ padding: "40px 48px", maxWidth: "1200px", margin: "0 auto" }}>
-        <SectionHeader center label="Transparent Pricing" title="Agency Quality." titleAccent="Startup Pricing."
-          sub="Deliberately 3-5x below agency rates. Fixed pricing, no surprises, no scope creep." />
+        <SectionHeader center label="Pricing" title="What it" titleAccent="costs"
+          sub="Fixed quotes, no hourly billing, no scope creep. Here's what we charge." />
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "32px", alignItems: "start" }}>
           {tiers.map((t, i) => <PricingTier key={i} t={t} i={i} />)}
         </div>
