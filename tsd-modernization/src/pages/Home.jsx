@@ -79,10 +79,6 @@ export default function Home() {
     transition: `opacity 0.8s cubic-bezier(0.16,1,0.3,1) ${d}ms, transform 0.8s cubic-bezier(0.16,1,0.3,1) ${d}ms`,
   });
 
-  const [s1, r1] = useCountUp(50000);
-  const [s2, r2] = useCountUp(10);
-  const [s3, r3] = useCountUp(48);
-  const r4 = useRef(null);
 
   return (
     <>
