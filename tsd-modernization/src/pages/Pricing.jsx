@@ -89,7 +89,7 @@ function PricingTier({ t, i }) {
         </>
       )}
       <p style={{ fontSize: "14px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", marginBottom: "8px", color: C.accentLight }}>{t.label}</p>
-      <p style={{ fontSize: "42px", fontWeight: 800, letterSpacing: "-1px", marginBottom: "4px", color: C.text }}>{t.price}</p>
+      <p style={{ fontSize: "36px", fontWeight: 800, letterSpacing: "-0.5px", marginBottom: "4px", color: C.text }}>{t.price}</p>
       <p style={{ fontSize: "14px", color: C.textMuted, marginBottom: "24px" }}>{t.range}</p>
       <div style={{ borderTop: `1px solid ${C.divider}`, paddingTop: "24px" }}>
         {t.features.map((f, j) => (
