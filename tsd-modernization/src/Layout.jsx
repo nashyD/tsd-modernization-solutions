@@ -76,13 +76,15 @@ export default function Layout() {
           {/* Menu dropdown trigger */}
           <div ref={menuRef} style={{ position: "relative" }}>
             <button onClick={() => setMenuOpen(!menuOpen)} style={{
-              background: "none", border: `1.5px solid ${v("surface-border")}`, cursor: "pointer",
-              color: v("text"), padding: "8px 16px", borderRadius: "100px",
+              background: menuOpen ? v("surface") : C.gradientPrism,
+              border: menuOpen ? `1.5px solid ${v("surface-border")}` : "1.5px solid transparent",
+              cursor: "pointer",
+              color: menuOpen ? v("text") : "#fff",
+              padding: "10px 20px", borderRadius: "100px",
               display: "flex", alignItems: "center", gap: "8px",
-              fontSize: "13px", fontWeight: 600, fontFamily: "var(--font-body)",
-              backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
-              transition: "border-color 0.2s ease, background 0.2s ease",
-              background: menuOpen ? v("surface") : "transparent",
+              fontSize: "13px", fontWeight: 700, fontFamily: "var(--font-body)",
+              transition: "all 0.2s ease",
+              boxShadow: menuOpen ? "none" : "0 2px 12px rgba(75,156,211,0.3)",
             }} aria-label="Navigation menu">
               {menuOpen ? <XIcon size={16} /> : <MenuIcon size={16} />}
               Menu
