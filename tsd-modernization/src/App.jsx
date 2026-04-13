@@ -88,11 +88,7 @@ export default function App() {
         img { max-width: 100%; display: block; }
 
         @media (max-width: 768px) {
-          .desktop-nav { display: none !important; }
-          .mobile-menu-btn { display: flex !important; }
-        }
-        @media (min-width: 769px) {
-          .mobile-menu-btn { display: none !important; }
+          .hide-mobile { display: none !important; }
         }
       `}</style>
       <BrowserRouter>

@@ -1,19 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import { C, v, useTheme, DiamondDivider, RippleButton } from "./shared";
-import { TSDLogo, SunIcon, MoonIcon, MenuIcon, XIcon } from "./icons";
+import { TSDLogo, SunIcon, MoonIcon, MenuIcon, XIcon, ChevronDownIcon } from "./icons";
 
 const NAV_ITEMS = [
   { label: "Services", to: "/services" },
+  { label: "Why Us", to: "/why-us" },
   { label: "Process", to: "/process" },
   { label: "Pricing", to: "/pricing" },
+  { label: "Testimonials", to: "/testimonials" },
   { label: "Team", to: "/team" },
+  { label: "Contact", to: "/contact" },
 ];
 
 export default function Layout() {
   const { theme, toggle } = useTheme();
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -22,7 +26,15 @@ export default function Layout() {
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  useEffect(() => { setMobileOpen(false); window.scrollTo(0, 0); }, [location]);
+  useEffect(() => { setMenuOpen(false); window.scrollTo(0, 0); }, [location]);
+
+  /* Close dropdown when clicking outside */
+  useEffect(() => {
+    if (!menuOpen) return;
+    const fn = (e) => { if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false); };
+    document.addEventListener("mousedown", fn);
+    return () => document.removeEventListener("mousedown", fn);
+  }, [menuOpen]);
 
   return (
     <>
@@ -51,15 +63,8 @@ export default function Layout() {
           </div>
         </Link>
 
-        {/* Desktop nav */}
-        <div className="desktop-nav" style={{ display: "flex", alignItems: "center", gap: "36px" }}>
-          {NAV_ITEMS.map((item) => (
-            <Link key={item.to} to={item.to} style={{
-              fontSize: "13px", fontWeight: 600, letterSpacing: "0.5px",
-              color: location.pathname === item.to ? v("accent") : v("text-muted"),
-              transition: "color 0.2s ease", textDecoration: "none",
-            }}>{item.label}</Link>
-          ))}
+        {/* Right side controls */}
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           <button onClick={toggle} style={{
             background: "none", border: "none", cursor: "pointer", color: v("text-muted"),
             padding: "6px", borderRadius: "8px", display: "flex", alignItems: "center",
@@ -67,46 +72,56 @@ export default function Layout() {
           }} aria-label="Toggle theme">
             {theme === "dark" ? <SunIcon /> : <MoonIcon />}
           </button>
-          <Link to="/contact">
-            <RippleButton variant="primary" style={{ padding: "10px 24px", fontSize: "13px" }}>
-              Free Consultation
-            </RippleButton>
-          </Link>
-        </div>
 
-        {/* Mobile menu button */}
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }} className="mobile-menu-btn">
-          <button onClick={toggle} style={{
-            background: "none", border: "none", cursor: "pointer", color: v("text-muted"),
-            padding: "6px", display: "flex",
-          }} aria-label="Toggle theme">
-            {theme === "dark" ? <SunIcon /> : <MoonIcon />}
-          </button>
-          <button onClick={() => setMobileOpen(!mobileOpen)} style={{
-            background: "none", border: "none", cursor: "pointer", color: v("text"),
-            padding: "4px", display: "flex",
-          }} aria-label="Menu">
-            {mobileOpen ? <XIcon size={24} /> : <MenuIcon size={24} />}
-          </button>
+          {/* Menu dropdown trigger */}
+          <div ref={menuRef} style={{ position: "relative" }}>
+            <button onClick={() => setMenuOpen(!menuOpen)} style={{
+              background: "none", border: `1.5px solid ${v("surface-border")}`, cursor: "pointer",
+              color: v("text"), padding: "8px 16px", borderRadius: "100px",
+              display: "flex", alignItems: "center", gap: "8px",
+              fontSize: "13px", fontWeight: 600, fontFamily: "var(--font-body)",
+              backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+              transition: "border-color 0.2s ease, background 0.2s ease",
+              background: menuOpen ? v("surface") : "transparent",
+            }} aria-label="Navigation menu">
+              {menuOpen ? <XIcon size={16} /> : <MenuIcon size={16} />}
+              Menu
+            </button>
+
+            {/* Dropdown panel */}
+            {menuOpen && (
+              <div style={{
+                position: "absolute", top: "calc(100% + 12px)", right: 0,
+                minWidth: "220px", padding: "8px",
+                background: v("nav-bg"), backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
+                border: `1px solid ${v("surface-border")}`,
+                borderRadius: "16px",
+                boxShadow: "0 16px 48px rgba(0,0,0,0.3)",
+                animation: "fadeUp 0.2s ease",
+              }}>
+                {NAV_ITEMS.map((item) => (
+                  <Link key={item.to} to={item.to} onClick={() => setMenuOpen(false)} style={{
+                    display: "block", padding: "12px 16px", borderRadius: "10px",
+                    fontSize: "14px", fontWeight: 600, textDecoration: "none",
+                    color: location.pathname === item.to ? v("accent") : v("text"),
+                    background: location.pathname === item.to ? "rgba(75,156,211,0.1)" : "transparent",
+                    transition: "background 0.15s ease",
+                  }}
+                    onMouseEnter={(e) => { if (location.pathname !== item.to) e.currentTarget.style.background = v("surface"); }}
+                    onMouseLeave={(e) => { if (location.pathname !== item.to) e.currentTarget.style.background = "transparent"; }}
+                  >{item.label}</Link>
+                ))}
+                <div style={{ height: "1px", background: v("divider"), margin: "8px 16px" }} />
+                <Link to="/contact" onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "4px" }}>
+                  <RippleButton variant="primary" style={{ width: "100%", padding: "12px 0", fontSize: "13px" }}>
+                    Free Consultation
+                  </RippleButton>
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </nav>
-
-      {/* ── Mobile overlay ──────────────────── */}
-      {mobileOpen && (
-        <div style={{
-          position: "fixed", inset: 0, zIndex: 999,
-          background: v("bg"), backdropFilter: "blur(20px)",
-          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "32px",
-        }}>
-          {[...NAV_ITEMS, { label: "Contact", to: "/contact" }].map((item) => (
-            <Link key={item.to} to={item.to} onClick={() => setMobileOpen(false)} style={{
-              fontSize: "20px", fontWeight: 700, letterSpacing: "1px",
-              color: location.pathname === item.to ? v("accent") : v("text"),
-              textDecoration: "none",
-            }}>{item.label}</Link>
-          ))}
-        </div>
-      )}
 
       {/* ── Content ─────────────────────────── */}
       <main><Outlet /></main>
