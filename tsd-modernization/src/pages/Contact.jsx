@@ -86,7 +86,7 @@ function ContactForm() {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
-          access_key: "324d5bf7-1ecb-4da6-9e04-6626f782b082",
+          access_key: import.meta.env.VITE_WEB3FORMS_KEY,
           subject: `New tech audit request from ${formData.name || "website visitor"}`,
           from_name: "TSD Modernization Solutions Website",
           replyto: formData.email,
