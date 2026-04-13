@@ -41,7 +41,7 @@ export default function Layout() {
       {/* ── Nav ─────────────────────────────── */}
       <nav style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
-        padding: scrolled ? "12px 48px" : "20px 48px",
+        padding: scrolled ? "12px clamp(16px, 4vw, 48px)" : "20px clamp(16px, 4vw, 48px)",
         background: scrolled ? v("nav-bg") : "transparent",
         backdropFilter: scrolled ? "blur(20px)" : "none",
         WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
