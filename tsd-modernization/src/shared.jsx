@@ -357,7 +357,7 @@ export function CardModal({ open, onClose, children }) {
         onClick={(e) => e.stopPropagation()}
         style={{
           position: "relative",
-          maxWidth: "720px", width: "100%",
+          maxWidth: "800px", width: "100%",
           maxHeight: "calc(100vh - 80px)",
           overflowY: "auto",
           background: "var(--c-modal-bg)",
