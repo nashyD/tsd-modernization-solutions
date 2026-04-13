@@ -53,7 +53,7 @@ function Hero() {
       position: "relative", overflow: "hidden", paddingBottom: "80px",
     }}>
       {/* Past storefront (base layer — always visible) */}
-      <div style={{
+      <div className="hero-bg" style={{
         position: "absolute", inset: 0, zIndex: 0,
         backgroundImage: "url(/hero-storefront.jpg)",
         backgroundSize: "cover", backgroundPosition: "center 40%",
@@ -61,7 +61,7 @@ function Hero() {
       }} />
 
       {/* Future storefront (crossfades in and out) */}
-      <div style={{
+      <div className="hero-bg" style={{
         position: "absolute", inset: 0, zIndex: 0,
         backgroundImage: "url(/hero-storefront-future.jpg)",
         backgroundSize: "cover", backgroundPosition: "center 40%",
