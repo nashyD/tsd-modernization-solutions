@@ -1,160 +1,288 @@
-import { useState, useEffect, useRef } from "react";
-import { Outlet, Link, useLocation } from "react-router-dom";
-import { C, v, useTheme, DiamondDivider, RippleButton } from "./shared";
-import { TSDLogo, SunIcon, MoonIcon, MenuIcon, XIcon, ChevronDownIcon } from "./icons";
+import { useState, useEffect } from "react";
+import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+import { C, useTheme, toggleTheme } from "./shared";
 
-const NAV_ITEMS = [
+const NAV_LINKS = [
+  { label: "Home", to: "/" },
   { label: "Services", to: "/services" },
   { label: "Why Us", to: "/why-us" },
   { label: "Process", to: "/process" },
   { label: "Pricing", to: "/pricing" },
   { label: "Testimonials", to: "/testimonials" },
   { label: "Team", to: "/team" },
-  { label: "Contact", to: "/contact" },
 ];
 
-export default function Layout() {
-  const { theme, toggle } = useTheme();
-  const [scrolled, setScrolled] = useState(false);
+function MenuButton() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef(null);
   const location = useLocation();
+  const theme = useTheme();
 
-  useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", fn, { passive: true });
-    return () => window.removeEventListener("scroll", fn);
-  }, []);
+  // Close menu on route change
+  useEffect(() => { setMenuOpen(false); }, [location.pathname]);
 
-  useEffect(() => { setMenuOpen(false); window.scrollTo(0, 0); }, [location]);
-
-  /* Close dropdown when clicking outside */
+  // Close menu on Escape
   useEffect(() => {
     if (!menuOpen) return;
-    const fn = (e) => { if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false); };
-    document.addEventListener("mousedown", fn);
-    return () => document.removeEventListener("mousedown", fn);
+    const onKey = (e) => { if (e.key === "Escape") setMenuOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [menuOpen]);
 
   return (
-    <>
-      {/* ── Nav ─────────────────────────────── */}
-      <nav style={{
-        position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
-        padding: scrolled ? "12px clamp(16px, 4vw, 48px)" : "20px clamp(16px, 4vw, 48px)",
-        background: scrolled ? v("nav-bg") : "transparent",
-        backdropFilter: scrolled ? "blur(20px)" : "none",
-        WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
-        borderBottom: scrolled ? `1px solid ${v("divider")}` : "1px solid transparent",
-        transition: "all 0.35s ease",
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-      }}>
-        <Link to="/" style={{ display: "flex", alignItems: "center", gap: "14px", textDecoration: "none" }}>
-          <TSDLogo size={40} />
-          <div>
-            <div style={{
-              fontSize: "11px", fontWeight: 700, letterSpacing: "3.5px", textTransform: "uppercase",
-              color: v("text"), lineHeight: 1.2,
-            }}>Modernization</div>
-            <div style={{
-              fontSize: "9px", fontWeight: 600, letterSpacing: "4px", textTransform: "uppercase",
-              color: v("text-dim"),
-            }}>Solutions</div>
-          </div>
-        </Link>
+    <div className="menu-button-wrap" style={{
+      position: "fixed",
+      top: "24px", right: "32px",
+      zIndex: 1000,
+    }}>
+      <div style={{ position: "relative" }}>
+        <button
+          aria-label="Menu"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((o) => !o)}
+          style={{
+            display: "flex", flexDirection: "column", gap: "5px",
+            alignItems: "center", justifyContent: "center",
+            background: menuOpen ? `rgba(${C.accentRGB},0.35)` : C.accent,
+            backdropFilter: "blur(18px)",
+            WebkitBackdropFilter: "blur(18px)",
+            border: `1px solid ${menuOpen ? C.accentLight : C.accentLight}`,
+            borderRadius: "12px",
+            padding: "14px 18px",
+            cursor: "pointer",
+            zIndex: 1001,
+            transition: "all 0.25s ease",
+            boxShadow: menuOpen
+              ? `0 0 0 4px rgba(${C.accentRGB},0.25), 0 8px 30px rgba(0,0,0,0.5)`
+              : `0 8px 24px rgba(${C.accentRGB},0.45), 0 0 0 1px rgba(255,255,255,0.08)`,
+            animation: menuOpen ? "none" : "menuPulse 2.4s ease-in-out infinite",
+          }}
+          onMouseEnter={(e) => { if (!menuOpen) { e.currentTarget.style.background = C.accentLight; e.currentTarget.style.transform = "translateY(-1px)"; } }}
+          onMouseLeave={(e) => { if (!menuOpen) { e.currentTarget.style.background = C.accent; e.currentTarget.style.transform = "translateY(0)"; } }}
+        >
+          <div style={{
+            width: "24px", height: "2px", background: C.text,
+            transition: "all 0.3s ease", borderRadius: "2px",
+            transform: menuOpen ? "rotate(45deg) translate(5px, 5px)" : "none",
+          }} />
+          <div style={{
+            width: "24px", height: "2px", background: C.text,
+            transition: "all 0.3s ease", borderRadius: "2px",
+            opacity: menuOpen ? 0 : 1,
+          }} />
+          <div style={{
+            width: "24px", height: "2px", background: C.text,
+            transition: "all 0.3s ease", borderRadius: "2px",
+            transform: menuOpen ? "rotate(-45deg) translate(5px, -5px)" : "none",
+          }} />
+        </button>
 
-        {/* Right side controls */}
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <button onClick={toggle} style={{
-            background: "none", border: "none", cursor: "pointer", color: v("text-muted"),
-            padding: "6px", borderRadius: "8px", display: "flex", alignItems: "center",
-            transition: "color 0.2s ease",
-          }} aria-label="Toggle theme">
-            {theme === "dark" ? <SunIcon /> : <MoonIcon />}
-          </button>
-
-          {/* Menu dropdown trigger */}
-          <div ref={menuRef} style={{ position: "relative", overflow: "visible" }}>
-            <button onClick={() => setMenuOpen(!menuOpen)} style={{
-              background: menuOpen ? v("surface") : C.gradientPrism,
-              border: "none",
-              cursor: "pointer",
-              color: menuOpen ? v("text") : "#fff",
-              padding: "8px 16px", borderRadius: "100px",
-              display: "flex", alignItems: "center", gap: "6px",
-              fontSize: "12px", fontWeight: 700, fontFamily: "var(--font-body)",
-              transition: "all 0.2s ease",
-              boxShadow: menuOpen ? `0 0 0 1px ${v("surface-border")}` : "0 2px 10px rgba(75,156,211,0.25)",
-              lineHeight: 1,
-              WebkitAppearance: "none",
-              MozAppearance: "none",
-            }} aria-label="Navigation menu">
-              {menuOpen ? <XIcon size={14} /> : <MenuIcon size={14} />}
-              Menu
-            </button>
-
-            {/* Dropdown panel */}
-            {menuOpen && (
-              <div style={{
-                position: "absolute", top: "calc(100% + 12px)", right: 0,
-                minWidth: "220px", padding: "8px",
-                background: v("nav-bg"), backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
-                border: `1px solid ${v("surface-border")}`,
-                borderRadius: "16px",
-                boxShadow: "0 16px 48px rgba(0,0,0,0.3)",
-                animation: "fadeUp 0.2s ease",
-              }}>
-                {NAV_ITEMS.map((item) => (
-                  <Link key={item.to} to={item.to} onClick={() => setMenuOpen(false)} style={{
-                    display: "block", padding: "12px 16px", borderRadius: "10px",
-                    fontSize: "14px", fontWeight: 600, textDecoration: "none",
-                    color: location.pathname === item.to ? v("accent") : v("text"),
-                    background: location.pathname === item.to ? "rgba(75,156,211,0.1)" : "transparent",
-                    transition: "background 0.15s ease",
-                  }}
-                    onMouseEnter={(e) => { if (location.pathname !== item.to) e.currentTarget.style.background = v("surface"); }}
-                    onMouseLeave={(e) => { if (location.pathname !== item.to) e.currentTarget.style.background = "transparent"; }}
-                  >{item.label}</Link>
-                ))}
-                <div style={{ height: "1px", background: v("divider"), margin: "8px 16px" }} />
-                <Link to="/contact" onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "4px" }}>
-                  <RippleButton variant="primary" style={{ width: "100%", padding: "12px 0", fontSize: "13px" }}>
-                    Free Consultation
-                  </RippleButton>
-                </Link>
-              </div>
-            )}
-          </div>
-        </div>
-      </nav>
-
-      {/* ── Content ─────────────────────────── */}
-      <main><Outlet /></main>
-
-      {/* ── Footer ──────────────────────────── */}
-      <footer style={{
-        padding: "60px 48px 40px", textAlign: "center",
-        borderTop: `1px solid ${v("divider")}`,
-      }}>
-        <DiamondDivider width={160} style={{ marginBottom: "32px" }} />
-        <div style={{ display: "flex", justifyContent: "center", gap: "28px", flexWrap: "wrap", marginBottom: "24px" }}>
-          {[...NAV_ITEMS, { label: "Contact", to: "/contact" }].map((item) => (
-            <Link key={item.to} to={item.to} style={{
-              fontSize: "13px", fontWeight: 600, color: v("text-muted"),
-              transition: "color 0.2s", textDecoration: "none",
-            }}>{item.label}</Link>
+        {/* Dropdown panel */}
+        <div style={{
+          position: "absolute",
+          top: "calc(100% + 14px)",
+          right: 0,
+          minWidth: "240px",
+          background: "var(--c-menu-panel)",
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
+          border: `1px solid ${C.divider}`,
+          borderRadius: "16px",
+          padding: "12px",
+          display: "flex", flexDirection: "column", gap: "2px",
+          boxShadow: "0 20px 60px rgba(0,0,0,0.45)",
+          opacity: menuOpen ? 1 : 0,
+          transform: menuOpen ? "translateY(0)" : "translateY(-8px)",
+          pointerEvents: menuOpen ? "auto" : "none",
+          transition: "opacity 0.25s ease, transform 0.25s ease",
+        }}>
+          {NAV_LINKS.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.to === "/"}
+              style={({ isActive }) => ({
+                padding: "12px 16px",
+                borderRadius: "10px",
+                fontSize: "15px", fontWeight: 500,
+                color: isActive ? C.accentLight : C.textMuted,
+                textDecoration: "none",
+                transition: "all 0.2s ease",
+                background: isActive ? `rgba(${C.accentRGB},0.15)` : "transparent",
+              })}
+              onMouseEnter={(e) => {
+                if (e.currentTarget.getAttribute("aria-current") !== "page") {
+                  e.currentTarget.style.background = `rgba(${C.accentRGB},0.08)`;
+                  e.currentTarget.style.color = C.text;
+                }
+              }}
+              onMouseLeave={(e) => {
+                const isActive = e.currentTarget.getAttribute("aria-current") === "page";
+                e.currentTarget.style.background = isActive ? `rgba(${C.accentRGB},0.15)` : "transparent";
+                e.currentTarget.style.color = isActive ? C.accentLight : C.textMuted;
+              }}
+            >{item.label}</NavLink>
           ))}
+          <div style={{ height: "1px", background: C.divider, margin: "8px 4px" }} />
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+            style={{
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+              padding: "12px 16px", borderRadius: "10px",
+              background: "transparent",
+              border: `1px solid ${C.glassBorder}`,
+              color: C.text,
+              fontSize: "14px", fontWeight: 500,
+              cursor: "pointer",
+              transition: "background 0.2s ease, border-color 0.2s ease",
+              margin: "0 0 4px",
+              width: "100%",
+              textAlign: "left",
+              fontFamily: "inherit",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = `rgba(${C.accentRGB},0.1)`;
+              e.currentTarget.style.borderColor = C.accentLight;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.borderColor = C.glassBorder;
+            }}
+          >
+            <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <span aria-hidden="true" style={{ fontSize: "16px", lineHeight: 1 }}>
+                {theme === "dark" ? "\u2600" : "\u263D"}
+              </span>
+              <span>{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>
+            </span>
+            <span aria-hidden="true" style={{
+              position: "relative",
+              width: "34px", height: "20px", borderRadius: "20px",
+              background: theme === "dark" ? `rgba(${C.accentRGB},0.25)` : C.accent,
+              transition: "background 0.25s ease",
+              flexShrink: 0,
+            }}>
+              <span style={{
+                position: "absolute", top: "2px",
+                left: theme === "dark" ? "2px" : "16px",
+                width: "16px", height: "16px", borderRadius: "50%",
+                background: "#fff",
+                boxShadow: "0 1px 4px rgba(0,0,0,0.35)",
+                transition: "left 0.25s ease",
+              }} />
+            </span>
+          </button>
+          <Link to="/contact" style={{ textDecoration: "none" }}>
+            <div style={{
+              padding: "13px 16px", borderRadius: "10px",
+              background: C.gradient1,
+              color: "#fff",
+              fontSize: "15px", fontWeight: 600,
+              textAlign: "center",
+              boxShadow: `0 4px 20px ${C.accentGlow}`,
+              cursor: "pointer",
+            }}>Free Consultation</div>
+          </Link>
         </div>
-        <p style={{ fontSize: "13px", color: v("text-dim"), marginBottom: "8px" }}>
-          TSD Modernization Solutions — A division of TSD Incorporated, LLC
-        </p>
-        <p style={{ fontSize: "12px", color: v("text-dim") }}>
-          Serving the Charlotte metro area including Gastonia, Belmont, and surrounding communities.
-        </p>
-        <p style={{ fontSize: "12px", color: v("text-dim"), marginTop: "16px" }}>
-          &copy; {new Date().getFullYear()} TSD Ventures. All rights reserved.
-        </p>
-      </footer>
-    </>
+      </div>
+    </div>
+  );
+}
+
+function FloatingLogo() {
+  const theme = useTheme();
+  const src = theme === "light" ? C.logoSrcLight : C.logoSrc;
+  return (
+    <div
+      aria-hidden="true"
+      className="floating-logo"
+      style={{
+        position: "fixed",
+        top: "12px", left: "50%",
+        width: "360px",
+        pointerEvents: "none",
+        zIndex: 999,
+        animation: "tsdFloatPulse 6s ease-in-out infinite",
+        willChange: "transform, opacity",
+      }}
+    >
+      <img
+        src={src}
+        alt=""
+        style={{
+          width: "100%", display: "block",
+          filter: `drop-shadow(0 0 40px rgba(${C.accentRGB},0.55)) drop-shadow(0 0 80px rgba(${C.accentRGB},0.25))`,
+        }}
+      />
+    </div>
+  );
+}
+
+function Footer() {
+  const theme = useTheme();
+  const src = theme === "light" ? C.logoSrcLight : C.logoSrc;
+  return (
+    <footer style={{
+      padding: "64px 48px 40px", textAlign: "center", fontSize: "14px",
+      color: C.textDim, borderTop: `1px solid ${C.divider}`,
+      background: theme === "light" ? "rgba(19,41,75,0.04)" : "rgba(0,0,0,0.2)",
+      position: "relative", zIndex: 2,
+    }}>
+      <Link to="/" aria-label="TSD Modernization Solutions — Home" style={{
+        cursor: "pointer", marginBottom: "24px", display: "inline-block", textDecoration: "none",
+      }}>
+        <img
+          src={src}
+          alt="TSD Modernization Solutions"
+          style={{ height: "140px", width: "auto", display: "block" }}
+        />
+      </Link>
+
+      <div style={{ display: "flex", justifyContent: "center", gap: "28px", marginBottom: "32px", flexWrap: "wrap" }}>
+        {[...NAV_LINKS.filter((l) => l.to !== "/"), { label: "Contact", to: "/contact" }].map((item) => (
+          <Link key={item.to} to={item.to} style={{
+            color: C.textMuted, textDecoration: "none", fontSize: "14px", fontWeight: 500,
+            cursor: "pointer", transition: "color 0.2s ease",
+          }}
+            onMouseEnter={(e) => (e.target.style.color = C.accentLight)}
+            onMouseLeave={(e) => (e.target.style.color = C.textMuted)}>
+            {item.label}
+          </Link>
+        ))}
+      </div>
+
+      <div style={{
+        height: "1px", maxWidth: "200px", margin: "0 auto 24px",
+        background: `linear-gradient(90deg, transparent, ${C.glassBorder}, transparent)`,
+      }} />
+
+      <p style={{ marginBottom: "8px", fontSize: "13px" }}>
+        <span style={{ fontWeight: 700, color: C.text }}>TSD Modernization Solutions</span>{" "}
+        &mdash; A division of TSD Incorporated, LLC
+      </p>
+      <p style={{ fontSize: "13px" }}>Serving the Charlotte Metro Area &middot; Gastonia &middot; Belmont &middot; Charlotte, NC</p>
+      <p style={{ marginTop: "16px", opacity: 0.4, fontSize: "12px" }}>&copy; {new Date().getFullYear()} TSD Incorporated, LLC. All rights reserved.</p>
+    </footer>
+  );
+}
+
+export default function Layout() {
+  const { pathname } = useLocation();
+
+  // Scroll to top on route change
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+
+  return (
+    <div style={{
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      margin: 0, padding: 0, overflowX: "hidden", background: C.bg, color: C.text,
+      minHeight: "100vh",
+    }}>
+      <FloatingLogo />
+      <MenuButton />
+      <Outlet />
+      <Footer />
+    </div>
   );
 }

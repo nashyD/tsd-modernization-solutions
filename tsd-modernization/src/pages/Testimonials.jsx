@@ -1,55 +1,110 @@
-import { v, SectionHeader, Card } from "../shared";
-import { QuoteIcon } from "../icons";
+import { C, GlassCard, SectionHeader } from "../shared";
 import PageShell from "./PageShell";
 
-const TESTIMONIALS = [
-  {
-    quote: "They set up an AI chatbot that handles 60% of our customer questions automatically. Our staff can actually focus on cooking instead of answering the phone all day.",
-    metric: "60% fewer calls",
-    name: "Local Restaurant Owner",
-    role: "Charlotte, NC",
-  },
-  {
-    quote: "The website they built loads faster than anything our old agency ever delivered, and it cost a fraction of the price. Plus they actually taught us how to update it ourselves.",
-    metric: "3x faster load time",
-    name: "Dental Practice Manager",
-    role: "Gastonia, NC",
-  },
-  {
-    quote: "I was drowning in spreadsheets before TSD modernized our workflow. Now everything is automated and I get a dashboard that tells me exactly where I stand.",
-    metric: "12 hrs/week saved",
-    name: "Real Estate Professional",
-    role: "Belmont, NC",
-  },
-];
+function TestimonialModalContent({ t }) {
+  return (
+    <div>
+      <div style={{
+        display: "inline-block", padding: "8px 18px", borderRadius: "10px",
+        background: "rgba(6,214,160,0.12)", border: "1px solid rgba(6,214,160,0.3)",
+        fontSize: "13px", fontWeight: 700, color: C.cyan, marginBottom: "24px",
+      }}>{t.metric}</div>
+      <p style={{ fontSize: "20px", lineHeight: 1.6, color: C.text, marginBottom: "32px", fontStyle: "italic", fontWeight: 500 }}>
+        "{t.quote}"
+      </p>
+      <div style={{ marginBottom: "32px", paddingBottom: "24px", borderBottom: `1px solid ${C.glassBorder}` }}>
+        <p style={{ fontSize: "17px", fontWeight: 700, color: C.text, marginBottom: "4px" }}>{t.author}</p>
+        <p style={{ fontSize: "14px", color: C.textMuted }}>{t.role}</p>
+      </div>
+
+      <h3 style={{ fontSize: "13px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1.2px", color: C.accentLight, marginBottom: "12px" }}>
+        Project Overview
+      </h3>
+      <p style={{ fontSize: "15px", lineHeight: 1.7, color: C.textMuted, marginBottom: "28px" }}>
+        {t.projectOverview}
+      </p>
+
+      <h3 style={{ fontSize: "13px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1.2px", color: C.accentLight, marginBottom: "12px" }}>
+        Results
+      </h3>
+      <ul style={{ listStyle: "none", padding: 0 }}>
+        {t.results.map((r, i) => (
+          <li key={i} style={{
+            padding: "12px 16px", marginBottom: "8px", borderRadius: "12px",
+            background: `rgba(${C.accentRGB},0.06)`,
+            border: `1px solid rgba(${C.accentRGB},0.18)`,
+            fontSize: "14px", color: C.text,
+          }}>{r}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 export default function Testimonials() {
+  const testimonials = [
+    {
+      quote: "TSD helped us set up an AI chatbot that handles 60% of our customer inquiries. Our response time went from 4 hours to under 2 minutes.",
+      author: "Local Restaurant Owner",
+      role: "Charlotte, NC",
+      metric: "60% fewer manual inquiries",
+      projectOverview: "[Placeholder] Local Charlotte restaurant struggling with high volume of repetitive customer questions about hours, menu, reservations, and dietary options. We deployed a custom AI chatbot trained on their menu and FAQs, integrated with their reservation system.",
+      results: [
+        "[Placeholder] 60% reduction in manual customer inquiries",
+        "[Placeholder] Average response time dropped from 4 hours to under 2 minutes",
+        "[Placeholder] Front-of-house staff freed up to focus on dine-in service",
+        "[Placeholder] Project completed in 2 weeks",
+      ],
+    },
+    {
+      quote: "They rebuilt our website and set up automated scheduling in just 3 weeks. The handoff documentation was so thorough I can manage everything myself.",
+      author: "Dental Practice Manager",
+      role: "Gastonia, NC",
+      metric: "3-week turnaround",
+      projectOverview: "[Placeholder] Established dental practice needed a modern website and online appointment scheduling. We delivered a custom-designed site with integrated booking, automated reminders, and a content management system the practice manager could update herself.",
+      results: [
+        "[Placeholder] New website launched in 3 weeks",
+        "[Placeholder] Online bookings up 45% in first month",
+        "[Placeholder] Reduced no-shows by 30% with automated reminders",
+        "[Placeholder] Full self-service editing for staff",
+      ],
+    },
+    {
+      quote: "The tech audit alone was worth it. They identified 5 processes we could automate and saved us roughly 15 hours per week.",
+      author: "Real Estate Brokerage",
+      role: "Belmont, NC",
+      metric: "15 hrs/week saved",
+      projectOverview: "[Placeholder] Mid-sized real estate brokerage running on spreadsheets and manual data entry. Our tech audit mapped out their entire workflow and identified five high-impact automations. We then built out the top three.",
+      results: [
+        "[Placeholder] 15 hours/week of admin work eliminated",
+        "[Placeholder] Lead intake fully automated from web to CRM",
+        "[Placeholder] Listings auto-published across 3 platforms",
+        "[Placeholder] Agents now spend more time selling, less time updating spreadsheets",
+      ],
+    },
+  ];
   return (
     <PageShell>
-      <div style={{ padding: "40px 48px 80px", maxWidth: "1100px", margin: "0 auto" }}>
-        <SectionHeader center label="Social Proof" title="What clients" titleAccent="say"
-          sub="Real results from real Charlotte-area businesses." />
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "24px" }}>
-          {TESTIMONIALS.map((t, i) => (
-            <Card key={i} delay={i * 120} hover={false} style={{ display: "flex", flexDirection: "column" }}>
-              <QuoteIcon size={36} style={{ color: v("accent"), marginBottom: "16px" }} />
+      <div style={{ padding: "40px 48px", maxWidth: "1200px", margin: "0 auto" }}>
+        <SectionHeader center label="Results" title="What Our Clients" titleAccent="Experience"
+          sub="Real impact for Charlotte-area businesses — measured in time saved, customers served, and revenue generated." />
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "32px" }}>
+          {testimonials.map((t, i) => (
+            <GlassCard key={i} delay={i * 150} hoverGlow={C.accentGlow}
+              expandable expandedContent={<TestimonialModalContent t={t} />}>
               <div style={{
-                display: "inline-block", padding: "4px 12px", borderRadius: "100px",
-                fontSize: "12px", fontWeight: 700, letterSpacing: "0.5px",
-                background: "rgba(6,214,160,0.1)", color: "#06d6a0",
-                border: "1px solid rgba(6,214,160,0.2)", marginBottom: "16px", alignSelf: "flex-start",
+                display: "inline-block", padding: "6px 14px", borderRadius: "8px",
+                background: "rgba(6,214,160,0.1)", border: "1px solid rgba(6,214,160,0.2)",
+                fontSize: "12px", fontWeight: 700, color: C.cyan, marginBottom: "20px",
               }}>{t.metric}</div>
-              <p style={{
-                fontSize: "15px", lineHeight: 1.75, color: v("text-muted"),
-                fontStyle: "italic", flex: 1, marginBottom: "24px",
-              }}>
+              <p style={{ fontSize: "15px", lineHeight: 1.7, color: C.textMuted, marginBottom: "24px", fontStyle: "italic" }}>
                 "{t.quote}"
               </p>
-              <div style={{ borderTop: `1px solid ${v("surface-border")}`, paddingTop: "16px" }}>
-                <div style={{ fontSize: "14px", fontWeight: 700, color: v("text") }}>{t.name}</div>
-                <div style={{ fontSize: "13px", color: v("text-dim") }}>{t.role}</div>
+              <div>
+                <p style={{ fontSize: "15px", fontWeight: 700, color: C.text }}>{t.author}</p>
+                <p style={{ fontSize: "13px", color: C.textDim }}>{t.role}</p>
               </div>
-            </Card>
+            </GlassCard>
           ))}
         </div>
       </div>

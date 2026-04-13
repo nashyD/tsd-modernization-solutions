@@ -1,30 +1,51 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TSD Modernization Solutions | AI Integration & Website Creation | Charlotte, NC</title>
     <meta name="description" content="Affordable AI integration, custom website creation, and workflow automation for small businesses in the Charlotte metro area. Book a free tech audit today." />
-    <meta property="og:title" content="TSD Modernization Solutions — Small Business Modernization Specialists" />
-    <meta property="og:description" content="AI integration, custom websites, and workflow automation for Charlotte-area small businesses." />
-    <meta property="og:image" content="/og-image.png" />
-    <meta property="og:url" content="https://tsd-modernization.com" />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href="https://tsd-ventures.com/" />
+
+    <!-- Favicons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,800;1,400;1,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!-- Open Graph (iMessage, Slack, LinkedIn, Facebook link previews) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="TSD Modernization Solutions" />
+    <meta property="og:url" content="https://tsd-ventures.com/" />
+    <meta property="og:title" content="TSD Modernization Solutions — AI, Websites & Automation for Charlotte Small Business" />
+    <meta property="og:description" content="Affordable AI integration, custom website creation, and workflow automation for small businesses in the Charlotte metro area. Book a free tech audit today." />
+    <meta property="og:image" content="https://tsd-ventures.com/og-image.png" />
+    <meta property="og:image:secure_url" content="https://tsd-ventures.com/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="TSD Modernization Solutions" />
+
+    <!-- Twitter / X card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="TSD Modernization Solutions — AI, Websites & Automation for Charlotte Small Business" />
+    <meta name="twitter:description" content="Affordable AI integration, custom website creation, and workflow automation for small businesses in the Charlotte metro area." />
+    <meta name="twitter:image" content="https://tsd-ventures.com/og-image.png" />
+
+    <!-- Apply saved theme before paint to avoid a flash -->
     <script>
-      (function(){
+      (function () {
         try {
-          var t = localStorage.getItem("tsd-ms-theme");
-          if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
-          else if (window.matchMedia("(prefers-color-scheme: light)").matches) document.documentElement.dataset.theme = "light";
-        } catch(e) {}
+          var t = localStorage.getItem("tsd-theme");
+          if (t === "light" || t === "dark") {
+            document.documentElement.dataset.theme = t;
+          } else {
+            document.documentElement.dataset.theme = "dark";
+          }
+        } catch (e) {
+          document.documentElement.dataset.theme = "dark";
+        }
       })();
     </script>
   </head>

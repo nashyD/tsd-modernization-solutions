@@ -1,0 +1,50 @@
+<svg width="100%" viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg">
+  <title>TSD Ventures — Modernization Solutions</title>
+
+  <defs>
+    <!-- Slightly deeper gradients so the white letters stay legible on a light page bg -->
+    <linearGradient id="prism-t" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4A90BF"/>
+      <stop offset="100%" stop-color="#2C7DA0"/>
+    </linearGradient>
+    <linearGradient id="prism-s" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2C7DA0"/>
+      <stop offset="100%" stop-color="#1F5A7A"/>
+    </linearGradient>
+    <linearGradient id="prism-d" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#13294B"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </linearGradient>
+
+    <!-- Wordmark divider -->
+    <linearGradient id="divider" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#13294B" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#13294B" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#13294B" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- === PRISMS === -->
+  <path d="M230 40 L350 40 L310 200 L190 200 Z" fill="url(#prism-t)"/>
+  <path d="M320 40 L440 40 L400 200 L280 200 Z" fill="url(#prism-s)"/>
+  <path d="M410 40 L530 40 L490 200 L370 200 Z" fill="url(#prism-d)"/>
+
+  <!-- Subtle top-edge highlights -->
+  <path d="M230 40 L350 40" stroke="#ffffff" stroke-opacity="0.32" stroke-width="1" fill="none"/>
+  <path d="M320 40 L440 40" stroke="#ffffff" stroke-opacity="0.36" stroke-width="1" fill="none"/>
+  <path d="M410 40 L530 40" stroke="#ffffff" stroke-opacity="0.42" stroke-width="1" fill="none"/>
+
+  <!-- Letters: white still works because the prisms are saturated enough -->
+  <g font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-weight="700" fill="#ffffff" text-anchor="middle">
+    <text x="270" y="138" font-size="56">T</text>
+    <text x="360" y="138" font-size="56">S</text>
+    <text x="450" y="138" font-size="56">D</text>
+  </g>
+
+  <!-- === WORDMARK === — dark text so it reads on a light page -->
+  <g transform="translate(360, 230)">
+    <line x1="-160" y1="0" x2="160" y2="0" stroke="url(#divider)" stroke-width="1"/>
+    <text x="0" y="30" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="26" font-weight="600" fill="#13294B" letter-spacing="5" text-anchor="middle">MODERNIZATION</text>
+    <text x="0" y="60" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="18" font-weight="500" fill="#2C7DA0" letter-spacing="7" text-anchor="middle">SOLUTIONS</text>
+  </g>
+</svg>
