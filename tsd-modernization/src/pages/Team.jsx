@@ -1,167 +1,175 @@
-import { C, GlassCard, SectionHeader } from "../shared";
+import { useState } from "react";
+import { C, v, SectionHeader, Card, DiamondDivider, DoubleLine } from "../shared";
+import { TSDLogo, MailIcon, PhoneIcon, MapPinIcon, LinkIcon, XIcon } from "../icons";
 import PageShell from "./PageShell";
 
-function TeamModalContent({ member }) {
+const TEAM = [
+  {
+    initials: "ND", name: "Nash Davis", role: "CEO & Head of Modernization",
+    school: "UNC Chapel Hill",
+    bio: "AI and technology strategy. Leads technical delivery, client engagement, and custom solution architecture.",
+    image: "/nash-davis.png",
+    card: {
+      company: "TSD MODERNIZATION SOLUTIONS",
+      name: "NASH DAVIS", title: "Chief Executive Officer",
+      email: "nashdavis@tsd-ventures.com", website: "tsd-ventures.com",
+      location: "Charlotte, North Carolina", phone: "+1 704-275-1410",
+    },
+  },
+  {
+    initials: "BS", name: "Bishop Switzer", role: "COO \u2014 Operations",
+    school: "UNC Wilmington",
+    bio: "Operations and process management. Oversees project tracking, proposals, invoicing, and handoff documentation.",
+    image: "/bishop-switzer.jpg",
+    card: {
+      company: "TSD \u00b7 VENTURES",
+      name: "BISHOP SWITZER", title: "Chief Operating Officer",
+      email: "bishopswitzer@tsd-ventures.com", website: "tsd-ventures.com",
+      location: "Charlotte, North Carolina", phone: "+1 704-275-1410",
+    },
+  },
+  {
+    initials: "GT", name: "Grant Tadlock", role: "CFO & Sales Lead",
+    school: "UNC Charlotte",
+    bio: "Financial planning and client acquisition. Drives sales pipeline, pricing strategy, and relationship development.",
+    image: "/grant-tadlock.jpg",
+    card: {
+      company: "TSD \u00b7 VENTURES",
+      name: "GRANT TADLOCK", title: "Chief Financial Officer  \u00b7  Sales",
+      email: "granttadlock@tsd-ventures.com", website: "tsd-ventures.com",
+      location: "Charlotte, North Carolina", phone: "+1 704-275-1410",
+    },
+  },
+];
+
+/* ── CSS Business Card (pixel-matches the PDF) ────────────────── */
+function BusinessCard({ data }) {
   return (
-    <div>
+    <div style={{
+      width: "100%", maxWidth: "520px", aspectRatio: "1.75 / 1",
+      background: v("card-front"),
+      borderRadius: "12px", padding: "40px 48px",
+      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+      boxShadow: "0 20px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.05)",
+      fontFamily: "var(--font-body)", position: "relative", overflow: "hidden",
+    }}>
+      {/* Logo */}
+      <TSDLogo size={36} style={{ marginBottom: "16px" }} />
+
+      {/* Company name */}
       <div style={{
-        width: "140px", height: "140px", borderRadius: "32px",
-        background: member.image ? "none" : `linear-gradient(135deg, rgba(${C.accentRGB},0.2), rgba(${C.navyRGB},0.25))`,
-        border: `1px solid rgba(${C.accentRGB},0.35)`,
-        margin: "0 auto 24px", overflow: "hidden",
-        boxShadow: `0 8px 32px rgba(${C.accentRGB},0.18)`,
-        display: "flex", alignItems: "center", justifyContent: "center",
-        fontSize: "48px", color: C.accentLight, fontWeight: 700,
-      }}>
-        {member.image
-          ? <img src={member.image} alt={member.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          : member.initials}
-      </div>
-      <div style={{ textAlign: "center", marginBottom: "32px" }}>
-        <h2 style={{ fontSize: "28px", fontWeight: 800, marginBottom: "6px", color: C.text }}>{member.name}</h2>
-        <p style={{ fontSize: "15px", color: C.accentLight, fontWeight: 600, marginBottom: "4px" }}>{member.role}</p>
-        <p style={{ fontSize: "13px", color: C.textDim }}>{member.school}</p>
+        fontSize: "10px", fontWeight: 700, letterSpacing: "3.5px",
+        color: v("card-text"), marginBottom: "12px", textAlign: "center", whiteSpace: "nowrap",
+      }}>{data.company}</div>
+
+      {/* Diamond divider */}
+      <div style={{ display: "flex", alignItems: "center", gap: "10px", width: "70%", marginBottom: "18px" }}>
+        <div style={{ flex: 1, height: "1px", background: v("card-divider") }} />
+        <span style={{ color: v("card-accent"), fontSize: "8px" }}>{"\u25C6"}</span>
+        <div style={{ flex: 1, height: "1px", background: v("card-divider") }} />
       </div>
 
-      <h3 style={{ fontSize: "13px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1.2px", color: C.accentLight, marginBottom: "12px" }}>
-        About
-      </h3>
-      <p style={{ fontSize: "15px", lineHeight: 1.7, color: C.textMuted, marginBottom: "28px" }}>
-        {member.fullBio}
-      </p>
+      {/* Name */}
+      <div style={{
+        fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
+        fontSize: "clamp(24px, 4vw, 32px)", color: v("card-text"), letterSpacing: "1px",
+        marginBottom: "4px", textAlign: "center",
+      }}>{data.name}</div>
 
-      <h3 style={{ fontSize: "13px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1.2px", color: C.accentLight, marginBottom: "12px" }}>
-        Specialties
-      </h3>
-      <div style={{ marginBottom: "28px" }}>
-        {member.specialties.map((tag, i) => (
-          <span key={i} style={{
-            display: "inline-block", padding: "6px 14px", borderRadius: "10px",
-            fontSize: "13px", fontWeight: 600, marginRight: "8px", marginBottom: "8px",
-            background: `rgba(${C.accentRGB},0.12)`,
-            border: `1px solid rgba(${C.accentRGB},0.25)`,
-            color: C.accentLight,
-          }}>{tag}</span>
-        ))}
+      {/* Title */}
+      <div style={{
+        fontFamily: "var(--font-display)", fontSize: "14px", fontWeight: 400,
+        color: v("card-text-muted"), marginBottom: "18px", textAlign: "center",
+      }}>{data.title}</div>
+
+      {/* Double line */}
+      <div style={{ width: "55%", marginBottom: "18px" }}>
+        <div style={{ height: "1px", background: v("card-accent"), opacity: 0.35, marginBottom: "3px" }} />
+        <div style={{ height: "2px", background: v("card-accent"), opacity: 0.5 }} />
       </div>
 
-      <h3 style={{ fontSize: "13px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1.2px", color: C.accentLight, marginBottom: "12px" }}>
-        Connect
-      </h3>
-      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-        <a href={`mailto:${member.email}`} style={{
-          display: "flex", alignItems: "center", gap: "12px",
-          padding: "12px 16px", borderRadius: "12px",
-          background: "rgba(255,255,255,0.04)", border: `1px solid ${C.glassBorder}`,
-          color: C.text, textDecoration: "none", fontSize: "14px",
-          transition: "background 0.2s ease, border-color 0.2s ease",
-        }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = `rgba(${C.accentRGB},0.12)`; e.currentTarget.style.borderColor = C.accentLight; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.borderColor = C.glassBorder; }}
-        >
-          <span style={{ color: C.accentLight, fontWeight: 700, minWidth: "70px" }}>Email</span>
-          <span>{member.email}</span>
-        </a>
-        {member.socials.map((s, i) => (
-          <a key={i} href={s.url} target="_blank" rel="noopener noreferrer" style={{
-            display: "flex", alignItems: "center", gap: "12px",
-            padding: "12px 16px", borderRadius: "12px",
-            background: "rgba(255,255,255,0.04)", border: `1px solid ${C.glassBorder}`,
-            color: C.text, textDecoration: "none", fontSize: "14px",
-            transition: "background 0.2s ease, border-color 0.2s ease",
-          }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = `rgba(${C.accentRGB},0.12)`; e.currentTarget.style.borderColor = C.accentLight; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.borderColor = C.glassBorder; }}
-          >
-            <span style={{ color: C.accentLight, fontWeight: 700, minWidth: "70px" }}>{s.label}</span>
-            <span>{s.handle}</span>
-          </a>
-        ))}
+      {/* Contact details */}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "4px" }}>
+        <a href={`mailto:${data.email}`} style={{
+          fontSize: "13px", color: v("card-text-muted"), textDecoration: "none",
+          fontFamily: "var(--font-display)",
+        }}>{data.email}</a>
+        <div style={{ fontSize: "13px", fontWeight: 700, color: v("card-text") }}>{data.website}</div>
+        <div style={{ fontSize: "13px", color: v("card-text-muted"), fontFamily: "var(--font-display)" }}>{data.location}</div>
+        <div style={{ fontSize: "13px", color: v("card-text-muted"), fontFamily: "var(--font-display)" }}>{data.phone}</div>
       </div>
     </div>
   );
 }
 
+/* ── Modal ─────────────────────────────────────────────────────── */
+function CardModal({ member, onClose }) {
+  return (
+    <div onClick={onClose} style={{
+      position: "fixed", inset: 0, zIndex: 2000,
+      background: "rgba(0,0,0,0.7)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      padding: "24px", animation: "fadeUp 0.3s ease",
+    }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ position: "relative", width: "100%", maxWidth: "540px" }}>
+        <button onClick={onClose} style={{
+          position: "absolute", top: "-40px", right: "0",
+          background: "none", border: "none", color: "#fff", cursor: "pointer",
+          opacity: 0.6, transition: "opacity 0.2s",
+        }} aria-label="Close">
+          <XIcon size={24} />
+        </button>
+        <BusinessCard data={member.card} />
+        {/* Info below card */}
+        <div style={{ textAlign: "center", marginTop: "24px" }}>
+          <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", marginBottom: "4px" }}>{member.school}</p>
+          <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)", maxWidth: "400px", margin: "0 auto", lineHeight: 1.6 }}>{member.bio}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Team page ─────────────────────────────────────────────────── */
 export default function Team() {
-  const team = [
-    {
-      initials: "ND", name: "Nash Davis", role: "CEO & Head of Modernization",
-      school: "UNC Chapel Hill",
-      bio: "AI and technology strategy. Leads technical delivery, client engagement, and custom solution architecture.",
-      image: "/nash-davis.png",
-      fullBio: "Nash leads TSD's technical development and oversees every modernization project from kickoff to handoff. With expertise in AI integration, custom development, and business architecture, he turns dated business problems into modern, flowing software. While currently a freshman, he is guaranteed admission to UNC Chapel Hill's Kenan Flagler Business School, where he intends to acquire his Bachelor's in Business Administration, concentrating on Entrepreneurship and Finance.",
-      specialties: ["AI Integration", "Solution Architecture", "Client Strategy", "Technical Delivery"],
-      email: "nash@tsd-ventures.com",
-      socials: [
-        { label: "LinkedIn", handle: "linkedin.com/in/nashdavis", url: "https://www.linkedin.com/in/nashdavis" },
-        { label: "Instagram", handle: "@nashyd694", url: "https://www.instagram.com/nashyd694/" },
-      ],
-    },
-    {
-      initials: "BS", name: "Bishop Switzer", role: "COO — Operations",
-      school: "UNC Wilmington",
-      bio: "Operations and process management. Oversees project tracking, proposals, invoicing, and handoff documentation.",
-      image: "/bishop-switzer.jpg",
-      fullBio: "As Chief Operations Officer, Bishop keeps every TSD engagement on track and on time. From scoping and proposals to invoicing and documentation, he makes sure clients always know exactly where their project stands and what comes next. Bishop is also the CEO of TSD Mobile Detailing, and has several years of experience in the field. He is intending on acquiring his Bachelor's in Business Administration from UNC Wilmington's Cameron School of Business.",
-      specialties: ["Project Management", "Operations", "Process Design", "Client Communication"],
-      email: "bishop@tsd-ventures.com",
-      socials: [
-        { label: "LinkedIn", handle: "linkedin.com/in/bishopswitzer", url: "https://www.linkedin.com/in/bishopswitzer" },
-        { label: "Instagram", handle: "@bilshup", url: "https://www.instagram.com/bilshup/" },
-      ],
-    },
-    {
-      initials: "GT", name: "Grant Tadlock", role: "CFO & Sales Lead",
-      school: "UNC Charlotte",
-      bio: "Financial planning and client acquisition. Drives sales pipeline, pricing strategy, and relationship development.",
-      image: "/grant-tadlock.jpg",
-      fullBio: "As Chief Financial Officer and Sales Lead, Grant runs TSD's sales pipeline and financial planning. He's the first person most clients meet, and the one who builds long-term relationships that turn one project into ongoing partnerships. Grant is currently studying Business Marketing at UNC Charlotte's Belk College of Business.",
-      specialties: ["Sales", "Pricing Strategy", "Financial Planning", "Client Relationships"],
-      email: "grant@tsd-ventures.com",
-      socials: [
-        { label: "LinkedIn", handle: "linkedin.com/in/granttadlock", url: "https://www.linkedin.com/in/granttadlock" },
-        { label: "Instagram", handle: "@grant_tadlock", url: "https://www.instagram.com/grant_tadlock/" },
-      ],
-    },
-  ];
+  const [selected, setSelected] = useState(null);
+
   return (
     <PageShell>
-      <div style={{ padding: "40px 48px", maxWidth: "1200px", margin: "0 auto" }}>
-        <SectionHeader center label="Meet the Team" title="Built by" titleAccent="Founders Who Care"
-          sub="Three UNC-system students combining technical expertise with genuine commitment to helping Charlotte businesses thrive." />
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "32px" }}>
-          {team.map((t, i) => (
-            <GlassCard key={i} delay={i * 150} hoverGlow={C.accentGlow} enableTilt style={{ textAlign: "center" }}
-              expandable expandedContent={<TeamModalContent member={t} />}>
+      <div style={{ padding: "40px 48px 80px", maxWidth: "1100px", margin: "0 auto" }}>
+        <SectionHeader center label="The Team" title="Who" titleAccent="we are"
+          sub="Three friends from the Charlotte area. We go to different UNC-system schools, but we grew up within 20 minutes of each other." />
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "28px" }}>
+          {TEAM.map((t, i) => (
+            <Card key={i} delay={i * 150} onClick={() => setSelected(t)} style={{ textAlign: "center", cursor: "pointer" }}>
+              {/* Avatar */}
               <div style={{
-                width: "100px", height: "100px", borderRadius: "24px",
-                background: t.image ? "none" : `linear-gradient(135deg, rgba(${C.accentRGB},0.2), rgba(${C.navyRGB},0.25))`,
-                border: `1px solid rgba(${C.accentRGB},0.25)`,
+                width: "100px", height: "100px", borderRadius: "50%",
+                background: t.image ? "none" : C.gradientPrism,
+                border: `2px solid ${v("surface-border")}`,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: "36px", margin: "0 auto 20px", color: C.accentLight,
-                fontWeight: 700, overflow: "hidden",
-                boxShadow: `0 8px 32px rgba(${C.accentRGB},0.1)`,
-                position: "relative",
+                fontSize: "32px", fontWeight: 700, color: "#fff",
+                margin: "0 auto 20px", overflow: "hidden",
               }}>
-                <div style={{
-                  position: "absolute", inset: "-3px", borderRadius: "27px",
-                  background: `linear-gradient(135deg, rgba(${C.accentRGB},0.4), transparent, rgba(${C.navyRGB},0.4))`,
-                  zIndex: -1, filter: "blur(6px)", opacity: 0.6,
-                }} />
                 {t.image ? (
-                  <img src={t.image} alt={t.name} style={{
-                    width: "100%", height: "100%", objectFit: "cover",
-                  }} />
+                  <img src={t.image} alt={t.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 ) : t.initials}
               </div>
-              <h4 style={{ fontSize: "20px", fontWeight: 700, marginBottom: "4px", color: C.text }}>{t.name}</h4>
-              <p style={{ fontSize: "14px", color: C.accentLight, fontWeight: 600, marginBottom: "8px" }}>{t.role}</p>
-              <p style={{ fontSize: "13px", color: C.textDim, marginBottom: "16px" }}>{t.school}</p>
-              <p style={{ fontSize: "14px", lineHeight: 1.6, color: C.textMuted }}>{t.bio}</p>
-            </GlassCard>
+              <h4 style={{ fontSize: "20px", fontWeight: 700, color: v("text"), marginBottom: "4px" }}>{t.name}</h4>
+              <p style={{ fontSize: "14px", fontWeight: 600, color: v("accent"), marginBottom: "8px" }}>{t.role}</p>
+              <p style={{ fontSize: "13px", color: v("text-dim"), marginBottom: "16px" }}>{t.school}</p>
+              <p style={{ fontSize: "14px", lineHeight: 1.6, color: v("text-muted") }}>{t.bio}</p>
+              <div style={{
+                marginTop: "20px", paddingTop: "16px", borderTop: `1px solid ${v("surface-border")}`,
+                fontSize: "12px", fontWeight: 600, color: v("accent"), letterSpacing: "1px", textTransform: "uppercase",
+              }}>
+                View Business Card
+              </div>
+            </Card>
           ))}
         </div>
       </div>
+      {selected && <CardModal member={selected} onClose={() => setSelected(null)} />}
     </PageShell>
   );
 }
