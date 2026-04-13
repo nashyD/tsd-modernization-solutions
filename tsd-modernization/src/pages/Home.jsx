@@ -66,7 +66,7 @@ function Hero() {
         backgroundImage: "url(/hero-storefront-future.jpg)",
         backgroundSize: "cover", backgroundPosition: "center 40%",
         backgroundRepeat: "no-repeat",
-        animation: "heroCrossfade 24s ease-in-out infinite",
+        animation: "heroCrossfade 15s ease-in-out infinite",
         opacity: 0,
       }} />
 
