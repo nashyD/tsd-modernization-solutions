@@ -52,12 +52,22 @@ function Hero() {
       minHeight: "100vh", display: "flex", alignItems: "flex-end", justifyContent: "center",
       position: "relative", overflow: "hidden", paddingBottom: "80px",
     }}>
-      {/* Storefront background image */}
+      {/* Past storefront (base layer — always visible) */}
       <div style={{
         position: "absolute", inset: 0, zIndex: 0,
-        backgroundImage: "url(/hero-storefront.png)",
+        backgroundImage: "url(/hero-storefront.jpg)",
         backgroundSize: "cover", backgroundPosition: "center 40%",
         backgroundRepeat: "no-repeat",
+      }} />
+
+      {/* Future storefront (crossfades in and out) */}
+      <div style={{
+        position: "absolute", inset: 0, zIndex: 0,
+        backgroundImage: "url(/hero-storefront-future.jpg)",
+        backgroundSize: "cover", backgroundPosition: "center 40%",
+        backgroundRepeat: "no-repeat",
+        animation: "heroCrossfade 24s ease-in-out infinite",
+        opacity: 0,
       }} />
 
       {/* Dark overlay gradient — heavier at bottom for text readability */}

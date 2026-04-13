@@ -26,6 +26,7 @@ export default function App() {
         @keyframes particlePulse { 0%,100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.5); } }
         @keyframes heroGlow { 0%,100% { opacity: 0.15; } 50% { opacity: 0.3; } }
         @keyframes scanLine { 0% { top: -2px; } 100% { top: 100%; } }
+        @keyframes heroCrossfade { 0%,30% { opacity: 0; } 42%,58% { opacity: 1; } 70%,100% { opacity: 0; } }
 
         :root, [data-theme="dark"] {
           --font-display: 'Playfair Display', Georgia, serif;
