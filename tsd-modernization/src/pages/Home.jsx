@@ -2,86 +2,117 @@ import { Link } from "react-router-dom";
 import { C, v, useFadeIn, useCountUp, DiamondDivider, Card, RippleButton, Tag } from "../shared";
 import { BotIcon, GlobeIcon, CogIcon, ArrowRightIcon } from "../icons";
 
-/* ── Floating stat cards in hero ──────────────────────────────── */
-function FloatingCards() {
-  const cards = [
-    { label: "AI Workflows", value: "+340%", x: "8%", y: "22%", anim: "float1", dur: "6s" },
-    { label: "Tasks Automated", value: "2,400+", x: "78%", y: "18%", anim: "float2", dur: "7s" },
-    { label: "Avg Response", value: "<2hr", x: "72%", y: "68%", anim: "float1", dur: "8s" },
-  ];
-  return cards.map((c, i) => (
-    <div key={i} style={{
-      position: "absolute", left: c.x, top: c.y,
-      padding: "14px 20px", borderRadius: "14px",
-      background: v("surface"), border: `1px solid ${v("surface-border")}`,
-      backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
-      animation: `${c.anim} ${c.dur} ease-in-out infinite`,
-      zIndex: 2, display: "none",
-    }} className="desktop-nav">{/* Only show on desktop */}
-      <div style={{ fontSize: "18px", fontWeight: 800, color: v("accent"), letterSpacing: "-0.5px" }}>{c.value}</div>
-      <div style={{ fontSize: "11px", fontWeight: 600, color: v("text-dim"), letterSpacing: "0.5px" }}>{c.label}</div>
+/* ── Holographic particles overlay ────────────────────────────── */
+function HoloParticles() {
+  const particles = Array.from({ length: 20 }, (_, i) => ({
+    left: `${Math.random() * 100}%`,
+    size: 2 + Math.random() * 4,
+    delay: Math.random() * 12,
+    duration: 8 + Math.random() * 10,
+    opacity: 0.2 + Math.random() * 0.5,
+  }));
+  return (
+    <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 2, overflow: "hidden" }}>
+      {particles.map((p, i) => (
+        <div key={i} style={{
+          position: "absolute", left: p.left, bottom: "-10px",
+          width: `${p.size}px`, height: `${p.size}px`, borderRadius: "50%",
+          background: i % 3 === 0 ? C.carolinaLight : i % 3 === 1 ? C.carolina : C.gold,
+          animation: `particleFloat ${p.duration}s ${p.delay}s ease-in-out infinite`,
+          opacity: 0,
+          boxShadow: `0 0 ${p.size * 3}px ${i % 3 === 0 ? C.carolinaLight : C.carolina}`,
+        }} />
+      ))}
+      {/* Pulsing glow dots on buildings */}
+      {[
+        { x: "15%", y: "30%" }, { x: "85%", y: "25%" }, { x: "10%", y: "55%" },
+        { x: "90%", y: "50%" }, { x: "25%", y: "20%" }, { x: "75%", y: "35%" },
+      ].map((d, i) => (
+        <div key={`glow-${i}`} style={{
+          position: "absolute", left: d.x, top: d.y,
+          width: "6px", height: "6px", borderRadius: "50%",
+          background: C.carolinaLight,
+          animation: `particlePulse ${3 + i * 0.7}s ${i * 0.5}s ease-in-out infinite`,
+          boxShadow: `0 0 12px ${C.carolinaLight}, 0 0 24px rgba(123,184,224,0.3)`,
+        }} />
+      ))}
     </div>
-  ));
+  );
 }
 
 /* ── Hero ──────────────────────────────────────────────────────── */
 function Hero() {
-  const [r1, f1] = useFadeIn(0);
-  const [r2, f2] = useFadeIn(150);
-  const [r3, f3] = useFadeIn(300);
-  const [r4, f4] = useFadeIn(450);
+  const [r1, f1] = useFadeIn(200);
+  const [r2, f2] = useFadeIn(400);
+  const [r3, f3] = useFadeIn(600);
+  const [r4, f4] = useFadeIn(800);
 
   return (
     <section style={{
-      minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
-      position: "relative", overflow: "hidden", padding: "120px 48px 80px",
+      minHeight: "100vh", display: "flex", alignItems: "flex-end", justifyContent: "center",
+      position: "relative", overflow: "hidden", paddingBottom: "80px",
     }}>
-      {/* Background orb */}
+      {/* Storefront background image */}
       <div style={{
-        position: "absolute", width: "600px", height: "600px", borderRadius: "50%",
-        background: `radial-gradient(circle, rgba(75,156,211,0.08) 0%, transparent 70%)`,
-        top: "10%", left: "50%", transform: "translateX(-50%)",
-        animation: "orbFloat 15s ease-in-out infinite", pointerEvents: "none",
+        position: "absolute", inset: 0, zIndex: 0,
+        backgroundImage: "url(/hero-storefront.png)",
+        backgroundSize: "cover", backgroundPosition: "center 40%",
+        backgroundRepeat: "no-repeat",
       }} />
 
-      <FloatingCards />
+      {/* Dark overlay gradient — heavier at bottom for text readability */}
+      <div style={{
+        position: "absolute", inset: 0, zIndex: 1,
+        background: `linear-gradient(to bottom, rgba(12,21,36,0.3) 0%, rgba(12,21,36,0.5) 40%, rgba(12,21,36,0.85) 70%, rgba(12,21,36,0.95) 100%)`,
+      }} />
 
-      <div style={{ maxWidth: "800px", textAlign: "center", position: "relative", zIndex: 3 }}>
-        {/* Label */}
+      {/* Holographic glow on the edges */}
+      <div style={{
+        position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
+        background: `radial-gradient(ellipse at 20% 30%, rgba(75,156,211,0.08) 0%, transparent 50%),
+                     radial-gradient(ellipse at 80% 25%, rgba(123,184,224,0.06) 0%, transparent 50%)`,
+        animation: "heroGlow 6s ease-in-out infinite",
+      }} />
+
+      <HoloParticles />
+
+      {/* Content */}
+      <div style={{ maxWidth: "800px", textAlign: "center", position: "relative", zIndex: 3, padding: "0 24px" }}>
         <div ref={r1} style={{
           ...f1, fontSize: "12px", fontWeight: 700, letterSpacing: "3px", textTransform: "uppercase",
-          color: v("accent"), marginBottom: "24px",
+          color: C.carolinaLight, marginBottom: "20px",
           display: "flex", alignItems: "center", gap: "8px", justifyContent: "center",
+          textShadow: "0 2px 8px rgba(0,0,0,0.5)",
         }}>
           <span style={{ fontSize: "8px" }}>{"\u25C6"}</span> Small Business Modernization Specialists
         </div>
 
-        {/* Headline */}
         <h1 ref={r2} style={{
           ...f2, fontFamily: "var(--font-body)", fontWeight: 800,
-          fontSize: "clamp(36px, 6vw, 72px)", letterSpacing: "-2px", lineHeight: 1.05,
-          color: v("text"), marginBottom: "24px",
+          fontSize: "clamp(32px, 5.5vw, 64px)", letterSpacing: "-2px", lineHeight: 1.08,
+          color: "#fff", marginBottom: "20px",
+          textShadow: "0 4px 20px rgba(0,0,0,0.5)",
         }}>
-          We bring your business{" "}
+          The world moved forward.{" "}
           <span style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
             background: C.gradientAccent, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
             backgroundClip: "text",
-          }}>into the future</span>
+            filter: "drop-shadow(0 2px 8px rgba(75,156,211,0.4))",
+          }}>Your business can too.</span>
         </h1>
 
-        <DiamondDivider width={180} style={{ marginBottom: "24px" }} />
+        <DiamondDivider width={160} style={{ marginBottom: "20px" }} />
 
-        {/* Subtitle */}
         <p ref={r3} style={{
-          ...f3, fontSize: "18px", lineHeight: 1.7, color: v("text-muted"),
-          maxWidth: "560px", margin: "0 auto 40px",
+          ...f3, fontSize: "17px", lineHeight: 1.7, color: "rgba(255,255,255,0.75)",
+          maxWidth: "520px", margin: "0 auto 36px",
+          textShadow: "0 2px 8px rgba(0,0,0,0.4)",
         }}>
           AI integration, custom websites, and workflow automation for Charlotte-area small businesses.
           Real results at a fraction of agency prices.
         </p>
 
-        {/* CTAs */}
         <div ref={r4} style={{ ...f4, display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
           <Link to="/contact">
             <RippleButton variant="primary" style={{ padding: "16px 36px", fontSize: "15px" }}>
@@ -89,7 +120,11 @@ function Hero() {
             </RippleButton>
           </Link>
           <Link to="/services">
-            <RippleButton variant="secondary" style={{ padding: "16px 36px", fontSize: "15px" }}>
+            <RippleButton variant="secondary" style={{
+              padding: "16px 36px", fontSize: "15px",
+              background: "rgba(255,255,255,0.1)", borderColor: "rgba(255,255,255,0.25)",
+              backdropFilter: "blur(8px)", color: "#fff",
+            }}>
               Our Services
             </RippleButton>
           </Link>
@@ -98,13 +133,13 @@ function Hero() {
 
       {/* Scroll indicator */}
       <div style={{
-        position: "absolute", bottom: "32px", left: "50%", transform: "translateX(-50%)",
+        position: "absolute", bottom: "20px", left: "50%", transform: "translateX(-50%)",
         display: "flex", flexDirection: "column", alignItems: "center", gap: "8px",
-        animation: "scrollBounce 2s ease-in-out infinite", opacity: 0.4,
+        animation: "scrollBounce 2s ease-in-out infinite", opacity: 0.5, zIndex: 3,
       }}>
-        <div style={{ width: "20px", height: "32px", borderRadius: "10px", border: `1.5px solid ${v("text-dim")}`, position: "relative" }}>
+        <div style={{ width: "20px", height: "32px", borderRadius: "10px", border: "1.5px solid rgba(255,255,255,0.3)", position: "relative" }}>
           <div style={{
-            width: "3px", height: "6px", borderRadius: "2px", background: v("text-dim"),
+            width: "3px", height: "6px", borderRadius: "2px", background: "rgba(255,255,255,0.4)",
             position: "absolute", left: "50%", transform: "translateX(-50%)",
             animation: "scrollDot 1.5s ease-in-out infinite",
           }} />

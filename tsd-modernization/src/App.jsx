@@ -22,6 +22,10 @@ export default function App() {
         @keyframes scrollDot { 0% { top: 8px; opacity: 1; } 100% { top: 22px; opacity: 0; } }
         @keyframes orbFloat { 0%,100% { transform: translate(0,0); } 33% { transform: translate(-25px,15px); } 66% { transform: translate(15px,-10px); } }
         @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes particleFloat { 0% { transform: translateY(0) translateX(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(-100vh) translateX(40px); opacity: 0; } }
+        @keyframes particlePulse { 0%,100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.5); } }
+        @keyframes heroGlow { 0%,100% { opacity: 0.15; } 50% { opacity: 0.3; } }
+        @keyframes scanLine { 0% { top: -2px; } 100% { top: 100%; } }
 
         :root, [data-theme="dark"] {
           --font-display: 'Playfair Display', Georgia, serif;
