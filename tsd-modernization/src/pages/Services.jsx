@@ -1,139 +1,55 @@
-import { C, GlassCard, SectionHeader } from "../shared";
-import { SparklesIcon, MonitorIcon, TrendingUpIcon, CheckIcon } from "../icons";
+import { C, v, SectionHeader, Card, Tag } from "../shared";
+import { BotIcon, GlobeIcon, CogIcon } from "../icons";
 import PageShell from "./PageShell";
 
-function ServiceModalContent({ service }) {
-  return (
-    <div>
-      <div style={{
-        width: "72px", height: "72px", borderRadius: "18px",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        marginBottom: "24px", background: service.gradient, color: "#fff",
-        boxShadow: `0 8px 24px ${service.glow}`,
-      }}>
-        <service.Icon size={36} />
-      </div>
-      <h2 style={{ fontSize: "32px", fontWeight: 800, marginBottom: "12px", letterSpacing: "-0.5px", color: C.text }}>
-        {service.title}
-      </h2>
-      <p style={{ fontSize: "16px", lineHeight: 1.7, color: C.textMuted, marginBottom: "32px" }}>
-        {service.longDesc}
-      </p>
-      <h3 style={{ fontSize: "14px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1.2px", color: C.accentLight, marginBottom: "16px" }}>
-        What's Included
-      </h3>
-      <ul style={{ listStyle: "none", padding: 0, marginBottom: "32px" }}>
-        {service.included.map((item, i) => (
-          <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "12px", padding: "10px 0", fontSize: "15px", lineHeight: 1.6, color: C.text }}>
-            <span style={{ color: C.success, flexShrink: 0, marginTop: "2px" }}><CheckIcon size={18} /></span>
-            <span>{item}</span>
-          </li>
-        ))}
-      </ul>
-      <h3 style={{ fontSize: "14px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1.2px", color: C.accentLight, marginBottom: "12px" }}>
-        Typical Timeline
-      </h3>
-      <p style={{ fontSize: "15px", lineHeight: 1.6, color: C.textMuted, marginBottom: "32px" }}>
-        {service.timeline}
-      </p>
-      <div style={{
-        padding: "20px 24px", borderRadius: "16px",
-        background: `rgba(${C.accentRGB},0.08)`,
-        border: `1px solid rgba(${C.accentRGB},0.25)`,
-      }}>
-        <p style={{ fontSize: "13px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", color: C.accentLight, marginBottom: "6px" }}>
-          Starting Price
-        </p>
-        <p style={{ fontSize: "15px", color: C.text }}>{service.price}</p>
-      </div>
-    </div>
-  );
-}
+const SERVICES = [
+  {
+    Icon: BotIcon, title: "AI Integration & Automation",
+    desc: "Deploy intelligent chatbots, automate repetitive workflows, and unlock AI-powered insights. We set up the tools, train your team, and document everything.",
+    longDesc: "From customer-facing chatbots that handle FAQs to backend automations that replace hours of manual data entry, we build AI solutions that actually make sense for your business size and budget.",
+    tags: ["Chatbots", "Zapier", "AI Reports", "Scheduling", "Email Automation"],
+    gradient: C.gradientPrism,
+  },
+  {
+    Icon: GlobeIcon, title: "Website Creation",
+    desc: "We build sites that load fast, look good on phones, and show up in search results. Every site comes with written and video documentation so you can update content without calling us.",
+    longDesc: "Two weeks of post-launch support included. We use modern frameworks like React and Vite to build sites that are fast, accessible, and easy to maintain.",
+    tags: ["React", "SEO", "Mobile-First", "CMS", "Performance", "Analytics"],
+    gradient: C.gradientAccent,
+  },
+  {
+    Icon: CogIcon, title: "Process Modernization",
+    desc: "Replace spreadsheets, paper forms, and manual processes with streamlined digital tools. We audit your current workflow and build exactly what you need.",
+    longDesc: "Whether it's a custom dashboard, automated invoicing, or a client portal, we identify the bottlenecks and build targeted solutions that save your team real time every week.",
+    tags: ["Workflows", "Dashboards", "Integrations", "Training", "Documentation"],
+    gradient: "linear-gradient(135deg, #2c5f8a 0%, #13294B 100%)",
+  },
+];
 
 export default function Services() {
-  const services = [
-    {
-      Icon: SparklesIcon, title: "AI Integration & Automation",
-      desc: "Chatbots that answer customer questions, automations that handle the repetitive stuff, and dashboards that actually make sense.",
-      tags: ["Chatbots", "Zapier", "AI Reports", "Scheduling"],
-      gradient: C.gradient1, glow: C.accentGlow,
-      longDesc: "We look at what you're doing manually and figure out what can be handed off to AI. FAQ chatbots, scheduling automation, invoicing workflows, reporting dashboards \u2014 built around how your business already runs, not some generic template.",
-      included: [
-        "Custom AI chatbot trained on your business",
-        "Make automation workflows",
-        "AI-powered reporting dashboards",
-        "Calendar & appointment automation",
-        "Staff training on every tool we deploy",
-      ],
-      timeline: "1-2 weeks from kickoff to launch.",
-      price: "Projects start at $250. Final quote depends on scope and is included in your free tech audit.",
-    },
-    {
-      Icon: MonitorIcon, title: "Website Creation & Redesign",
-      desc: "Clean, fast websites with SEO baked in. You get handoff docs so you can actually update it yourself after we\u2019re done.",
-      tags: ["Webflow", "WordPress", "SEO", "Analytics"],
-      gradient: C.gradient2, glow: `rgba(${C.accentRGB},0.3)`,
-      longDesc: "We build sites that load fast, look good on phones, and show up in search results. Every site comes with written and video documentation so you can update content without calling us. Two weeks of post-launch support included.",
-      included: [
-        "5-8 page custom-designed website",
-        "Mobile-first responsive build",
-        "On-page SEO and metadata optimized for AI search visibility",
-        "Google Analytics + Search Console wiring",
-        "Contact form & chatbot integration",
-        "Written + video handoff documentation",
-        "2 weeks of post-launch support",
-      ],
-      timeline: "2-4 weeks from approved mockup to launch.",
-      price: "Starter websites from $250. Bundle pricing available with AI integration.",
-    },
-    {
-      Icon: TrendingUpIcon, title: "Process Modernization",
-      desc: "We sit down with you, map out how your business runs, and tell you what to fix first. Written roadmap, no obligation to hire us.",
-      tags: ["Tech Audit", "Roadmap", "ROI Analysis", "Training"],
-      gradient: C.gradient3, glow: `rgba(${C.navyRGB},0.35)`,
-      longDesc: "Not everything needs AI. We walk through your operations, figure out where you\u2019re wasting time, and give you a prioritized list of what to change. You can hire us to do it or take the roadmap to someone else.",
-      included: [
-        "2-3 hour structured tech audit (in-person or remote)",
-        "Written modernization roadmap",
-        "Tool & platform recommendations with cost estimates",
-        "Priority sequence + estimated ROI per item",
-        "No obligation to continue with us",
-      ],
-      timeline: "Audit completed in a single session. Written roadmap delivered within 48 hours.",
-      price: "$150-$250 one-time fee. Free if bundled with a website or AI project.",
-    },
-  ];
   return (
     <PageShell>
-      <div style={{ padding: "40px 48px", maxWidth: "1200px", margin: "0 auto" }}>
-        <SectionHeader center label="What We Do" title="Three things" titleAccent="we build"
-          sub="We keep it simple. Pick what you need, get a fixed quote, and we build it." />
-        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "32px" }}>
-          {services.map((s, i) => (
-            <GlassCard key={i} delay={i * 150} hoverGlow={s.glow} enableTilt
-              expandable expandedContent={<ServiceModalContent service={s} />}
-              style={{ flex: "1 1 320px", maxWidth: "380px" }}>
+      <div style={{ padding: "40px 48px 80px", maxWidth: "1100px", margin: "0 auto" }}>
+        <SectionHeader center label="What We Do" title="Our" titleAccent="services"
+          sub="Every engagement is hands-on, fully documented, and priced for small business budgets." />
+        <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
+          {SERVICES.map((s, i) => (
+            <Card key={i} delay={i * 120} style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "32px", alignItems: "start" }}>
               <div style={{
-                width: "64px", height: "64px", borderRadius: "16px",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                marginBottom: "24px", background: s.gradient, color: "#fff",
-                boxShadow: `0 8px 24px ${s.glow}`,
+                width: "60px", height: "60px", borderRadius: "16px", background: s.gradient,
+                display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", flexShrink: 0,
               }}>
-                <s.Icon size={32} />
+                <s.Icon size={28} />
               </div>
-              <h3 style={{ fontSize: "22px", fontWeight: 700, marginBottom: "12px", color: C.text }}>{s.title}</h3>
-              <p style={{ fontSize: "15px", lineHeight: 1.7, color: C.textMuted, marginBottom: "20px" }}>{s.desc}</p>
               <div>
-                {s.tags.map((tag, j) => (
-                  <span key={j} style={{
-                    display: "inline-block", padding: "4px 12px", borderRadius: "8px",
-                    fontSize: "12px", fontWeight: 600, marginRight: "8px", marginBottom: "8px",
-                    background: `rgba(${C.accentRGB},0.1)`, border: `1px solid rgba(${C.accentRGB},0.2)`,
-                    color: C.accentLight,
-                  }}>{tag}</span>
-                ))}
+                <h3 style={{ fontSize: "22px", fontWeight: 700, color: v("text"), marginBottom: "10px" }}>{s.title}</h3>
+                <p style={{ fontSize: "15px", lineHeight: 1.7, color: v("text-muted"), marginBottom: "8px" }}>{s.desc}</p>
+                <p style={{ fontSize: "14px", lineHeight: 1.7, color: v("text-dim"), marginBottom: "20px" }}>{s.longDesc}</p>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+                  {s.tags.map((t) => <Tag key={t}>{t}</Tag>)}
+                </div>
               </div>
-            </GlassCard>
+            </Card>
           ))}
         </div>
       </div>
