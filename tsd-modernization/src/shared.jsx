@@ -391,39 +391,6 @@ export function CardModal({ open, onClose, children }) {
   );
 }
 
-// ─── Tabs ────────────────────────────────────────────────────────────────
-export function Tabs({ tabs }) {
-  const [active, setActive] = useState(0);
-  return (
-    <div>
-      <div role="tablist" style={{
-        display: "flex", gap: "4px", marginBottom: "28px",
-        borderBottom: `1px solid ${C.glassBorder}`, paddingBottom: "0",
-      }}>
-        {tabs.map((t, i) => (
-          <button key={i} role="tab" aria-selected={active === i}
-            onClick={() => setActive(i)}
-            style={{
-              padding: "10px 20px", fontSize: "13px", fontWeight: 700,
-              letterSpacing: "0.5px", border: "none", cursor: "pointer",
-              borderRadius: "10px 10px 0 0", transition: "all 0.25s ease",
-              background: active === i ? `rgba(${C.accentRGB},0.15)` : "transparent",
-              color: active === i ? C.accentLight : C.textMuted,
-              borderBottom: active === i ? `2px solid ${C.accentLight}` : "2px solid transparent",
-              marginBottom: "-1px",
-            }}
-          >{t.label}</button>
-        ))}
-      </div>
-      {tabs.map((t, i) => (
-        <div key={i} role="tabpanel" hidden={active !== i}>
-          {active === i && t.content}
-        </div>
-      ))}
-    </div>
-  );
-}
-
 // ─── Section Header ───────────────────────────────────────────────────────
 export function SectionHeader({ label, title, titleAccent, sub, center }) {
   const [ref, fadeStyle] = useFadeIn(0);

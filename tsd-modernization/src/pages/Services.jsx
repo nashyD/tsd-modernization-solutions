@@ -1,101 +1,21 @@
-import { useState } from "react";
-import { C, GlassCard, SectionHeader, Tabs } from "../shared";
+import { C, GlassCard, SectionHeader } from "../shared";
 import { SparklesIcon, MonitorIcon, TrendingUpIcon, CheckIcon } from "../icons";
 import PageShell from "./PageShell";
 
-/* ── YouTube Embed ─────────────────────────────────────────────────────── */
-function YouTubeEmbed({ videoId, title }) {
-  return (
-    <div style={{
-      position: "relative", paddingBottom: "56.25%", height: 0,
-      borderRadius: "14px", overflow: "hidden", marginBottom: "16px",
-      border: `1px solid ${C.glassBorder}`,
-    }}>
-      <iframe
-        src={`https://www.youtube-nocookie.com/embed/${videoId}`}
-        title={title}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-        loading="lazy"
-        style={{
-          position: "absolute", top: 0, left: 0,
-          width: "100%", height: "100%", border: "none",
-        }}
-      />
-    </div>
-  );
-}
-
-/* ── Slideshow / Carousel ──────────────────────────────────────────────── */
-function Slideshow({ slides }) {
-  const [idx, setIdx] = useState(0);
-  if (!slides || slides.length === 0) return null;
-  const prev = () => setIdx((i) => (i === 0 ? slides.length - 1 : i - 1));
-  const next = () => setIdx((i) => (i === slides.length - 1 ? 0 : i + 1));
-  const slide = slides[idx];
-
-  const arrowBtn = (dir) => ({
-    position: "absolute", top: "50%", transform: "translateY(-50%)",
-    [dir === "left" ? "left" : "right"]: "12px",
-    width: "40px", height: "40px", borderRadius: "12px",
-    background: "rgba(0,0,0,0.55)", backdropFilter: "blur(8px)",
-    border: `1px solid rgba(255,255,255,0.15)`,
-    color: "#fff", fontSize: "20px", cursor: "pointer",
-    display: "flex", alignItems: "center", justifyContent: "center",
-    transition: "background 0.2s",
-    zIndex: 2,
-  });
-
+function ServiceModalContent({ service }) {
   return (
     <div>
       <div style={{
-        position: "relative", borderRadius: "14px", overflow: "hidden",
-        aspectRatio: "16/9",
-        background: slide.gradient || `url(${slide.src}) center/cover no-repeat`,
-        border: `1px solid ${C.glassBorder}`,
-        display: "flex", alignItems: "flex-end", justifyContent: "center",
+        width: "72px", height: "72px", borderRadius: "18px",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        marginBottom: "24px", background: service.gradient, color: "#fff",
+        boxShadow: `0 8px 24px ${service.glow}`,
       }}>
-        {/* caption overlay */}
-        <div style={{
-          position: "absolute", inset: 0,
-          background: "linear-gradient(transparent 50%, rgba(0,0,0,0.7))",
-          display: "flex", alignItems: "flex-end", justifyContent: "center",
-          padding: "24px",
-        }}>
-          <p style={{ color: "#fff", fontSize: "14px", fontWeight: 600, textAlign: "center" }}>
-            {slide.caption}
-          </p>
-        </div>
-        {slides.length > 1 && (
-          <>
-            <button onClick={prev} style={arrowBtn("left")} aria-label="Previous slide">&#8249;</button>
-            <button onClick={next} style={arrowBtn("right")} aria-label="Next slide">&#8250;</button>
-          </>
-        )}
+        <service.Icon size={36} />
       </div>
-      {/* dot indicators */}
-      {slides.length > 1 && (
-        <div style={{ display: "flex", justifyContent: "center", gap: "8px", marginTop: "14px" }}>
-          {slides.map((_, i) => (
-            <button key={i} onClick={() => setIdx(i)} aria-label={`Go to slide ${i + 1}`}
-              style={{
-                width: idx === i ? "24px" : "8px", height: "8px",
-                borderRadius: "4px", border: "none", cursor: "pointer",
-                background: idx === i ? C.accentLight : `rgba(${C.accentRGB},0.25)`,
-                transition: "all 0.3s ease",
-              }}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* ── Overview Tab (original modal content) ─────────────────────────────── */
-function OverviewTab({ service }) {
-  return (
-    <div>
+      <h2 style={{ fontSize: "32px", fontWeight: 800, marginBottom: "12px", letterSpacing: "-0.5px", color: C.text }}>
+        {service.title}
+      </h2>
       <p style={{ fontSize: "16px", lineHeight: 1.7, color: C.textMuted, marginBottom: "32px" }}>
         {service.longDesc}
       </p>
@@ -130,45 +50,6 @@ function OverviewTab({ service }) {
   );
 }
 
-/* ── Service Modal Content (tabbed) ────────────────────────────────────── */
-function ServiceModalContent({ service }) {
-  return (
-    <div>
-      <div style={{
-        width: "72px", height: "72px", borderRadius: "18px",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        marginBottom: "24px", background: service.gradient, color: "#fff",
-        boxShadow: `0 8px 24px ${service.glow}`,
-      }}>
-        <service.Icon size={36} />
-      </div>
-      <h2 style={{ fontSize: "32px", fontWeight: 800, marginBottom: "20px", letterSpacing: "-0.5px", color: C.text }}>
-        {service.title}
-      </h2>
-      <Tabs tabs={[
-        { label: "Overview", content: <OverviewTab service={service} /> },
-        {
-          label: "Demo Videos",
-          content: (
-            <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-              {service.videos.map((v, i) => (
-                <div key={i}>
-                  <h4 style={{ fontSize: "14px", fontWeight: 600, color: C.text, marginBottom: "10px" }}>{v.title}</h4>
-                  <YouTubeEmbed videoId={v.id} title={v.title} />
-                </div>
-              ))}
-            </div>
-          ),
-        },
-        {
-          label: "Solutions Gallery",
-          content: <Slideshow slides={service.slides} />,
-        },
-      ]} />
-    </div>
-  );
-}
-
 export default function Services() {
   const services = [
     {
@@ -186,15 +67,6 @@ export default function Services() {
       ],
       timeline: "1-2 weeks from kickoff to launch.",
       price: "Projects start at $250. Final quote depends on scope and is included in your free tech audit.",
-      videos: [
-        { id: "lM02vNMRRB0", title: "Placeholder: Custom Chatbot Setup" },
-        { id: "BHACKCNDMW8", title: "Placeholder: Zapier Workflow Walkthrough" },
-      ],
-      slides: [
-        { gradient: "linear-gradient(135deg, #0a1628 0%, #1a3a5c 50%, #2d6a9f 100%)", caption: "AI chatbot dashboard — real-time conversation analytics" },
-        { gradient: "linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)", caption: "Zapier automation builder — connect 5,000+ apps" },
-        { gradient: "linear-gradient(135deg, #141e30 0%, #243b55 50%, #3a7bd5 100%)", caption: "AI-generated reporting — weekly insights on autopilot" },
-      ],
     },
     {
       Icon: MonitorIcon, title: "Website Creation & Redesign",
@@ -213,15 +85,6 @@ export default function Services() {
       ],
       timeline: "2-4 weeks from approved mockup to launch.",
       price: "Starter websites from $250. Bundle pricing available with AI integration.",
-      videos: [
-        { id: "hlWiI4xVXKY", title: "Placeholder: Mobile-First Responsive Demo" },
-        { id: "lM02vNMRRB0", title: "Placeholder: SEO & Analytics Setup" },
-      ],
-      slides: [
-        { gradient: "linear-gradient(135deg, #0d1b2a 0%, #1b3a4b 50%, #3a86ff 100%)", caption: "Mobile-first responsive design — looks great on every screen" },
-        { gradient: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)", caption: "Built-in SEO — optimized metadata and structured data" },
-        { gradient: "linear-gradient(135deg, #0b0c10 0%, #1f2833 50%, #45a29e 100%)", caption: "Analytics dashboard — see exactly what's working" },
-      ],
     },
     {
       Icon: TrendingUpIcon, title: "Process Modernization",
@@ -238,14 +101,6 @@ export default function Services() {
       ],
       timeline: "Audit completed in a single session. Written roadmap delivered within 48 hours.",
       price: "$150-$250 one-time fee. Free if bundled with a website or AI project.",
-      videos: [
-        { id: "BHACKCNDMW8", title: "Placeholder: Tech Audit Walkthrough" },
-      ],
-      slides: [
-        { gradient: "linear-gradient(135deg, #1a1a2e 0%, #2d3436 50%, #636e72 100%)", caption: "Structured tech audit — every process mapped and scored" },
-        { gradient: "linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)", caption: "Modernization roadmap — prioritized by ROI" },
-        { gradient: "linear-gradient(135deg, #232526 0%, #414345 50%, #5c6b73 100%)", caption: "Tool recommendations — cost estimates included" },
-      ],
     },
   ];
   return (
