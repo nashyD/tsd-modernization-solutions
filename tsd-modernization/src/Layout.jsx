@@ -77,16 +77,17 @@ export default function Layout() {
           <div ref={menuRef} style={{ position: "relative" }}>
             <button onClick={() => setMenuOpen(!menuOpen)} style={{
               background: menuOpen ? v("surface") : C.gradientPrism,
-              border: menuOpen ? `1.5px solid ${v("surface-border")}` : "1.5px solid transparent",
+              border: menuOpen ? `1px solid ${v("surface-border")}` : "1px solid transparent",
               cursor: "pointer",
               color: menuOpen ? v("text") : "#fff",
-              padding: "10px 20px", borderRadius: "100px",
-              display: "flex", alignItems: "center", gap: "8px",
-              fontSize: "13px", fontWeight: 700, fontFamily: "var(--font-body)",
+              padding: "7px 14px", borderRadius: "100px",
+              display: "flex", alignItems: "center", gap: "6px",
+              fontSize: "12px", fontWeight: 700, fontFamily: "var(--font-body)",
               transition: "all 0.2s ease",
-              boxShadow: menuOpen ? "none" : "0 2px 12px rgba(75,156,211,0.3)",
+              boxShadow: menuOpen ? "none" : "0 2px 10px rgba(75,156,211,0.25)",
+              lineHeight: 1,
             }} aria-label="Navigation menu">
-              {menuOpen ? <XIcon size={16} /> : <MenuIcon size={16} />}
+              {menuOpen ? <XIcon size={14} /> : <MenuIcon size={14} />}
               Menu
             </button>
 
