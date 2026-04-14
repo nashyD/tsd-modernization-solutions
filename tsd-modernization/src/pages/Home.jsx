@@ -77,16 +77,22 @@ function Hero() {
         <source src="/hero-loop.mp4" type="video/mp4" />
       </video>
 
-      {/* Reveal overlay — solid bg at top (behind text), transparent in the middle (video visible), solid bg at bottom */}
+      {/* Reveal overlay — a sliver of solid bg at top (tucks behind nav), then clears to reveal the full video frame, solid bg at bottom */}
       <div style={{
         position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
         background: `linear-gradient(to bottom,
           var(--c-bg) 0%,
-          var(--c-bg) 35%,
-          transparent 45%,
+          var(--c-bg) 8%,
+          transparent 20%,
           transparent 82%,
           var(--c-bg) 90%,
           var(--c-bg) 100%)`,
+      }} />
+
+      {/* Soft darkening behind text for readability (no hard edge) */}
+      <div style={{
+        position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
+        background: "radial-gradient(ellipse 70% 45% at 50% 32%, rgba(12,21,36,0.55) 0%, rgba(12,21,36,0.25) 45%, transparent 75%)",
       }} />
 
       {/* Holographic glow concentrated in the visible video band */}
@@ -105,7 +111,7 @@ function Hero() {
           ...f1, fontSize: "12px", fontWeight: 700, letterSpacing: "3px", textTransform: "uppercase",
           color: C.carolinaLight, marginBottom: "20px",
           display: "flex", alignItems: "center", gap: "8px", justifyContent: "center",
-          textShadow: "0 2px 8px rgba(0,0,0,0.5)",
+          textShadow: "0 2px 12px rgba(0,0,0,0.9), 0 1px 3px rgba(0,0,0,0.8)",
         }}>
           <span style={{ fontSize: "8px" }}>{"\u25C6"}</span> Small Business Modernization Specialists
         </div>
@@ -114,23 +120,23 @@ function Hero() {
           ...f2, fontFamily: "var(--font-body)", fontWeight: 800,
           fontSize: "clamp(32px, 5.5vw, 64px)", letterSpacing: "-2px", lineHeight: 1.08,
           color: "#fff", marginBottom: "20px",
-          textShadow: "0 4px 20px rgba(0,0,0,0.5)",
+          textShadow: "0 4px 24px rgba(0,0,0,0.9), 0 2px 6px rgba(0,0,0,0.8)",
         }}>
           The world moved forward.{" "}
           <span style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
             background: C.gradientAccent, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
             backgroundClip: "text",
-            filter: "drop-shadow(0 2px 8px rgba(75,156,211,0.4))",
+            filter: "drop-shadow(0 2px 12px rgba(0,0,0,0.85)) drop-shadow(0 2px 8px rgba(75,156,211,0.4))",
           }}>Your business can too.</span>
         </h1>
 
         <DiamondDivider width={160} style={{ marginBottom: "20px" }} />
 
         <p ref={r3} style={{
-          ...f3, fontSize: "17px", lineHeight: 1.7, color: "rgba(255,255,255,0.75)",
+          ...f3, fontSize: "17px", lineHeight: 1.7, color: "rgba(255,255,255,0.85)",
           maxWidth: "520px", margin: "0 auto 36px",
-          textShadow: "0 2px 8px rgba(0,0,0,0.4)",
+          textShadow: "0 2px 12px rgba(0,0,0,0.9), 0 1px 3px rgba(0,0,0,0.7)",
         }}>
           AI integration, custom websites, and workflow automation for Charlotte-area small businesses.
           Real results at a fraction of agency prices.
