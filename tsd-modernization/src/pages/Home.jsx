@@ -49,8 +49,10 @@ function Hero() {
 
   return (
     <section style={{
-      minHeight: "100vh", display: "flex", alignItems: "flex-end", justifyContent: "center",
-      position: "relative", overflow: "hidden", paddingBottom: "80px",
+      minHeight: "100vh", position: "relative", overflow: "hidden",
+      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start",
+      background: "var(--c-bg)",
+      paddingTop: "140px", paddingBottom: "80px",
     }}>
       {/* Storefront image — base layer and mobile fallback */}
       <div className="hero-bg" style={{
@@ -75,17 +77,23 @@ function Hero() {
         <source src="/hero-loop.mp4" type="video/mp4" />
       </video>
 
-      {/* Dark overlay gradient — heavier at bottom for text readability, fully opaque at edge to blend into page bg */}
-      <div style={{
-        position: "absolute", inset: 0, zIndex: 1,
-        background: `linear-gradient(to bottom, rgba(12,21,36,0.3) 0%, rgba(12,21,36,0.5) 40%, rgba(12,21,36,0.85) 70%, rgba(12,21,36,1) 95%)`,
-      }} />
-
-      {/* Holographic glow on the edges */}
+      {/* Reveal overlay — solid bg at top (behind text), transparent in the middle (video visible), solid bg at bottom */}
       <div style={{
         position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
-        background: `radial-gradient(ellipse at 20% 30%, rgba(75,156,211,0.08) 0%, transparent 50%),
-                     radial-gradient(ellipse at 80% 25%, rgba(123,184,224,0.06) 0%, transparent 50%)`,
+        background: `linear-gradient(to bottom,
+          var(--c-bg) 0%,
+          var(--c-bg) 35%,
+          transparent 45%,
+          transparent 82%,
+          var(--c-bg) 90%,
+          var(--c-bg) 100%)`,
+      }} />
+
+      {/* Holographic glow concentrated in the visible video band */}
+      <div style={{
+        position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
+        background: `radial-gradient(ellipse at 20% 65%, rgba(75,156,211,0.1) 0%, transparent 40%),
+                     radial-gradient(ellipse at 80% 65%, rgba(123,184,224,0.08) 0%, transparent 40%)`,
         animation: "heroGlow 6s ease-in-out infinite",
       }} />
 
@@ -146,20 +154,6 @@ function Hero() {
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div style={{
-        position: "absolute", bottom: "20px", left: "50%", transform: "translateX(-50%)",
-        display: "flex", flexDirection: "column", alignItems: "center", gap: "8px",
-        animation: "scrollBounce 2s ease-in-out infinite", opacity: 0.5, zIndex: 3,
-      }}>
-        <div style={{ width: "20px", height: "32px", borderRadius: "10px", border: "1.5px solid rgba(255,255,255,0.3)", position: "relative" }}>
-          <div style={{
-            width: "3px", height: "6px", borderRadius: "2px", background: "rgba(255,255,255,0.4)",
-            position: "absolute", left: "50%", transform: "translateX(-50%)",
-            animation: "scrollDot 1.5s ease-in-out infinite",
-          }} />
-        </div>
-      </div>
     </section>
   );
 }
