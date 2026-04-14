@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { C, v, useFadeIn, useCountUp, DiamondDivider, Card, RippleButton, Tag } from "../shared";
-import { BotIcon, GlobeIcon, CogIcon, ArrowRightIcon } from "../icons";
+import { C, v, useFadeIn, useCountUp, DiamondDivider, Card, RippleButton, SectionHeader } from "../shared";
+import { ArrowRightIcon } from "../icons";
 
 /* ── Holographic particles overlay ────────────────────────────── */
 function HoloParticles() {
@@ -175,6 +175,7 @@ function Stats() {
   return (
     <section style={{
       padding: "0 48px", maxWidth: "1100px", margin: "-20px auto 80px",
+      position: "relative", zIndex: 2,
     }}>
       <div style={{
         display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1px",
@@ -203,62 +204,63 @@ function Stats() {
   );
 }
 
-/* ── Services preview ──────────────────────────────────────────── */
-const SERVICES = [
-  { Icon: BotIcon, title: "AI Integration & Automation", desc: "Deploy chatbots, automate repetitive workflows, and unlock AI-powered insights that save your team hours every week.", tags: ["Chatbots", "Zapier", "AI Reports", "Scheduling"], gradient: C.gradientPrism },
-  { Icon: GlobeIcon, title: "Website Creation", desc: "Fast, mobile-first websites that look great and show up in search results. Includes documentation so you can update content yourself.", tags: ["React", "SEO", "Mobile-First", "CMS"], gradient: C.gradientAccent },
-  { Icon: CogIcon, title: "Process Modernization", desc: "Replace spreadsheets and manual processes with streamlined digital tools. We audit your workflow and build exactly what you need.", tags: ["Workflows", "Dashboards", "Integrations", "Training"], gradient: "linear-gradient(135deg, #2c5f8a 0%, #13294B 100%)" },
+/* ── Why we do this ────────────────────────────────────────────── */
+const WHY_BEATS = [
+  {
+    label: "For the 70%",
+    title: "Priced out, not left behind",
+    body: "Fewer than 30% of Charlotte small businesses have modern tools. That isn't reluctance — it's access. Agencies price for enterprise retainers and freelancers disappear after delivery. We bring the same capability at a price main street can actually spend.",
+  },
+  {
+    label: "Ship it, teach it",
+    title: "You own what we build",
+    body: "Every project ends with documentation and training your team can actually use. When we're done, you run it — no vendor lock-in, no hostage fees, no calling a ticketing queue for a password reset. 95% of our clients stay modern because they understand what's under the hood.",
+  },
+  {
+    label: "From here, for here",
+    title: "Local means accountable",
+    body: "We live in the Charlotte metro. When something breaks at 7pm, you talk to the person who built it — not an offshore call center, not a ticket in a queue. Local means someone picks up. Accountable means it actually gets fixed.",
+  },
 ];
 
-function ServicesPreview() {
+function WhyWeDo() {
   return (
-    <section style={{ padding: "80px 48px", maxWidth: "1200px", margin: "0 auto" }}>
-      <div style={{ textAlign: "center", marginBottom: "56px" }}>
-        <div style={{
-          fontSize: "12px", fontWeight: 700, letterSpacing: "3px", textTransform: "uppercase",
-          color: v("accent"), marginBottom: "16px",
-          display: "flex", alignItems: "center", gap: "8px", justifyContent: "center",
-        }}>
-          <span style={{ fontSize: "8px" }}>{"\u25C6"}</span> What We Do
-        </div>
-        <h2 style={{
-          fontFamily: "var(--font-body)", fontWeight: 800, fontSize: "clamp(28px, 4vw, 44px)",
-          letterSpacing: "-0.5px", lineHeight: 1.1, color: v("text"), marginBottom: "16px",
-        }}>
-          Three ways we{" "}
-          <span style={{
-            fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-            background: C.gradientAccent, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-          }}>modernize</span>
-        </h2>
-        <p style={{ fontSize: "17px", color: v("text-muted"), maxWidth: "520px", margin: "0 auto", lineHeight: 1.65 }}>
-          Every service is hands-on, documented, and priced for small business budgets.
-        </p>
-      </div>
+    <section style={{ padding: "0 48px 100px", maxWidth: "1200px", margin: "0 auto" }}>
+      <SectionHeader
+        center
+        label="Why We're Here"
+        title="Main street built Charlotte."
+        titleAccent="Let's keep it that way."
+        sub="Those numbers above are the problem. Fifty thousand small businesses in this metro, and fewer than a third have modern tools. It isn't because they don't want them — it's because nobody builds for them. That gap is why we exist."
+      />
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "24px" }}>
-        {SERVICES.map((s, i) => (
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "24px" }}>
+        {WHY_BEATS.map((b, i) => (
           <Card key={i} delay={i * 120}>
             <div style={{
-              width: "52px", height: "52px", borderRadius: "14px", background: s.gradient,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              color: "#fff", marginBottom: "24px",
+              fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase",
+              color: v("accent"), marginBottom: "18px",
+              display: "flex", alignItems: "center", gap: "8px",
             }}>
-              <s.Icon size={24} />
+              <span style={{ fontSize: "7px" }}>{"\u25C6"}</span> {b.label}
             </div>
-            <h3 style={{ fontSize: "20px", fontWeight: 700, color: v("text"), marginBottom: "12px" }}>{s.title}</h3>
-            <p style={{ fontSize: "14px", lineHeight: 1.7, color: v("text-muted"), marginBottom: "20px" }}>{s.desc}</p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-              {s.tags.map((t) => <Tag key={t}>{t}</Tag>)}
-            </div>
+            <h3 style={{
+              fontFamily: "var(--font-body)", fontSize: "22px", fontWeight: 700,
+              color: v("text"), marginBottom: "14px", lineHeight: 1.2, letterSpacing: "-0.3px",
+            }}>
+              {b.title}
+            </h3>
+            <p style={{ fontSize: "14px", lineHeight: 1.75, color: v("text-muted") }}>
+              {b.body}
+            </p>
           </Card>
         ))}
       </div>
 
       <div style={{ textAlign: "center", marginTop: "48px" }}>
-        <Link to="/services">
+        <Link to="/why-us">
           <RippleButton variant="ghost" style={{ padding: "14px 32px" }}>
-            View All Services <ArrowRightIcon size={16} />
+            See how we compare <ArrowRightIcon size={16} />
           </RippleButton>
         </Link>
       </div>
@@ -272,7 +274,7 @@ export default function Home() {
     <>
       <Hero />
       <Stats />
-      <ServicesPreview />
+      <WhyWeDo />
     </>
   );
 }
