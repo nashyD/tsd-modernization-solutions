@@ -75,10 +75,10 @@ function Hero() {
         <source src="/hero-loop.mp4" type="video/mp4" />
       </video>
 
-      {/* Dark overlay gradient — heavier at bottom for text readability */}
+      {/* Dark overlay gradient — heavier at bottom for text readability, fully opaque at edge to blend into page bg */}
       <div style={{
         position: "absolute", inset: 0, zIndex: 1,
-        background: `linear-gradient(to bottom, rgba(12,21,36,0.3) 0%, rgba(12,21,36,0.5) 40%, rgba(12,21,36,0.85) 70%, rgba(12,21,36,0.95) 100%)`,
+        background: `linear-gradient(to bottom, rgba(12,21,36,0.3) 0%, rgba(12,21,36,0.5) 40%, rgba(12,21,36,0.85) 70%, rgba(12,21,36,1) 95%)`,
       }} />
 
       {/* Holographic glow on the edges */}
