@@ -52,7 +52,7 @@ function Hero() {
       minHeight: "100vh", display: "flex", alignItems: "flex-end", justifyContent: "center",
       position: "relative", overflow: "hidden", paddingBottom: "80px",
     }}>
-      {/* Past storefront (base layer — always visible) */}
+      {/* Storefront image — base layer and mobile fallback */}
       <div className="hero-bg" style={{
         position: "absolute", inset: 0, zIndex: 0,
         backgroundImage: "url(/hero-storefront.jpg)",
@@ -60,15 +60,20 @@ function Hero() {
         backgroundRepeat: "no-repeat",
       }} />
 
-      {/* Future storefront (crossfades in and out) */}
-      <div className="hero-bg" style={{
-        position: "absolute", inset: 0, zIndex: 0,
-        backgroundImage: "url(/hero-storefront-future.jpg)",
-        backgroundSize: "cover", backgroundPosition: "center 40%",
-        backgroundRepeat: "no-repeat",
-        animation: "heroCrossfade 15s ease-in-out infinite",
-        opacity: 0,
-      }} />
+      {/* Palindrome video loop (desktop only — hidden on mobile via CSS) */}
+      <video
+        className="hero-video"
+        autoPlay muted loop playsInline
+        preload="metadata"
+        poster="/hero-loop-poster.jpg"
+        style={{
+          position: "absolute", inset: 0, zIndex: 0,
+          width: "100%", height: "100%",
+          objectFit: "cover", objectPosition: "center 40%",
+        }}
+      >
+        <source src="/hero-loop.mp4" type="video/mp4" />
+      </video>
 
       {/* Dark overlay gradient — heavier at bottom for text readability */}
       <div style={{
