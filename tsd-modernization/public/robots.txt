@@ -1,0 +1,8 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Don't bother crawling the raw mp4/jpg backup files if they ever leak to prod
+Disallow: /*.backup$
+
+Sitemap: https://tsd-modernization.com/sitemap.xml

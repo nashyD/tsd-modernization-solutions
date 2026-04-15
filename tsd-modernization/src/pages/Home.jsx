@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { C, v, useFadeIn, useCountUp, DiamondDivider, Card, RippleButton, SectionHeader } from "../shared";
 import { ArrowRightIcon } from "../icons";
@@ -61,6 +61,28 @@ function Hero() {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
+  // Defer video download until the page is idle. The poster image paints
+  // immediately (LCP candidate) and the video streams in afterwards. This
+  // keeps 15 MB of mp4 out of the critical-path download and improves
+  // Core Web Vitals — meaningful for SEO.
+  const videoRef = useRef(null);
+  const [videoReady, setVideoReady] = useState(false);
+  useEffect(() => {
+    const kick = () => setVideoReady(true);
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(kick, { timeout: 1500 });
+      return () => window.cancelIdleCallback && window.cancelIdleCallback(id);
+    }
+    const id = setTimeout(kick, 400);
+    return () => clearTimeout(id);
+  }, []);
+  useEffect(() => {
+    if (videoReady && videoRef.current) {
+      videoRef.current.load();
+      videoRef.current.play().catch(() => {});
+    }
+  }, [videoReady, isMobile]);
+
   return (
     <section style={{
       minHeight: "100vh", position: "relative", overflow: "hidden",
@@ -77,12 +99,14 @@ function Hero() {
       }} />
 
       {/* Palindrome video loop — viewport-specific source & fit.
-          `key` forces React to remount on viewport change so the new <source> is picked up. */}
+          `key` forces React to remount on viewport change so the new <source> is picked up.
+          <source> is rendered only after idle so the mp4 stays out of the critical path. */}
       <video
+        ref={videoRef}
         key={isMobile ? "mobile" : "desktop"}
         className="hero-video"
         autoPlay muted loop playsInline
-        preload="metadata"
+        preload="none"
         poster={isMobile ? "/hero-loop-mobile-poster.jpg" : "/hero-loop-poster.jpg"}
         style={{
           position: "absolute", inset: 0, zIndex: 0,
@@ -92,7 +116,9 @@ function Hero() {
           background: "var(--c-bg)",
         }}
       >
-        <source src={isMobile ? "/hero-loop-mobile.mp4" : "/hero-loop.mp4"} type="video/mp4" />
+        {videoReady && (
+          <source src={isMobile ? "/hero-loop-mobile.mp4" : "/hero-loop.mp4"} type="video/mp4" />
+        )}
       </video>
 
       {/* Reveal overlay — a sliver of solid bg at top (tucks behind nav), then clears to reveal the full video frame, solid bg at bottom */}

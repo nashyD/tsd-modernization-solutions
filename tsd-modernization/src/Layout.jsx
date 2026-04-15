@@ -13,6 +13,63 @@ const NAV_ITEMS = [
   { label: "Contact", to: "/contact" },
 ];
 
+/* ── Per-route SEO metadata ────────────────────────────────────────
+   Applied client-side on route change. Google's second-wave renderer
+   executes JS and will pick these up; browsers show the right tab
+   title; link previews show the right OG tags once shared. */
+const SITE_URL = "https://tsd-modernization.com";
+const ROUTE_META = {
+  "/": {
+    title: "TSD Modernization Solutions | AI Integration & Website Creation | Charlotte, NC",
+    description: "Affordable AI integration, custom website creation, and workflow automation for small businesses in the Charlotte metro area. Book a free tech audit today.",
+  },
+  "/services": {
+    title: "Services — AI, Websites & Automation | TSD Modernization Solutions",
+    description: "Our core services: AI integration & automation, custom website design & redesign, and process modernization for Charlotte-area small businesses.",
+  },
+  "/why-us": {
+    title: "Why Us — Local, Accountable, Main-Street Priced | TSD Modernization Solutions",
+    description: "Why Charlotte small businesses choose TSD: local team, main-street pricing, no vendor lock-in. See how we compare to agencies and freelancers.",
+  },
+  "/process": {
+    title: "Our Process — From Audit to Launch | TSD Modernization Solutions",
+    description: "How we work: free tech audit, custom proposal within 48 hours, hands-on implementation, and training so your team owns what we build.",
+  },
+  "/pricing": {
+    title: "Pricing — Tech Audits, Websites & AI from $150 | TSD Modernization Solutions",
+    description: "Transparent pricing for Charlotte-area small businesses. Tech audits from $150, custom websites + AI bundles, and monthly care plans.",
+  },
+  "/testimonials": {
+    title: "Client Testimonials | TSD Modernization Solutions — Charlotte, NC",
+    description: "What Charlotte-area small businesses say about working with TSD Modernization Solutions.",
+  },
+  "/team": {
+    title: "Our Team — Nash Davis, Bishop Switzer, Grant Tadlock | TSD Modernization Solutions",
+    description: "Meet the founders of TSD Modernization Solutions — a local Charlotte team of small-business modernization specialists.",
+  },
+  "/contact": {
+    title: "Contact Us — Free Tech Audit | TSD Modernization Solutions",
+    description: "Book a free tech audit for your Charlotte-area small business. Call 704-275-1410 or send us a message.",
+  },
+};
+
+function applyRouteMeta(pathname) {
+  const meta = ROUTE_META[pathname] || ROUTE_META["/"];
+  const url = SITE_URL + pathname;
+  document.title = meta.title;
+  const setAttr = (selector, attr, value) => {
+    const el = document.querySelector(selector);
+    if (el) el.setAttribute(attr, value);
+  };
+  setAttr('meta[name="description"]', "content", meta.description);
+  setAttr('link[rel="canonical"]', "href", url);
+  setAttr('meta[property="og:title"]', "content", meta.title);
+  setAttr('meta[property="og:description"]', "content", meta.description);
+  setAttr('meta[property="og:url"]', "content", url);
+  setAttr('meta[name="twitter:title"]', "content", meta.title);
+  setAttr('meta[name="twitter:description"]', "content", meta.description);
+}
+
 export default function Layout() {
   const { theme, toggle } = useTheme();
   const [scrolled, setScrolled] = useState(false);
@@ -26,7 +83,11 @@ export default function Layout() {
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  useEffect(() => { setMenuOpen(false); window.scrollTo(0, 0); }, [location]);
+  useEffect(() => {
+    setMenuOpen(false);
+    window.scrollTo(0, 0);
+    applyRouteMeta(location.pathname);
+  }, [location]);
 
   /* Close dropdown when clicking outside */
   useEffect(() => {
