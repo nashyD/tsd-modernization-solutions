@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { C, v, useFadeIn, useCountUp, DiamondDivider, Card, RippleButton, SectionHeader } from "../shared";
 import { ArrowRightIcon } from "../icons";
@@ -47,6 +48,19 @@ function Hero() {
   const [r3, f3] = useFadeIn(600);
   const [r4, f4] = useFadeIn(800);
 
+  // Pick the right hero video for the viewport. Desktop gets the full 1080p
+  // landscape (with contain so the full frame shows). Mobile gets a portrait-
+  // cropped version so the storefront isn't reduced to a narrow middle slice.
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches
+  );
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    const handler = (e) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
   return (
     <section style={{
       minHeight: "100vh", position: "relative", overflow: "hidden",
@@ -62,19 +76,23 @@ function Hero() {
         backgroundRepeat: "no-repeat",
       }} />
 
-      {/* Palindrome video loop (desktop only — hidden on mobile via CSS) */}
+      {/* Palindrome video loop — viewport-specific source & fit.
+          `key` forces React to remount on viewport change so the new <source> is picked up. */}
       <video
+        key={isMobile ? "mobile" : "desktop"}
         className="hero-video"
         autoPlay muted loop playsInline
         preload="metadata"
-        poster="/hero-loop-poster.jpg"
+        poster={isMobile ? "/hero-loop-mobile-poster.jpg" : "/hero-loop-poster.jpg"}
         style={{
           position: "absolute", inset: 0, zIndex: 0,
           width: "100%", height: "100%",
-          objectFit: "cover", objectPosition: "center 40%",
+          objectFit: isMobile ? "cover" : "contain",
+          objectPosition: "center center",
+          background: "var(--c-bg)",
         }}
       >
-        <source src="/hero-loop.mp4" type="video/mp4" />
+        <source src={isMobile ? "/hero-loop-mobile.mp4" : "/hero-loop.mp4"} type="video/mp4" />
       </video>
 
       {/* Reveal overlay — a sliver of solid bg at top (tucks behind nav), then clears to reveal the full video frame, solid bg at bottom */}
@@ -125,9 +143,8 @@ function Hero() {
           The world moved forward.{" "}
           <span style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-            background: C.gradientAccent, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-            filter: "drop-shadow(0 2px 12px rgba(0,0,0,0.85)) drop-shadow(0 2px 8px rgba(75,156,211,0.4))",
+            color: "#f4f9fd",
+            textShadow: "0 2px 16px rgba(0,0,0,0.95), 0 2px 6px rgba(0,0,0,0.9), 0 0 32px rgba(0,0,0,0.5)",
           }}>Your business can too.</span>
         </h1>
 

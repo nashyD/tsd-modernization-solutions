@@ -89,7 +89,6 @@ export default function App() {
         @media (max-width: 768px) {
           .hide-mobile { display: none !important; }
           .hero-bg { background-size: 180% auto !important; background-position: center 35% !important; }
-          .hero-video { object-position: center 35% !important; }
         }
       `}</style>
       <BrowserRouter>
