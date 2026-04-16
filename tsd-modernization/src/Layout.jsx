@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import { C, v, useTheme, DiamondDivider, RippleButton } from "./shared";
 import { TSDLogo, SunIcon, MoonIcon, MenuIcon, XIcon, ChevronDownIcon } from "./icons";
+import { trackPageView } from "./analytics.js";
 
 const NAV_ITEMS = [
   { label: "Services", to: "/services" },
@@ -87,6 +88,8 @@ export default function Layout() {
     setMenuOpen(false);
     window.scrollTo(0, 0);
     applyRouteMeta(location.pathname);
+    /* Fire after applyRouteMeta so document.title is fresh when GA4 reads it. */
+    trackPageView(location.pathname);
   }, [location]);
 
   /* Close dropdown when clicking outside */
