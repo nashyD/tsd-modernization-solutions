@@ -41,8 +41,8 @@ const ROUTE_META = {
     description: "Transparent pricing for Charlotte-area small businesses. Tech audits from $150, custom websites + AI bundles, and monthly care plans.",
   },
   "/testimonials": {
-    title: "Client Testimonials | TSD Modernization Solutions — Charlotte, NC",
-    description: "What Charlotte-area small businesses say about working with TSD Modernization Solutions.",
+    title: "Case Studies Coming Soon | TSD Modernization Solutions",
+    description: "We're shipping our first client projects now. Real results, real outcomes, documented here — coming soon.",
   },
   "/team": {
     title: "Our Team — Nash Davis, Bishop Switzer, Grant Tadlock | TSD Modernization Solutions",

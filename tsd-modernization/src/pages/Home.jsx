@@ -213,7 +213,7 @@ function Stats() {
     { end: 50000, suffix: "+", label: "Small businesses in Charlotte metro" },
     { end: 30, suffix: "%", prefix: "<", label: "Have adopted AI tools" },
     { end: 48, suffix: "hr", label: "From audit to proposal" },
-    { end: 95, suffix: "%+", label: "Client satisfaction rate" },
+    { end: 100, suffix: "%", label: "Money-back guarantee" },
   ];
   return (
     <section style={{
@@ -311,13 +311,121 @@ function WhyWeDo() {
   );
 }
 
+/* ── Founders strip ────────────────────────────────────────────── */
+const FOUNDERS = [
+  {
+    name: "Nash Davis", role: "CEO & Head of Modernization", school: "UNC Chapel Hill",
+    bio: "AI and technology strategy. Leads technical delivery and solution architecture.",
+    image: "/nash-davis.png",
+  },
+  {
+    name: "Bishop Switzer", role: "COO — Operations", school: "UNC Wilmington",
+    bio: "Project tracking, proposals, invoicing, and handoff documentation.",
+    image: "/bishop-switzer.jpg",
+  },
+  {
+    name: "Grant Tadlock", role: "CFO & Sales Lead", school: "UNC Charlotte",
+    bio: "Financial planning, pricing strategy, and client acquisition.",
+    image: "/grant-tadlock.jpg",
+  },
+];
+
+function FoundersStrip() {
+  return (
+    <section style={{ padding: "0 48px 100px", maxWidth: "1200px", margin: "0 auto" }}>
+      <SectionHeader
+        center
+        label="The Founders"
+        title="Charlotte built."
+        titleAccent="Three founders, one phone number."
+        sub="When something breaks, you talk to the person who built it. These are the people you'll be working with — no account managers, no offshoring."
+      />
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px" }}>
+        {FOUNDERS.map((f, i) => (
+          <Card key={i} delay={i * 120} hover={false} style={{ textAlign: "center" }}>
+            <div style={{
+              width: "96px", height: "96px", borderRadius: "50%",
+              border: `2px solid ${v("surface-border")}`,
+              margin: "0 auto 20px", overflow: "hidden",
+            }}>
+              <img src={f.image} alt={`${f.name}, ${f.role}`}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            </div>
+            <h4 style={{ fontSize: "20px", fontWeight: 700, color: v("text"), marginBottom: "4px" }}>{f.name}</h4>
+            <p style={{ fontSize: "13px", fontWeight: 600, color: v("accent"), marginBottom: "4px" }}>{f.role}</p>
+            <p style={{ fontSize: "12px", color: v("text-dim"), marginBottom: "14px" }}>{f.school}</p>
+            <p style={{ fontSize: "14px", lineHeight: 1.65, color: v("text-muted") }}>{f.bio}</p>
+          </Card>
+        ))}
+      </div>
+
+      <div style={{ textAlign: "center", marginTop: "40px" }}>
+        <Link to="/team">
+          <RippleButton variant="ghost" style={{ padding: "14px 32px" }}>
+            Meet the team <ArrowRightIcon size={16} />
+          </RippleButton>
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+/* ── Founding client offer ─────────────────────────────────────── */
+function FoundingClientOffer() {
+  const [ref, f] = useFadeIn(100);
+  return (
+    <section style={{ padding: "0 48px 100px", maxWidth: "1100px", margin: "0 auto" }}>
+      <div ref={ref} style={{
+        ...f,
+        background: C.gradientPrism,
+        borderRadius: "24px",
+        padding: "clamp(40px, 6vw, 64px) clamp(32px, 5vw, 56px)",
+        textAlign: "center", color: "#fff",
+        position: "relative", overflow: "hidden",
+        boxShadow: "0 20px 60px rgba(19,41,75,0.25)",
+      }}>
+        <div style={{
+          fontSize: "12px", fontWeight: 700, letterSpacing: "3px", textTransform: "uppercase",
+          color: "rgba(255,255,255,0.85)", marginBottom: "16px",
+          display: "flex", alignItems: "center", gap: "8px", justifyContent: "center",
+        }}>
+          <span style={{ fontSize: "8px" }}>{"\u25C6"}</span> Founding Client Spots Open
+        </div>
+        <h2 style={{
+          fontFamily: "var(--font-body)", fontSize: "clamp(24px, 4vw, 38px)", fontWeight: 800,
+          letterSpacing: "-1px", lineHeight: 1.15, marginBottom: "16px",
+        }}>
+          Be one of our first 5 Charlotte clients.
+        </h2>
+        <p style={{
+          fontSize: "16px", lineHeight: 1.7, color: "rgba(255,255,255,0.92)",
+          maxWidth: "620px", margin: "0 auto 32px",
+        }}>
+          Founding-client pricing, direct founder access on every project, and your business featured in our first case studies. Limited to our first 5 engagements.
+        </p>
+        <Link to="/contact">
+          <RippleButton variant="secondary" style={{
+            padding: "16px 36px", fontSize: "15px",
+            background: "#fff", color: C.navy, borderColor: "transparent",
+          }}>
+            Claim a founding slot <ArrowRightIcon size={16} />
+          </RippleButton>
+        </Link>
+      </div>
+    </section>
+  );
+}
+
 /* ── Home page ─────────────────────────────────────────────────── */
 export default function Home() {
   return (
     <>
       <Hero />
       <Stats />
+      <FoundersStrip />
       <WhyWeDo />
+      <FoundingClientOffer />
     </>
   );
 }
