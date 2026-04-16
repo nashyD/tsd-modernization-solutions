@@ -121,6 +121,35 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-16 — Debugged: env vars set but analytics still not firing
+
+**What.** After setting all three env vars in Vercel and redeploying multiple times, the Plausible dashboard still couldn't detect the install. Inspecting the deployed JS bundle showed none of the tokens (`pa-...`, `G-SKT5WM633H`, `wclqqyqray`) — even though the pre-existing `VITE_WEB3FORMS_KEY` was there.
+
+**Root cause.** `src/analytics.js` and the `Layout.jsx`/`main.jsx` wiring existed only locally — never committed, never pushed. Vercel kept auto-deploying the same pre-analytics commit (`5ef4642`) from GitHub, and rebuilding it with the new env vars changed nothing because **nothing in that commit's code read them**. Fix was one commit + push; pushing landed commit `0b65cb3`, Vercel auto-deployed, all three tokens appeared in the bundle.
+
+**Symptoms that should have tipped us off sooner.**
+- **Bundle filename didn't change** across redeploys (`index-DqmS-seF.js` every time). If the source input were different, Vite's content-hashed output would be different too.
+- **Suspiciously fast builds** (~14 s; a real Vite rebuild is 40–60 s). Fast means cache reuse, which means the build thinks the source is unchanged.
+- `x-vercel-cache: HIT` on repeated fetches — this was a red herring. Cache invalidates when Vercel promotes a new deploy; if you see HIT with an old bundle name, the deploy itself didn't produce new output.
+
+**The 30-second debugging check to do first next time.** When a deploy ships but behavior doesn't match what you built:
+
+```bash
+git log origin/main --oneline -5
+```
+
+If your change isn't in the remote log, stop troubleshooting the deploy — nothing downstream matters. This should have been check #1, not check #11. We worked through env var scopes, the "Use existing Build Cache" checkbox, and CDN caching — all irrelevant because the code simply wasn't on GitHub.
+
+**Secondary gotcha — two `.git` directories.** This project has both `Modernization Solutions Site/.git` (the real repo, wired to GitHub → Vercel) and `tsd-modernization/.git` (a stray empty repo with zero commits). Running `git status` inside the inner directory reports "No commits yet" — technically true, but misleading: Vercel doesn't watch that repo. `git remote -v` is the source of truth (the GitHub URL only appears in the outer repo). Worth deleting the inner `.git` to prevent future confusion — commit below to do this cleanly:
+
+```bash
+rm -rf tsd-modernization/.git
+```
+
+**Principle reinforced.** *An env-gated feature has two halves: code that reads the variable, and the variable set in the environment that builds the code. Both must ship, to the same place, at the same time.* Missing either half is a silent no-op. Ship them as one atomic unit: commit the code **and** set the env var **before** the deploy that should light them up. If you split the steps, verify each: `git log origin/main` for the code half, Vercel's Environment Variables page for the config half. If either is stale, you've already found your bug.
+
+---
+
 ### 2026-04-16 — Wired Microsoft Clarity (project ID `wclqqyqray`)
 
 **What.** No code change — [`src/analytics.js`](src/analytics.js) `initClarity()` already reproduces Clarity's install IIFE verbatim, with the ID injected via `JSON.stringify`. Smoke-tested `https://www.clarity.ms/tag/wclqqyqray` and it loaded 200.
