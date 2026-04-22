@@ -121,6 +121,56 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-22 — Halved hero video weight, converted LCP-path images to WebP
+
+**What.** Re-encoded both hero videos, converted the three poster/backdrop JPGs to WebP, and removed the `.backup` files from `public/`.
+
+| File | Before | After | Change |
+|---|---|---|---|
+| `hero-loop.mp4` | 15.31 MB | 7.43 MB | −51% |
+| `hero-loop-mobile.mp4` | 6.94 MB | 2.45 MB | −65% |
+| `hero-loop-poster.jpg` → `.webp` | 425 KB | 196 KB | −54% |
+| `hero-loop-mobile-poster.jpg` → `.webp` | 72 KB | 59 KB | −18% |
+| `hero-storefront.jpg` → `.webp` | 133 KB | 77 KB | −42% |
+
+Total savings: ~12.1 MB off every desktop session, ~4.6 MB off every mobile session.
+
+**Why.** Fixes items #2 (hero video weight) and #8 (`.backup` file cleanup) from the audit. The hero videos dominated mobile data cost; the posters (not the videos) sit on the LCP path because the videos defer via `requestIdleCallback`.
+
+**Surprise #1 — CRF 28 made the video bigger.** The audit's recipe (`-crf 28 -preset slower -vf scale=1280:-2`) grew `hero-loop.mp4` from 15.3 MB to 17.8 MB. CRF is a *quality target*, not a compression ratio — and the source was already heavily compressed (~2.5 Mbps at 1080p). Asking CRF 28 ("visually lossless-ish") at 720p effectively demanded higher bitrate than the input carries, so the output grew. Re-ran at CRF 34 to land at 7.4 MB with no visible artifacts in-browser (verified via dev-server playback at `currentTime=8s` — skyline, brick, and small signage all clean).
+
+**Surprise #2 — WebP q=80 did the same thing to the poster.** `hero-loop-poster.jpg` at q=80 grew from 425 KB to 519 KB for the same reason. Dropped to q=65 and scaled 1920×1080 → 1280×720 (matching the new video resolution), landing at 196 KB.
+
+**Encoding recipes used.**
+```bash
+ffmpeg -y -i hero-loop.mp4 -c:v libx264 -crf 34 -preset slower \
+  -vf scale=1280:-2 -an -movflags +faststart hero-loop.new.mp4
+
+ffmpeg -y -i hero-loop-mobile.mp4 -c:v libx264 -crf 34 -preset slower \
+  -an -movflags +faststart hero-loop-mobile.new.mp4
+
+cwebp -resize 1280 720 -q 65 -m 6 hero-loop-poster.jpg -o hero-loop-poster.webp
+cwebp -q 55 -m 6 hero-loop-mobile-poster.jpg -o hero-loop-mobile-poster.webp
+cwebp -q 80 -m 6 hero-storefront.jpg -o hero-storefront.webp
+```
+
+`-an` strips audio (hero is muted anyway). `+faststart` moves the MOOV atom to the front of the mp4 so browsers can begin playback on the first range request instead of downloading the whole file first.
+
+**Files touched.**
+- `public/hero-loop.mp4`, `hero-loop-mobile.mp4` — re-encoded in place.
+- `public/hero-loop-poster.webp`, `hero-loop-mobile-poster.webp`, `hero-storefront.webp` — new.
+- `public/hero-loop-poster.jpg`, `hero-loop-mobile-poster.jpg`, `hero-storefront.jpg` — deleted (replaced by `.webp`).
+- `public/hero-loop.mp4.backup`, `hero-loop-poster.jpg.backup`, `hero-storefront.jpg.backup` — deleted.
+- `src/pages/Home.jsx` — swapped the `poster` attribute and `.hero-bg` `backgroundImage` to `.webp`. Two-line change (lines 96, 110).
+
+**Dependency added.** `cwebp` (Google's libwebp encoder), installed via `brew install webp`. Local dev tool only — nothing in the repo or build depends on it.
+
+**Browser support for `.webp` in the `<video poster>` attribute and CSS `background-image`.** Safari 14+ (Sept 2020), Chrome/Firefox/Edge far earlier. In 2026, dropping the JPG fallback is safe.
+
+**Principle reinforced.** *Compression targets answer to the input, not just the knob.* CRF 28 and WebP q=80 both made files *larger* here because the existing assets were already aggressively compressed by some earlier pipeline — the encoder's "quality level 80" was above the source's actual quality, so the "re-encode" reproduced the source at a higher-fidelity setting than it started at. The right mental model isn't "pick a quality slider, see what size you get" — it's "the output can't be smaller than what the encoder thinks it needs to match the input's quality level." Always probe the input's real bitrate/resolution before picking a target. For hero-background media specifically, the viewer's fidelity threshold is very low (dark gradient overlay, never the focal point) — target well below what the input carries and verify visually, rather than compressing blindly to a "visually lossless" spec.
+
+---
+
 ### 2026-04-16 — Debugged: env vars set but analytics still not firing
 
 **What.** After setting all three env vars in Vercel and redeploying multiple times, the Plausible dashboard still couldn't detect the install. Inspecting the deployed JS bundle showed none of the tokens (`pa-...`, `G-SKT5WM633H`, `wclqqyqray`) — even though the pre-existing `VITE_WEB3FORMS_KEY` was there.
@@ -292,11 +342,9 @@ Short reference. Each concept links to where it was discussed above so you can c
 ## Open items (next things to tackle, roughly ordered)
 
 1. Add testimonials + client logos to the homepage (biggest conversion lift per hour).
-2. Re-encode hero video to <3 MB (biggest performance lift).
-3. Prerender the build and split `/services` into 3 pages (biggest SEO lift).
-4. Add real `<label>` elements and image `alt` text (accessibility baseline).
-5. Rewrite the H1 for specificity.
-6. Move the "48-hour proposal" claim into the hero.
-7. Claim and link Google Business Profile; embed Map on Contact page.
-8. Remove `.backup` files from `public/`.
-9. Add README with dev setup and deploy steps.
+2. Prerender the build and split `/services` into 3 pages (biggest SEO lift).
+3. Add real `<label>` elements and image `alt` text (accessibility baseline).
+4. Rewrite the H1 for specificity.
+5. Move the "48-hour proposal" claim into the hero.
+6. Claim and link Google Business Profile; embed Map on Contact page.
+7. Add README with dev setup and deploy steps.

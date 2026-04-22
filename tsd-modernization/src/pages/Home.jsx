@@ -93,7 +93,7 @@ function Hero() {
       {/* Storefront image — base layer and mobile fallback */}
       <div className="hero-bg" style={{
         position: "absolute", inset: 0, zIndex: 0,
-        backgroundImage: "url(/hero-storefront.jpg)",
+        backgroundImage: "url(/hero-storefront.webp)",
         backgroundSize: "cover", backgroundPosition: "center 40%",
         backgroundRepeat: "no-repeat",
       }} />
@@ -107,7 +107,7 @@ function Hero() {
         className="hero-video"
         autoPlay muted loop playsInline
         preload="none"
-        poster={isMobile ? "/hero-loop-mobile-poster.jpg" : "/hero-loop-poster.jpg"}
+        poster={isMobile ? "/hero-loop-mobile-poster.webp" : "/hero-loop-poster.webp"}
         style={{
           position: "absolute", inset: 0, zIndex: 0,
           width: "100%", height: "100%",
