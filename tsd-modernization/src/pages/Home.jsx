@@ -49,7 +49,7 @@ function Hero() {
     <section style={{
       minHeight: "100vh", position: "relative", overflow: "hidden",
       display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start",
-      background: "var(--c-bg)",
+      background: "#0c1524",
       paddingTop: "140px", paddingBottom: "80px",
     }}>
       {/* Storefront image — base layer and mobile fallback */}
@@ -75,7 +75,7 @@ function Hero() {
           width: "100%", height: "100%",
           objectFit: "cover",
           objectPosition: "center center",
-          background: "var(--c-bg)",
+          background: "#0c1524",
         }}
       >
         {videoReady && (
@@ -83,16 +83,16 @@ function Hero() {
         )}
       </video>
 
-      {/* Reveal overlay — sliver of solid bg at the top (tucks behind the nav and frames the hero), then clears to reveal the video, then solid bg at the bottom to blend into the stats section */}
+      {/* Reveal overlay — sliver of solid bg at the top (tucks behind the nav and frames the hero), then clears to reveal the video, then solid bg at the bottom. Hardcoded to the dark navy so the hero stays cinematic in both light and dark site themes — letting it follow --c-bg produced torn-edge fades in light mode where the video's natural colors clashed with the cream theme bg. */}
       <div style={{
         position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
         background: `linear-gradient(to bottom,
-          var(--c-bg) 0%,
-          var(--c-bg) 8%,
+          #0c1524 0%,
+          #0c1524 8%,
           transparent 20%,
           transparent 82%,
-          var(--c-bg) 90%,
-          var(--c-bg) 100%)`,
+          #0c1524 90%,
+          #0c1524 100%)`,
       }} />
 
       {/* Light readability tint — much gentler than before (peaks at 40% opacity at center) so the video still reads clearly while the text has enough contrast to pop */}
