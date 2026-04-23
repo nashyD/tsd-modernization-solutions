@@ -98,15 +98,7 @@ function Hero() {
       {/* Soft darkening behind text for readability (no hard edge) */}
       <div style={{
         position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
-        background: "radial-gradient(ellipse 90% 80% at 50% 50%, rgba(12,21,36,0.85) 0%, rgba(12,21,36,0.7) 50%, rgba(12,21,36,0.3) 75%, transparent 90%)",
-      }} />
-
-      {/* Holographic glow concentrated in the visible video band */}
-      <div style={{
-        position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
-        background: `radial-gradient(ellipse at 20% 65%, rgba(75,156,211,0.1) 0%, transparent 40%),
-                     radial-gradient(ellipse at 80% 65%, rgba(123,184,224,0.08) 0%, transparent 40%)`,
-        animation: "heroGlow 6s ease-in-out infinite",
+        background: "radial-gradient(ellipse 90% 80% at 50% 50%, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0.3) 75%, transparent 90%)",
       }} />
 
       {/* Content */}
