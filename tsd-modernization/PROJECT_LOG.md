@@ -121,6 +121,46 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-22 — Split /services into three per-service routes
+
+**What.** Replaced the single modal-driven `/services` page with three indexable routes:
+
+- `/services/ai-integration`
+- `/services/websites`
+- `/services/process-modernization`
+
+Along the way: extracted the service data into its own module, rewrote the overview page as a pure link grid, and added per-route meta + sitemap entries.
+
+**Why.** Fixes the remaining half of audit §1. One URL was trying to rank for three buyer intents (AI consulting, website design, process modernization). Google can rank a URL for one topic well or several topics mediocrely — not all several topics well at once. Three URLs with focused content, focused titles, focused descriptions let each page win its own intent.
+
+**Structural moves.**
+- `src/services-data.js` (new) — `SERVICES` array keyed by `slug`, plus a `getServiceBySlug(slug)` helper. Single source of truth for both the overview and the detail pages, so copy changes don't have to be made twice.
+- `src/pages/ServiceDetail.jsx` (new) — rendered at `/services/:slug` via a React Router dynamic segment. Unknown slugs `<Navigate>` to `/services`.
+- `src/pages/Services.jsx` — rewrote from 354 lines to ~32. Cards became `<Link>`s to the deep pages; the modal, `ServiceModalContent`, `VideoCard`, `GallerySlideshow`, and `TabBar` moved to `ServiceDetail.jsx`. In the process, the old modal's Overview / Videos / Gallery tabs became stacked full-page sections — tab-hidden content ranks weaker because Google downweights content that isn't visible on initial render.
+- `src/App.jsx` — one new `<Route path="services/:slug" element={<ServiceDetail />} />`.
+- `src/Layout.jsx` — three new `ROUTE_META` entries with keyword-targeted titles (e.g. `"Custom Website Design & Redesign | Charlotte Small Business Web Developer"`). The existing `applyRouteMeta` already does exact-pathname lookup, so dynamic routes work as long as each final pathname has its own entry.
+- `public/sitemap.xml` — three new `<url>` entries at priority 0.8.
+
+**What this SEO work is and isn't yet.** Google's second-pass JS renderer will eventually index the three new URLs and pick up their per-route titles and descriptions. Link-preview scrapers (LinkedIn, Facebook, iMessage, Slack) mostly don't run JS — they'll still see the static `index.html` shell on every URL until the site is prerendered. So today's change unlocks **search results** for the three focused terms; **social previews** remain generic until prerendering lands. The two lifts are complementary; this one had to come first because prerendering only helps if per-route content already exists.
+
+**Principle reinforced.** *One URL = one intent.* The SEO penalty for stacking buyer intents on a single URL isn't additive — it's multiplicative in reverse. A page trying to rank for three keywords doesn't rank 1/3 as well for each; it ranks substantially worse for all three, because topical focus is one of the strongest ranking signals. Whenever a buyer's journey branches (they search for one of several distinct things you offer), the site's URL structure should branch at the same point.
+
+---
+
+### 2026-04-22 — Rewrote hero copy for specificity and surfaced the 48-hour claim
+
+**What.** Replaced the poetic H1 ("The world moved forward. Your business can too.") with a services-specific one: "AI integration, custom websites, and workflow automation. *Shipped in days.*" Preserved the two-phrase display-italic structure that was already a signature element of the hero. Swapped the subhead from a services restatement to two risk-reversal signals: "48-hour proposals and a 100% money-back guarantee for Charlotte-area small businesses. Real results at a fraction of agency prices." Widened and strengthened the readability gradient behind the text since the longer copy spans a taller block.
+
+**Why.** Audit §7 called the old H1 poetic but ambiguous — a visitor from Google has under five seconds to decide if you fit their need. "The world moved forward" doesn't survive that test on its own. The new H1 says *what* you do, and the italic second phrase carries the *differentiator* (speed). The subhead moves the 48-hour claim out of the stats strip and above the fold, where it does conversion work instead of decoration work.
+
+**Voice note — avoid the "X, not Y" pattern.** First attempt was "Shipped in days, not months." User flagged the contrastive "this not that" construction as an AI writing tell and asked to cut it to "Shipped in days." — which reads cleaner and less formulaic. Saved as a global style rule: avoid symmetric "X, not Y" phrasing in copy, comments, and log entries, since the pattern is a common LLM signature even when the content is accurate.
+
+**Files touched.** `src/pages/Home.jsx` only. Three edits: H1 text + added `<br />` before the italic span so the two-phrase rhythm survives the longer main phrase; subhead text; radial gradient widened from `70% 45% at 50% 32%` to `90% 80% at 50% 50%` at higher opacity, with a stronger subhead textShadow to match.
+
+**Principle reinforced.** *Clarity beats cleverness at the top of the funnel.* Poetry works once a visitor is already in your world. At the front door, they need to know what you sell and why you're worth another thirty seconds of their time — in that order, in that span.
+
+---
+
 ### 2026-04-22 — Halved hero video weight, converted LCP-path images to WebP
 
 **What.** Re-encoded both hero videos, converted the three poster/backdrop JPGs to WebP, and removed the `.backup` files from `public/`.
@@ -342,9 +382,7 @@ Short reference. Each concept links to where it was discussed above so you can c
 ## Open items (next things to tackle, roughly ordered)
 
 1. Add testimonials + client logos to the homepage (biggest conversion lift per hour).
-2. Prerender the build and split `/services` into 3 pages (biggest SEO lift).
+2. Prerender the build so per-route meta reaches link-preview bots — the `/services` split shipped on 2026-04-22; prerendering is the remaining half of the SEO lift.
 3. Add real `<label>` elements and image `alt` text (accessibility baseline).
-4. Rewrite the H1 for specificity.
-5. Move the "48-hour proposal" claim into the hero.
-6. Claim and link Google Business Profile; embed Map on Contact page.
-7. Add README with dev setup and deploy steps.
+4. Claim and link Google Business Profile; embed Map on Contact page.
+5. Add README with dev setup and deploy steps.
