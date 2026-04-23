@@ -83,12 +83,15 @@ function Hero() {
         )}
       </video>
 
-      {/* Reveal overlay — video goes full-bleed to the top; a gentle 4% fade at the very bottom softens the seam to the stats section */}
+      {/* Reveal overlay — sliver of solid bg at the top (tucks behind the nav and frames the hero), then clears to reveal the video, then solid bg at the bottom to blend into the stats section */}
       <div style={{
         position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
         background: `linear-gradient(to bottom,
-          transparent 0%,
-          transparent 96%,
+          var(--c-bg) 0%,
+          var(--c-bg) 8%,
+          transparent 20%,
+          transparent 82%,
+          var(--c-bg) 90%,
           var(--c-bg) 100%)`,
       }} />
 
