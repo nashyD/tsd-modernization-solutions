@@ -78,13 +78,18 @@ export function initAnalytics() {
 }
 
 /* Fire a pageview for GA4 on SPA route change. Plausible + Clarity
-   hook the History API themselves and don't need this. */
-export function trackPageView(path) {
+   hook the History API themselves and don't need this.
+
+   `title` is passed explicitly because react-helmet-async's DOM update
+   for document.title doesn't race-condition-safely with the useEffect
+   that calls this. Passing the value straight through avoids the race. */
+export function trackPageView(path, title) {
+  if (typeof window === "undefined") return;
   if (GA4_ID && window.gtag) {
     window.gtag("event", "page_view", {
       page_path: path,
       page_location: window.location.origin + path,
-      page_title: document.title,
+      page_title: title || document.title,
     });
   }
 }

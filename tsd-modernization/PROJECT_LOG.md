@@ -121,6 +121,48 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-23 — Prerendered every route with vite-react-ssg
+
+**What.** Switched the build from plain `vite build` (single HTML shell, SPA hydrates the rest) to `vite-react-ssg build`. All 11 routes now ship as their own static HTML files with per-route `<title>`, `<meta name="description">`, `<link rel="canonical">`, and OG/Twitter tags baked into the shell. Dev stays on plain `vite` for fast CSR iteration.
+
+**Why.** Closes the other half of audit §1. The old `applyRouteMeta()` DOM-mutation approach worked for Google (which runs JS on a second pass) but failed for every scraper that doesn't execute JavaScript — LinkedIn, iMessage, Slack, Facebook, Bing. They saw the same `index.html` shell for every URL. Prerendering emits correct first-byte HTML for every route so the right preview shows up wherever a link gets shared.
+
+**Dependency shift.** vite-react-ssg supports `react-router-dom@^6`, so downgraded `react-router-dom` from `7.14.0` to `6.30.3`. All router APIs in use (`BrowserRouter`, `Routes`, `Route`, `Outlet`, `Link`, `useLocation`, `Navigate`) are identical between v6 and v7, so zero call-site changes were needed.
+
+**Structural changes.**
+- **`src/routes.jsx`** (new). Data-router route array in vite-react-ssg's format. `getStaticPaths` on `services/:slug` enumerates the three service slugs so SSG knows to render `/services/ai-integration`, `/services/websites`, and `/services/process-modernization` at build time.
+- **`src/main.jsx`**. Replaced `ReactDOM.createRoot(…).render(…)` with `ViteReactSSG({ routes }, ({ isClient }) => { if (isClient) initAnalytics() })`. Analytics only initialize on the client; the Node SSG pass never loads GA4/Plausible/Clarity scripts.
+- **`src/App.jsx`** — deleted. Its global `<style>` block and `<Analytics />` moved into `Layout.jsx`. The router is now constructed internally by ViteReactSSG, so App.jsx had nothing left to hold.
+- **`src/Layout.jsx`**. The old `applyRouteMeta(pathname)` function that mutated `document.title` and individual `<meta>` elements is replaced by a `<RouteMeta>` component that renders a `<Head>` from vite-react-ssg (a thin wrapper over react-helmet-async). `useLocation()` picks the right entry from `ROUTE_META` at render time — so the correct tags end up in the emitted HTML shell at build, and continue to update on client-side navigation after hydration.
+- **`src/analytics.js`**. `trackPageView(path, title)` now takes the title explicitly. Without this, it read `document.title` inside a useEffect, which raced react-helmet-async's head update on route change — the first GA4 pageview after navigation would occasionally log the previous route's title.
+- **`index.html`**. Removed the per-route-varying `<title>`, `<meta name="description">`, `<link rel="canonical">`, og:title/description/url, and twitter:title/description. They were duplicating the Helmet-injected ones in the built HTML. Kept favicons, og:image/type/site_name, twitter:card/image, JSON-LD structured data, and the pre-paint theme script (all shared across routes).
+- **`vite.config.js`**. Added `ssgOptions: { script: 'async', dirStyle: 'nested', formatting: 'none' }`. `dirStyle: 'nested'` emits `/services/index.html` rather than `/services.html` so Vercel's default static-file resolution picks them up.
+- **`package.json`**. `"build": "vite-react-ssg build"`.
+- **`vercel.json`** unchanged. The existing `{ source: "/(.*)", destination: "/index.html" }` rewrite runs "after filesystem" by default — static files are served first, rewrite only fires for URLs with no matching file. That's the SPA fallback for typos while prerendered routes get served directly.
+
+**Build output.**
+```
+dist/index.html                                  Home
+dist/services/index.html                         Services overview
+dist/services/ai-integration/index.html          (from getStaticPaths)
+dist/services/websites/index.html                (from getStaticPaths)
+dist/services/process-modernization/index.html   (from getStaticPaths)
+dist/why-us/index.html
+dist/process/index.html
+dist/pricing/index.html
+dist/testimonials/index.html
+dist/team/index.html
+dist/contact/index.html
+```
+
+Verified by grep against the built HTML: every route has its correct title, description, canonical, og:*, and twitter:* baked in. Dev preview confirmed client-side navigation updates the same tags via Helmet (tested by pushing `/services/ai-integration` and observing `document.title`, canonical, and og:url all update).
+
+**Incidental fix.** The footer nav in `Layout.jsx` was spreading `NAV_ITEMS` and then appending another `{ label: "Contact", to: "/contact" }`. Both entries produced `<Link key="/contact">`, which logged a React duplicate-key warning on every render. Removed the extra entry.
+
+**Principle reinforced.** *Static HTML is the universal interface.* Search crawlers, link-preview bots, screen readers, slow devices, JS-disabled browsers — they all render it. Client-side rendering layered on top is an optimization. The audit surfaced this gap in January; splitting `/services` in April unlocked per-URL topical focus; today's change makes that focus visible to every consumer of the HTML, including the ones that never run a line of JavaScript.
+
+---
+
 ### 2026-04-22 — Wired accessibility baseline
 
 **What.** Closed most of audit §6: added form labels, a keyboard focus ring, a skip link, and a `<main>` landmark. No visual design changes — every improvement is either invisible to sighted users or only appears on keyboard focus.
