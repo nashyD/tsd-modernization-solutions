@@ -87,6 +87,30 @@ export default function App() {
         a { color: inherit; text-decoration: none; }
         img { max-width: 100%; display: block; }
 
+        /* A11y: screen-reader-only utility */
+        .sr-only {
+          position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+          overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+        }
+        /* A11y: skip link — visible only when focused via keyboard */
+        .skip-link {
+          position: absolute; top: 8px; left: 8px; z-index: 2000;
+          padding: 10px 16px; border-radius: 8px;
+          background: var(--c-accent); color: #fff;
+          font-size: 14px; font-weight: 600; text-decoration: none;
+          transform: translateY(-120%); transition: transform 0.2s ease;
+        }
+        .skip-link:focus, .skip-link:focus-visible { transform: translateY(0); outline: none; }
+        /* A11y: keyboard focus ring on interactive elements */
+        a:focus-visible, button:focus-visible,
+        input:focus-visible, textarea:focus-visible, select:focus-visible {
+          outline: 2px solid var(--c-accent);
+          outline-offset: 2px;
+        }
+        main:focus { outline: none; }
+        /* A11y: skip link target — offset scroll so #main lands below the fixed nav */
+        main { scroll-margin-top: 100px; }
+
         @media (max-width: 768px) {
           .hide-mobile { display: none !important; }
           .hero-bg { background-size: 180% auto !important; background-position: center 35% !important; }

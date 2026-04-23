@@ -114,6 +114,7 @@ export default function Layout() {
 
   return (
     <>
+      <a href="#main" className="skip-link">Skip to main content</a>
       {/* ── Nav ─────────────────────────────── */}
       <nav style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
@@ -205,7 +206,7 @@ export default function Layout() {
       </nav>
 
       {/* ── Content ─────────────────────────── */}
-      <main><Outlet /></main>
+      <main id="main" tabIndex={-1}><Outlet /></main>
 
       {/* ── Footer ──────────────────────────── */}
       <footer style={{

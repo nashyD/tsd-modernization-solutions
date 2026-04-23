@@ -66,7 +66,7 @@ function ContactForm() {
     padding: "14px 18px", borderRadius: "12px",
     border: `1px solid ${v("surface-border")}`,
     background: v("surface"), color: v("text"),
-    fontSize: "15px", fontFamily: "var(--font-body)", outline: "none", width: "100%",
+    fontSize: "15px", fontFamily: "var(--font-body)", width: "100%",
     transition: "border-color 0.2s ease",
   };
 
@@ -130,26 +130,41 @@ function ContactForm() {
               style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px", opacity: 0 }}
               tabIndex={-1} autoComplete="off" aria-hidden="true" />
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-              <input style={inputStyle} type="text" placeholder="Your name" required
-                value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                onFocus={(e) => { e.target.style.borderColor = C.carolina; }}
-                onBlur={(e) => { e.target.style.borderColor = ""; }} />
-              <input style={inputStyle} type="email" placeholder="Email address" required
-                value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              <div>
+                <label htmlFor="contact-name" className="sr-only">Your name</label>
+                <input id="contact-name" style={inputStyle} type="text" placeholder="Your name" required
+                  autoComplete="name"
+                  value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onFocus={(e) => { e.target.style.borderColor = C.carolina; }}
+                  onBlur={(e) => { e.target.style.borderColor = ""; }} />
+              </div>
+              <div>
+                <label htmlFor="contact-email" className="sr-only">Email address</label>
+                <input id="contact-email" style={inputStyle} type="email" placeholder="Email address" required
+                  autoComplete="email"
+                  value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onFocus={(e) => { e.target.style.borderColor = C.carolina; }}
+                  onBlur={(e) => { e.target.style.borderColor = ""; }} />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="contact-business" className="sr-only">Business name (optional)</label>
+              <input id="contact-business" style={inputStyle} type="text" placeholder="Business name"
+                autoComplete="organization"
+                value={formData.business} onChange={(e) => setFormData({ ...formData, business: e.target.value })}
                 onFocus={(e) => { e.target.style.borderColor = C.carolina; }}
                 onBlur={(e) => { e.target.style.borderColor = ""; }} />
             </div>
-            <input style={inputStyle} type="text" placeholder="Business name"
-              value={formData.business} onChange={(e) => setFormData({ ...formData, business: e.target.value })}
-              onFocus={(e) => { e.target.style.borderColor = C.carolina; }}
-              onBlur={(e) => { e.target.style.borderColor = ""; }} />
-            <textarea style={{ ...inputStyle, minHeight: "120px", resize: "vertical" }}
-              placeholder="Tell us about your business and what you're looking to modernize..."
-              value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-              onFocus={(e) => { e.target.style.borderColor = C.carolina; }}
-              onBlur={(e) => { e.target.style.borderColor = ""; }} />
+            <div>
+              <label htmlFor="contact-message" className="sr-only">Tell us about your business</label>
+              <textarea id="contact-message" style={{ ...inputStyle, minHeight: "120px", resize: "vertical" }}
+                placeholder="Tell us about your business and what you're looking to modernize..."
+                value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                onFocus={(e) => { e.target.style.borderColor = C.carolina; }}
+                onBlur={(e) => { e.target.style.borderColor = ""; }} />
+            </div>
             {error && (
-              <div style={{
+              <div role="alert" style={{
                 padding: "12px 16px", borderRadius: "10px",
                 background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)",
                 color: "#fca5a5", fontSize: "14px",
