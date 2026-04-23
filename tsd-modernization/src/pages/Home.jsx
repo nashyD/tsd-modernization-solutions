@@ -136,7 +136,7 @@ function Hero() {
       {/* Soft darkening behind text for readability (no hard edge) */}
       <div style={{
         position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
-        background: "radial-gradient(ellipse 70% 45% at 50% 32%, rgba(12,21,36,0.55) 0%, rgba(12,21,36,0.25) 45%, transparent 75%)",
+        background: "radial-gradient(ellipse 90% 80% at 50% 50%, rgba(12,21,36,0.85) 0%, rgba(12,21,36,0.7) 50%, rgba(12,21,36,0.3) 75%, transparent 90%)",
       }} />
 
       {/* Holographic glow concentrated in the visible video band */}
@@ -166,22 +166,23 @@ function Hero() {
           color: "#fff", marginBottom: "20px",
           textShadow: "0 4px 24px rgba(0,0,0,0.9), 0 2px 6px rgba(0,0,0,0.8)",
         }}>
-          The world moved forward.{" "}
+          AI integration, custom websites, and workflow automation.
+          <br />
           <span style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
             color: "#f4f9fd",
             textShadow: "0 2px 16px rgba(0,0,0,0.95), 0 2px 6px rgba(0,0,0,0.9), 0 0 32px rgba(0,0,0,0.5)",
-          }}>Your business can too.</span>
+          }}>Shipped in days.</span>
         </h1>
 
         <DiamondDivider width={160} style={{ marginBottom: "20px" }} />
 
         <p ref={r3} style={{
-          ...f3, fontSize: "17px", lineHeight: 1.7, color: "rgba(255,255,255,0.85)",
+          ...f3, fontSize: "17px", lineHeight: 1.7, color: "rgba(255,255,255,0.92)",
           maxWidth: "520px", margin: "0 auto 36px",
-          textShadow: "0 2px 12px rgba(0,0,0,0.9), 0 1px 3px rgba(0,0,0,0.7)",
+          textShadow: "0 2px 16px rgba(0,0,0,0.95), 0 1px 4px rgba(0,0,0,0.9), 0 0 24px rgba(0,0,0,0.6)",
         }}>
-          AI integration, custom websites, and workflow automation for Charlotte-area small businesses.
+          48-hour proposals and a 100% money-back guarantee for Charlotte-area small businesses.
           Real results at a fraction of agency prices.
         </p>
 
