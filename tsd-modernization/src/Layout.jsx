@@ -127,7 +127,7 @@ export default function Layout() {
         display: "flex", alignItems: "center", justifyContent: "space-between",
       }}>
         <Link to="/" style={{ display: "flex", alignItems: "center", gap: "14px", textDecoration: "none", filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.6))" }}>
-          <TSDLogo size={56} />
+          <TSDLogo size={72} />
           <div>
             <div style={{
               fontSize: "11px", fontWeight: 700, letterSpacing: "3.5px", textTransform: "uppercase",
