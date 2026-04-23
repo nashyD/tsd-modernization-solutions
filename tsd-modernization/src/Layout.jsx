@@ -126,8 +126,8 @@ export default function Layout() {
         transition: "all 0.35s ease",
         display: "flex", alignItems: "center", justifyContent: "space-between",
       }}>
-        <Link to="/" style={{ display: "flex", alignItems: "center", gap: "14px", textDecoration: "none" }}>
-          <TSDLogo size={40} />
+        <Link to="/" style={{ display: "flex", alignItems: "center", gap: "14px", textDecoration: "none", filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.6))" }}>
+          <TSDLogo size={56} />
           <div>
             <div style={{
               fontSize: "11px", fontWeight: 700, letterSpacing: "3.5px", textTransform: "uppercase",
@@ -146,6 +146,7 @@ export default function Layout() {
             background: "none", border: "none", cursor: "pointer", color: v("text-muted"),
             padding: "6px", borderRadius: "8px", display: "flex", alignItems: "center",
             transition: "color 0.2s ease",
+            filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.5))",
           }} aria-label="Toggle theme">
             {theme === "dark" ? <SunIcon /> : <MoonIcon />}
           </button>

@@ -73,7 +73,7 @@ function Hero() {
         style={{
           position: "absolute", inset: 0, zIndex: 0,
           width: "100%", height: "100%",
-          objectFit: "contain",
+          objectFit: "cover",
           objectPosition: "center center",
           background: "var(--c-bg)",
         }}
@@ -83,22 +83,13 @@ function Hero() {
         )}
       </video>
 
-      {/* Reveal overlay — a sliver of solid bg at top (tucks behind nav), then clears to reveal the full video frame, solid bg at bottom */}
+      {/* Reveal overlay — video goes full-bleed to the top; a gentle 4% fade at the very bottom softens the seam to the stats section */}
       <div style={{
         position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
         background: `linear-gradient(to bottom,
-          var(--c-bg) 0%,
-          var(--c-bg) 8%,
-          transparent 20%,
-          transparent 82%,
-          var(--c-bg) 90%,
+          transparent 0%,
+          transparent 96%,
           var(--c-bg) 100%)`,
-      }} />
-
-      {/* Soft darkening behind text for readability (no hard edge) */}
-      <div style={{
-        position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
-        background: "radial-gradient(ellipse 90% 80% at 50% 50%, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0.3) 75%, transparent 90%)",
       }} />
 
       {/* Content */}
@@ -130,9 +121,9 @@ function Hero() {
         <DiamondDivider width={160} style={{ marginBottom: "20px" }} />
 
         <p ref={r3} style={{
-          ...f3, fontSize: "17px", lineHeight: 1.7, color: "rgba(255,255,255,0.92)",
+          ...f3, fontSize: "17px", lineHeight: 1.7, color: "#fff", fontWeight: 500,
           maxWidth: "520px", margin: "0 auto 36px",
-          textShadow: "0 2px 16px rgba(0,0,0,0.95), 0 1px 4px rgba(0,0,0,0.9), 0 0 24px rgba(0,0,0,0.6)",
+          textShadow: "0 2px 4px rgba(0,0,0,1), 0 2px 18px rgba(0,0,0,1), 0 0 36px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,1)",
         }}>
           48-hour proposals and a 100% money-back guarantee for Charlotte-area small businesses.
           Real results at a fraction of agency prices.
