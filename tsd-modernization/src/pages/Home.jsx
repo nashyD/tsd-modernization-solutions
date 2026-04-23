@@ -3,44 +3,6 @@ import { Link } from "react-router-dom";
 import { C, v, useFadeIn, useCountUp, DiamondDivider, Card, RippleButton, SectionHeader } from "../shared";
 import { ArrowRightIcon } from "../icons";
 
-/* ── Holographic particles overlay ────────────────────────────── */
-function HoloParticles() {
-  const particles = Array.from({ length: 20 }, (_, i) => ({
-    left: `${Math.random() * 100}%`,
-    size: 2 + Math.random() * 4,
-    delay: Math.random() * 12,
-    duration: 8 + Math.random() * 10,
-    opacity: 0.2 + Math.random() * 0.5,
-  }));
-  return (
-    <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 2, overflow: "hidden" }}>
-      {particles.map((p, i) => (
-        <div key={i} style={{
-          position: "absolute", left: p.left, bottom: "-10px",
-          width: `${p.size}px`, height: `${p.size}px`, borderRadius: "50%",
-          background: i % 3 === 0 ? C.carolinaLight : i % 3 === 1 ? C.carolina : C.gold,
-          animation: `particleFloat ${p.duration}s ${p.delay}s ease-in-out infinite`,
-          opacity: 0,
-          boxShadow: `0 0 ${p.size * 3}px ${i % 3 === 0 ? C.carolinaLight : C.carolina}`,
-        }} />
-      ))}
-      {/* Pulsing glow dots on buildings */}
-      {[
-        { x: "15%", y: "30%" }, { x: "85%", y: "25%" }, { x: "10%", y: "55%" },
-        { x: "90%", y: "50%" }, { x: "25%", y: "20%" }, { x: "75%", y: "35%" },
-      ].map((d, i) => (
-        <div key={`glow-${i}`} style={{
-          position: "absolute", left: d.x, top: d.y,
-          width: "6px", height: "6px", borderRadius: "50%",
-          background: C.carolinaLight,
-          animation: `particlePulse ${3 + i * 0.7}s ${i * 0.5}s ease-in-out infinite`,
-          boxShadow: `0 0 12px ${C.carolinaLight}, 0 0 24px rgba(123,184,224,0.3)`,
-        }} />
-      ))}
-    </div>
-  );
-}
-
 /* ── Hero ──────────────────────────────────────────────────────── */
 function Hero() {
   const [r1, f1] = useFadeIn(200);
@@ -146,8 +108,6 @@ function Hero() {
                      radial-gradient(ellipse at 80% 65%, rgba(123,184,224,0.08) 0%, transparent 40%)`,
         animation: "heroGlow 6s ease-in-out infinite",
       }} />
-
-      <HoloParticles />
 
       {/* Content */}
       <div style={{ maxWidth: "800px", textAlign: "center", position: "relative", zIndex: 3, padding: "0 24px" }}>
