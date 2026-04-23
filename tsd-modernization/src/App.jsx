@@ -3,6 +3,7 @@ import { C } from "./shared";
 import Layout from "./Layout";
 import Home from "./pages/Home";
 import Services from "./pages/Services";
+import ServiceDetail from "./pages/ServiceDetail";
 import WhyUs from "./pages/WhyUs";
 import Process from "./pages/Process";
 import Pricing from "./pages/Pricing";
@@ -96,6 +97,7 @@ export default function App() {
           <Route element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="services" element={<Services />} />
+            <Route path="services/:slug" element={<ServiceDetail />} />
             <Route path="why-us" element={<WhyUs />} />
             <Route path="process" element={<Process />} />
             <Route path="pricing" element={<Pricing />} />

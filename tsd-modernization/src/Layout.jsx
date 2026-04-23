@@ -28,6 +28,18 @@ const ROUTE_META = {
     title: "Services — AI, Websites & Automation | TSD Modernization Solutions",
     description: "Our core services: AI integration & automation, custom website design & redesign, and process modernization for Charlotte-area small businesses.",
   },
+  "/services/ai-integration": {
+    title: "AI Integration & Business Automation for Small Businesses | TSD Modernization Solutions",
+    description: "Custom AI chatbots, workflow automation with Make and Zapier, and AI-powered reporting for Charlotte-area small businesses. Projects start at $250, launched in 1-2 weeks.",
+  },
+  "/services/websites": {
+    title: "Custom Website Design & Redesign | Charlotte Small Business Web Developer",
+    description: "Fast, mobile-first websites with on-page SEO, analytics wiring, and full handoff docs so your team can manage content. 5-8 page sites from $250, launched in 2-4 weeks.",
+  },
+  "/services/process-modernization": {
+    title: "Tech Audits & Process Modernization for Small Businesses | TSD Modernization Solutions",
+    description: "Structured tech audits and written modernization roadmaps for Charlotte-area small businesses. Identify bottlenecks, get cost estimates and ROI projections. From $150.",
+  },
   "/why-us": {
     title: "Why Us — Local, Accountable, Main-Street Priced | TSD Modernization Solutions",
     description: "Why Charlotte small businesses choose TSD: local team, main-street pricing, no vendor lock-in. See how we compare to agencies and freelancers.",
