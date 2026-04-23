@@ -92,13 +92,19 @@ function Hero() {
           var(--c-bg) 100%)`,
       }} />
 
+      {/* Light readability tint — much gentler than before (peaks at 40% opacity at center) so the video still reads clearly while the text has enough contrast to pop */}
+      <div style={{
+        position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
+        background: "radial-gradient(ellipse 90% 80% at 50% 50%, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.1) 75%, transparent 90%)",
+      }} />
+
       {/* Content */}
       <div style={{ maxWidth: "800px", textAlign: "center", position: "relative", zIndex: 3, padding: "0 24px" }}>
         <div ref={r1} style={{
           ...f1, fontSize: "12px", fontWeight: 700, letterSpacing: "3px", textTransform: "uppercase",
           color: C.carolinaLight, marginBottom: "20px",
           display: "flex", alignItems: "center", gap: "8px", justifyContent: "center",
-          textShadow: "0 2px 12px rgba(0,0,0,0.9), 0 1px 3px rgba(0,0,0,0.8)",
+          textShadow: "-1px -1px 0 rgba(0,0,0,0.95), 1px -1px 0 rgba(0,0,0,0.95), -1px 1px 0 rgba(0,0,0,0.95), 1px 1px 0 rgba(0,0,0,0.95), 0 2px 10px rgba(0,0,0,0.7)",
         }}>
           <span style={{ fontSize: "8px" }}>{"\u25C6"}</span> Small Business Modernization Specialists
         </div>
@@ -123,7 +129,7 @@ function Hero() {
         <p ref={r3} style={{
           ...f3, fontSize: "17px", lineHeight: 1.7, color: "#fff", fontWeight: 500,
           maxWidth: "520px", margin: "0 auto 36px",
-          textShadow: "0 2px 4px rgba(0,0,0,1), 0 2px 18px rgba(0,0,0,1), 0 0 36px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,1)",
+          textShadow: "-1px -1px 0 rgba(0,0,0,0.95), 1px -1px 0 rgba(0,0,0,0.95), -1px 1px 0 rgba(0,0,0,0.95), 1px 1px 0 rgba(0,0,0,0.95), 0 2px 12px rgba(0,0,0,0.8)",
         }}>
           48-hour proposals and a 100% money-back guarantee for Charlotte-area small businesses.
           Real results at a fraction of agency prices.
