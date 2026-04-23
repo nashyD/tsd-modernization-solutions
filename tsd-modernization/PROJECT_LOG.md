@@ -121,6 +121,28 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-22 — Wired accessibility baseline
+
+**What.** Closed most of audit §6: added form labels, a keyboard focus ring, a skip link, and a `<main>` landmark. No visual design changes — every improvement is either invisible to sighted users or only appears on keyboard focus.
+
+**Why.** Accessibility is table stakes (ADA in the US, EU Accessibility Act in Europe), an SEO signal (Google rewards semantic HTML), and around 15% of users have a disability of some kind. The audit called out four specific gaps; three are fixed here (the fourth — `prefers-color-scheme` theme default — was deferred as a UX preference rather than an a11y one).
+
+**Changes.**
+- **Contact form labels** (audit item 1). Every `<input>` and `<textarea>` now has a `<label htmlFor="...">` via unique ids (`contact-name`, `contact-email`, `contact-business`, `contact-message`). Labels use a new `.sr-only` utility class (absolute 1×1 px clipped box) so screen readers announce them but sighted users see no visual change — placeholders still read as labels. Added `autoComplete` attributes (`name` / `email` / `organization`) so browsers can autofill and reduce typing friction.
+- **Form error alert.** The submission-error div is now `role="alert"`, which gives it implicit `aria-live="assertive"` behavior so screen readers interrupt to announce it when it appears.
+- **Focus-visible ring** (audit item 3). Global rule: `a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 2px solid var(--c-accent); outline-offset: 2px; }`. Modern browsers only apply `:focus-visible` on keyboard-initiated focus (Tab, Shift+Tab), so mouse users never see it and keyboard users always do. Removed the `outline: "none"` override that had been suppressing focus indicators on the Contact form inputs.
+- **Skip link.** First focusable element on the page: `<a href="#main" className="skip-link">Skip to main content</a>`. Off-screen by default (`transform: translateY(-120%)`), slides in via the accent color when it receives focus. Pairs with a new `<main id="main" tabIndex={-1}>` so activating the skip link moves focus programmatically into the main content. `scroll-margin-top: 100px` on `main` ensures the scroll target lands below the fixed nav instead of behind it.
+
+**Files touched.** `src/App.jsx` (added sr-only, skip-link, and :focus-visible CSS rules), `src/Layout.jsx` (skip link above `<nav>`, `id="main"` + `tabIndex={-1}` on `<main>`), `src/pages/Contact.jsx` (labels + ids + autoComplete + role=alert, plus removing the `outline: "none"` override).
+
+**Design decision — sr-only labels vs visible ones.** Two ways to label form fields: visible labels above each input (traditional, more accessible, changes the visual design) or visually-hidden labels paired with placeholders (same a11y benefit, no visual change). Chose the second because (a) the placeholders already carry the labels for sighted users, (b) moving to visible labels is a design choice separate from a11y and shouldn't be bundled into an a11y pass, (c) Nash can opt into visible labels later without undoing any of this work.
+
+**Verification note.** `:focus` and `:focus-visible` don't trigger in the dev preview frame because it doesn't hold document focus (`document.hasFocus()` returns false). Confirmed the CSS rules are parsed correctly by inspecting `document.styleSheets` directly, and confirmed the skip link renders correctly by forcing the visible state inline. In a real browser window with keyboard focus, all three patterns work.
+
+**Principle reinforced.** *Accessibility and visual design aren't in conflict.* The common objection to a11y work is that it forces ugly defaults — giant focus rings, visible form labels cluttering minimal designs. In 2026, the modern CSS primitives (`:focus-visible`, `.sr-only`, `scroll-margin-top`) let you deliver the a11y contract without changing what non-disabled users see. If a team thinks a11y means compromising design, they're using the 2010 toolkit.
+
+---
+
 ### 2026-04-22 — Split /services into three per-service routes
 
 **What.** Replaced the single modal-driven `/services` page with three indexable routes:
@@ -383,6 +405,5 @@ Short reference. Each concept links to where it was discussed above so you can c
 
 1. Add testimonials + client logos to the homepage (biggest conversion lift per hour).
 2. Prerender the build so per-route meta reaches link-preview bots — the `/services` split shipped on 2026-04-22; prerendering is the remaining half of the SEO lift.
-3. Add real `<label>` elements and image `alt` text (accessibility baseline).
-4. Claim and link Google Business Profile; embed Map on Contact page.
-5. Add README with dev setup and deploy steps.
+3. Claim and link Google Business Profile; embed Map on Contact page.
+4. Add README with dev setup and deploy steps.
