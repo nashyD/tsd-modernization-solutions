@@ -121,6 +121,59 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-23 — Editorial overhaul of Home, Team, and Testimonials
+
+**What.** Refined-evolution pass on the three pages carrying the most conversion weight. Same brand system (Playfair Display + Inter, Carolina/cream, diamond motifs) — just tighter compositions and more editorial personality. No new colors, no new fonts, no new components outside these three pages.
+
+**Scope.**
+
+1. **[Home.jsx](src/pages/Home.jsx).**
+   - **Hero.** Added a masthead marker above the headline: `— NO. 01 ◆ CHARLOTTE EDITION ◆ SPRING MMXXVI —` with hairline rules on either side. Softened the text treatment — dropped the 4-way outline shadow that gave the H1 a poster look and replaced it with a tighter, stronger radial vignette (`70% 60% at 50% 48%`, peak 0.62 opacity) so the readable darkening lives in the backdrop rather than the letterforms. The masthead replaces the older "Small Business Modernization Specialists" eyebrow.
+   - **ServiceTicker (new).** Slow horizontal marquee between the hero and stats — service names in italic Playfair, separated by diamond glyphs, 55s loop, honors `prefers-reduced-motion`. Doubles as an editorial rhythm break and as a keyword strip for anyone skimming.
+   - **Stats → asymmetric "By the Numbers".** Replaced the 4-up symmetric grid with a 1.4 / 1 split: a hero stat on the left (`48 hrs` set in oversized italic Playfair with the gradient-accent text fill, "The Differentiator" label, supporting copy) and three smaller stacked stats on the right (50,000+ / < 30% / 100%, each with a Playfair-italic pull-quote line — "*The audience we serve.*", "*The gap we close.*", "*The promise we stand behind.*"). Collapses to single column below 760px.
+   - **FoundersStrip → The Masthead.** Replaced the three-identical-circles with editorial portrait cards (4:5 aspect, "FOUNDER NO. 01/02/03" chips, nameplate with Playfair italic over a gradient scrim), followed by a pull-quote strip framed by hairlines with an oversized Playfair quote mark. School name is a small caps eyebrow above each bio.
+   - **WhyWeDo → The Thesis.** Gave each of the three "why" cards a distinct header variant — (01) oversized italic numeral, (02) a triple-diamond glyph run, (03) an oversized quote mark — so the row doesn't read as a carbon-copy grid. Headline moved out of `SectionHeader` into a custom two-line editorial block.
+   - **Section markers.** Each non-hero section now gets the same three-part header treatment: `◆ LABEL` / horizontal rule / `§ 0N` — so the page reads like a sequence of editorial chapters rather than a stack of cards.
+
+2. **[Team.jsx](src/pages/Team.jsx).**
+   - Rewrote from three-identical-circle cards to alternating magazine-style spreads. Each founder gets: a 4:5 portrait with a translucent "FOUNDER NO. 0X" chip, a Playfair-italic name set large, a pull-quote in an accent-bordered block, a bio paragraph, a "WHAT THEY SHIP" bulleted list with diamond markers, and a "View business card" button that opens the existing modal (kept as-is).
+   - New page-level headline: "Three friends from the *Carolina piedmont.*" (italic Playfair accent on the place name).
+   - Portraits alternate left/right on desktop; collapse to a single column below 820px.
+
+3. **[Testimonials.jsx](src/pages/Testimonials.jsx) → The Ledger.**
+   - Killed the "coming soon" shell. Reframed the page as a live-methodology spec: **I / II / III** — *What we measure · How we report · What you'll see* — each column with an icon, Roman numeral, headline, body, and a sample-format line set in italic Playfair.
+   - Added a "Provisional Entries" row — three dashed-border cards labeled `No. 01 / 02 / 03` with "Awaiting first ship" italics and an "Open slot" pill. Shows the template filled with placeholders so visitors can see what a real entry will look like.
+   - CTA block at the bottom keeps the existing prism-gradient treatment and "Claim a founding slot" button.
+   - Uses the same masthead pattern as Home and Team for visual continuity.
+
+**Why.** Audit items §5 (Trust & social proof) and §7 (Content & messaging). The three target pages were the weakest surfaces of an otherwise solid site:
+
+- **Home** had a cohesive but quiet design — identical-width cards in every section meant the page read as one undifferentiated scroll with no hierarchy. Adding the masthead, ticker, and asymmetric stats introduces rhythm and a single strong focal point per section.
+- **Team** undersold three founders by reducing them to matching 96px avatars. Portrait-first editorial layout gives each person proper real estate and a distinct voice via the pull-quotes.
+- **Testimonials** admitted a gap without filling it. A "coming soon" page trains visitors to expect absence; a methodology page trains them to expect rigor. Shipping the *format* of a case study before any client testimonial exists signals the discipline the page will eventually document.
+
+**Voice notes.**
+- Preserved the "Avoid 'X, not Y'" rule throughout. All new copy reviewed — no contrastive symmetric phrasing.
+- Kept every concrete fact (48 hours, 50,000+, <30%, 100%) intact; only the framing changed.
+
+**Design notes — what was intentionally kept.**
+- Brand palette untouched. No new hex values introduced.
+- Font stack untouched (Playfair Display + Inter). Playfair gets more surface area in the new layouts, but it's the existing font.
+- Diamond motif (`◆`) elevated to a system-level signifier — appears as bullet, section delimiter, decorative background element, and ticker separator.
+- Card component, RippleButton, DiamondDivider all kept and reused.
+- Hero video, theme toggle, nav, footer — all unchanged. The overhaul stops at the page content.
+
+**A small bug caught during verification.** Unicode escapes (`\u2014`) written directly into JSX text content render literally because JSX text isn't a JS string. Fixed by wrapping in a JSX expression (`{"\u2014"}`). Worth remembering: JS string escapes only work inside JS strings, not inside JSX text.
+
+**Files touched.**
+- `src/pages/Home.jsx` — full section-by-section rewrite (Hero cleanup, new `ServiceTicker`, new `Stats` + `SupportStat`, new `FoundersStrip` + `FounderPortrait`, new `WhyWeDo` + `WhyCard`). Import list unchanged — every component still uses existing shared primitives.
+- `src/pages/Team.jsx` — complete rewrite. `BusinessCard` and `CardModal` components preserved verbatim; the page wrapper and card grid replaced with `FounderSpread`.
+- `src/pages/Testimonials.jsx` — complete rewrite. Three `LedgerColumn`s + provisional-entries row + CTA block.
+
+**Principle reinforced.** *Refined evolution beats aesthetic resets for a brand that's already working.* A service business targeting main-street Charlotte owners trades trust before novelty — a radical visual reset risks the signal the current design already earns. The right move was structural: keep every choice that's carrying weight (type, palette, motif, motion), and raise the production value of the composition. Every page now earns its scroll with its own rhythm rather than being a cascade of similarly-weighted cards.
+
+---
+
 ### 2026-04-23 — Local SEO: schema enrichment + visible NAP
 
 **What.** Two-pronged pass at audit §8. Enriched the `ProfessionalService` JSON-LD with `geo` coordinates and an `openingHoursSpecification`. Added a three-card NAP strip (Call, Hours, Service area) above the contact form, and surfaced phone + hours in the footer so they ride along with every page.
