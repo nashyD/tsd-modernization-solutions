@@ -54,6 +54,56 @@ function FAQSection() {
   );
 }
 
+/* ── Contact info (NAP block) ──────────────────────────────────── */
+function ContactInfo() {
+  const [ref, fadeStyle] = useFadeIn(0);
+  const blocks = [
+    { label: "Call", value: "(704) 275-1410", href: "tel:+17042751410" },
+    { label: "Hours", value: "Every day · 8am – 8pm" },
+    { label: "Service area", value: "Charlotte · Gastonia · Belmont" },
+  ];
+  const cardStyle = {
+    padding: "18px 22px", borderRadius: "14px",
+    background: v("surface"), border: `1px solid ${v("surface-border")}`,
+    textAlign: "center", transition: "border-color 0.2s ease",
+  };
+  return (
+    <div ref={ref} style={{
+      ...fadeStyle, padding: "40px 48px 0", maxWidth: "700px", margin: "0 auto",
+    }}>
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+        gap: "14px",
+      }}>
+        {blocks.map((b, i) => {
+          const inner = (
+            <>
+              <div style={{
+                fontSize: "11px", fontWeight: 700, letterSpacing: "2px",
+                textTransform: "uppercase", color: v("text-dim"), marginBottom: "6px",
+              }}>{b.label}</div>
+              <div style={{ fontSize: "15px", fontWeight: 600, color: v("text") }}>
+                {b.value}
+              </div>
+            </>
+          );
+          return b.href ? (
+            <a key={i} href={b.href}
+              style={{ ...cardStyle, display: "block", textDecoration: "none", color: "inherit" }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = v("accent"); }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = v("surface-border"); }}>
+              {inner}
+            </a>
+          ) : (
+            <div key={i} style={cardStyle}>{inner}</div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 /* ── Contact form ──────────────────────────────────────────────── */
 function ContactForm() {
   const [formData, setFormData] = useState({ name: "", email: "", business: "", message: "", botcheck: "" });
@@ -186,6 +236,7 @@ function ContactForm() {
 export default function Contact() {
   return (
     <PageShell>
+      <ContactInfo />
       <ContactForm />
       <DiamondDivider width={120} style={{ margin: "20px auto" }} />
       <FAQSection />
