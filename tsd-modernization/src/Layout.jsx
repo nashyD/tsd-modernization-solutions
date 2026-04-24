@@ -332,6 +332,10 @@ export default function Layout() {
         <p style={{ fontSize: "12px", color: v("text-dim") }}>
           Serving the Charlotte metro area including Gastonia, Belmont, and surrounding communities.
         </p>
+        <p style={{ fontSize: "12px", color: v("text-dim"), marginTop: "8px" }}>
+          <a href="tel:+17042751410" style={{ color: "inherit" }}>(704) 275-1410</a>
+          {" · Open every day, 8am – 8pm"}
+        </p>
         <p style={{ fontSize: "12px", color: v("text-dim"), marginTop: "16px" }}>
           &copy; {new Date().getFullYear()} TSD Ventures. All rights reserved.
         </p>

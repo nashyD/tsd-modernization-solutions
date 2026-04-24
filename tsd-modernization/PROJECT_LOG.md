@@ -121,6 +121,28 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-23 — Local SEO: schema enrichment + visible NAP
+
+**What.** Two-pronged pass at audit §8. Enriched the `ProfessionalService` JSON-LD with `geo` coordinates and an `openingHoursSpecification`. Added a three-card NAP strip (Call, Hours, Service area) above the contact form, and surfaced phone + hours in the footer so they ride along with every page.
+
+**Why.** Local SEO is its own discipline — the local pack ranks on signals general organic doesn't care about: proximity, hours coverage, and citation consistency across directories. `geo` lets Google score how close a searcher is to the business's service centroid. `openingHoursSpecification` powers the "Open now" filter and populates Knowledge Panel hours. A visible NAP on every rendered page is the cheapest form of citation reinforcement — crawlers cross-check it against GBP, BBB, Yelp, and so on; consistent matches compound trust.
+
+**Context — service-area business.** TSD operates as a service-area business on Google Business Profile (no public street address). Schema keeps `addressLocality: Charlotte, NC` without a street, which is the right pattern for SABs. `geo` set to downtown Charlotte (35.2271, -80.8431) as the service-area centroid so proximity scoring still works. Map embed intentionally skipped — with no storefront, a map adds visual weight for no real signal.
+
+**Changes.**
+- **[index.html](index.html).** Added `geo.GeoCoordinates` and `openingHoursSpecification` (Mon–Sun 08:00–20:00) to the LocalBusiness block.
+- **[src/pages/Contact.jsx](src/pages/Contact.jsx).** New `ContactInfo` component above the form: three cards (Call → `tel:` link, Hours, Service area). Matches the page's existing `v()` theme vars, `useFadeIn` hook, and surface card styling. Grid collapses to a single column below ~560px.
+- **[src/Layout.jsx](src/Layout.jsx).** Footer gained a line with the phone (as a `tel:` link) and hours between the service-area copy and the copyright.
+
+**Deferred.**
+- `sameAs` (GBP URL, socials, BBB, Yelp) — pending GBP verification and profile creation. Once the GBP listing goes live, add its share URL plus any real social profiles to the schema.
+- Location-specific landing pages (`/charlotte`, `/gastonia`, `/belmont`) — separate content job.
+- Off-site: GBP verification, directory listings, reviews flow — Nash's side, no code.
+
+**Principle reinforced.** *Local SEO runs on citation consistency.* Google trusts a business when the same NAP, hours, and service areas appear identically across the rendered HTML, the structured data, and every external directory. Every mismatch costs a small amount of trust; every match compounds.
+
+---
+
 ### 2026-04-23 — Prerendered every route with vite-react-ssg
 
 **What.** Switched the build from plain `vite build` (single HTML shell, SPA hydrates the rest) to `vite-react-ssg build`. All 11 routes now ship as their own static HTML files with per-route `<title>`, `<meta name="description">`, `<link rel="canonical">`, and OG/Twitter tags baked into the shell. Dev stays on plain `vite` for fast CSR iteration.
