@@ -40,7 +40,8 @@ function GuaranteeBlock() {
     }} className="guarantee-block">
       <div style={{
         fontFamily: "var(--font-display)", fontStyle: "italic", fontSize: "84px",
-        lineHeight: 0.85, flexShrink: 0,
+        lineHeight: 1.1, flexShrink: 0,
+        paddingBottom: "4px",
         background: C.gradientAccent, WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent", backgroundClip: "text",
       }}>{"§"}</div>
