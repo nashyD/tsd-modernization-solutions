@@ -121,6 +121,39 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-25 — Unified the logo system: 4-slab prism everywhere
+
+**What.** Brought every static logo file in line with the 4-slab prism design used by the React nav component. Two parallel design systems lived in the project: the React `TSDLogo` component used 4 non-overlapping rectangles with `skewX(-12)` (light → dark Carolina-blue gradient, T/S/D over slabs 1–3), while every static SVG (favicon, og-image, `tsd-ms-logo*`) used 3 *overlapping* parallelograms drawn as path data with a tarheel-blue gradient. Same brand, different logos. A visitor saw one version on tsd-modernization.com and a different version on the browser tab favicon and the LinkedIn share preview. This pass swept the static SVGs over to the 4-slab design.
+
+In the repo's `public/`:
+- [`favicon.svg`](public/favicon.svg) → square mark (64×64), dark backdrop, prism centered, T S D letters.
+- [`tsd-ms-logo.svg`](public/tsd-ms-logo.svg) (the JSON-LD logo for Google's Knowledge Panel — was on legacy purple/teal palette before this change), [`tsd-ms-logo-tarheel.svg`](public/tsd-ms-logo-tarheel.svg) → 4-slab prism + `MODERNIZATION` / `SOLUTIONS` wordmark in light-blue text (dark-theme).
+- [`tsd-ms-logo-tarheel-light.svg`](public/tsd-ms-logo-tarheel-light.svg) → same prism, wordmark in navy/steel for light backgrounds.
+- [`og-image.svg`](public/og-image.svg) → 1200×630 social-share card: prism scaled 2.2× on a dark navy backdrop with a subtle grid + radial glow.
+
+Rasters regenerated from the new SVGs with `rsvg-convert`:
+- `favicon-16.png`, `favicon-32.png`, `favicon.ico` (32×32 PNG bytes — modern browsers prefer the SVG anyway).
+- `apple-touch-icon.png` (180×180).
+- `og-image.png` (1200×630).
+
+**Why.** Brand consistency. The Hormozi audit on the same day flagged perceived-likelihood as the offer's biggest leak — and a buyer who sees one logo on the site, a different one in the browser tab, and a third in the iMessage preview reads that as "this team isn't sure who they are yet." The 4-slab design is what shipped on the live nav and what the user explicitly named as canonical.
+
+The JSON-LD `logo` field in [`index.html`](index.html) still references `tsd-ms-logo.svg`, which now carries the correct tarheel palette (it was purple/teal before this change). Google's Knowledge Panel will pick up the new asset on its next crawl.
+
+**Files touched (in this repo).** 5 SVGs and 5 rasters in `tsd-modernization/public/`. Outside the repo, ~50 additional logo files across `TSD Inc. /Logos`, `TSD Ventures/Logos`, `TSD Inc. /TSD Business Cards/logos`, `TSD Inc. /launch-tracker/public/`, `TSD Ventures/tsd-ventures/public/`, and the `TSD All/*copy/...` mirror folders were updated to the same templates (those are local brand assets and don't deploy from this repo). TSD Mobile Detailing files (`tsd-md-*.svg`) were intentionally left alone — separate brand, teal palette.
+
+**Verification.** `npm run build` clean. Live preview confirmed: `/favicon.svg` and `/tsd-ms-logo-tarheel.svg` render the new 4-slab prism. The nav logo (already on the new design from the earlier `icons.jsx` viewBox fix) remains visually unchanged.
+
+**Tooling note.** Used `librsvg` (`brew install librsvg`) for SVG → PNG rasterization. `rsvg-convert -w <px> in.svg -o out.png` is the call. ICO regeneration would normally need ImageMagick; for this pass the 32×32 PNG bytes were copied to `favicon.ico` since modern browsers prefer the SVG favicon and the .ico is a fallback for older clients.
+
+**Two known gaps left for you.**
+- Banner PNGs (`tsd_modernization_banner.png`, `tsd_ventures_banner.png` in the brand-asset folders) had no SVG counterpart — the previous design lived only as a raster export. Not regenerated; they retain their previous design until a banner SVG template is created and exported.
+- Business-card print files in TSD Inc./TSD Business Cards may have separate Adobe sources that need re-exporting from the new SVG masters before the next print run.
+
+**Principle reinforced.** *Two designs for one brand is a credibility tax.* Every place a customer sees the company should show the same shape. When the React nav and the favicon and the LinkedIn share card don't match, each mismatch is a small "are these guys for real?" moment. The fix isn't picking the prettier design; it's picking *one* and stamping it everywhere it appears.
+
+---
+
 ### 2026-04-25 — Phase 2: site-wide alignment with the Summer 2026 cohort
 
 **What.** Followed Phase 1's pricing surgery with a sweep across every other page that still implied an ongoing relationship. Five files touched.
