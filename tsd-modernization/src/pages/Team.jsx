@@ -230,13 +230,13 @@ function FounderSpread({ member, index, onView }) {
           {member.bio}
         </p>
 
-        {/* What they ship */}
+        {/* What I ship — first-person framing, the founder speaking */}
         <div style={{ marginBottom: "28px" }}>
           <div style={{
             fontSize: "10px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase",
             color: v("text-dim"), marginBottom: "12px",
           }}>
-            What they ship
+            What I ship
           </div>
           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {member.ships.map((s, j) => (
@@ -309,12 +309,12 @@ export default function Team() {
           fontFamily: "var(--font-body)", fontWeight: 800, fontSize: "clamp(36px, 6vw, 72px)",
           letterSpacing: "-2px", lineHeight: 1.02, color: v("text"), marginBottom: "24px",
         }}>
-          Three friends from the{" "}
+          Three founders.{" "}
           <span style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
             background: C.gradientAccent, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
             backgroundClip: "text",
-          }}>Carolina piedmont.</span>
+          }}>Building it ourselves.</span>
         </h1>
         <p style={{
           fontSize: "18px", lineHeight: 1.65, color: v("text-muted"),
