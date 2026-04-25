@@ -211,6 +211,25 @@ const TIERS = [
   },
 ];
 
+function WedgePointer() {
+  return (
+    <div style={{
+      maxWidth: "640px", margin: "32px auto 0", padding: "0 24px",
+      textAlign: "center",
+    }}>
+      <p style={{ fontSize: "13px", color: v("text-dim"), lineHeight: 1.6 }}>
+        Looking for the smaller wedge? See the{" "}
+        <Link to="/ai-receptionist" style={{
+          color: v("accent"), textDecoration: "underline", fontWeight: 600,
+        }}>
+          AI receptionist setup, $497
+        </Link>
+        {" "}— built for HVAC and trades.
+      </p>
+    </div>
+  );
+}
+
 export default function Pricing() {
   return (
     <PageShell>
@@ -235,6 +254,7 @@ export default function Pricing() {
           ))}
         </div>
         <ClosingNote />
+        <WedgePointer />
       </div>
       <style>{`
         @media (max-width: 820px) {

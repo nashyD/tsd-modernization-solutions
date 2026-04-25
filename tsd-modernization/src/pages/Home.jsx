@@ -127,7 +127,7 @@ function Hero() {
           color: "#fff", marginBottom: "20px",
           textShadow: "0 2px 18px rgba(0,0,0,0.65), 0 1px 4px rgba(0,0,0,0.8)",
         }}>
-          AI integration, custom websites, and workflow automation.
+          Get every after-hours call into a booked appointment.
           <br />
           <span style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
@@ -143,8 +143,8 @@ function Hero() {
           maxWidth: "540px", margin: "0 auto 36px",
           textShadow: "0 2px 14px rgba(0,0,0,0.75), 0 1px 4px rgba(0,0,0,0.85)",
         }}>
-          48-hour proposals and a 100% money-back guarantee for Charlotte-area small businesses.
-          Real results at a fraction of agency prices.
+          Custom AI for Charlotte HVAC, plumbing, roofing, and home services.
+          48-hour proposals and a 100% money-back guarantee.
         </p>
 
         <div ref={r4} style={{ ...f4, display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
@@ -192,7 +192,7 @@ function Hero() {
 
 /* ── Service ticker — slow-scrolling editorial marquee ─────────── */
 const TICKER_ITEMS = [
-  "AI integration",
+  "AI receptionists",
   "Custom websites",
   "Workflow automation",
   "Tech audits",
@@ -748,11 +748,53 @@ function FoundingClientOffer() {
   );
 }
 
+/* ── Trades strip — names the vertical audience without bouncing
+     a non-HVAC visitor. Sits above the service ticker so it reads
+     immediately after the hero on first scroll. ─────────────────── */
+function TradesStrip() {
+  const [ref, fade] = useFadeIn(0);
+  return (
+    <section ref={ref} style={{
+      ...fade,
+      padding: "28px 24px",
+      borderTop: `1px solid ${v("divider")}`,
+      borderBottom: `1px solid ${v("divider")}`,
+      background: v("bg-alt"),
+    }}>
+      <div style={{
+        display: "flex", alignItems: "center", justifyContent: "center", gap: "20px",
+        flexWrap: "wrap", maxWidth: "1100px", margin: "0 auto",
+        textAlign: "center",
+      }}>
+        <span style={{
+          fontSize: "11px", fontWeight: 700, letterSpacing: "3px", textTransform: "uppercase",
+          color: v("accent"), display: "inline-flex", alignItems: "center", gap: "8px",
+          whiteSpace: "nowrap",
+        }}>
+          <span style={{ fontSize: "8px" }}>{"◆"}</span> Built for the trades
+        </span>
+        <span style={{
+          fontFamily: "var(--font-display)", fontStyle: "italic",
+          fontSize: "clamp(16px, 2.2vw, 22px)", color: v("text"), lineHeight: 1.4,
+        }}>
+          HVAC <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
+          Plumbing <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
+          Roofing <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
+          Electrical <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
+          Lawn Care <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
+          Home Services
+        </span>
+      </div>
+    </section>
+  );
+}
+
 /* ── Home page ─────────────────────────────────────────────────── */
 export default function Home() {
   return (
     <>
       <Hero />
+      <TradesStrip />
       <ServiceTicker />
       <Stats />
       <FoundersStrip />

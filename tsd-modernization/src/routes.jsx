@@ -8,6 +8,7 @@ import Pricing from "./pages/Pricing";
 import Testimonials from "./pages/Testimonials";
 import Team from "./pages/Team";
 import Contact from "./pages/Contact";
+import AIReceptionist from "./pages/AIReceptionist";
 
 export const routes = [
   {
@@ -29,6 +30,7 @@ export const routes = [
       { path: "why-us", Component: WhyUs },
       { path: "process", Component: Process },
       { path: "pricing", Component: Pricing },
+      { path: "ai-receptionist", Component: AIReceptionist },
       { path: "testimonials", Component: Testimonials },
       { path: "team", Component: Team },
       { path: "contact", Component: Contact },

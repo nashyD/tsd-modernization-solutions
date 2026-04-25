@@ -55,6 +55,10 @@ const ROUTE_META = {
     title: "Pricing — Founding Cohort, Summer 2026 | TSD Modernization Solutions",
     description: "Founding-cohort pricing for ten Charlotte-area small businesses. Tech audits at $250, web + AI bundles at $2,000 founding rate (standard $4,000). Last project start July 13, 2026.",
   },
+  "/ai-receptionist": {
+    title: "AI Receptionist for Charlotte HVAC + Trades | TSD Modernization Solutions",
+    description: "Custom-trained AI answers your phone 24/7, qualifies the lead, and books the appointment on your calendar. $497 founding setup for Charlotte HVAC, plumbing, roofing, and home services. Ten spots, last setup start July 13, 2026.",
+  },
   "/testimonials": {
     title: "Case Studies Coming Soon | TSD Modernization Solutions",
     description: "We're shipping our first client projects now. Real results, real outcomes, documented here — coming soon.",

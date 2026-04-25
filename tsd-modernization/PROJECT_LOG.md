@@ -121,6 +121,42 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-25 — Phase 3: offer sharpening — vertical commit + AI receptionist wedge
+
+**What.** Three-part offer-sharpening pass following Phases 1 and 2:
+
+1. **Hero rewrite — outcome-led + vertical-bordered.** The Home H1 moved from a generic three-services list ("AI integration, custom websites, and workflow automation. Shipped in days.") to a single-outcome statement: "Get every after-hours call into a booked appointment. *Shipped in days.*" The sub now names the target audience by trade — "Custom AI for Charlotte HVAC, plumbing, roofing, and home services. 48-hour proposals and a 100% money-back guarantee." Added a `TradesStrip` section between the hero and the existing `ServiceTicker`: a single editorial line in italic Playfair listing HVAC · Plumbing · Roofing · Electrical · Lawn Care · Home Services under a "◆ BUILT FOR THE TRADES" eyebrow. Updated the `ServiceTicker` to lead with "AI receptionists" instead of "AI integration."
+
+2. **New `/ai-receptionist` landing page.** Dedicated wedge product page at [`src/pages/AIReceptionist.jsx`](src/pages/AIReceptionist.jsx). Hero with editorial masthead `AI RECEPTIONIST ◆ CHARLOTTE HVAC + TRADES ◆ SUMMER MMXXVI`, the same outcome-led H1, a `Reserve a setup spot` CTA pointing to `/contact?ref=ai-receptionist`, and a scarcity strip with the hard $497 founding price + ten-spot cap + July 13 last-start. Five sections in the established "◆ LABEL / hairline / § 0N" pattern: **The Leak** (industry data on after-hours missed calls + voicemail/call-center math), **The Flow** (3-step explainer — Forward, Answer, Confirm), **The Offer** (asymmetric two-card grid: deliverables list + price card with $1,500 standard struck-through, $497 founding, $97/mo through Aug 31, risk-reversal callout, ownership-transfer note), and a closing CTA with diamond divider. New route registered in [`routes.jsx`](src/routes.jsx), `ROUTE_META` entry in [`Layout.jsx`](src/Layout.jsx) (title names HVAC + Trades), `<url>` entry in [`sitemap.xml`](public/sitemap.xml) at priority 0.8.
+
+3. **Pricing → wedge pointer.** Added a `WedgePointer` element below the closing footnote on [`/pricing`](src/pages/Pricing.jsx): a single-line italic note linking "AI receptionist setup, $497 — built for HVAC and trades." Catches a buyer who landed on `/pricing` first and might want the lighter-weight entry product.
+
+**Why.** Two of the three offer leaks the Hormozi audit flagged were generic dream-outcome language and a missing wedge product. Phases 1 and 2 fixed pricing and surfaced the cohort cap; Phase 3 sharpens the *offer* itself.
+
+The H1 change is the bigger swing. The old H1 was a product list ("AI integration, custom websites, and workflow automation") — accurate but unmemorable, like reading a menu before you've decided you're hungry. The new H1 names a single buyer pain ("after-hours call → booked appointment") that any Charlotte service-business owner instantly recognizes. The trade-off: a non-HVAC visitor (a dentist, a salon) now reads a hero pitched at trades. The `TradesStrip` and the `home-services` framing in the sub are the mitigations — they broaden the audience without diluting the headline. The vertical narrowing happens hardest on `/ai-receptionist`, which fully commits to HVAC + trades because that page is the ad-targeting destination.
+
+The wedge product page is the lower-priced entry point Hormozi calls a "sharp wedge" — small dollar amount, fast time-to-value, named outcome, easy yes. It exists for two reasons: (1) it gives Facebook + Google Local ads a converting funnel for $300/month-style ad budgets that wouldn't carry a $2,000 bundle, and (2) it captures buyers who balk at $2,000 but would say yes to $497, with a natural upsell path to the bundle later. The dedicated URL also lets the audit's recommended tactic — paid local ads against HVAC keywords — run against a focused destination instead of a generic homepage.
+
+The summer-only operating window forced a small honesty addition to the wedge offer: `$97/mo through August 31, 2026` (matching the on-call window from Phase 1) followed by an ownership-transfer note explaining that the AI agent and credentials hand off to the buyer when the season closes. Same pattern as the bundle's "founder on call through Aug 31" — every offer page acknowledges the time bound rather than implying perpetual support.
+
+**Files touched.**
+- [`src/pages/Home.jsx`](src/pages/Home.jsx) — H1 text, sub text, `ServiceTicker` lead item changed from `AI integration` to `AI receptionists`. New `TradesStrip` component definition + invocation in the page composition.
+- [`src/pages/AIReceptionist.jsx`](src/pages/AIReceptionist.jsx) — new file, ~270 lines, six sub-components (`ChapterHead`, `ReceptionistHero`, `TheLeak`, `HowItWorks`, `TheOffer`, `ClosingCTA`) plus the page wrapper.
+- [`src/routes.jsx`](src/routes.jsx) — new import + new `ai-receptionist` child route.
+- [`src/Layout.jsx`](src/Layout.jsx) — new `ROUTE_META["/ai-receptionist"]` entry.
+- [`public/sitemap.xml`](public/sitemap.xml) — new `<url>` block at priority 0.8 (slightly below /pricing's 0.9 since the wedge is secondary).
+- [`src/pages/Pricing.jsx`](src/pages/Pricing.jsx) — new `WedgePointer` component below `ClosingNote`, links to `/ai-receptionist`.
+
+**Verification.** `npm run build` clean — 12 routes prerendered (was 11). Visual check on dev server confirmed Home hero reads correctly with the new H1, `TradesStrip` sits cleanly between hero and ticker, `/ai-receptionist` renders all five sections in the right vertical order, and the Pricing page now shows the wedge pointer below the closing footnote. The `?ref=ai-receptionist` query parameter on the CTA isn't read by the form yet — GA4 and Plausible will capture it as page params for traffic-attribution analysis; a future Phase 4 can wire it into the form submission directly so it appears in Web3Forms inbox.
+
+**Out of scope this pass.** Facebook + Google Local ad creative for the new landing page (separate task with its own budget). Contact form modification to capture the `?ref=` param into a hidden field (deferred — analytics will still tell you which page sent the lead).
+
+**Voice notes.** Drafted hero copy and landing-page copy mentally checked against the humanizer rule set: no imperative trio cadence (the Step titles "Forward / Answer / Confirm" are a structured 3-step format rather than free-prose imperatives, which is allowed), no "X, not Y" contrastive constructions, no banned vocabulary (`comprehensive`, `leverage`, `seamless`, etc.). One originally-drafted line — *"Voicemail loses; a call center is overkill; a receptionist is overhead the math doesn't carry."* — was three parallel statements; rewrote to a single sentence: *"Voicemail loses leads, call centers are overkill at this scale, and the math on a real receptionist rarely carries for a small operator."*
+
+**Principle reinforced.** *Specificity multiplies in headlines, hedges everywhere else.* The Home H1 commits to one outcome ("after-hours call → booked appointment") because the H1 has 5 seconds to register; abstraction loses there. The sub broadens the audience because it has more space and more time. The trades strip names every adjacent vertical so a non-HVAC visitor doesn't bounce. And `/ai-receptionist` gets to commit *fully* to HVAC because it's a destination URL, not a doorway. Each layer trades a different amount of specificity for a different amount of audience reach — that's the right shape, not the same level of specificity everywhere.
+
+---
+
 ### 2026-04-25 — Unified the logo system: 4-slab prism everywhere
 
 **What.** Brought every static logo file in line with the 4-slab prism design used by the React nav component. Two parallel design systems lived in the project: the React `TSDLogo` component used 4 non-overlapping rectangles with `skewX(-12)` (light → dark Carolina-blue gradient, T/S/D over slabs 1–3), while every static SVG (favicon, og-image, `tsd-ms-logo*`) used 3 *overlapping* parallelograms drawn as path data with a tarheel-blue gradient. Same brand, different logos. A visitor saw one version on tsd-modernization.com and a different version on the browser tab favicon and the LinkedIn share preview. This pass swept the static SVGs over to the 4-slab design.
