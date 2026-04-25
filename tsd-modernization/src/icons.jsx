@@ -150,7 +150,7 @@ export const ClipboardIcon = ({ size = 24, ...rest }) => (
 
 /* ── TSD Prism Logo ──────────────────────────────────────────── */
 export const TSDLogo = ({ size = 48, ...rest }) => (
-  <svg width={size} height={size * 0.65} viewBox="0 0 120 78" fill="none" {...rest}>
+  <svg width={size * 1.17} height={size * 0.65} viewBox="0 0 140 78" fill="none" {...rest}>
     <g transform="skewX(-12)">
       <rect x="18" y="4" width="30" height="70" rx="2" fill="#a8d1ed" />
       <rect x="48" y="4" width="30" height="70" rx="2" fill="#7BB8E0" />
