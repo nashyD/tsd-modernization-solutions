@@ -52,8 +52,8 @@ const ROUTE_META = {
     description: "How we work: free tech audit, custom proposal within 48 hours, hands-on implementation, and training so your team owns what we build.",
   },
   "/pricing": {
-    title: "Pricing — Tech Audits, Websites & AI from $150 | TSD Modernization Solutions",
-    description: "Transparent pricing for Charlotte-area small businesses. Tech audits from $150, custom websites + AI bundles, and monthly care plans.",
+    title: "Pricing — Founding Cohort, Summer 2026 | TSD Modernization Solutions",
+    description: "Founding-cohort pricing for ten Charlotte-area small businesses. Tech audits at $250, web + AI bundles at $2,000 founding rate (standard $4,000). Last project start July 13, 2026.",
   },
   "/testimonials": {
     title: "Case Studies Coming Soon | TSD Modernization Solutions",
