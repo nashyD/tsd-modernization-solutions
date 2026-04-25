@@ -25,7 +25,7 @@ const SITE_URL = "https://tsd-modernization.com";
 const ROUTE_META = {
   "/": {
     title: "TSD Modernization Solutions | AI Integration & Website Creation | Charlotte, NC",
-    description: "Affordable AI integration, custom website creation, and workflow automation for small businesses in the Charlotte metro area. Book a free tech audit today.",
+    description: "Affordable AI integration, custom website creation, and workflow automation for Charlotte-area small businesses. Summer 2026 founding cohort — ten spots, last project start July 13. Book a free consultation today.",
   },
   "/services": {
     title: "Services — AI, Websites & Automation | TSD Modernization Solutions",
@@ -49,7 +49,7 @@ const ROUTE_META = {
   },
   "/process": {
     title: "Our Process — From Audit to Launch | TSD Modernization Solutions",
-    description: "How we work: free tech audit, custom proposal within 48 hours, hands-on implementation, and training so your team owns what we build.",
+    description: "How we work: free consultation, written proposal within 48 hours, hands-on implementation, and training so your team owns what we build.",
   },
   "/pricing": {
     title: "Pricing — Founding Cohort, Summer 2026 | TSD Modernization Solutions",
@@ -64,8 +64,8 @@ const ROUTE_META = {
     description: "Meet the founders of TSD Modernization Solutions — a local Charlotte team of small-business modernization specialists.",
   },
   "/contact": {
-    title: "Contact Us — Free Tech Audit | TSD Modernization Solutions",
-    description: "Book a free tech audit for your Charlotte-area small business. Call 704-275-1410 or send us a message.",
+    title: "Contact Us — Book a Free Consultation | TSD Modernization Solutions",
+    description: "Reserve a Summer 2026 founding-cohort spot. Free 1-2 hour consultation, then a written proposal within 48 hours. Call 704-275-1410 or send us a message.",
   },
 };
 

@@ -9,6 +9,7 @@ function Hero() {
   const [r2, f2] = useFadeIn(400);
   const [r3, f3] = useFadeIn(600);
   const [r4, f4] = useFadeIn(800);
+  const [r5, f5] = useFadeIn(1000);
 
   // Pick the right hero video for the viewport. Desktop gets the full 1080p
   // landscape (with contain so the full frame shows). Mobile gets a portrait-
@@ -112,11 +113,11 @@ function Hero() {
           textShadow: "0 1px 4px rgba(0,0,0,0.8)",
         }}>
           <span style={{ flex: "0 0 44px", height: "1px", background: "rgba(232,224,212,0.35)" }} />
-          <span>No. 01</span>
+          <span>Founding Cohort</span>
           <span style={{ color: C.carolinaLight, fontSize: "7px" }}>{"\u25C6"}</span>
           <span>Charlotte Edition</span>
           <span style={{ color: C.carolinaLight, fontSize: "7px" }}>{"\u25C6"}</span>
-          <span>Spring MMXXVI</span>
+          <span>Summer MMXXVI</span>
           <span style={{ flex: "0 0 44px", height: "1px", background: "rgba(232,224,212,0.35)" }} />
         </div>
 
@@ -161,6 +162,27 @@ function Hero() {
               Our Services
             </RippleButton>
           </Link>
+        </div>
+
+        {/* Cohort scarcity strip — surfaces the hard cap and the last-start
+            date so the time-bounded nature of the offer reads above the fold. */}
+        <div ref={r5} style={{
+          ...f5, marginTop: "36px",
+          display: "flex", alignItems: "center", gap: "14px", justifyContent: "center", flexWrap: "wrap",
+          fontSize: "11px", fontWeight: 600, letterSpacing: "2.5px", textTransform: "uppercase",
+          color: "rgba(232,224,212,0.78)",
+          textShadow: "0 1px 4px rgba(0,0,0,0.85)",
+        }}>
+          <span style={{ flex: "0 0 32px", height: "1px", background: "rgba(232,224,212,0.3)" }} />
+          <span>Ten Spots</span>
+          <span style={{ color: C.carolinaLight, fontSize: "7px" }}>{"◆"}</span>
+          <span>Last project start</span>
+          <span style={{
+            fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 600,
+            fontSize: "14px", letterSpacing: "0", textTransform: "none",
+            color: "#f4f9fd",
+          }}>July 13</span>
+          <span style={{ flex: "0 0 32px", height: "1px", background: "rgba(232,224,212,0.3)" }} />
         </div>
       </div>
 
