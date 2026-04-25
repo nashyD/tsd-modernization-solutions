@@ -121,6 +121,36 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-25 — Site admin pass: README, Sentry, dynamic sitemap
+
+**What.** Closed the three remaining housekeeping items from the original audit (§9):
+
+1. **`README.md`** at the project root — covers stack, local setup, build/deploy, project structure, env vars, conventions (PROJECT_LOG discipline + voice rules), common tasks, and pre-launch context. Links the live site, GitHub, Vercel auto-deploy. ~150 lines, written for a future collaborator who hasn't seen the project before.
+2. **Sentry frontend error monitoring** — `@sentry/react` ^10.50 added as a dependency. New [`src/sentry.js`](src/sentry.js) module follows the exact env-gating pattern of `analytics.js`: reads `VITE_SENTRY_DSN`, no-ops if unset, sample rate kept at 0.1 to stay inside Sentry's free-tier quota. Wired into [`src/main.jsx`](src/main.jsx) inside the `isClient` callback, called *before* `initAnalytics()` so it captures errors thrown during analytics init too. New `VITE_SENTRY_DSN` row in [`.env.example`](.env.example).
+3. **Auto-generated sitemap** — new [`scripts/generate-sitemap.mjs`](scripts/generate-sitemap.mjs) walks the prerendered `dist/` tree after build, finds every `index.html`, and writes both `dist/sitemap.xml` and `public/sitemap.xml`. Per-route priority + changefreq overrides live in `PRIORITY_META`; routes not in the table use a 0.5/monthly default. Build script in [`package.json`](package.json) now runs `vite-react-ssg build && node scripts/generate-sitemap.mjs`. New top-level `npm run sitemap` command for re-running the generator standalone.
+
+**Why.** All three are fix-it-once-and-forget improvements. The README means a future contributor (or future-Nash returning to the project after a break) can get oriented in five minutes instead of by reading every file. Sentry means production JS errors after May 7 surface in a dashboard rather than silently breaking pages — useful when the founders are on outreach calls and not watching Vercel logs. The dynamic sitemap means adding a route in `routes.jsx` no longer requires also remembering to hand-edit `public/sitemap.xml` — the build pass picks it up. Removes one of the recurring sources of audit-flagged drift.
+
+**Files touched.**
+- `README.md` (new, ~150 lines)
+- `src/sentry.js` (new)
+- `src/main.jsx` (added Sentry init in client callback)
+- `scripts/generate-sitemap.mjs` (new)
+- `package.json` (added `@sentry/react` dep, updated `build` script, added `sitemap` script)
+- `package-lock.json` (auto-updated by npm install)
+- `.env.example` (added `VITE_SENTRY_DSN` row with format note)
+- `public/sitemap.xml`, `dist/sitemap.xml` (regenerated; matches new format)
+
+**Verification.** `npm run build` clean — 12 routes prerendered, sitemap script ran, both `dist/sitemap.xml` and `public/sitemap.xml` written with matching content. URLs use the correct base, priorities match `PRIORITY_META` (e.g. `/` is 1.0/weekly, `/contact` and `/pricing` are 0.9/monthly, `/ai-receptionist` is 0.8/monthly). `@sentry/react` resolves cleanly under Vite — the env-gated init is a no-op without `VITE_SENTRY_DSN`, so dev console stays clean.
+
+**Operational note.** When you're ready, create a Sentry project at sentry.io (free tier is generous), grab the DSN, and add `VITE_SENTRY_DSN` in Vercel → Project → Settings → Environment Variables. Until then Sentry stays dormant. Same flow as GA4/Plausible/Clarity in the analytics setup.
+
+**Hidden gotcha.** The npm install for `@sentry/react` failed the first time with a `~/.npm` cache permission error (`EACCES`). Workaround: `npm install ... --cache /tmp/npm-cache`. Worth a one-time fix when you have a moment: `sudo chown -R $(id -u):$(id -g) ~/.npm`.
+
+**Principle reinforced.** *Tooling that runs on every build is the only tooling that stays in sync.* The hand-edited sitemap was always going to drift — the audit predicted it three weeks ago. The fix isn't more discipline about hand-editing; it's removing the hand-edit step entirely. Same logic applies to the README (live in the repo, not in someone's head) and Sentry (errors surface automatically, not when someone remembers to check).
+
+---
+
 ### 2026-04-25 — Phase 3: offer sharpening — vertical commit + AI receptionist wedge
 
 **What.** Three-part offer-sharpening pass following Phases 1 and 2:
