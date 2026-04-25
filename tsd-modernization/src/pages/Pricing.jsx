@@ -129,7 +129,7 @@ function TierCard({ tier, delay }) {
         )}
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "14px", marginBottom: "32px" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "14px", marginBottom: tier.bonus ? "20px" : "32px" }}>
         {tier.features.map((f, j) => (
           <div key={j} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
             <CheckIcon size={16} style={{ color: C.success, flexShrink: 0, marginTop: "2px" }} />
@@ -137,6 +137,21 @@ function TierCard({ tier, delay }) {
           </div>
         ))}
       </div>
+
+      {tier.bonus && (
+        <div style={{
+          padding: "14px 16px", borderRadius: "10px",
+          background: "rgba(75,156,211,0.08)",
+          border: `1px dashed ${C.carolina}`,
+          marginBottom: "24px",
+        }}>
+          <div style={{
+            fontSize: "10px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase",
+            color: v("accent"), marginBottom: "6px",
+          }}>{"◆ Bonus"}</div>
+          <p style={{ fontSize: "13px", color: v("text"), lineHeight: 1.5 }}>{tier.bonus}</p>
+        </div>
+      )}
 
       <Link to="/contact">
         <RippleButton variant={featured ? "primary" : "ghost"} style={{ width: "100%", padding: "14px 0" }}>
@@ -206,6 +221,7 @@ const TIERS = [
       "Founder on call for fixes through August 31, 2026",
       "Full source code ownership",
     ],
+    bonus: "AI receptionist setup ($497 value) included with the bundle.",
     btn: "Claim Founding Spot",
     featured: true,
   },

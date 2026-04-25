@@ -233,11 +233,42 @@ function ContactForm() {
   );
 }
 
+/* ── Service-area map — Charlotte metro centroid. TSD operates as a
+     service-area business (no storefront), so the map shows the city
+     centroid rather than a pinned address. Useful as a local-SEO signal
+     and as visitor reassurance that we're locally based. ────────── */
+function ServiceAreaMap() {
+  const [ref, fadeStyle] = useFadeIn(0);
+  return (
+    <div ref={ref} style={{
+      ...fadeStyle, padding: "32px 48px 0", maxWidth: "700px", margin: "0 auto",
+    }}>
+      <div style={{
+        position: "relative",
+        borderRadius: "14px", overflow: "hidden",
+        border: `1px solid ${v("surface-border")}`,
+        height: "280px",
+      }}>
+        <iframe
+          title="TSD Modernization Solutions service area — Charlotte, NC"
+          src="https://www.google.com/maps?q=Charlotte%2C+NC&t=&z=11&ie=UTF8&iwloc=&output=embed"
+          width="100%" height="100%"
+          style={{ border: 0, display: "block" }}
+          allowFullScreen=""
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+        />
+      </div>
+    </div>
+  );
+}
+
 /* ── Contact page ──────────────────────────────────────────────── */
 export default function Contact() {
   return (
     <PageShell>
       <ContactInfo />
+      <ServiceAreaMap />
       <ContactForm />
       <DiamondDivider width={120} style={{ margin: "20px auto" }} />
       <FAQSection />

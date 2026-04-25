@@ -399,7 +399,7 @@ const WHY_BEATS = [
   {
     label: "Ship it, teach it",
     title: "You own what we build",
-    body: "Every project ends with documentation and training your team can actually use. When we're done, you run it — no vendor lock-in, no hostage fees, no calling a ticketing queue for a password reset. 95% of our clients stay modern because they understand what's under the hood.",
+    body: "Every project ends with written + video documentation and a live training session. You own the source code, the credentials, and the runbook when we're done. That's the deliverable — your team running what we built, on its own.",
   },
   {
     label: "From here, for here",
