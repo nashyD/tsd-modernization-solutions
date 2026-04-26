@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { C, v } from "../shared";
+import { trackEvent } from "../analytics.js";
 
 /* ── TSD chat agent ────────────────────────────────────────────────
  * Floating chat widget mounted globally in Layout. Talks to /api/agent
@@ -8,15 +9,29 @@ import { C, v } from "../shared";
  * capture_lead tool which posts to the same Web3Forms backend the
  * contact page uses.
  *
- * State model: the server returns the FULL message history (including
- * tool_use / tool_result blocks). We store it verbatim and send it back
- * unchanged on the next request — that's what gives the agent memory of
- * its own tool calls without us building a server-side session store.
- * The render loop filters down to text-only blocks for display.
+ * Wire format from the server is NDJSON over a streaming response.
+ * Each line is a JSON event:
+ *   {type:"delta", text}                    — text streaming in
+ *   {type:"done", messages, leadCaptured}   — terminal, canonical state
+ *   {type:"error", error}                   — terminal, failure
+ *
+ * State model: while a response is streaming we accumulate text into
+ * `streamingText` and render it in a separate transient bubble. When
+ * the server emits `done`, we replace `messages` with the canonical
+ * full history (which includes tool_use / tool_result blocks the
+ * client doesn't see) and clear `streamingText`.
+ *
+ * Persistence: messages + leadCaptured are mirrored to localStorage on
+ * every change. On mount we hydrate from localStorage if the saved
+ * blob is current-version and within the TTL window.
  */
 
 const INITIAL_GREETING =
   "Hi — I'm the chat agent for TSD Modernization Solutions. Ask me about pricing, the Summer 2026 cohort, or what we build. If you want to talk to a founder, just say so.";
+
+const STORAGE_KEY = "tsd-agent-conversation";
+const STORAGE_VERSION = 1;
+const STORAGE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 function ChatBubbleIcon({ size = 20 }) {
   return (
@@ -50,6 +65,20 @@ function SendIcon({ size = 18 }) {
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
         d="M4 12l16-8-6 18-3-7-7-3z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function TrashIcon({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M5 7h14M10 11v6M14 11v6M6 7l1 12a2 2 0 002 2h6a2 2 0 002-2l1-12M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2"
         stroke="currentColor"
         strokeWidth="1.6"
         strokeLinecap="round"
@@ -97,6 +126,46 @@ function toRenderable(messages) {
   return out;
 }
 
+function loadFromStorage() {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    if (data?.version !== STORAGE_VERSION) return null;
+    if (!Array.isArray(data.messages) || data.messages.length === 0) return null;
+    if (Date.now() - (data.savedAt || 0) > STORAGE_MAX_AGE_MS) {
+      window.localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
+    return { messages: data.messages, leadCaptured: Boolean(data.leadCaptured) };
+  } catch {
+    return null;
+  }
+}
+
+function saveToStorage(messages, leadCaptured) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        version: STORAGE_VERSION,
+        messages,
+        leadCaptured,
+        savedAt: Date.now(),
+      }),
+    );
+  } catch {}
+}
+
+function clearStorage() {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.removeItem(STORAGE_KEY);
+  } catch {}
+}
+
 export default function TSDAgent() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([
@@ -104,22 +173,52 @@ export default function TSDAgent() {
   ]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
+  const [streamingText, setStreamingText] = useState("");
   const [error, setError] = useState("");
   const [leadCaptured, setLeadCaptured] = useState(false);
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
+  const hydratedRef = useRef(false);
+
+  // Hydrate from localStorage on mount (client-only — useEffect doesn't run during SSR prerender).
+  useEffect(() => {
+    const persisted = loadFromStorage();
+    if (persisted) {
+      setMessages(persisted.messages);
+      if (persisted.leadCaptured) setLeadCaptured(true);
+    }
+    hydratedRef.current = true;
+  }, []);
+
+  // Persist to localStorage whenever messages or leadCaptured change.
+  // Skip the initial render (before hydration) so we don't overwrite a
+  // saved conversation with the default greeting.
+  useEffect(() => {
+    if (!hydratedRef.current) return;
+    if (messages.length <= 1 && !leadCaptured) {
+      // Only the greeting present; don't bother persisting.
+      clearStorage();
+      return;
+    }
+    saveToStorage(messages, leadCaptured);
+  }, [messages, leadCaptured]);
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages, sending, open]);
+  }, [messages, sending, streamingText, open]);
 
   useEffect(() => {
     if (open && inputRef.current) {
       const t = setTimeout(() => inputRef.current?.focus(), 220);
       return () => clearTimeout(t);
     }
+  }, [open]);
+
+  // Track agent_opened the first time the panel opens in a session.
+  useEffect(() => {
+    if (open) trackEvent("agent_opened");
   }, [open]);
 
   const send = useCallback(async () => {
@@ -130,7 +229,9 @@ export default function TSDAgent() {
     setMessages(next);
     setInput("");
     setSending(true);
+    setStreamingText("");
     setError("");
+    trackEvent("agent_message_sent");
 
     try {
       const res = await fetch("/api/agent", {
@@ -138,16 +239,73 @@ export default function TSDAgent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: next }),
       });
-      const data = await res.json().catch(() => ({}));
+
       if (!res.ok) {
-        throw new Error(data?.error || `Request failed (${res.status})`);
+        // Non-streaming error response — server returned JSON before
+        // it started streaming (auth, rate limit, validation).
+        let errMsg = `Request failed (${res.status})`;
+        try {
+          const errData = await res.json();
+          if (errData?.error) errMsg = errData.error;
+        } catch {}
+        throw new Error(errMsg);
       }
-      if (Array.isArray(data.messages)) {
-        setMessages(data.messages);
+
+      if (!res.body) {
+        throw new Error("Streaming is not supported in this browser.");
       }
-      if (data.leadCaptured) setLeadCaptured(true);
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      let accumulatedText = "";
+
+      // Process one parsed event from the NDJSON stream.
+      const handleEvent = (event) => {
+        if (event.type === "delta" && typeof event.text === "string") {
+          accumulatedText += event.text;
+          setStreamingText(accumulatedText);
+        } else if (event.type === "done") {
+          if (Array.isArray(event.messages)) setMessages(event.messages);
+          if (event.leadCaptured) {
+            setLeadCaptured(true);
+            trackEvent("agent_lead_captured");
+          }
+          setStreamingText("");
+        } else if (event.type === "error") {
+          throw new Error(event.error || "Agent error.");
+        }
+      };
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          try {
+            handleEvent(JSON.parse(line));
+          } catch (parseErr) {
+            // If parse fails because handleEvent threw, rethrow it.
+            if (parseErr instanceof Error && parseErr.message !== "Unexpected end of JSON input") {
+              throw parseErr;
+            }
+          }
+        }
+      }
+      // Flush any final partial line (server should always end with \n,
+      // but handle the case where the last newline was lost).
+      if (buffer.trim()) {
+        try {
+          handleEvent(JSON.parse(buffer));
+        } catch {}
+      }
     } catch (e) {
       setError(e?.message || "Something went wrong. Please try again.");
+      setStreamingText("");
+      trackEvent("agent_error", { error: e?.message?.slice(0, 100) });
     } finally {
       setSending(false);
     }
@@ -160,7 +318,18 @@ export default function TSDAgent() {
     }
   };
 
+  const clearConversation = useCallback(() => {
+    if (sending) return;
+    setMessages([{ role: "assistant", content: INITIAL_GREETING }]);
+    setLeadCaptured(false);
+    setStreamingText("");
+    setError("");
+    clearStorage();
+    trackEvent("agent_cleared");
+  }, [sending]);
+
   const renderable = toRenderable(messages);
+  const hasHistory = messages.length > 1 || leadCaptured;
 
   return (
     <>
@@ -269,25 +438,50 @@ export default function TSDAgent() {
                 TSD Modernization
               </div>
             </div>
-            <button
-              onClick={() => setOpen(false)}
-              aria-label="Close chat"
-              style={{
-                width: "32px",
-                height: "32px",
-                borderRadius: "50%",
-                border: "1px solid rgba(255,255,255,0.25)",
-                background: "rgba(255,255,255,0.1)",
-                color: "#fff",
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                flexShrink: 0,
-              }}
-            >
-              <CloseIcon size={16} />
-            </button>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              {hasHistory && (
+                <button
+                  onClick={clearConversation}
+                  aria-label="Clear conversation"
+                  title="Clear conversation"
+                  disabled={sending}
+                  style={{
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    border: "1px solid rgba(255,255,255,0.25)",
+                    background: "rgba(255,255,255,0.1)",
+                    color: "#fff",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: sending ? "default" : "pointer",
+                    opacity: sending ? 0.5 : 1,
+                  }}
+                >
+                  <TrashIcon size={14} />
+                </button>
+              )}
+              <button
+                onClick={() => setOpen(false)}
+                aria-label="Close chat"
+                style={{
+                  width: "32px",
+                  height: "32px",
+                  borderRadius: "50%",
+                  border: "1px solid rgba(255,255,255,0.25)",
+                  background: "rgba(255,255,255,0.1)",
+                  color: "#fff",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  flexShrink: 0,
+                }}
+              >
+                <CloseIcon size={16} />
+              </button>
+            </div>
           </div>
 
           {/* Lead-captured banner */}
@@ -357,17 +551,26 @@ export default function TSDAgent() {
                 </div>
               </div>
             ))}
-            {sending && (
+            {/* Streaming bubble — visible while a response is being generated.
+                Shows accumulated text once first delta arrives; typing dots
+                while waiting for the first delta or during a tool-execution
+                pause. */}
+            {(sending || streamingText) && (
               <div style={{ alignSelf: "flex-start", maxWidth: "85%" }}>
                 <div
                   style={{
-                    padding: "6px 14px",
+                    padding: streamingText ? "10px 14px" : "6px 14px",
                     borderRadius: "16px 16px 16px 4px",
                     background: v("surface"),
                     border: `1px solid ${v("surface-border")}`,
+                    color: v("text"),
+                    fontSize: "14px",
+                    lineHeight: 1.55,
+                    whiteSpace: "pre-wrap",
+                    wordBreak: "break-word",
                   }}
                 >
-                  <TypingDots />
+                  {streamingText || <TypingDots />}
                 </div>
               </div>
             )}

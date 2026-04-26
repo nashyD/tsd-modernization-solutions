@@ -1,5 +1,11 @@
 import Anthropic from "@anthropic-ai/sdk";
 
+// Vercel: extend the function timeout from the 10s default. Streaming
+// responses are short (Haiku 4.5 typically finishes in <5s) but the
+// tool loop can chain 2-3 model calls when capture_lead fires, so 30s
+// gives comfortable headroom while staying inside the Hobby tier cap.
+export const maxDuration = 30;
+
 /* ── System prompt ─────────────────────────────────────────────────
  * Source of truth for what the agent knows about TSD. Keep this in sync
  * with src/services-data.js, src/pages/Pricing.jsx, and the AIReceptionist
@@ -143,7 +149,62 @@ const TOOLS = [
 
 const client = new Anthropic();
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/* Per-IP rate limit. Best-effort: module-level state is shared within a
+   single Vercel container instance, but Vercel can spin up parallel
+   instances and recycle them on cold start, so a determined attacker
+   spreads across instances. Vercel's platform-level DDoS protection
+   handles the wider-blast case; this layer just stops one client from
+   hammering one instance. 12/min/IP is generous for normal chat. */
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX = 12;
+const RATE_LIMIT_MAP_CAP = 1000;
+const rateLimits = new Map();
+
+function checkRateLimit(ip) {
+  if (!ip) return { allowed: true };
+  const now = Date.now();
+  let entry = rateLimits.get(ip);
+  if (!entry || now > entry.resetAt) {
+    entry = { count: 0, resetAt: now + RATE_LIMIT_WINDOW_MS };
+  }
+  entry.count++;
+  rateLimits.set(ip, entry);
+  if (rateLimits.size > RATE_LIMIT_MAP_CAP) {
+    // Soft eviction: drop the oldest 100 entries to keep the map bounded.
+    const keys = Array.from(rateLimits.keys()).slice(0, 100);
+    for (const k of keys) rateLimits.delete(k);
+  }
+  return {
+    allowed: entry.count <= RATE_LIMIT_MAX,
+    retryAfter: Math.max(1, Math.ceil((entry.resetAt - now) / 1000)),
+  };
+}
+
+function getClientIP(req) {
+  const fwd = req.headers["x-forwarded-for"];
+  if (typeof fwd === "string") return fwd.split(",")[0]?.trim() || null;
+  return req.headers["x-real-ip"] || req.socket?.remoteAddress || null;
+}
+
 async function submitLead({ name, email, business, summary }) {
+  // Lead-capture validation: catch malformed input before posting to
+  // Web3Forms. The tool schema requires these fields, but the agent
+  // can still pass blanks or a malformed email — guard explicitly so
+  // the founders' inbox stays clean.
+  const errors = [];
+  if (!name?.trim()) errors.push("name is empty");
+  if (!email?.trim()) errors.push("email is empty");
+  else if (!EMAIL_REGEX.test(email.trim())) errors.push("email format is invalid");
+  if (!summary?.trim()) errors.push("summary is empty");
+  if (errors.length) {
+    return {
+      ok: false,
+      message: `Lead validation failed: ${errors.join(", ")}. Confirm the visitor's contact details before retrying — ask them to spell their email if it looked wrong.`,
+    };
+  }
+
   const accessKey = process.env.VITE_WEB3FORMS_KEY;
   if (!accessKey) {
     return {
@@ -161,13 +222,13 @@ async function submitLead({ name, email, business, summary }) {
       },
       body: JSON.stringify({
         access_key: accessKey,
-        subject: `[Chat agent] New lead from ${name}`,
+        subject: `[Chat agent] New lead from ${name.trim()}`,
         from_name: "TSD Modernization Solutions Chat Agent",
-        replyto: email,
-        name,
-        email,
-        business: business || "Not provided",
-        message: summary,
+        replyto: email.trim(),
+        name: name.trim(),
+        email: email.trim(),
+        business: business?.trim() || "Not provided",
+        message: summary.trim(),
       }),
     });
     const data = await res.json().catch(() => ({}));
@@ -205,6 +266,16 @@ export default async function handler(req, res) {
     return;
   }
 
+  const ip = getClientIP(req);
+  const rl = checkRateLimit(ip);
+  if (!rl.allowed) {
+    res.setHeader("Retry-After", String(rl.retryAfter));
+    res.status(429).json({
+      error: `Too many requests. Wait ${rl.retryAfter}s and try again.`,
+    });
+    return;
+  }
+
   let body = req.body;
   if (typeof body === "string") {
     try {
@@ -227,24 +298,56 @@ export default async function handler(req, res) {
     return;
   }
 
+  /* ── Streaming response ─────────────────────────────────────────
+   * Wire format: NDJSON. One JSON object per newline-terminated line.
+   * Event types the client handles:
+   *   {type:"delta", text}   — incremental text from the model
+   *   {type:"done", messages, leadCaptured}  — terminal, full state
+   *   {type:"error", error}  — terminal, failure
+   * Tool execution happens between iterations of the loop and is
+   * invisible to the client beyond a brief pause in delta events.
+   */
+  res.setHeader("Content-Type", "application/x-ndjson");
+  res.setHeader("Cache-Control", "no-cache, no-transform");
+  res.setHeader("X-Accel-Buffering", "no");
+
+  function emit(obj) {
+    res.write(JSON.stringify(obj) + "\n");
+    // Flush the response buffer so deltas reach the client without
+    // waiting for Node to fill an internal buffer. flushHeaders is
+    // a no-op after first write but res.flush exists on most adapters.
+    if (typeof res.flush === "function") res.flush();
+  }
+
   const messages = [...incomingMessages];
   let leadCaptured = false;
 
   try {
-    let response = await client.messages.create({
-      model: "claude-haiku-4-5",
-      max_tokens: 1024,
-      system: SYSTEM_PROMPT,
-      tools: TOOLS,
-      messages,
-    });
+    for (let iteration = 0; iteration < 4; iteration++) {
+      const stream = client.messages.stream({
+        model: "claude-haiku-4-5",
+        max_tokens: 1024,
+        system: SYSTEM_PROMPT,
+        tools: TOOLS,
+        messages,
+      });
 
-    let iterations = 0;
-    while (response.stop_reason === "tool_use" && iterations++ < 3) {
-      messages.push({ role: "assistant", content: response.content });
+      for await (const event of stream) {
+        if (
+          event.type === "content_block_delta" &&
+          event.delta?.type === "text_delta"
+        ) {
+          emit({ type: "delta", text: event.delta.text });
+        }
+      }
+
+      const final = await stream.finalMessage();
+      messages.push({ role: "assistant", content: final.content });
+
+      if (final.stop_reason !== "tool_use") break;
 
       const toolResults = [];
-      for (const block of response.content) {
+      for (const block of final.content) {
         if (block.type !== "tool_use") continue;
         if (block.name === "capture_lead") {
           const result = await submitLead(block.input);
@@ -265,28 +368,22 @@ export default async function handler(req, res) {
         }
       }
       messages.push({ role: "user", content: toolResults });
-
-      response = await client.messages.create({
-        model: "claude-haiku-4-5",
-        max_tokens: 1024,
-        system: SYSTEM_PROMPT,
-        tools: TOOLS,
-        messages,
-      });
     }
 
-    messages.push({ role: "assistant", content: response.content });
-    const displayText = response.content
-      .filter((b) => b.type === "text")
-      .map((b) => b.text)
-      .join("\n\n");
-
-    res.status(200).json({ messages, displayText, leadCaptured });
+    emit({ type: "done", messages, leadCaptured });
+    res.end();
   } catch (e) {
-    console.error("[/api/agent] Anthropic call failed:", e);
-    const status = e?.status >= 400 && e?.status < 600 ? e.status : 500;
-    res.status(status).json({
-      error: e?.message || "Agent error. Please try again.",
-    });
+    console.error("[/api/agent] Stream failed:", e);
+    // If we've already started streaming, emit error event in the wire
+    // format the client expects. Otherwise return a normal JSON error.
+    if (res.headersSent) {
+      emit({ type: "error", error: e?.message || "Agent error." });
+      res.end();
+    } else {
+      const status = e?.status >= 400 && e?.status < 600 ? e.status : 500;
+      res.status(status).json({
+        error: e?.message || "Agent error. Please try again.",
+      });
+    }
   }
 }

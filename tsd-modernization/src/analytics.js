@@ -93,3 +93,26 @@ export function trackPageView(path, title) {
     });
   }
 }
+
+/* Custom event — fires to whichever analytics services are loaded.
+   GA4 and Plausible accept arbitrary params/props; Clarity has no
+   first-class custom-event API but `clarity("event", name)` tags the
+   session, which is enough for funnel filtering inside Clarity. */
+export function trackEvent(name, params) {
+  if (typeof window === "undefined" || !name) return;
+  try {
+    if (GA4_ID && window.gtag) {
+      window.gtag("event", name, params || {});
+    }
+  } catch {}
+  try {
+    if (PLAUSIBLE_ID && window.plausible) {
+      window.plausible(name, params ? { props: params } : undefined);
+    }
+  } catch {}
+  try {
+    if (CLARITY_ID && window.clarity) {
+      window.clarity("event", name);
+    }
+  } catch {}
+}
