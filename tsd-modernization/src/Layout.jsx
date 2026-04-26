@@ -25,8 +25,8 @@ const NAV_ITEMS = [
 const SITE_URL = "https://tsd-modernization.com";
 const ROUTE_META = {
   "/": {
-    title: "TSD Modernization Solutions | AI Integration & Website Creation | Charlotte, NC",
-    description: "Affordable AI integration, custom website creation, and workflow automation for Charlotte-area small businesses. Summer 2026 founding cohort — ten spots, last project start July 13. Book a free consultation today.",
+    title: "AI Receptionist for Charlotte HVAC, Electricians & Plumbers | TSD Modernization Solutions",
+    description: "Custom AI receptionist for Charlotte trades — HVAC, electricians, and plumbers. Books the after-hours job and transfers to you on August 31. $497 founding setup, ten spots, Summer 2026 cohort.",
   },
   "/services": {
     title: "Services — AI, Websites & Automation | TSD Modernization Solutions",
@@ -54,11 +54,11 @@ const ROUTE_META = {
   },
   "/pricing": {
     title: "Pricing — Founding Cohort, Summer 2026 | TSD Modernization Solutions",
-    description: "Founding-cohort pricing for ten Charlotte-area small businesses. Tech audits at $250, web + AI bundles at $2,000 founding rate (standard $4,000). Last project start July 13, 2026.",
+    description: "Founding-cohort pricing for ten Charlotte-area small businesses. Phase I audit at $1,500 (anchor $3,000), Phase II Website + AI Bundle at $2,000 (anchor $4,000), Founding Partnership at $5,000 (anchor $10,000, three spots). Last project start July 13, 2026.",
   },
   "/ai-receptionist": {
-    title: "AI Receptionist for Charlotte HVAC + Trades | TSD Modernization Solutions",
-    description: "Custom-trained AI answers your phone 24/7, qualifies the lead, and books the appointment on your calendar. $497 founding setup for Charlotte HVAC, plumbing, roofing, and home services. Ten spots, last setup start July 13, 2026.",
+    title: "AI Receptionist for Charlotte Trades — $497, Yours to Keep | TSD Modernization Solutions",
+    description: "Custom AI answers the after-hours call, qualifies the lead, and books the job. Built for Charlotte HVAC, electricians, and plumbers. $497 founding setup plus $97/mo through Aug 31, then the agent transfers to you. No subscription forever.",
   },
   "/testimonials": {
     title: "Case Studies Coming Soon | TSD Modernization Solutions",

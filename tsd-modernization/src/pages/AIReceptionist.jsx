@@ -50,7 +50,7 @@ function ReceptionistHero() {
         <span style={{ flex: "0 0 44px", height: "1px", background: v("divider") }} />
         <span>AI Receptionist</span>
         <span style={{ color: v("accent"), fontSize: "7px" }}>{"◆"}</span>
-        <span>Charlotte HVAC + Trades</span>
+        <span>Charlotte Trades</span>
         <span style={{ color: v("accent"), fontSize: "7px" }}>{"◆"}</span>
         <span>Summer MMXXVI</span>
         <span style={{ flex: "0 0 44px", height: "1px", background: v("divider") }} />
@@ -67,7 +67,7 @@ function ReceptionistHero() {
           fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
           background: C.gradientAccent, WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent", backgroundClip: "text",
-        }}>By morning.</span>
+        }}>And the agent is yours.</span>
       </h1>
 
       <DiamondDivider width={160} style={{ marginBottom: "20px" }} />
@@ -76,7 +76,7 @@ function ReceptionistHero() {
         ...f3, fontSize: "17px", lineHeight: 1.7, color: v("text-muted"),
         maxWidth: "580px", margin: "0 auto 32px",
       }}>
-        A custom-trained AI answers your phone 24/7, qualifies the lead, and lands the appointment on your calendar. Built for Charlotte trades. Setup in a week.
+        A custom-trained AI answers your phone 24/7, qualifies the lead, and lands the appointment on your calendar. Built for Charlotte HVAC, electricians, and plumbers. Setup in a week — and on August 31, the agent transfers to you.
       </p>
 
       <div ref={r4} style={{ ...f4, display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap", marginBottom: "32px" }}>
@@ -195,7 +195,7 @@ function TheOffer() {
     <section ref={ref} style={{ ...fade, padding: "20px 24px 80px", maxWidth: "1100px", margin: "0 auto" }}>
       <ChapterHead
         label="The Offer"
-        num="03"
+        num="04"
         title="What you get, what it costs, what we promise."
       />
 
@@ -260,6 +260,21 @@ function TheOffer() {
             </p>
           </div>
 
+          <div style={{
+            padding: "14px 16px", borderRadius: "10px",
+            background: "rgba(75,156,211,0.04)",
+            border: `1px dashed ${C.carolina}`,
+            marginBottom: "18px",
+          }}>
+            <div style={{
+              fontSize: "10px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase",
+              color: v("accent"), marginBottom: "6px",
+            }}>{"◆ Bundle bonus"}</div>
+            <p style={{ fontSize: "13px", color: v("text"), lineHeight: 1.55 }}>
+              Add the Phase II Bundle within 30 days of setup and save $500 off the bundle price.
+            </p>
+          </div>
+
           <p style={{
             fontFamily: "var(--font-display)", fontStyle: "italic",
             fontSize: "13px", color: v("text-dim"), lineHeight: 1.55, marginBottom: "20px",
@@ -307,13 +322,123 @@ function ClosingCTA() {
   );
 }
 
+/* Anti-SaaS comparison — explicit table contrasting national subscription
+   AI receptionist services with TSD's local + ownership-transfer model.
+   Per the v2 trades-wedge checklist: TSD will not out-engineer Smith.ai
+   on features; the win is structural (one-time fee + ownership). Tabular
+   format makes the price + ownership delta unmissable at a glance. */
+const SAAS_COMPARISON = [
+  { axis: "Setup", saas: "Self-serve, remote", tsd: "Three founders, in-person" },
+  { axis: "Pricing", saas: "$95–$199/mo forever", tsd: "$497 + $97/mo for 4 months, then yours" },
+  { axis: "Ownership", saas: "Theirs — you rent it", tsd: "Yours — agent + credentials transfer Aug 31" },
+  { axis: "Where they are", saas: "Anywhere in the country", tsd: "Charlotte / Gaston" },
+];
+
+function TheDifference() {
+  const [ref, fade] = useFadeIn(0);
+  return (
+    <section ref={ref} style={{ ...fade, padding: "20px 24px 60px", maxWidth: "1100px", margin: "0 auto" }}>
+      <ChapterHead
+        label="The Difference"
+        num="03"
+        title="The national SaaS rents you an AI. We sell you one."
+        sub="Smith.ai, NextPhone, Marlie, RealVoice AI — they all charge a monthly subscription that never ends. TSD is a one-time setup plus four months of upkeep, then the agent and credentials transfer to you. Three months from now, your AI is a line item; ours is an asset."
+      />
+
+      <div style={{ overflowX: "auto", borderRadius: "16px", border: `1px solid ${v("surface-border")}` }}>
+        <div style={{ minWidth: "640px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1.4fr 1.4fr" }}>
+            <div style={{
+              padding: "20px 24px", background: v("surface"),
+              borderBottom: `1px solid ${v("divider")}`,
+            }} />
+            <div style={{
+              padding: "20px 24px", background: v("surface"),
+              borderBottom: `1px solid ${v("divider")}`,
+              borderLeft: `1px solid ${v("divider")}`,
+            }}>
+              <div style={{
+                fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase",
+                color: v("text-muted"),
+              }}>National SaaS</div>
+              <div style={{
+                fontSize: "11px", fontStyle: "italic", color: v("text-dim"),
+                marginTop: "4px", fontFamily: "var(--font-display)",
+              }}>Smith.ai · NextPhone · Marlie</div>
+            </div>
+            <div style={{
+              padding: "20px 24px", background: "rgba(75,156,211,0.08)",
+              borderBottom: `1px solid ${v("divider")}`,
+              borderLeft: `1px solid ${v("divider")}`,
+            }}>
+              <div style={{
+                fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase",
+                color: v("accent"),
+              }}>TSD</div>
+              <div style={{
+                fontSize: "11px", fontStyle: "italic", color: v("text-muted"),
+                marginTop: "4px", fontFamily: "var(--font-display)",
+              }}>Charlotte trades</div>
+            </div>
+          </div>
+
+          {SAAS_COMPARISON.map((row, i) => (
+            <div key={i} style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1.4fr 1.4fr",
+              borderTop: i === 0 ? "none" : `1px solid ${v("divider")}`,
+            }}>
+              <div style={{
+                padding: "16px 24px", background: v("surface"),
+                fontSize: "11px", fontWeight: 700, letterSpacing: "2px", textTransform: "uppercase",
+                color: v("text-muted"),
+                display: "flex", alignItems: "center",
+              }}>{row.axis}</div>
+              <div style={{
+                padding: "16px 24px", background: v("surface"),
+                borderLeft: `1px solid ${v("divider")}`,
+                fontSize: "14px", color: v("text-muted"), lineHeight: 1.5,
+              }}>{row.saas}</div>
+              <div style={{
+                padding: "16px 24px", background: "rgba(75,156,211,0.05)",
+                borderLeft: `1px solid ${v("divider")}`,
+                fontSize: "14px", color: v("text"), fontWeight: 500, lineHeight: 1.5,
+              }}>{row.tsd}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* Disqualification callout — Marc's rule: be ultra-specific for the ideal
+   customer, nonsense for everyone else. The shop owner running ServiceTitan
+   already has scheduling integrations TSD can't out-engineer. Naming the
+   wrong-fit visitor and pointing them at a competitor (Marlie) is the
+   honest move and reinforces who TSD IS for. */
+function TheFit() {
+  return (
+    <section style={{ padding: "0 24px 80px", maxWidth: "780px", margin: "0 auto" }}>
+      <ChapterHead
+        label="The Fit"
+        num="05"
+        title="Already running ServiceTitan or Housecall Pro?"
+        sub="You're not our customer — go to Marlie. We're built for the shop owner using Google Calendar and a notepad."
+      />
+    </section>
+  );
+}
+
 export default function AIReceptionist() {
   return (
     <PageShell>
       <ReceptionistHero />
       <TheLeak />
       <HowItWorks />
+      <TheDifference />
       <TheOffer />
+      <TheFit />
       <ClosingCTA />
     </PageShell>
   );

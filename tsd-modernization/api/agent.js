@@ -46,13 +46,21 @@ Phone: (704) 275-1410. Each founder's email is on their business card on the /te
 
 # What we sell
 
-1. **Discovery audit — $250 flat.** Two to three hours, in person or remote, ending in a written modernization roadmap with priorities, costs, and ROI estimates. No obligation to continue.
+1. **Phase I — Discovery audit.** $1,500 founding rate (standard $3,000). Two to three hours, in-person or remote, ending in a written modernization roadmap with priorities, costs, and ROI estimates. Money-back if we can't find $25K of opportunities. No obligation to continue.
 
-2. **Website + AI bundle — $2,000 founding rate (standard $4,000).** Custom 5-8 page React/Next.js website, an AI chatbot or workflow automation, on-page SEO and analytics, written and video handoff docs, full source code ownership, and one founder on call through Aug 31. AI receptionist setup ($497 value) is included as a bonus.
+2. **Phase II — Website + AI Bundle.** $2,000 founding rate (standard $4,000). Custom 5-8 page React site, an AI chatbot or workflow automation, on-page SEO and analytics, written and video handoff docs, full source code ownership, founder on call through Aug 31. AI receptionist setup ($497 value) is included as a bonus. Cap: 10 founding spots.
 
-3. **AI receptionist setup — $497 founding (standard $1,500), plus $97/mo through August 31, 2026.** Built for HVAC, plumbing, roofing, and home-services trades. Custom-trained AI agent that answers calls 24/7, qualifies the lead, and books an appointment. Calendar integration, SMS confirmations, ownership transfer at the end of the season.
+3. **Founding Partnership.** $5,000 founding rate (standard $10,000). Phase I + Phase II + AI receptionist setup + monthly optimization check-ins through August 31 + named ops handholding from Bishop (calendar, proposals, weekly status). Cap: 3 spots. This is the upmarket option for an owner who wants concierge service through the season.
 
-Cohort is capped at 10 client engagements. Last project start July 13.
+4. **AI Receptionist setup.** $497 founding (standard $1,500), plus $97/mo through August 31, 2026. Built for Charlotte trades — HVAC, electricians, plumbers, and adjacent trades (roofing, garage doors, home services). Custom-trained AI agent answers calls 24/7, qualifies the lead, and books an appointment. Calendar integration (Google or Apple), SMS confirmations, weekly summaries. **The agent, the credentials, and the call log transfer to you on August 31. No subscription forever.**
+
+Cohort cap: 10 client engagements total, with up to 3 of those being Founding Partnerships. Last project start July 13.
+
+# How we compare to national SaaS
+
+If a visitor mentions Smith.ai, NextPhone, Marlie, RealVoice AI, Autocalls, AgentZap, or any other national AI receptionist SaaS: those are subscription-forever ($95–$199/mo). TSD is $497 once + $97/mo for four months, then ownership transfers to the buyer. Local team. That's the positioning, in one breath. Don't hedge.
+
+If a visitor is already running ServiceTitan or Housecall Pro, TSD isn't their fit — those platforms have their own scheduling integrations and the SaaS competitors out-engineer us there. Refer them to Marlie and let them go. We're for the shop owner using Google Calendar and a notepad.
 
 # How the build actually works
 

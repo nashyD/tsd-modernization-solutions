@@ -127,39 +127,39 @@ function Hero() {
           color: "#fff", marginBottom: "20px",
           textShadow: "0 2px 18px rgba(0,0,0,0.65), 0 1px 4px rgba(0,0,0,0.8)",
         }}>
-          Get every missed call into a booked customer.
+          Stop losing after-hours service calls.
           <br />
           <span style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
             color: "#f4f9fd",
             textShadow: "0 2px 24px rgba(0,0,0,0.75), 0 1px 6px rgba(0,0,0,0.85)",
-          }}>Shipped in days.</span>
+          }}>Your AI books the job — and the agent is yours.</span>
         </h1>
 
         <DiamondDivider width={160} style={{ marginBottom: "20px" }} />
 
         <p ref={r3} style={{
           ...f3, fontSize: "17px", lineHeight: 1.7, color: "#fff", fontWeight: 500,
-          maxWidth: "540px", margin: "0 auto 36px",
+          maxWidth: "560px", margin: "0 auto 36px",
           textShadow: "0 2px 14px rgba(0,0,0,0.75), 0 1px 4px rgba(0,0,0,0.85)",
         }}>
-          Custom websites and AI tools for Charlotte small businesses.
-          48-hour proposals and a 100% money-back guarantee.
+          Custom AI receptionist for Charlotte HVAC, electricians, and plumbers.
+          $497 once, then the agent is yours. No subscription forever.
         </p>
 
         <div ref={r4} style={{ ...f4, display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
-          <Link to="/contact">
+          <Link to="/ai-receptionist">
             <RippleButton variant="primary" style={{ padding: "16px 36px", fontSize: "15px" }}>
-              Book Free Consultation <ArrowRightIcon size={16} />
+              See the AI Receptionist <ArrowRightIcon size={16} />
             </RippleButton>
           </Link>
-          <Link to="/services">
+          <Link to="/contact">
             <RippleButton variant="secondary" style={{
               padding: "16px 36px", fontSize: "15px",
               background: "rgba(255,255,255,0.1)", borderColor: "rgba(255,255,255,0.25)",
               backdropFilter: "blur(8px)", color: "#fff",
             }}>
-              Our Services
+              Book a free consultation
             </RippleButton>
           </Link>
         </div>
@@ -719,26 +719,26 @@ function FoundingClientOffer() {
           color: "rgba(255,255,255,0.85)", marginBottom: "16px",
           display: "flex", alignItems: "center", gap: "8px", justifyContent: "center",
         }}>
-          <span style={{ fontSize: "8px" }}>{"\u25C6"}</span> Founding Client Spots Open
+          <span style={{ fontSize: "8px" }}>{"\u25C6"}</span> Founding Cohort · Summer 2026
         </div>
         <h2 style={{
           fontFamily: "var(--font-body)", fontSize: "clamp(24px, 4vw, 38px)", fontWeight: 800,
           letterSpacing: "-1px", lineHeight: 1.15, marginBottom: "16px",
         }}>
-          Be one of our first 5 Charlotte clients.
+          Ten Charlotte businesses, one summer.
         </h2>
         <p style={{
           fontSize: "16px", lineHeight: 1.7, color: "rgba(255,255,255,0.92)",
           maxWidth: "620px", margin: "0 auto 32px",
         }}>
-          Founding-client pricing, direct founder access on every project, and your business featured in our first case studies. Limited to our first 5 engagements.
+          Founding-cohort pricing on every offer — half what we'll charge after Summer 2026. Direct founder access. Source code yours from day one. Three tiers: the audit at $1,500, the website + AI bundle at $2,000, and the Founding Partnership at $5,000 (capped at three spots).
         </p>
-        <Link to="/contact">
+        <Link to="/pricing">
           <RippleButton variant="secondary" style={{
             padding: "16px 36px", fontSize: "15px",
             background: "#fff", color: C.navy, borderColor: "transparent",
           }}>
-            Claim a founding slot <ArrowRightIcon size={16} />
+            See all three tiers <ArrowRightIcon size={16} />
           </RippleButton>
         </Link>
       </div>
@@ -746,10 +746,12 @@ function FoundingClientOffer() {
   );
 }
 
-/* ── Audience strip — names the verticals TSD actually serves so a
-     visitor self-recognizes without the page over-committing to one
-     trade. Sits above the service ticker so it reads immediately
-     after the hero on first scroll. ─────────────────────────────── */
+/* ── Audience strip — names the trades the homepage commits to (HVAC,
+     electrical, plumbing as the wedge core; garage doors / roofing /
+     home services as adjacent trades that share the after-hours pain).
+     Per the v2 trades-wedge framing, the homepage is the cold-traffic
+     destination for trades operators — non-trades visitors land via
+     founder DM on /salons, /auto-shops, etc. ─────────────────────── */
 function TradesStrip() {
   const [ref, fade] = useFadeIn(0);
   return (
@@ -770,17 +772,17 @@ function TradesStrip() {
           color: v("accent"), display: "inline-flex", alignItems: "center", gap: "8px",
           whiteSpace: "nowrap",
         }}>
-          <span style={{ fontSize: "8px" }}>{"◆"}</span> Built for main street
+          <span style={{ fontSize: "8px" }}>{"◆"}</span> Built for the trades
         </span>
         <span style={{
           fontFamily: "var(--font-display)", fontStyle: "italic",
           fontSize: "clamp(16px, 2.2vw, 22px)", color: v("text"), lineHeight: 1.4,
         }}>
-          Trades <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
-          Salons <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
-          Auto Shops <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
-          Restaurants <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
-          Retail <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
+          HVAC <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
+          Electrical <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
+          Plumbing <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
+          Garage Doors <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
+          Roofing <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
           Home Services
         </span>
       </div>
