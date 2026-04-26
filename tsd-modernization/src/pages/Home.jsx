@@ -239,8 +239,7 @@ function ServiceTicker() {
 function Stats() {
   const [headRef, headFade] = useFadeIn(0);
   const [count48, ref48] = useCountUp(48, 1600);
-  const [count50k, ref50k] = useCountUp(50000, 2200);
-  const [count30, ref30] = useCountUp(30, 1400);
+  const [count2k, ref2k] = useCountUp(2000, 1800);
   const [count100, ref100] = useCountUp(100, 1400);
 
   return (
@@ -335,16 +334,15 @@ function Stats() {
           border: `1px solid ${v("surface-border")}`,
         }}>
           <SupportStat
-            forwardRef={ref50k}
-            value={`${count50k.toLocaleString()}+`}
-            label="Small businesses in the Charlotte metro"
-            note="The audience we serve."
+            forwardRef={ref2k}
+            value={`$${count2k.toLocaleString()}`}
+            label="Founding-cohort rate (standard $4,000)"
+            note="Half-price for our first ten."
           />
           <SupportStat
-            forwardRef={ref30}
-            value={`< ${count30}%`}
-            label="Have adopted modern AI tools yet"
-            note="The gap we close."
+            value="Aug 31"
+            label="One founder on call through this date"
+            note="Past that, your codebase has a co-pilot."
           />
           <SupportStat
             forwardRef={ref100}
