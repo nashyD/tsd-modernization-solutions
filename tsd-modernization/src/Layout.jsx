@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { C, v, useTheme, DiamondDivider, RippleButton } from "./shared";
 import { TSDLogo, SunIcon, MoonIcon, MenuIcon, XIcon } from "./icons";
 import { trackPageView } from "./analytics.js";
+import TSDAgent from "./components/TSDAgent.jsx";
 
 const NAV_ITEMS = [
   { label: "Services", to: "/services" },
@@ -345,6 +346,7 @@ export default function Layout() {
         </p>
       </footer>
       <Analytics />
+      <TSDAgent />
     </>
   );
 }

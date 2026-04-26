@@ -127,7 +127,7 @@ function Hero() {
           color: "#fff", marginBottom: "20px",
           textShadow: "0 2px 18px rgba(0,0,0,0.65), 0 1px 4px rgba(0,0,0,0.8)",
         }}>
-          Get every after-hours call into a booked appointment.
+          Get every missed call into a booked customer.
           <br />
           <span style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
@@ -143,7 +143,7 @@ function Hero() {
           maxWidth: "540px", margin: "0 auto 36px",
           textShadow: "0 2px 14px rgba(0,0,0,0.75), 0 1px 4px rgba(0,0,0,0.85)",
         }}>
-          Custom AI for Charlotte HVAC, plumbing, roofing, and home services.
+          Custom websites and AI tools for Charlotte small businesses.
           48-hour proposals and a 100% money-back guarantee.
         </p>
 
@@ -748,9 +748,10 @@ function FoundingClientOffer() {
   );
 }
 
-/* ── Trades strip — names the vertical audience without bouncing
-     a non-HVAC visitor. Sits above the service ticker so it reads
-     immediately after the hero on first scroll. ─────────────────── */
+/* ── Audience strip — names the verticals TSD actually serves so a
+     visitor self-recognizes without the page over-committing to one
+     trade. Sits above the service ticker so it reads immediately
+     after the hero on first scroll. ─────────────────────────────── */
 function TradesStrip() {
   const [ref, fade] = useFadeIn(0);
   return (
@@ -771,17 +772,17 @@ function TradesStrip() {
           color: v("accent"), display: "inline-flex", alignItems: "center", gap: "8px",
           whiteSpace: "nowrap",
         }}>
-          <span style={{ fontSize: "8px" }}>{"◆"}</span> Built for the trades
+          <span style={{ fontSize: "8px" }}>{"◆"}</span> Built for main street
         </span>
         <span style={{
           fontFamily: "var(--font-display)", fontStyle: "italic",
           fontSize: "clamp(16px, 2.2vw, 22px)", color: v("text"), lineHeight: 1.4,
         }}>
-          HVAC <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
-          Plumbing <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
-          Roofing <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
-          Electrical <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
-          Lawn Care <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
+          Trades <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
+          Salons <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
+          Auto Shops <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
+          Restaurants <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
+          Retail <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
           Home Services
         </span>
       </div>

@@ -121,6 +121,65 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-25 — TSD chat agent (proof of concept)
+
+**What.** Custom LLM-powered chat widget mounted globally on the site. Floating "Chat with TSD" bubble bottom-right; expands to a 380×560px editorial-styled panel that talks to a Vercel serverless function backed by Claude Haiku 4.5. The agent answers questions about TSD (services, pricing, cohort, founders) and, when a visitor shows clear intent, calls a `capture_lead` tool that posts to the same Web3Forms backend the contact form uses. New lead lands in the founders' inbox tagged `[Chat agent]`.
+
+**Architecture.**
+- **Backend:** [`api/agent.js`](api/agent.js) — Vercel serverless function. Uses `@anthropic-ai/sdk` ^0.x, calls `claude-haiku-4-5` with a system prompt drawn from services-data + Pricing + AIReceptionist + Team. Single tool: `capture_lead` with `{name, email, business, summary}` schema. Manual agent loop with a 3-iteration safety cap; tool execution submits to Web3Forms server-side and returns success/failure to the model so it can confirm to the visitor in plain language.
+- **Frontend:** [`src/components/TSDAgent.jsx`](src/components/TSDAgent.jsx) — React widget, mounted in [`src/Layout.jsx`](src/Layout.jsx) so it appears on every route. Uses the existing `C` palette + `v()` theme vars. Editorial header (`◆ CHAT AGENT / TSD Modernization` in italic Playfair) matches site typography. Chat bubbles styled as Carolina-gradient (user) / surface-bordered (assistant). Typing-dots animation while waiting; red bar for errors; green-tinted "Lead submitted" banner when capture fires.
+- **Statelessness:** server returns the FULL message history (including tool_use / tool_result blocks) on every response; client stores it verbatim and sends it back unchanged on the next request. No server session store needed. Display layer filters down to text-only blocks for rendering.
+
+**Voice + honesty rules in the system prompt.** Operator-direct, short sentences, no "X, not Y" patterns, no banned vocab. Critically: **zero signed clients as of launch.** When asked "who has hired you" or "show me case studies," the agent answers plainly: no one yet, Summer 2026 is the first cohort, recruiting the founding ten now. The transparency *is* the pitch. Locked-pipeline names (Studio C, Moose Electric, etc.) are not in the system prompt and the agent never represents them as clients.
+
+**Why.** Two payoffs. (1) Eat-our-own-dog-food proof: the chat product TSD sells to clients is now running on TSD's own site. Anyone who asks "can you actually build one of these" can press the bubble and try it. (2) 24/7 sales surface: the contact form requires a visitor to compose a message; the agent qualifies, answers objections, and only asks for contact details once the visitor shows they're serious. Lower friction than the form, higher signal than a generic chatbot.
+
+**Files touched.**
+- [`api/agent.js`](api/agent.js) (new)
+- [`src/components/TSDAgent.jsx`](src/components/TSDAgent.jsx) (new)
+- [`src/Layout.jsx`](src/Layout.jsx) (import + global mount after `<Analytics />`)
+- [`.env.example`](.env.example) (added `ANTHROPIC_API_KEY` row, no VITE_ prefix on purpose)
+- [`package.json`](package.json) / [`package-lock.json`](package-lock.json) (added `@anthropic-ai/sdk` dependency)
+
+**Verification.** Dev server reloaded via Vite HMR. Bubble renders bottom-right with the correct aria-label. Click expands the panel; greeting renders; user input round-trips correctly through the React state. The fetch to `/api/agent` 404s in local dev because Vite doesn't run serverless functions — the widget displays "Request failed (404)" gracefully in its error bar, which confirms the error path is intact. Full backend behavior can only be verified after `ANTHROPIC_API_KEY` is set in Vercel.
+
+**Operational notes.**
+- **Required env var:** `ANTHROPIC_API_KEY` (no `VITE_` prefix — server-side only, must NOT be exposed in the browser bundle). The Web3Forms key (`VITE_WEB3FORMS_KEY`) is reused server-side for lead capture — Vercel env vars are accessible from serverless functions regardless of prefix.
+- **Cost:** ~$0.008 per conversation at expected volume (Haiku 4.5 at $1/M input + $5/M output). 100 conversations/day ≈ $24/month. Negligible at pre-launch traffic.
+- **No rate limit yet.** Open endpoint. If the URL gets discovered or someone scripts it, costs could spike. Add a token-bucket or Vercel Edge rate limit if traffic grows.
+- **No streaming yet.** Non-streaming responses; visitor waits ~1-3s for the full reply. Acceptable at this volume; revisit if responses get longer.
+
+**Hidden gotcha.** Vercel auto-detects functions in `/api/` at the project root. The existing `vercel.json` rewrites `/(.*)` to `/index.html` for SPA fallback — but Vercel's filesystem checks (including serverless function routes) take precedence over rewrites, so `/api/agent` resolves to the function before the catch-all hits. No vercel.json change needed. (Side note: now that the site is fully prerendered by `vite-react-ssg`, the SPA catch-all rewrite may be dead code — worth removing in a future pass.)
+
+**Principle reinforced.** *Eat your own dog food, and tell the truth.* The agent demonstrates the AI-chatbot product TSD is selling — visitors who experience it firsthand are warmer leads than ones who read prose about it. And the honest-framing rule (no signed clients yet) compounds rather than undercuts: a prospect who sees the chat acknowledge "no one yet, you'd be the first" gets two signals at once — the product works, *and* the founders won't bullshit them.
+
+---
+
+### 2026-04-25 — Vertical soften: trades-only → Charlotte-metro small business
+
+**What.** Pulled the homepage off its hard HVAC/trades vertical commit and broadened it to address Charlotte small businesses across verticals. Three changes in [`src/pages/Home.jsx`](src/pages/Home.jsx):
+
+1. **Hero H1** — "Get every after-hours call into a booked appointment." → "Get every missed call into a booked customer." Same Hormozi-spec "Get every X into Y" structure, broader noun. "after-hours call" was HVAC-coded; "missed call" works for any service business with a phone. "booked appointment" was salon/contractor-coded; "booked customer" extends to retail and food-service.
+2. **Hero sub** — "Custom AI for Charlotte HVAC, plumbing, roofing, and home services. 48-hour proposals and a 100% money-back guarantee." → "Custom websites and AI tools for Charlotte small businesses. 48-hour proposals and a 100% money-back guarantee." Names the products (websites + AI) instead of the vertical (HVAC + trades).
+3. **Audience strip (formerly TradesStrip)** — eyebrow "Built for the trades" → "Built for main street"; vertical list "HVAC · Plumbing · Roofing · Electrical · Lawn Care · Home Services" → "Trades · Salons · Auto Shops · Restaurants · Retail · Home Services." Six items, mirrored visual rhythm. Each name in the new list maps to a real or potential client type — "Salons" = Studio C, "Auto Shops" = Diesel Doctors, "Trades" = Moose Electric, "Restaurants" covers Cake Me Away, "Retail" + "Home Services" extend to plausible adjacent buyers.
+
+Component name `TradesStrip` left in place (internal only). Inline comment above the function updated to reflect the broader purpose.
+
+**Kept hard-vertical (intentional):** [`src/pages/AIReceptionist.jsx`](src/pages/AIReceptionist.jsx) — the wedge product page commits fully to HVAC + trades because it's the destination for paid local ads against trades keywords. The Pricing page's `WedgePointer` ([`src/pages/Pricing.jsx`](src/pages/Pricing.jsx)) still labels the wedge as "built for HVAC and trades" so a non-trades visitor self-selects out of the wedge funnel. [`Layout.jsx`](src/Layout.jsx) `ROUTE_META["/ai-receptionist"]` likewise stays HVAC-coded for SEO/share-preview reasons. The split is now intentional: the homepage is broad, the wedge funnel is sharp.
+
+**Why.** As of 2026-04-25 Nash has 3 locked clients + 1 warm: Studio C Salon (Gastonia), Moose Electric (Lincolnton), Diesel Doctors (Charlotte), Cake Me Away Bakery (Dallas, NC). Only 1 of the 4 fits the HVAC/trades thesis the homepage was committing to. Three of four came in via relationship outreach, not the site — but when those buyers Google TSD or share the link, the trades-only framing reads like a mismatch with what they bought. Reality is broader than the page; updating the page so it stops contradicting the actual sales motion. The vertical wedge is preserved for paid traffic where narrow targeting still earns its keep.
+
+**Files touched.**
+- [`src/pages/Home.jsx`](src/pages/Home.jsx) — hero H1, hero sub, audience strip eyebrow + vertical list, comment above the strip function.
+
+**Verification.** Dev server up via `preview_start`, accessibility snapshot confirms all four text changes rendered correctly on `/`. Visual screenshot at desktop and mobile widths shows the hero, sub, and audience strip stacking cleanly with no layout regression. No console errors. The cohort masthead, scarcity strip, and "Founding Cohort · Charlotte Edition · Summer MMXXVI" framing all unchanged.
+
+**Voice notes.** New copy passed through the humanizer rules — no "X, not Y" contrastive constructions introduced, no banned vocabulary, no imperative trio cadence. The H1 keeps the "Get every X into Y" Hormozi-spec structure intentionally; that pattern is a conversion-pitch shape, not a voice tic.
+
+**Principle reinforced.** *Match the page to what's actually closing, not to the channel you wish was closing.* The trades-only positioning was good strategy when paid ads against HVAC keywords were the planned acquisition channel. It's a liability when 75% of pre-launch closes came from cross-vertical relationship leads. The fix isn't to abandon the vertical wedge — it's to give each acquisition channel its own funnel: relationship leads land on the broad homepage, ad traffic lands on the focused wedge.
+
+---
+
 ### 2026-04-25 — Site admin pass: README, Sentry, dynamic sitemap
 
 **What.** Closed the three remaining housekeeping items from the original audit (§9):
