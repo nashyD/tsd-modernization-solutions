@@ -148,6 +148,92 @@ export const ClipboardIcon = ({ size = 24, ...rest }) => (
   </svg>
 );
 
+/* ── Service tile icons (Claude Design handoff) ──────────────────
+   Custom-drawn, viewBox 0 0 32 32, with `currentColor` driving the
+   icon "body" and `#fff` as the accent pop. Designed to render with
+   parent `color` set to a mid/light Carolina blue, layered over the
+   gradient tile: tile → body (lighter blue) → white accents. */
+
+export const AIIcon = ({ size = 28, ...rest }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" shapeRendering="geometricPrecision" aria-hidden="true" {...rest}>
+    {/* Outer chip package */}
+    <rect x="6" y="6" width="20" height="20" rx="2" fill="currentColor" />
+    <rect x="6" y="6" width="20" height="20" rx="2" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+    {/* Pin legs — 4 per side */}
+    <line x1="2" y1="10" x2="6" y2="10" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+    <line x1="2" y1="14" x2="6" y2="14" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+    <line x1="2" y1="18" x2="6" y2="18" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+    <line x1="2" y1="22" x2="6" y2="22" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+    <line x1="26" y1="10" x2="30" y2="10" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+    <line x1="26" y1="14" x2="30" y2="14" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+    <line x1="26" y1="18" x2="30" y2="18" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+    <line x1="26" y1="22" x2="30" y2="22" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+    <line x1="10" y1="2" x2="10" y2="6" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+    <line x1="14" y1="2" x2="14" y2="6" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+    <line x1="18" y1="2" x2="18" y2="6" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+    <line x1="22" y1="2" x2="22" y2="6" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+    <line x1="10" y1="26" x2="10" y2="30" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+    <line x1="14" y1="26" x2="14" y2="30" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+    <line x1="18" y1="26" x2="18" y2="30" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+    <line x1="22" y1="26" x2="22" y2="30" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+    {/* Inner die */}
+    <rect x="11" y="11" width="10" height="10" rx="1" fill="#fff" />
+    {/* "AI" mark */}
+    <path d="M12.6 19 L14.2 13 L15.8 19 M13 17 L15.4 17" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+    <path d="M17.6 13 L19.4 13 M17.6 19 L19.4 19 M18.5 13 L18.5 19" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" fill="none" />
+    {/* Pin-1 indicator dot */}
+    <circle cx="8.5" cy="8.5" r="1" fill="#fff" />
+  </svg>
+);
+
+export const WebsiteIcon = ({ size = 28, ...rest }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" shapeRendering="geometricPrecision" aria-hidden="true" {...rest}>
+    {/* Browser body */}
+    <rect x="3" y="6" width="26" height="20" rx="2" fill="currentColor" />
+    <rect x="3" y="6" width="26" height="20" rx="2" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+    {/* Title bar */}
+    <path d="M5 6 H27 A2 2 0 0 1 29 8 V11 H3 V8 A2 2 0 0 1 5 6 Z" fill="#fff" fillOpacity="0.18" />
+    <line x1="3" y1="11" x2="29" y2="11" stroke="currentColor" strokeWidth="2" />
+    {/* Traffic lights */}
+    <circle cx="6" cy="8.5" r="1.1" fill="#fff" />
+    <circle cx="9" cy="8.5" r="1.1" fill="#fff" opacity="0.7" />
+    <circle cx="12" cy="8.5" r="1.1" fill="#fff" opacity="0.45" />
+    {/* URL bar */}
+    <rect x="16" y="7.25" width="11" height="2.5" rx="1.25" fill="#fff" fillOpacity="0.28" />
+    {/* Page content rules */}
+    <rect x="6" y="15" width="9" height="2" rx="1" fill="#fff" />
+    <rect x="6" y="19" width="13" height="1.6" rx="0.8" fill="#fff" opacity="0.55" />
+    <rect x="6" y="22" width="10" height="1.6" rx="0.8" fill="#fff" opacity="0.55" />
+    {/* Cursor + click flicks */}
+    <path d="M21 14 L21 23 L23.2 21 L24.7 24.2 L26 23.6 L24.5 20.4 L27 20.4 Z" fill="#fff" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" strokeLinecap="round" />
+  </svg>
+);
+
+export const ProcessIcon = ({ size = 28, ...rest }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" shapeRendering="geometricPrecision" aria-hidden="true" {...rest}>
+    {/* Back card — "before" paper */}
+    <rect x="3" y="9" width="14" height="19" rx="2" fill="currentColor" fillOpacity="0.35" />
+    <rect x="3" y="9" width="14" height="19" rx="2" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+    <rect x="6" y="13" width="8" height="1.4" rx="0.7" fill="#fff" opacity="0.7" />
+    <rect x="6" y="16" width="6" height="1.4" rx="0.7" fill="#fff" opacity="0.7" />
+    <rect x="6" y="19" width="7" height="1.4" rx="0.7" fill="#fff" opacity="0.7" />
+    <rect x="6" y="22" width="5" height="1.4" rx="0.7" fill="#fff" opacity="0.7" />
+    {/* Front card — "after" dashboard */}
+    <rect x="13" y="4" width="16" height="20" rx="2" fill="currentColor" />
+    <rect x="13" y="4" width="16" height="20" rx="2" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+    {/* Header */}
+    <circle cx="16" cy="8" r="1.4" fill="#fff" />
+    <rect x="18.5" y="7" width="8" height="2" rx="1" fill="#fff" />
+    {/* Ascending bars */}
+    <rect x="15" y="16" width="3" height="5" rx="0.5" fill="#fff" />
+    <rect x="19" y="13" width="3" height="8" rx="0.5" fill="#fff" />
+    <rect x="23" y="10" width="3" height="11" rx="0.5" fill="#fff" />
+    {/* Trendline + endpoint */}
+    <path d="M16 14 L20 11 L24 8" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.85" />
+    <circle cx="24" cy="8" r="1.3" fill="#fff" />
+  </svg>
+);
+
 /* ── TSD Prism Logo ──────────────────────────────────────────── */
 export const TSDLogo = ({ size = 48, ...rest }) => (
   <svg width={size * 1.17} height={size * 0.65} viewBox="0 0 140 78" fill="none" {...rest}>

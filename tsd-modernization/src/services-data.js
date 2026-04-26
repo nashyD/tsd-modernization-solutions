@@ -1,6 +1,7 @@
 import { C } from "./shared";
 import {
-  BotIcon, GlobeIcon, CogIcon,
+  AIIcon, WebsiteIcon, ProcessIcon,
+  BotIcon,
   BoltIcon, ChartBarIcon, CalendarIcon,
   LayoutIcon, SearchIcon, ChatBubbleIcon, MapIcon, ClipboardIcon,
 } from "./icons";
@@ -8,7 +9,7 @@ import {
 export const SERVICES = [
   {
     slug: "ai-integration",
-    Icon: BotIcon,
+    Icon: AIIcon,
     title: "AI Integration & Automation",
     desc: "Deploy intelligent chatbots, automate repetitive workflows, and unlock AI-powered insights. We set up the tools, train your team, and document everything.",
     longDesc: "From customer-facing chatbots that handle FAQs to backend automations that replace hours of manual data entry, we build AI solutions that actually make sense for your business size and budget.",
@@ -37,7 +38,7 @@ export const SERVICES = [
   },
   {
     slug: "websites",
-    Icon: GlobeIcon,
+    Icon: WebsiteIcon,
     title: "Website Creation & Redesign",
     desc: "We build sites that load fast, look good on phones, and show up in search results. Every site comes with written and video documentation so you can update content without calling us.",
     longDesc: "One founder stays on call for fixes through August 31, 2026 on every Summer 2026 cohort build. We use modern frameworks like React and Vite to build sites that are fast, accessible, and easy to maintain.",
@@ -68,7 +69,7 @@ export const SERVICES = [
   },
   {
     slug: "process-modernization",
-    Icon: CogIcon,
+    Icon: ProcessIcon,
     title: "Process Modernization",
     desc: "Replace spreadsheets, paper forms, and manual processes with streamlined digital tools. We audit your current workflow and build exactly what you need.",
     longDesc: "Whether it's a custom dashboard, automated invoicing, or a client portal, we identify the bottlenecks and build targeted solutions that save your team real time every week.",

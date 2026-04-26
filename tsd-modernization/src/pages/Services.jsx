@@ -16,7 +16,7 @@ export default function Services() {
                 style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "32px", alignItems: "start", cursor: "pointer" }}>
                 <div style={{
                   width: "60px", height: "60px", borderRadius: "16px", background: s.gradient,
-                  display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", flexShrink: 0,
+                  display: "flex", alignItems: "center", justifyContent: "center", color: "#a8d1ed", flexShrink: 0,
                 }}><s.Icon size={28} /></div>
                 <div>
                   <h3 style={{ fontSize: "22px", fontWeight: 700, color: v("text"), marginBottom: "10px" }}>{s.title}</h3>
