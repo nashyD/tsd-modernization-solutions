@@ -332,7 +332,7 @@ export default function Layout() {
           ))}
         </div>
         <p style={{ fontSize: "13px", color: v("text-dim"), marginBottom: "8px" }}>
-          TSD Modernization Solutions — A division of TSD Incorporated, LLC
+          TSD Modernization Solutions — A brand of TSD Ventures, LLC
         </p>
         <p style={{ fontSize: "12px", color: v("text-dim") }}>
           Serving the Charlotte metro area including Gastonia, Belmont, and surrounding communities.
