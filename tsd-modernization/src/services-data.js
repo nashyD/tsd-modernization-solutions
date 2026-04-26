@@ -1,7 +1,7 @@
 import { C } from "./shared";
 import {
   AIIcon, WebsiteIcon, ProcessIcon,
-  BotIcon,
+  BotIcon, CogIcon,
   BoltIcon, ChartBarIcon, CalendarIcon,
   LayoutIcon, SearchIcon, ChatBubbleIcon, MapIcon, ClipboardIcon,
 } from "./icons";

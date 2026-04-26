@@ -1,7 +1,15 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { C, v, useFadeIn, SectionHeader, Card, RippleButton } from "../shared";
 import { CheckIcon } from "../icons";
 import PageShell from "./PageShell";
+
+/* Live scarcity counter — update these as contracts sign so the counter
+   on each tier card stays honest. Currently 0 closed contracts; all open. */
+const SPOTS = {
+  bundle: { remaining: 10, total: 10 },
+  partnership: { remaining: 3, total: 3 },
+};
 
 /* Editorial masthead — pairs with the Home/Team mastheads. Frames the page
    so every dollar amount below sits inside the cohort scarcity context. */
@@ -62,15 +70,19 @@ function GuaranteeBlock() {
   );
 }
 
-/* Tier card. Bundle gets featured treatment + anchor price (small struck-
-   through standard above the prominent founding number). */
+/* Tier card. Featured tier (the middle bundle) gets the 2px border + Most
+   Popular badge so the visual hierarchy nudges toward it as the obvious pick.
+   Anchor pricing renders as small struck-through standard above the prominent
+   founding number. Live spots counter renders below the price for tiers that
+   have a cap. Objection-handling line renders below the CTA. */
 function TierCard({ tier, delay }) {
   const featured = tier.featured;
+  const spots = tier.spotsKey ? SPOTS[tier.spotsKey] : null;
   return (
     <Card delay={delay} style={{
       border: featured ? `2px solid ${C.carolina}` : undefined,
       position: "relative",
-      padding: featured ? "44px 36px 36px" : "36px",
+      padding: featured ? "44px 32px 32px" : "32px",
     }}>
       <div style={{
         position: "absolute", top: "-12px", left: "24px",
@@ -91,7 +103,7 @@ function TierCard({ tier, delay }) {
         }}>Most Popular</div>
       )}
 
-      <div style={{ textAlign: "center", marginBottom: "28px", marginTop: "8px" }}>
+      <div style={{ textAlign: "center", marginBottom: spots ? "18px" : "28px", marginTop: "8px" }}>
         <div style={{
           fontSize: "13px", fontWeight: 700, letterSpacing: "2px", textTransform: "uppercase",
           color: v("accent"), marginBottom: "16px",
@@ -129,6 +141,26 @@ function TierCard({ tier, delay }) {
         )}
       </div>
 
+      {spots && (
+        <div style={{
+          display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+          padding: "8px 14px",
+          borderRadius: "100px",
+          background: "rgba(75,156,211,0.1)",
+          border: `1px solid ${C.carolina}`,
+          fontSize: "10px", fontWeight: 700, letterSpacing: "2px", textTransform: "uppercase",
+          color: v("accent"),
+          margin: "0 auto 24px",
+          width: "fit-content",
+        }}>
+          <span aria-hidden="true" style={{
+            width: "6px", height: "6px", borderRadius: "50%",
+            background: C.success,
+          }} />
+          {spots.remaining} of {spots.total} spots remaining
+        </div>
+      )}
+
       <div style={{ display: "flex", flexDirection: "column", gap: "14px", marginBottom: tier.bonus ? "20px" : "32px" }}>
         {tier.features.map((f, j) => (
           <div key={j} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
@@ -158,6 +190,17 @@ function TierCard({ tier, delay }) {
           {tier.btn}
         </RippleButton>
       </Link>
+      {tier.objection && (
+        <p style={{
+          marginTop: "14px",
+          fontSize: "12px", lineHeight: 1.55,
+          fontFamily: "var(--font-display)", fontStyle: "italic",
+          color: v("text-dim"),
+          textAlign: "center",
+        }}>
+          {tier.objection}
+        </p>
+      )}
     </Card>
   );
 }
@@ -196,8 +239,9 @@ const TIERS = [
   {
     phase: "Phase I",
     label: "Discovery",
-    price: "$250",
-    range: "One-time engagement",
+    anchor: "$3,000",
+    price: "$1,500",
+    range: "Founding rate · One-time",
     features: [
       "2-3 hour structured tech audit",
       "Written modernization roadmap",
@@ -206,13 +250,15 @@ const TIERS = [
       "No obligation to continue",
     ],
     btn: "Book Tech Audit",
+    objection: "Money-back if we can't find $25K of opportunities.",
   },
   {
     phase: "Phase II",
     label: "Website + AI Bundle",
-    price: "$2,000",
     anchor: "$4,000",
-    range: "Founding rate · 10 spots",
+    price: "$2,000",
+    range: "Founding rate",
+    spotsKey: "bundle",
     features: [
       "Custom responsive website",
       "AI chatbot or workflow automation",
@@ -224,6 +270,24 @@ const TIERS = [
     bonus: "AI receptionist setup ($497 value) included with the bundle.",
     btn: "Claim Founding Spot",
     featured: true,
+    objection: "Fixed fee. Delivered by handoff. Source code is yours from day one.",
+  },
+  {
+    phase: "Partnership",
+    label: "Founding Partnership",
+    anchor: "$10,000",
+    price: "$5,000",
+    range: "Founding rate · By application",
+    spotsKey: "partnership",
+    features: [
+      "Phase I audit included",
+      "Phase II Bundle (everything in the middle column)",
+      "AI receptionist setup + first 4 months",
+      "Monthly optimization check-ins through August 31",
+      "Named ops handholding from Bishop — calendar, proposals, weekly status",
+    ],
+    btn: "Apply for Partnership",
+    objection: "Cancel any time after handoff. No retainer trap.",
   },
 ];
 
@@ -240,8 +304,63 @@ function WedgePointer() {
         }}>
           AI receptionist setup, $497
         </Link>
-        {" "}— built for HVAC and trades.
+        {" "}— built for HVAC, electricians, and plumbers.
       </p>
+    </div>
+  );
+}
+
+/* FAQ — moved from /contact 2026-04-26 per Marc's rule that the FAQ does the
+   salesperson's job at the moment of hesitation, which is the pricing page
+   (the buyer who reaches /contact has already self-selected past the price). */
+const FAQS = [
+  { q: "Why are your prices so much lower than agencies?", a: "We're a lean team of three founders with minimal overhead. Our founding-cohort rates are deliberately half what we'll charge after Summer 2026, set so we can build our portfolio and earn client trust. You get the same quality at 3-5x less than agency rates." },
+  { q: "How does the Summer 2026 cohort work?", a: "We operate from May 7 to August 10, 2026 — three founders running together over the summer, capped at ten clients so every project gets the time it needs. Last project start is July 13. After August 10 we hand off; one founder stays on call for fixes through August 31." },
+  { q: "How does the free consultation work?", a: "We schedule a 1-2 hour session (in-person or remote) where we walk through your current operations, tools, and pain points. You'll get actionable insights on the spot — no sales pressure. If there's a fit, we'll follow up with a written proposal within 48 hours." },
+  { q: "What happens after my project is done?", a: "Every project ends with handoff documentation, video tutorials, and a live training session. You'll run everything independently from there. One founder stays on call for fixes through August 31, 2026; past that, the season closes." },
+  { q: "Do I need to know anything about AI?", a: "Not at all. That's what we're here for. We'll explain everything in plain English, recommend only tools that genuinely fit your needs, and handle all the technical setup. You just tell us what's slowing your business down." },
+  { q: "How long does a typical project take?", a: "Tech audits are done in a single session. Website builds and AI integrations typically take 2-4 weeks from proposal to handoff." },
+  { q: "What's your service area?", a: "We serve the Charlotte metro area including Gastonia, Belmont, and surrounding communities. Discovery meetings can be done in-person or remote." },
+];
+
+function FAQSection() {
+  const [openIndex, setOpenIndex] = useState(null);
+  const [ref, fadeStyle] = useFadeIn(0);
+
+  return (
+    <div style={{ padding: "80px 0 0", maxWidth: "800px", margin: "0 auto" }}>
+      <SectionHeader center label="FAQ" title="Common" titleAccent="questions"
+        sub="The stuff people usually ask before getting started." />
+      <div ref={ref} style={{ ...fadeStyle, display: "flex", flexDirection: "column", gap: "10px" }}>
+        {FAQS.map((faq, i) => {
+          const isOpen = openIndex === i;
+          return (
+            <div key={i} style={{
+              background: v("surface"), border: `1px solid ${isOpen ? v("accent") : v("surface-border")}`,
+              borderRadius: "14px", overflow: "hidden", transition: "border-color 0.3s ease",
+            }}>
+              <button onClick={() => setOpenIndex(isOpen ? null : i)} style={{
+                width: "100%", padding: "18px 22px", background: "none", border: "none",
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+                cursor: "pointer", color: v("text"), fontSize: "15px", fontWeight: 600,
+                textAlign: "left", fontFamily: "var(--font-body)",
+              }}>
+                {faq.q}
+                <span style={{
+                  fontSize: "18px", color: v("accent"), transition: "transform 0.3s ease",
+                  transform: isOpen ? "rotate(45deg)" : "rotate(0deg)", flexShrink: 0, marginLeft: "16px",
+                }}>+</span>
+              </button>
+              <div style={{
+                maxHeight: isOpen ? "320px" : "0", overflow: "hidden",
+                transition: "max-height 0.4s cubic-bezier(0.16,1,0.3,1)",
+              }}>
+                <p style={{ padding: "0 22px 18px", fontSize: "14px", lineHeight: 1.7, color: v("text-muted") }}>{faq.a}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -254,26 +373,27 @@ export default function Pricing() {
         <SectionHeader
           center
           label="The Contract"
-          title="Two ways to"
+          title="Three ways to"
           titleAccent="start."
-          sub="Two engagements. Single prices, scope spelled out before you sign."
+          sub="Three engagements. Single prices, scope spelled out before you sign."
         />
         <GuaranteeBlock />
         <div style={{
           display: "grid",
-          gridTemplateColumns: "1fr 1.3fr",
-          gap: "32px",
+          gridTemplateColumns: "1fr 1.15fr 1fr",
+          gap: "24px",
           alignItems: "start",
         }} className="pricing-grid">
           {TIERS.map((t, i) => (
             <TierCard key={i} tier={t} delay={i * 120} />
           ))}
         </div>
-        <ClosingNote />
         <WedgePointer />
+        <FAQSection />
+        <ClosingNote />
       </div>
       <style>{`
-        @media (max-width: 820px) {
+        @media (max-width: 980px) {
           .pricing-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
           .guarantee-block { flex-direction: column !important; gap: 16px !important; text-align: center; padding: 32px 24px !important; }
         }

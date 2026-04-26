@@ -121,6 +121,45 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-26 — Pricing restructure: third tier, anchors on Phase I, FAQ migrated from Contact
+
+**What.** Restructured [`/pricing`](src/pages/Pricing.jsx) from two tiers to three, repriced and anchor-formatted Phase I, added a live spots-remaining counter on the capped tiers, added objection-handling copy below each CTA, and moved the FAQ block from [`/contact`](src/pages/Contact.jsx) to [`/pricing`](src/pages/Pricing.jsx). Together these implement the P0 "pricing page restructure" block of the v2 Marc Lou checklist (Slice 1 of the Marc Lou implementation arc).
+
+The new tier shape:
+
+| Tier | Phase chip | Anchor | Founding | Range | Cap | CTA | Objection line |
+|---|---|---|---|---|---|---|---|
+| Discovery | Phase I | $3,000 | $1,500 | Founding rate · One-time | none | Book Tech Audit | *"Money-back if we can't find $25K of opportunities."* |
+| Website + AI Bundle (featured) | Phase II | $4,000 | $2,000 | Founding rate | 10 | Claim Founding Spot | *"Fixed fee. Delivered by handoff. Source code is yours from day one."* |
+| Founding Partnership | Partnership | $10,000 | $5,000 | Founding rate · By application | 3 | Apply for Partnership | *"Cancel any time after handoff. No retainer trap."* |
+
+The `featured: true` flag stays on Phase II — 2px Carolina border + Most Popular badge + slightly taller padding. Marc's structural rule is three tiers with the middle as the obvious pick; the Bundle is still that pick, the Partnership is the upmarket "for serious buyers" option, and Phase I now reads as the discounted entry instead of a too-cheap-to-trust audit.
+
+A new `SPOTS` config at the top of [`Pricing.jsx`](src/pages/Pricing.jsx) holds `{ bundle: { remaining, total }, partnership: { remaining, total } }` and renders as a Carolina-bordered chip with a green status dot beneath the price on capped tiers (e.g. "● 10 OF 10 SPOTS REMAINING"). Update the numbers as contracts sign — the counter surfaces real scarcity visually rather than burying it in prose.
+
+The FAQ moved verbatim from [`Contact.jsx`](src/pages/Contact.jsx) into [`Pricing.jsx`](src/pages/Pricing.jsx) with one wording fix ("the founding-cohort rate is" → "our founding-cohort rates are" — plural now that there are three founding rates) and a reorder so the price-justification answer ("Why are your prices so much lower than agencies?") appears first. The `<DiamondDivider />` that previously separated the contact form from the FAQ also dropped, and `DiamondDivider` was pruned from the Contact imports.
+
+**Why.** Marc Lou's pricing rule is three tiers with the middle as the obvious pick — two tiers gives the buyer a binary they're more likely to opt out of, four+ gives them analysis paralysis. Reframing $250 → $1,500/$3,000 fixes the inverse-signaling problem: a $250 audit reads as "the work isn't valuable" before the buyer has read a feature; the same audit at $1,500 with a struck-through $3,000 anchor reads as a 50%-off founding rate from a serious vendor. The Partnership tier exists to anchor *upward* — most buyers will still pick the middle, but the existence of a $10,000-anchored option makes the $4,000-anchored Bundle read as the reasonable middle rather than the expensive one. Capped at 3 spots so it stays honest scarcity (one founder × ~12-15 hours/month of named ops handholding from Bishop is the realistic ceiling).
+
+The objection-handling copy under each CTA is Marc's "FAQ at the moment of decision" rule applied to a single line: the buyer's eye lands on the price, drifts to the button, hesitates — the italic line answers the specific objection that tier triggers. Phase I: *will I get my money back if it's a wash?* Bundle: *will the price change on me, and do I really own the code?* Partnership: *am I locking myself into a retainer?* Each line is a pre-emptive yes to the most likely objection at that price point.
+
+The FAQ migration follows the same logic at section scope. A buyer who reaches `/contact` has already self-selected past the price; they need a form to fill out. A buyer reading `/pricing` is *deciding* — that's where the FAQ does the salesperson's job. The reorder puts the price-justification answer first because that's the dominant hesitation on a pricing page.
+
+**Files touched.**
+- [`src/pages/Pricing.jsx`](src/pages/Pricing.jsx) — added `SPOTS` config, restructured `TIERS` to three entries with `anchor` + `objection` + `spotsKey` fields, added spots-remaining badge inside `TierCard`, added italic objection line below each CTA, changed grid from `1fr 1.3fr` to `1fr 1.15fr 1fr`, bumped mobile-stack breakpoint from 820px → 980px, added `FAQSection` + `FAQS` array (moved from Contact), updated section header from "Two ways to start" → "Three ways to start", updated wedge pointer copy to "built for HVAC, electricians, and plumbers" (matches v2 trades-wedge identity).
+- [`src/pages/Contact.jsx`](src/pages/Contact.jsx) — removed `FAQSection` component, removed `<FAQSection />` and the preceding `<DiamondDivider />` from page composition, dropped `DiamondDivider` from the shared imports.
+- [`src/services-data.js`](src/services-data.js) — added missing `CogIcon` to the icon import list. Pre-existing bug surfaced during verification: `CogIcon` is exported from [`icons.jsx`](src/icons.jsx) and referenced inside `SERVICES`, but was never named in the import line, so every visit to `/services` or `/services/process-modernization` was throwing a `ReferenceError` at runtime. One-character fix; left it in this slice rather than carrying an open bug.
+
+**Verification.** Dev server reloaded via Vite HMR. Accessibility snapshot at `/pricing` confirms three tier cards render in the right order with the correct anchor / price / range / spots-counter / features / bonus / CTA / objection structure. Phase II keeps the Most Popular badge and 2px Carolina border. The FAQ block renders below the wedge pointer with seven questions in the new order — "Why are your prices so much lower than agencies?" first. Snapshot at `/contact` confirms the page is now NAP block + map + form only (no FAQ, no divider). Snapshot at `/services` after the `CogIcon` import fix confirms all three service cards render cleanly with no `ReferenceError`. No new console errors introduced by this slice.
+
+**Out of scope this pass.** The `?ref=` query-param attribution on the three pricing CTAs is still on the P3 list (would need both URL params on the links *and* the contact form to capture them server-side); doing only the URL half here would create half-finished tracking. The headline test (P1 — five H1 variations sent to friends) is a parallel manual task. The remaining P0 items — homepage trades-wedge reframe, AIReceptionist anti-SaaS positioning, trade-specific landing pages (`/hvac`, `/electricians`, `/plumbers`), and the Missed Call Calculator — are slices 2–5 of this implementation arc.
+
+**Voice notes.** Drafted copy passed through the humanizer rules — no "X, not Y" contrastive constructions in the new strings, no imperative trio cadence, no banned vocabulary. The objection lines are deliberately short statements rather than mini-paragraphs because they sit beneath a CTA and shouldn't compete with it.
+
+**Principle reinforced.** *Three tiers with a middle pick beats two tiers with a winner.* Two-tier pricing forces the buyer to evaluate yes/no on the bigger number — the question becomes "do I want this at all." Three-tier pricing reframes the question to "which of these do I want," which is a much easier yes. The Partnership tier doesn't have to sell on its own; it just has to exist, so the Bundle reads as the obvious middle. Same logic on the FAQ migration: surface the answer at the moment of hesitation, before the buyer has self-selected past the question.
+
+---
+
 ### 2026-04-25 — TSD chat agent (proof of concept)
 
 **What.** Custom LLM-powered chat widget mounted globally on the site. Floating "Chat with TSD" bubble bottom-right; expands to a 380×560px editorial-styled panel that talks to a Vercel serverless function backed by Claude Haiku 4.5. The agent answers questions about TSD (services, pricing, cohort, founders) and, when a visitor shows clear intent, calls a `capture_lead` tool that posts to the same Web3Forms backend the contact form uses. New lead lands in the founders' inbox tagged `[Chat agent]`.

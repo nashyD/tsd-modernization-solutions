@@ -1,59 +1,7 @@
 import { useState } from "react";
-import { C, v, useFadeIn, SectionHeader, RippleButton, DiamondDivider } from "../shared";
+import { C, v, useFadeIn, SectionHeader, RippleButton } from "../shared";
 import { CheckIcon } from "../icons";
 import PageShell from "./PageShell";
-
-/* ── FAQ ───────────────────────────────────────────────────────── */
-function FAQSection() {
-  const faqs = [
-    { q: "How does the free consultation work?", a: "We schedule a 1-2 hour session (in-person or remote) where we walk through your current operations, tools, and pain points. You'll get actionable insights on the spot \u2014 no sales pressure. If there's a fit, we'll follow up with a written proposal within 48 hours." },
-    { q: "How does the Summer 2026 cohort work?", a: "We operate from May 7 to August 10, 2026 \u2014 three founders running together over the summer, capped at ten clients so every project gets the time it needs. Last project start is July 13. After August 10 we hand off; one founder stays on call for fixes through August 31." },
-    { q: "Do I need to know anything about AI?", a: "Not at all. That's what we're here for. We'll explain everything in plain English, recommend only tools that genuinely fit your needs, and handle all the technical setup. You just tell us what's slowing your business down." },
-    { q: "What happens after my project is done?", a: "Every project ends with handoff documentation, video tutorials, and a live training session. You'll run everything independently from there. One founder stays on call for fixes through August 31, 2026; past that, the season closes." },
-    { q: "Why are your prices so much lower than agencies?", a: "We're a lean team of three founders with minimal overhead. The founding-cohort rate is deliberately half what we'll charge after Summer 2026, set so we can build our portfolio and earn client trust. You get the same quality at 3-5x less than agency rates." },
-    { q: "What's your service area?", a: "We serve the Charlotte metro area including Gastonia, Belmont, and surrounding communities. Discovery meetings can be done in-person or remote." },
-    { q: "How long does a typical project take?", a: "Tech audits are done in a single session. Website builds and AI integrations typically take 2-4 weeks from proposal to handoff." },
-  ];
-  const [openIndex, setOpenIndex] = useState(null);
-  const [ref, fadeStyle] = useFadeIn(0);
-
-  return (
-    <div style={{ padding: "60px 48px 40px", maxWidth: "800px", margin: "0 auto" }}>
-      <SectionHeader center label="FAQ" title="Common" titleAccent="questions"
-        sub="The stuff people usually ask before getting started." />
-      <div ref={ref} style={{ ...fadeStyle, display: "flex", flexDirection: "column", gap: "10px" }}>
-        {faqs.map((faq, i) => {
-          const isOpen = openIndex === i;
-          return (
-            <div key={i} style={{
-              background: v("surface"), border: `1px solid ${isOpen ? v("accent") : v("surface-border")}`,
-              borderRadius: "14px", overflow: "hidden", transition: "border-color 0.3s ease",
-            }}>
-              <button onClick={() => setOpenIndex(isOpen ? null : i)} style={{
-                width: "100%", padding: "18px 22px", background: "none", border: "none",
-                display: "flex", alignItems: "center", justifyContent: "space-between",
-                cursor: "pointer", color: v("text"), fontSize: "15px", fontWeight: 600,
-                textAlign: "left", fontFamily: "var(--font-body)",
-              }}>
-                {faq.q}
-                <span style={{
-                  fontSize: "18px", color: v("accent"), transition: "transform 0.3s ease",
-                  transform: isOpen ? "rotate(45deg)" : "rotate(0deg)", flexShrink: 0, marginLeft: "16px",
-                }}>+</span>
-              </button>
-              <div style={{
-                maxHeight: isOpen ? "300px" : "0", overflow: "hidden",
-                transition: "max-height 0.4s cubic-bezier(0.16,1,0.3,1)",
-              }}>
-                <p style={{ padding: "0 22px 18px", fontSize: "14px", lineHeight: 1.7, color: v("text-muted") }}>{faq.a}</p>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
 
 /* ── Contact info (NAP block) ──────────────────────────────────── */
 function ContactInfo() {
@@ -270,8 +218,6 @@ export default function Contact() {
       <ContactInfo />
       <ServiceAreaMap />
       <ContactForm />
-      <DiamondDivider width={120} style={{ margin: "20px auto" }} />
-      <FAQSection />
     </PageShell>
   );
 }
