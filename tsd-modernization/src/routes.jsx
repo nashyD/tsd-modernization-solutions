@@ -11,6 +11,8 @@ import Contact from "./pages/Contact";
 import AIReceptionist from "./pages/AIReceptionist";
 import TradePage from "./pages/TradePage";
 import { TRADES } from "./trades-data";
+import RelationshipPage from "./pages/RelationshipPage";
+import { RELATIONSHIPS } from "./relationships-data";
 
 /* Trade-specific landing pages — flat URLs (/hvac, /electricians, /plumbers)
    so ad copy and word-of-mouth stay short. Each is the destination URL for
@@ -21,6 +23,13 @@ import { TRADES } from "./trades-data";
 function HvacPage() { return <TradePage trade={TRADES.hvac} />; }
 function ElectriciansPage() { return <TradePage trade={TRADES.electricians} />; }
 function PlumbersPage() { return <TradePage trade={TRADES.plumbers} />; }
+
+/* Relationship-channel landing pages — vertical-specific bundle pages for
+   warm leads who arrived via founder DM (per the v2 two-motion model).
+   Same wrapper-function pattern as the trade pages above. */
+function SalonsPage() { return <RelationshipPage rel={RELATIONSHIPS.salons} />; }
+function AutoShopsPage() { return <RelationshipPage rel={RELATIONSHIPS["auto-shops"]} />; }
+function RestaurantsPage() { return <RelationshipPage rel={RELATIONSHIPS.restaurants} />; }
 
 export const routes = [
   {
@@ -46,6 +55,9 @@ export const routes = [
       { path: "hvac", Component: HvacPage },
       { path: "electricians", Component: ElectriciansPage },
       { path: "plumbers", Component: PlumbersPage },
+      { path: "salons", Component: SalonsPage },
+      { path: "auto-shops", Component: AutoShopsPage },
+      { path: "restaurants", Component: RestaurantsPage },
       { path: "testimonials", Component: Testimonials },
       { path: "team", Component: Team },
       { path: "contact", Component: Contact },

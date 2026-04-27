@@ -121,6 +121,65 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-26 — Slice 3b: relationship-channel landing pages (/salons, /auto-shops, /restaurants)
+
+**What.** Three new flat-URL landing pages for the relationship motion — the warm-lead channel that runs in parallel to the cold-trades channel slice 3a built. Each page is bundle-led (NOT receptionist-led) and is the destination URL a founder can DM or text to a warm vertical lead so they land on copy that recognizes their business type without committing the homepage to all six verticals.
+
+| Route | H1 | The Build (vertical-specific bullets) |
+|---|---|---|
+| [`/salons`](src/relationships-data.js) | *"Charlotte salons. Your booth doesn't book itself. **Let your website do the work.**"* | Square / Booksy / Vagaro booking widgets, after-hours missed-call recovery, AI chat for "do you do balayage?" type questions, Instagram-feed integration. |
+| [`/auto-shops`](src/relationships-data.js) | *"Charlotte auto shops. Half your bay is empty Tuesday morning. **Fill it from your phone.**"* | Online quote-request form with photo upload, service catalog (brakes / alignment / transmissions), AI chat for "do you do European cars?" type questions, Google Business Profile sync. |
+| [`/restaurants`](src/relationships-data.js) | *"Charlotte restaurants. The phone keeps ringing through dinner service. **Let the website take the order.**"* | OpenTable / Resy / Tock reservations, Toast / Square / DoorDash ordering, AI chat for "what's gluten-free?" type questions, GBP + Yelp sync. |
+
+Each page has three sections + closing — lighter than the 5-section trade pages in slice 3a:
+
+1. **Hero** (data-driven) — masthead reads "WEBSITE + AI BUNDLE · {VERTICAL} · SUMMER MMXXVI" (vs "AI RECEPTIONIST · ..." on trade pages so the buyer knows which product the page is selling). Dual CTAs: primary "Book a free consultation" → `/contact?ref={vertical}`, secondary "See pricing" → `/pricing`.
+2. **The Build § 01** (data-driven) — six vertical-specific bullets in checkmark-prefixed cards. Title: "Here's what we'd ship for your {salon|shop|restaurant}." Sub references the source-code-yours promise + Aug 31 Claude+GitHub continuity.
+3. **ClosingCTA** — pricing reminder ("$2,000 founding rate, anchor $4,000. Ten cohort spots, last project start July 13. 100% money-back guarantee.") + dual CTAs ("Book a free consultation" + "See all three tiers").
+
+Notably absent (deliberate): the offer card, anti-SaaS comparison, disqualification callout, and 3-step Forward/Answer/Confirm flow that live on `/ai-receptionist`. The relationship buyer arrived via founder DM and already heard the $2,000 bundle pitch over text — the page's job is recognition (yes we work with your vertical), not conversion.
+
+**Why.** The v2 checklist's two-motion model splits acquisition into cold (paid ads + cold outreach against trades keywords) and warm (founder relationship outreach across verticals). The trade pages built in slice 3a serve the cold motion; these relationship pages serve the warm one. Both motions need vertical-specific destination URLs so a buyer doesn't land on copy that reads "wrong" for their business — but the conversion mechanics differ enough that they need different page templates.
+
+The relationship buyer's hesitation is "is this team competent and do they get my vertical?" not "is this the right product for me?" (the latter was answered in the founder DM). The Build section answers both competence and vertical-fit by being specific to their business — Square/Booksy for salons, OpenTable/Resy for restaurants, GBP for auto. Generic "we build websites and AI tools" pages fail this test; vertical-specific bullets pass.
+
+The trade-vs-relationship split also keeps the homepage trades-committed without losing the salon/auto/bakery leads currently in the pipeline (per the project memory: 3 of 4 pre-launch leads are non-trades). Relationship leads land on a page built for them via founder DM; cold ads land on the trade-committed homepage. Neither motion contaminates the other.
+
+**Files touched.**
+- [`src/relationships-data.js`](src/relationships-data.js) (new) — exports `RELATIONSHIPS` object with three entries (salons, "auto-shops", restaurants), each carrying `slug`, `vertical`, `routeMetaTitle`, `routeMetaDesc`, `hero { h1, h1Italic, sub }`, `build { title, sub, bullets[] }`. Note the kebab-case key `"auto-shops"` matches the URL slug; the other two are single-word lowercase. Also exports `RELATIONSHIP_SLUGS`.
+- [`src/pages/RelationshipPage.jsx`](src/pages/RelationshipPage.jsx) (new) — shared template. Four sub-components: `ChapterHead` (inlined — third copy of the same 25-line component now present in `AIReceptionist.jsx`, `TradePage.jsx`, and here; refactor to `shared.jsx` is a candidate if a fourth user appears), `RelationshipHero` (consumes `rel.hero`, dual CTAs to `/contact?ref={slug}` and `/pricing`), `TheBuild` (consumes `rel.build`, renders bullets as checkmark-prefixed cards), `ClosingCTA` (pricing reminder + dual CTAs). Default export takes a `rel` prop.
+- [`src/routes.jsx`](src/routes.jsx) — added `RelationshipPage` + `RELATIONSHIPS` imports, three wrapper components (`SalonsPage`, `AutoShopsPage`, `RestaurantsPage`), and three new route entries placed alongside the trade routes before the catch-all.
+- [`src/Layout.jsx`](src/Layout.jsx) — added three `ROUTE_META` entries (`/salons`, `/auto-shops`, `/restaurants`) with vertical-specific titles and descriptions for SERP relevance and link-preview accuracy.
+
+The sitemap will pick up the three new prerendered routes automatically on the next `npm run build` (per the existing dynamic-sitemap setup).
+
+**Verification.** Dev server reloaded via Vite HMR. All three relationship pages navigate cleanly with no console errors. `/salons` accessibility snapshot confirms the editorial masthead "WEBSITE + AI BUNDLE · CHARLOTTE SALONS · SUMMER MMXXVI", H1 with the salon-specific copy + italic line, sub copy, both CTAs ("Book a free consultation" + "See pricing"), all six Build bullets rendered in checkmark cards, and the closing CTA with the pricing reminder + dual CTAs. `/auto-shops` and `/restaurants` confirmed via DOM eval — correct masthead per vertical, correct H1 + Build heading, every CTA passes `?ref={vertical-slug}` (including the kebab-case `?ref=auto-shops`). Title meta is unset in dev (vite-react-ssg's `Head` component defers to prerender); meta resolves correctly on the production build.
+
+**Slice 3 architecture summary** (now that both 3a and 3b are shipped). Two vertical-specific data files + two templates feed six landing pages plus the canonical `/ai-receptionist` and the broad homepage:
+
+```
+                    Cold motion                         Warm motion
+                    ───────────                         ───────────
+Lead source         Paid ads, cold DMs                  Founder relationships
+Lead offer          AI Receptionist ($497)              Bundle ($2,000)
+Destination URL     /hvac, /electricians, /plumbers     /salons, /auto-shops, /restaurants
+Template            TradePage.jsx                       RelationshipPage.jsx
+Data                trades-data.js                      relationships-data.js
+Sections            5 (Hero, Math, Flow, Offer, Close)  3 (Hero, Build, Close)
+?ref=               hvac | electricians | plumbers      salons | auto-shops | restaurants
+Funnel target       /contact + /ai-receptionist (spec)  /contact + /pricing (offer detail)
+```
+
+Adding a new vertical to either side is a ~30-line data entry plus three lines in `routes.jsx` and `Layout.jsx`.
+
+**Out of scope this pass.** The Missed Call Calculator (`/missed-call-calculator`) is slice 4. The `WhyUs.jsx` rewrite + remaining P3 cleanup items (`?ref` capture in the contact form, GBP claim + Maps embed, chat agent rate limiter, founding-rate scarcity copy standardization) are slice 5. There's no internal-link strip from the homepage or `/ai-receptionist` pointing at the six new vertical pages — they're discoverable only via direct URL (paid ads, founder DMs, sitemap). That's the intended cold/warm split for now; if a "Choose your vertical →" footer becomes useful later, it's a 30-line addition.
+
+**Voice notes.** Per-vertical Hero copy passed through the humanizer rules — no "X, not Y" contrastive constructions, no imperative trio cadence, no banned vocabulary. The Build bullets use concrete tool names (Square, Booksy, OpenTable, Toast, etc.) rather than generic "industry-standard tools" phrasing — Marc's ultra-specific rule applied at the bullet level. The "AI chat: ... 'do you do X?' — 24/7 answers" pattern across all three verticals uses verbatim buyer questions ("do you do balayage?", "do you do European cars?", "what's gluten-free?") to make the capability concrete in the buyer's own language.
+
+**Principle reinforced.** *Different motions deserve different templates, even if the structural bones overlap.* The trade pages and relationship pages share an editorial frame (masthead + § numbering + ChapterHead) but solve different problems: cold pages need to convert in one scroll, warm pages need to confirm vertical fit. Forcing them into a single template via a `mode: "trade" | "relationship"` flag would have meant conditionals everywhere and a template that's clear for neither use case. Two thin templates against two thin data files is the right factoring — same logic that splits `/services` (taxonomy index) from `/services/:slug` (service detail) earlier in the project's evolution.
+
+---
+
 ### 2026-04-26 — Slice 3a: trade-specific landing pages (/hvac, /electricians, /plumbers)
 
 **What.** Three new flat-URL landing pages, each the destination URL for its own ad set and cold-outreach template (per the v2 trades-wedge checklist — "each page is the destination URL, never the homepage"). Pages share a template ([`TradePage.jsx`](src/pages/TradePage.jsx)) that renders per-trade Hero + Math from a data file ([`trades-data.js`](src/trades-data.js)) and reuses the Flow / Offer / ClosingCTA shape from [`/ai-receptionist`](src/pages/AIReceptionist.jsx).

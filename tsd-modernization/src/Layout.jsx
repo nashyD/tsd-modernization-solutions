@@ -72,6 +72,18 @@ const ROUTE_META = {
     title: "AI Receptionist for Charlotte Plumbers | TSD Modernization Solutions",
     description: "Custom AI receptionist for Charlotte plumbers — captures weekend water-heater failures, burst pipes, and no-hot-water Sunday mornings, then books the truck. $497 founding setup, then the agent transfers to you on August 31. No subscription forever.",
   },
+  "/salons": {
+    title: "Custom Website + AI for Charlotte Salons | TSD Modernization Solutions",
+    description: "Custom website and AI tools for Charlotte hair salons, nail studios, and spas — booking automation, after-hours chat, missed-call recovery. Built in 2-4 weeks. $2,000 founding-cohort rate (anchor $4,000), source code yours from day one.",
+  },
+  "/auto-shops": {
+    title: "Custom Website + AI for Charlotte Auto Shops | TSD Modernization Solutions",
+    description: "Custom website and AI tools for Charlotte auto repair, body shops, and tire stores — online quote requests, service catalogs, after-hours intake. Built in 2-4 weeks. $2,000 founding-cohort rate (anchor $4,000), source code yours from day one.",
+  },
+  "/restaurants": {
+    title: "Custom Website + AI for Charlotte Restaurants | TSD Modernization Solutions",
+    description: "Custom website and AI tools for Charlotte restaurants, bakeries, and food trucks — reservations, online ordering, AI chat for menu and hours. Built in 2-4 weeks. $2,000 founding-cohort rate (anchor $4,000), source code yours from day one.",
+  },
   "/testimonials": {
     title: "Case Studies Coming Soon | TSD Modernization Solutions",
     description: "We're shipping our first client projects now. Real results, real outcomes, documented here — coming soon.",
