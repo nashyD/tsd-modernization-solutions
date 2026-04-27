@@ -60,6 +60,18 @@ const ROUTE_META = {
     title: "AI Receptionist for Charlotte Trades — $497, Yours to Keep | TSD Modernization Solutions",
     description: "Custom AI answers the after-hours call, qualifies the lead, and books the job. Built for Charlotte HVAC, electricians, and plumbers. $497 founding setup plus $97/mo through Aug 31, then the agent transfers to you. No subscription forever.",
   },
+  "/hvac": {
+    title: "AI Receptionist for Charlotte HVAC Contractors | TSD Modernization Solutions",
+    description: "Custom AI receptionist for Charlotte HVAC contractors — books the after-hours emergency call so it doesn't go to a competitor by morning. $497 founding setup, then the agent transfers to you on August 31. No subscription forever.",
+  },
+  "/electricians": {
+    title: "AI Receptionist for Charlotte Electrical Contractors | TSD Modernization Solutions",
+    description: "Custom AI receptionist for Charlotte electricians — captures emergency rewires, panel failures, and after-hours service calls so the on-call rotation doesn't break. $497 founding setup, then the agent transfers to you on August 31. No subscription forever.",
+  },
+  "/plumbers": {
+    title: "AI Receptionist for Charlotte Plumbers | TSD Modernization Solutions",
+    description: "Custom AI receptionist for Charlotte plumbers — captures weekend water-heater failures, burst pipes, and no-hot-water Sunday mornings, then books the truck. $497 founding setup, then the agent transfers to you on August 31. No subscription forever.",
+  },
   "/testimonials": {
     title: "Case Studies Coming Soon | TSD Modernization Solutions",
     description: "We're shipping our first client projects now. Real results, real outcomes, documented here — coming soon.",

@@ -121,6 +121,46 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-26 — Slice 3a: trade-specific landing pages (/hvac, /electricians, /plumbers)
+
+**What.** Three new flat-URL landing pages, each the destination URL for its own ad set and cold-outreach template (per the v2 trades-wedge checklist — "each page is the destination URL, never the homepage"). Pages share a template ([`TradePage.jsx`](src/pages/TradePage.jsx)) that renders per-trade Hero + Math from a data file ([`trades-data.js`](src/trades-data.js)) and reuses the Flow / Offer / ClosingCTA shape from [`/ai-receptionist`](src/pages/AIReceptionist.jsx).
+
+| Route | H1 | Math angle |
+|---|---|---|
+| [`/hvac`](src/trades-data.js) | *"When it hits 95°, the phone rings off the hook. **Don't lose the call.**"* | $700–$1,000 per emergency ticket × 30% after-hours miss rate × peak summer (Jun–Aug) = $60K–$90K of leakage to whoever picked up first. |
+| [`/electricians`](src/trades-data.js) | *"The on-call rotation runs out. The phone doesn't. **Your AI takes the call.**"* | Emergency rewires and panel failures need an electrician *now*; the on-call rotation breaks every weekend; AI takes the call so the foreman can sleep. |
+| [`/plumbers`](src/trades-data.js) | *"The burst pipe at 2am pays for the week. **Book the truck before the call drops.**"* | Weekend water-heater failures and burst pipes are the highest-margin jobs; the plumber who answers Sunday morning at 7am gets the call. |
+
+Each page has five sections in the established editorial pattern: Hero (data-driven), `The Math § 01` (data-driven, trade-specific dollar math), `The Flow § 02` (shared 3-step Forward / Answer / Confirm), `The Offer § 03` (shared $497 + risk reversal + ownership transfer + CTA), `ClosingCTA`. Hero CTAs are paired: primary "Reserve a setup spot" → `/contact?ref={trade-slug}`, secondary "See the full spec" → `/ai-receptionist`. Every CTA on the page passes `?ref={hvac|electricians|plumbers}` so leads from each trade are attributable in GA4 / Plausible.
+
+The trade pages do NOT duplicate the anti-SaaS comparison block or the disqualification callout that live on `/ai-receptionist` (§ 03 The Difference + § 05 The Fit). Trade pages are funnels — short, focused on the trade-specific pain → buy. `/ai-receptionist` is the canonical product spec where a buyer who wants depth can see the SaaS comparison and self-qualify.
+
+**Why.** Two reasons, structural and tactical.
+
+Structural: Marc's niching rule says cold-traffic pages must be ultra-specific for the ideal customer and read as nonsense to everyone else. A salon owner who lands on `/hvac` should bounce; an HVAC contractor should feel like the page was built for him. Generic "AI receptionist for service businesses" pages convert worse than trade-specific "AI receptionist for HVAC" pages by 3–5× in Marc's published data. The trade pages exist because each ad set, each cold-outreach template, and each trade-specific search query needs a destination URL written for that exact buyer.
+
+Tactical: the Charlotte HVAC pool alone (~308 operators in the metro per the market analysis that drove the v2 checklist) is too thin to fill ten setup spots from cold ads. Adding electrical and plumbing widens the reachable pool to ~800–1,200 operators. Each trade has its own pain language (HVAC: peak summer storm calls; electricians: on-call rotation burnout; plumbers: weekend revenue capture) that the homepage and `/ai-receptionist` can't address without diluting their own positioning.
+
+The flat URLs (`/hvac` rather than `/trades/hvac`) are a deliberate choice: ad copy is shorter ("Visit tsd-modernization.com/hvac"), and the URL is memorable enough for word-of-mouth. The existing `/services/:slug` pattern is the right shape for a 3-service taxonomy; for trade landing pages where each URL is its own marketing surface, flat URLs win.
+
+**Files touched.**
+- [`src/trades-data.js`](src/trades-data.js) (new) — exports `TRADES` object with three entries (hvac, electricians, plumbers) each carrying `slug`, `vertical`, `routeMetaTitle`, `routeMetaDesc`, `hero { h1, h1Italic, sub }`, `math { title, body }`. Also exports `TRADE_SLUGS` for routing / sitemap consumers.
+- [`src/pages/TradePage.jsx`](src/pages/TradePage.jsx) (new) — shared template. Six sub-components: `ChapterHead` (inlined to keep the page self-contained — same shape as `AIReceptionist.jsx`'s local `ChapterHead`), `TradeHero` (consumes `trade.hero`), `TheMath` (consumes `trade.math`), `TheFlow` (static — same 3 steps as `/ai-receptionist`), `TheOffer` (static $497 + risk reversal + ownership note, with per-trade `?ref={slug}` on the CTA), `ClosingCTA` (per-trade `?ref={slug}`). Default export takes a `trade` prop and renders the full page.
+- [`src/routes.jsx`](src/routes.jsx) — added `TradePage` + `TRADES` imports, three wrapper components (`HvacPage`, `ElectriciansPage`, `PlumbersPage`) that pass the right `trade` prop, and three new route entries before the catch-all. Wrappers chosen over inline lambdas because vite-react-ssg's prerender handles named function references more reliably.
+- [`src/Layout.jsx`](src/Layout.jsx) — added three `ROUTE_META` entries (`/hvac`, `/electricians`, `/plumbers`) with trade-specific titles and descriptions for SERP relevance and link-preview accuracy.
+
+The sitemap will pick up the three new prerendered routes automatically on the next `npm run build` via [`scripts/generate-sitemap.mjs`](scripts/generate-sitemap.mjs) (per the 2026-04-25 dynamic-sitemap entry below). No manual sitemap edit needed.
+
+**Verification.** Dev server reloaded via Vite HMR. All three pages navigate cleanly with no console errors. `/hvac` accessibility snapshot confirms editorial masthead "AI RECEPTIONIST · CHARLOTTE HVAC · SUMMER MMXXVI", H1 with the trade-specific copy + italic line, sub copy with HVAC examples ("AC failures, weekend furnace breakdowns, storm-damaged units"), both CTAs ("Reserve a setup spot" + "See the full spec"), scarcity strip with $497 + ten spots + July 13. `/electricians` and `/plumbers` confirmed via DOM eval — correct masthead per trade, correct H1 + math heading, every CTA passes `?ref={trade}`. Title meta is unset in dev (vite-react-ssg's `Head` component defers to the prerender pass); meta resolves correctly on the production build.
+
+**Out of scope this pass.** The relationship-channel pages (`/salons`, `/auto-shops`, `/restaurants`) are slice 3b — they need their own template (Bundle-led, not Receptionist-led) and per-vertical pain copy. Those will get drafted after this slice is reviewed. The Missed Call Calculator (`/missed-call-calculator`) is slice 4. Trade-specific paid-ad creative and outreach templates live outside this repo (per the v2 checklist § "Paid-ad geo discipline" — Charlotte MSA only, video creative with founders' faces, lead with ownership-transfer story).
+
+**Voice notes.** Per-trade Hero copy passed through the humanizer rules — no "X, not Y" contrastive constructions, no imperative trio cadence, no banned vocabulary. The H1 italic lines ("Don't lose the call.", "Your AI takes the call.", "Book the truck before the call drops.") pair the painkiller name with action without the symmetric contrast pattern. Math section bodies use concrete numbers ($700–$1,000, 30% miss rate, $60K–$90K) and concrete scenarios (Saturday night AC failure, panel failure, Sunday morning water heater) rather than abstract loss-of-revenue framing.
+
+**Principle reinforced.** *One template, three destinations, three voices.* Building three bespoke pages would have meant ~700 lines of duplicated structural code with copy variation buried inside JSX. Building three thin data entries against a shared template means the structural decisions (offer-card layout, scarcity strip, section numbering) ship once and stay consistent — and adding a fourth trade (garage doors, roofing) becomes a ~30-line data entry plus three lines in `routes.jsx` and `Layout.jsx`. The abstraction earns its keep on the second use; the third use is free. Same logic that drove the `services-data.js` + `ServiceDetail.jsx` pattern for the three service pages (`/services/ai-integration`, `/services/websites`, `/services/process-modernization`).
+
+---
+
 ### 2026-04-26 — Trades-wedge reframe: homepage, AIReceptionist anti-SaaS, chat agent
 
 **What.** Slice 2 of the Marc Lou v2 implementation arc. Three coordinated changes that shift the cold-traffic path from "Charlotte SMB" to "Charlotte trades, AI receptionist as the painkiller, sold against national SaaS on local + ownership-transfer":
