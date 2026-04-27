@@ -1,4 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
 // Vercel: extend the function timeout from the 10s default. Streaming
 // responses are short (Haiku 4.5 typically finishes in <5s) but the
@@ -159,35 +161,51 @@ const client = new Anthropic();
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/* Per-IP rate limit. Best-effort: module-level state is shared within a
-   single Vercel container instance, but Vercel can spin up parallel
-   instances and recycle them on cold start, so a determined attacker
-   spreads across instances. Vercel's platform-level DDoS protection
-   handles the wider-blast case; this layer just stops one client from
-   hammering one instance. 12/min/IP is generous for normal chat. */
-const RATE_LIMIT_WINDOW_MS = 60_000;
-const RATE_LIMIT_MAX = 12;
-const RATE_LIMIT_MAP_CAP = 1000;
-const rateLimits = new Map();
+/* Per-IP rate limit, distributed via Upstash Redis (free tier covers
+   TSD's expected volume — 10K commands/day, 256MB storage). Sliding
+   window of 30 requests per 10 minutes per IP: a real conversation
+   runs 5-15 messages, so legit users have ~2x headroom while aggressive
+   scripts trip in the first 30 seconds.
 
-function checkRateLimit(ip) {
+   Replaces an earlier in-memory implementation that worked for a single
+   warm container but bypassed during cold-start scaling — Upstash is
+   shared state across every container, so a script can't dodge by
+   spreading requests across instances.
+
+   Fail-open behavior: if UPSTASH_REDIS_REST_URL or _TOKEN are missing,
+   or if Upstash is unreachable, the limiter no-ops and the agent stays
+   functional. Vercel's platform-level DDoS protection still handles the
+   wider-blast case while Upstash is down. */
+let ratelimit = null;
+const upstashUrl = process.env.UPSTASH_REDIS_REST_URL;
+const upstashToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+if (upstashUrl && upstashToken) {
+  const redis = new Redis({ url: upstashUrl, token: upstashToken });
+  ratelimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(30, "10 m"),
+    analytics: true,
+    prefix: "tsd-agent",
+  });
+}
+
+async function checkRateLimit(ip) {
   if (!ip) return { allowed: true };
-  const now = Date.now();
-  let entry = rateLimits.get(ip);
-  if (!entry || now > entry.resetAt) {
-    entry = { count: 0, resetAt: now + RATE_LIMIT_WINDOW_MS };
+  if (!ratelimit) return { allowed: true };
+  try {
+    const result = await ratelimit.limit(ip);
+    return {
+      allowed: result.success,
+      retryAfter: Math.max(1, Math.ceil((result.reset - Date.now()) / 1000)),
+      limit: result.limit,
+      remaining: result.remaining,
+    };
+  } catch (e) {
+    // Upstash request failed — fail open and log so the outage is
+    // visible in Vercel logs without taking the agent down.
+    console.warn("[/api/agent] Rate-limit check failed:", e?.message || e);
+    return { allowed: true };
   }
-  entry.count++;
-  rateLimits.set(ip, entry);
-  if (rateLimits.size > RATE_LIMIT_MAP_CAP) {
-    // Soft eviction: drop the oldest 100 entries to keep the map bounded.
-    const keys = Array.from(rateLimits.keys()).slice(0, 100);
-    for (const k of keys) rateLimits.delete(k);
-  }
-  return {
-    allowed: entry.count <= RATE_LIMIT_MAX,
-    retryAfter: Math.max(1, Math.ceil((entry.resetAt - now) / 1000)),
-  };
 }
 
 function getClientIP(req) {
@@ -275,9 +293,11 @@ export default async function handler(req, res) {
   }
 
   const ip = getClientIP(req);
-  const rl = checkRateLimit(ip);
+  const rl = await checkRateLimit(ip);
   if (!rl.allowed) {
     res.setHeader("Retry-After", String(rl.retryAfter));
+    if (rl.limit != null) res.setHeader("X-RateLimit-Limit", String(rl.limit));
+    if (rl.remaining != null) res.setHeader("X-RateLimit-Remaining", String(rl.remaining));
     res.status(429).json({
       error: `Too many requests. Wait ${rl.retryAfter}s and try again.`,
     });

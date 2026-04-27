@@ -121,6 +121,49 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-26 — Slice 5b: chat agent rate limit upgraded to Upstash (distributed)
+
+**What.** Replaced the in-memory per-IP rate limit on `/api/agent` with a distributed sliding-window limit backed by Upstash Redis. The previous implementation was self-acknowledged as "best-effort" — it held state in a module-level `Map` shared within a single Vercel container, but cold-start scaling created parallel instances that an attacker could spread requests across. Upstash gives shared state across every container so the limit holds globally.
+
+| | Before (in-memory) | After (Upstash sliding window) |
+|---|---|---|
+| State scope | Per-container `Map` | Distributed Redis (cross-container) |
+| Window | 60s fixed | 10m sliding |
+| Limit | 12 req | 30 req |
+| Bypass via cold-start | Yes | No |
+| Failure mode | Always works (no external dep) | Fail-open if Upstash unreachable |
+
+The new limit shape (30 per 10 min sliding) covers a long real conversation with ~2× headroom (5–15 messages is typical) while tripping aggressive scripts well inside the first 30 seconds. The previous 12/min limit was tight on burst but reset every 60s — a script could send 12 → wait → 12 → wait at 720/hour from one IP. The 10-minute sliding window caps that pattern at 180/hour.
+
+Per-request flow now:
+1. Get client IP (`x-forwarded-for` → first hop, with `x-real-ip` and `socket.remoteAddress` fallbacks — unchanged).
+2. `await ratelimit.limit(ip)` against Upstash. Returns `{ success, limit, remaining, reset }`.
+3. If not `success`: respond `429` with `Retry-After`, `X-RateLimit-Limit`, and `X-RateLimit-Remaining` headers. Body still includes the human-readable retry message the existing client expects.
+4. If `success` (or Upstash is unreachable / unconfigured): proceed to the existing handler.
+
+**Fail-open behavior on purpose.** If `UPSTASH_REDIS_REST_URL` or `UPSTASH_REDIS_REST_TOKEN` are missing (e.g. Nash hasn't set them in Vercel yet), or if Upstash returns an error (outage, rate limit on the free tier, transient network error), the limiter no-ops and logs `[/api/agent] Rate-limit check failed: <reason>` to Vercel logs. The agent stays functional during Upstash incidents. Vercel's platform-level DDoS protection covers the wider-blast case while Upstash is degraded.
+
+**Setup task for you (one-time, before paid traffic flips on).** Create a free Upstash account → console.upstash.com → Create Database → Type: Regional Redis → pick the region closest to Vercel's deployment region (default `us-east-1`). Copy the REST URL + REST Token from the database overview and add both to Vercel → Project → Settings → Environment Variables as `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`. Free tier: 10,000 commands/day + 256MB storage. At expected volume (~100 conversations/day → ~500 rate-limit checks/day) we use ~5% of the daily command quota.
+
+**Files touched.**
+- [`api/agent.js`](api/agent.js) — added `@upstash/ratelimit` + `@upstash/redis` imports; replaced the in-memory `RATE_LIMIT_*` constants + `rateLimits Map` + sync `checkRateLimit` with a lazy-initialized `Ratelimit` instance + async `checkRateLimit`; updated the call site in `handler` to `await checkRateLimit(ip)` and added the `X-RateLimit-Limit` / `X-RateLimit-Remaining` response headers when a limit decision is available.
+- [`package.json`](package.json) + `package-lock.json` — added `@upstash/ratelimit` and `@upstash/redis` dependencies (4 packages total with transitive deps; ~50KB combined).
+- [`.env.example`](.env.example) — added `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` rows with full setup instructions including the fail-open behavior note.
+- [`README.md`](README.md) — added a "Server-side env vars" subsection under Environment variables with `ANTHROPIC_API_KEY` (existing but undocumented in the README) and the two new Upstash vars. Documents the fail-open behavior so a future contributor isn't surprised.
+
+**Verification.** `node --check api/agent.js` passes (syntax). `npm run build` succeeds with all 19 prerendered routes regenerated and sitemap rebuilt — confirms the new server-side imports don't leak into the React side. The actual rate-limit behavior is untestable in dev (Vite doesn't run serverless functions; the existing chat-agent gotcha applies). Real verification happens after Vercel deploy: hit `/api/agent` 31 times in 10 minutes from one IP and confirm the 31st returns `429` with `Retry-After`, plus check the Upstash dashboard for analytics events on the `tsd-agent:` key prefix.
+
+**Out of scope this pass.**
+- **Frontend 429 handling.** [`TSDAgent.jsx`](src/components/TSDAgent.jsx)'s existing error bar shows `Request failed (429)` generically; a custom message ("you're sending messages too fast — wait a couple of minutes") would read better but isn't urgent. The existing UX surfaces the failure cleanly enough.
+- **Global daily endpoint cap.** A second limit shape (e.g. 1,000 messages/day across all IPs) would protect against a wide-spread distributed attack that individually slips under the per-IP limit. Not adding now because the per-IP layer + Vercel platform DDoS + Anthropic spend cap stack already covers the realistic threat. Add if real abuse data shows the gap.
+- **Token-budget limit.** A separate cap on input/output tokens per IP per hour would prevent token-bomb attacks that send small numbers of huge messages. Same rationale: existing layered defense is enough until evidence says otherwise.
+
+**Voice notes.** Code comments use plain operator-direct language. The new rate-limit comment block names the design choice, the trade-off (fail-open), and the fallback layer (Vercel DDoS) so a future maintainer doesn't have to re-derive the reasoning.
+
+**Principle reinforced.** *Fail open on auxiliary protection layers; fail closed on critical paths.* Rate limiting is auxiliary — it caps cost and prevents abuse, but the agent's primary job is to answer the visitor's question. If Upstash is down, throttling new visitors because we can't check the limit is worse than serving them with no limit (Vercel's edge handles wide-scale DDoS regardless). Same logic that drives the chat agent's "answer plainly when there's no signed client" rule: when a defense or context layer is degraded, prefer the path that keeps the user-facing surface working over the path that's "safer" for our infrastructure. Critical paths (auth, payment, contract signing) flip the rule — there, fail closed.
+
+---
+
 ### 2026-04-26 — Slice 5a: WhyUs rewrite, ?ref= form capture, scarcity copy normalized
 
 **What.** Three coordinated cleanup edits closing the v2 P2 / P3 list (everything except the chat-agent rate limiter, which is deferred to slice 5b because it needs persistent state — Vercel KV or Upstash Redis — that doesn't earn its keep until paid traffic flips on).

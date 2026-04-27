@@ -73,6 +73,18 @@ All client-side env vars must be `VITE_`-prefixed. Set them in Vercel → Projec
 
 Each analytics provider and Sentry no-ops when its env var is unset, so dev runs stay clean.
 
+### Server-side env vars
+
+These are read by the `/api/agent` Vercel serverless function — no `VITE_` prefix because they must stay out of the browser bundle. Set them only in Vercel → Project → Settings → Environment Variables (not in `.env.local`, since Vite doesn't run serverless functions in dev anyway).
+
+| Variable | Purpose | Required? |
+|---|---|---|
+| `ANTHROPIC_API_KEY` | Claude API key for the chat agent. Get one at [console.anthropic.com](https://console.anthropic.com). | yes for the agent to work |
+| `UPSTASH_REDIS_REST_URL` | Upstash Redis REST URL for distributed per-IP rate limiting on `/api/agent` (sliding window, 30 req / 10 min / IP). Free tier covers expected volume. Set up at [console.upstash.com](https://console.upstash.com) → Create Database → Regional Redis. | optional (rate limiter no-ops if unset) |
+| `UPSTASH_REDIS_REST_TOKEN` | Companion REST token for Upstash. Same database overview tab. | optional (rate limiter no-ops if unset) |
+
+When the Upstash vars are unset or Upstash is unreachable, the rate limiter fails open (allows all requests) and logs a warning — the agent stays functional during outages, with Vercel's platform-level DDoS protection as the only remaining safeguard.
+
 ## Conventions
 
 ### `PROJECT_LOG.md` is the source of truth for *why*
