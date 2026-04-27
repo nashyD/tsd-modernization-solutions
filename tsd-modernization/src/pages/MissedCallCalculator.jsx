@@ -76,7 +76,7 @@ function ClosingCTA() {
         fontFamily: "var(--font-display)", fontStyle: "italic",
         fontSize: "18px", lineHeight: 1.5, color: v("text-muted"), marginBottom: "24px",
       }}>
-        Ten setup spots. Last start: <span style={{ color: v("accent") }}>July 13</span>. After August 31, the agent is yours.
+        Ten spots. Last start: <span style={{ color: v("accent") }}>July 13</span>. After August 31, the agent is yours.
       </p>
       <Link to="/ai-receptionist">
         <RippleButton variant="ghost" style={{ padding: "14px 32px", fontSize: "15px" }}>

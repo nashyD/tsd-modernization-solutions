@@ -174,9 +174,9 @@ function Hero() {
           textShadow: "0 1px 4px rgba(0,0,0,0.85)",
         }}>
           <span style={{ flex: "0 0 32px", height: "1px", background: "rgba(232,224,212,0.3)" }} />
-          <span>Ten Spots</span>
+          <span>Ten spots</span>
           <span style={{ color: C.carolinaLight, fontSize: "7px" }}>{"◆"}</span>
-          <span>Last project start</span>
+          <span>Last start</span>
           <span style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 600,
             fontSize: "14px", letterSpacing: "0", textTransform: "none",

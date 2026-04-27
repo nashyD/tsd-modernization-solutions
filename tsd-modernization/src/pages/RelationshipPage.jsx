@@ -162,7 +162,7 @@ function ClosingCTA({ rel }) {
         fontSize: "15px", lineHeight: 1.65, color: v("text-muted"),
         marginBottom: "28px",
       }}>
-        Ten cohort spots, last project start <span style={{
+        Ten spots. Last start: <span style={{
           fontFamily: "var(--font-display)", fontStyle: "italic", color: v("accent"),
         }}>July 13</span>. 100% money-back guarantee.
       </p>

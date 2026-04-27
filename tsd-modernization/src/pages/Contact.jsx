@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { C, v, useFadeIn, SectionHeader, RippleButton } from "../shared";
 import { CheckIcon } from "../icons";
 import PageShell from "./PageShell";
@@ -60,6 +61,13 @@ function ContactForm() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const [ref, fadeStyle] = useFadeIn(0);
+  /* Lead-source attribution: every CTA on the site that wants to be tracked
+     passes ?ref={source} (e.g. /contact?ref=hvac, ?ref=calculator,
+     ?ref=ai-receptionist). We surface it as both a subject-line prefix
+     ("[hvac] New inquiry from...") and a custom `source` field in the
+     Web3Forms body so the founders can filter their inbox by channel. */
+  const [searchParams] = useSearchParams();
+  const refSource = searchParams.get("ref") || "";
 
   const inputStyle = {
     padding: "14px 18px", borderRadius: "12px",
@@ -74,17 +82,19 @@ function ContactForm() {
     setSending(true);
     setError("");
     try {
+      const subjectPrefix = refSource ? `[${refSource}] ` : "";
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
           access_key: import.meta.env.VITE_WEB3FORMS_KEY,
-          subject: `New inquiry from ${formData.name || "website visitor"}`,
+          subject: `${subjectPrefix}New inquiry from ${formData.name || "website visitor"}`,
           from_name: "TSD Modernization Solutions Website",
           replyto: formData.email,
           name: formData.name, email: formData.email,
           business: formData.business || "(not provided)",
           message: formData.message || "(no message)",
+          source: refSource || "(direct)",
           botcheck: formData.botcheck,
         }),
       });

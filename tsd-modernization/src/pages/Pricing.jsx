@@ -26,7 +26,7 @@ function CohortMasthead() {
       <span style={{ flex: "0 0 44px", height: "1px", background: v("divider") }} />
       <span>Founding Cohort</span>
       <span style={{ color: v("accent"), fontSize: "7px" }}>{"◆"}</span>
-      <span>Ten Spots</span>
+      <span>Ten spots</span>
       <span style={{ color: v("accent"), fontSize: "7px" }}>{"◆"}</span>
       <span>Summer MMXXVI</span>
       <span style={{ flex: "0 0 44px", height: "1px", background: v("divider") }} />
@@ -229,7 +229,7 @@ function ClosingNote() {
         fontFamily: "var(--font-display)", fontStyle: "italic",
         fontSize: "16px", lineHeight: 1.65, color: v("text-muted"),
       }}>
-        Last project start: <span style={{ color: v("text") }}>July 13</span>. We deliver
+        Last start: <span style={{ color: v("text") }}>July 13</span>. We deliver
         to handoff, then the season closes.
       </p>
     </div>

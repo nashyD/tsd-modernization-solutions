@@ -2,15 +2,19 @@ import { C, v, SectionHeader, useFadeIn } from "../shared";
 import { CheckIcon, XIcon } from "../icons";
 import PageShell from "./PageShell";
 
+/* Comparison axes — rewritten 2026-04-26 to swap generic claims (modern
+   stack, AI expertise, post-launch support — table stakes for any agency)
+   for actual structural differentiators a national agency or freelancer
+   can't match. The "Affordable" row was deliberately dropped per Marc's
+   rule: never compete on price as a positioning axis — it makes the offer
+   feel cheap and invites a race-to-the-bottom comparison. */
 const ROWS = [
-  { feature: "Personalized service", tsd: true, agency: false, freelancer: true, diy: false },
-  { feature: "Modern tech stack", tsd: true, agency: true, freelancer: "varies", diy: false },
-  { feature: "Full documentation & training", tsd: true, agency: "extra", freelancer: false, diy: false },
-  { feature: "Affordable for small business", tsd: true, agency: false, freelancer: true, diy: true },
-  { feature: "AI integration expertise", tsd: true, agency: "extra", freelancer: "varies", diy: false },
-  { feature: "48-hour proposal turnaround", tsd: true, agency: false, freelancer: false, diy: "n/a" },
-  { feature: "Post-launch support", tsd: true, agency: "extra", freelancer: "varies", diy: false },
-  { feature: "Local (Charlotte area)", tsd: true, agency: false, freelancer: "varies", diy: "n/a" },
+  { feature: "Founder direct support (no ticket queue)", tsd: true, agency: false, freelancer: "varies", diy: "n/a" },
+  { feature: "Source code + repo ownership at handoff", tsd: true, agency: "extra", freelancer: "varies", diy: true },
+  { feature: "Claude + GitHub continuity (no vendor lock-in)", tsd: true, agency: false, freelancer: false, diy: false },
+  { feature: "48-hour written proposal", tsd: true, agency: false, freelancer: "varies", diy: "n/a" },
+  { feature: "Money-back if we miss the mark", tsd: true, agency: false, freelancer: false, diy: "n/a" },
+  { feature: "Charlotte / Gaston local (no offshoring, no account managers)", tsd: true, agency: false, freelancer: "varies", diy: "n/a" },
 ];
 
 function CellVal({ val }) {

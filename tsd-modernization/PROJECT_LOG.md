@@ -121,6 +121,53 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-26 — Slice 5a: WhyUs rewrite, ?ref= form capture, scarcity copy normalized
+
+**What.** Three coordinated cleanup edits closing the v2 P2 / P3 list (everything except the chat-agent rate limiter, which is deferred to slice 5b because it needs persistent state — Vercel KV or Upstash Redis — that doesn't earn its keep until paid traffic flips on).
+
+1. **`WhyUs.jsx` comparison rewrite.** Eight generic rows ("Personalized service · Modern tech stack · Full documentation · Affordable for small business · AI integration expertise · 48-hour proposal · Post-launch support · Local") replaced with six structural differentiators a national agency or freelancer can't match: *Founder direct support (no ticket queue) · Source code + repo ownership at handoff · Claude + GitHub continuity (no vendor lock-in) · 48-hour written proposal · Money-back if we miss the mark · Charlotte / Gaston local (no offshoring, no account managers).* The "Affordable for small business" row was deliberately dropped per Marc's rule: never compete on price as a positioning axis — it makes the offer feel cheap and invites a race-to-the-bottom comparison. The TSD/Agency/Freelancer/DIY column structure stays; truth values (`true / false / "extra" / "varies" / "n/a"`) per cell were re-evaluated for each new row.
+
+2. **`?ref=` capture in [`Contact.jsx`](src/pages/Contact.jsx).** The contact form now reads the URL `?ref=` query param via `useSearchParams` and threads it through the Web3Forms submission in two places: a subject-line prefix (`"[hvac] New inquiry from John Smith"` instead of `"New inquiry from John Smith"`) and a custom `source` field in the JSON body (`source: "hvac"` or `source: "(direct)"` if no ref). Web3Forms forwards both to the founders' inbox so leads can be filtered by channel — `?ref=calculator` lands tagged calculator, `?ref=hvac` lands tagged hvac, etc. Closes the P3 task that's been pending across every other `?ref=` URL on the site (`/contact?ref=ai-receptionist`, `?ref=hvac`, `?ref=salons`, `?ref=calculator`, …) — they all attribute correctly now without per-source backend code.
+
+3. **Scarcity copy standardization.** Marc's rule: same wording, same counter, same urgency framing, every page. The site had drifted into four phrasings for the cap (*Ten Spots · Ten spots · Ten setup spots · Ten cohort spots*) and three for the date (*Last project start · Last setup start · last project start*). Normalized to **"Ten spots"** + **"Last start: July 13"** site-wide. Long-form FAQ prose (the `/pricing` FAQ entry that says "capped at ten clients" + "Last project start is July 13") and the `/pricing` ROUTE_META description left alone — those are deliberate context that benefits from the longer phrasing.
+
+**Files touched.**
+- [`src/pages/WhyUs.jsx`](src/pages/WhyUs.jsx) — `ROWS` array replaced (8 rows → 6 rows). Inline comment above the array documents the rewrite + the dropped "Affordable" row + Marc's price-as-axis rule.
+- [`src/pages/Contact.jsx`](src/pages/Contact.jsx) — added `useSearchParams` import; `ContactForm` reads `searchParams.get("ref")` into a `refSource` constant; `handleSubmit` builds a `subjectPrefix` (`[ref] ` or empty) and adds `source: refSource || "(direct)"` to the Web3Forms JSON body.
+- [`src/pages/Home.jsx`](src/pages/Home.jsx) — hero scarcity strip "Ten Spots · Last project start" → "Ten spots · Last start".
+- [`src/pages/Pricing.jsx`](src/pages/Pricing.jsx) — `CohortMasthead` "Ten Spots" → "Ten spots"; `ClosingNote` "Last project start: July 13" → "Last start: July 13".
+- [`src/pages/AIReceptionist.jsx`](src/pages/AIReceptionist.jsx) — `ClosingCTA` "Ten setup spots." → "Ten spots."
+- [`src/pages/TradePage.jsx`](src/pages/TradePage.jsx) — `ClosingCTA` "Ten setup spots." → "Ten spots."
+- [`src/pages/MissedCallCalculator.jsx`](src/pages/MissedCallCalculator.jsx) — `ClosingCTA` "Ten setup spots." → "Ten spots."
+- [`src/pages/RelationshipPage.jsx`](src/pages/RelationshipPage.jsx) — `ClosingCTA` "Ten cohort spots, last project start July 13" → "Ten spots. Last start: July 13."
+
+The scarcity-strip wording inside mastheads renders uppercase via CSS `textTransform: uppercase`, so the source-code change from "Ten Spots" → "Ten spots" doesn't change visual output on the strip — but it standardizes the source-of-truth wording so future copy edits don't drift again. The visible visual change is the shorter "LAST START" replacing "LAST PROJECT START" in the masthead strips and the closing-note text on the receptionist + relationship pages.
+
+**Why.**
+
+*WhyUs:* the old comparison row set ("Personalized service · Modern tech stack · AI integration expertise · Post-launch support") could describe any local agency. Marc's rule for comparison tables is to lead with axes only TSD wins on — and ideally axes that surface why TSD wins them. *Founder direct support (no ticket queue)* and *Charlotte / Gaston local (no offshoring, no account managers)* aren't just claims; they're statements about how TSD is structurally different from a national agency. *Source code + repo ownership at handoff* and *Claude + GitHub continuity (no vendor lock-in)* are the post-handoff promises that nobody else in the category makes. *Money-back if we miss the mark* is the risk-reversal that turns the offer from "we'll try" into "we'll deliver." Each row earns its place; nothing reads as table stakes.
+
+The dropped "Affordable" row deserves its own note. Marc's argument: a comparison table that includes price-as-axis invites the reader to mentally substitute a cheaper provider and reach a different conclusion. The right framing is to compete on what the cheaper provider structurally cannot offer (in TSD's case: founder-on-call, ownership transfer, local presence) and let the price be a reveal at `/pricing` rather than a positioning anchor.
+
+*`?ref=` capture:* the site has been laying breadcrumbs for ~10 days — every CTA passes a `?ref` param so GA4 / Plausible can attribute traffic per source. But none of those refs were being captured into the founders' actual inbox, which meant a lead arriving from `/hvac` looked identical to a lead arriving from `/contact` directly. That breaks the feedback loop on which channel is converting. One small Contact.jsx change closes the loop without any backend infrastructure (Web3Forms accepts arbitrary JSON fields).
+
+*Scarcity copy:* the drift was small (four wordings for the same cap, three for the same date) but compounded across 8 surfaces. A buyer who scrolls from `/` to `/ai-receptionist` to `/pricing` sees three slightly different phrasings of the same scarcity, and the inconsistency reads as imprecision. Normalizing to one phrasing = one less micro-friction in the buyer's read.
+
+**Verification.**
+- `/why-us` snapshot confirms 6 rows, no Affordable row, "Founder direct support" first. No console errors.
+- `/contact?ref=hvac` form submission verified by patching `window.fetch` to capture the Web3Forms request payload — confirmed `subject: "[hvac] New inquiry from Test Buyer"` and `source: "hvac"` in the JSON body. Without `?ref` the subject is unprefixed and `source: "(direct)"` (existing path test fits because the param defaults to `""`).
+- Homepage scarcity strip eval confirms `Ten spots`, `Last start`, `July 13` in the rendered DOM. Per-file source-edit confirmation across `Home.jsx`, `Pricing.jsx`, `AIReceptionist.jsx`, `TradePage.jsx`, `MissedCallCalculator.jsx`, `RelationshipPage.jsx`. No console errors on any page.
+
+**Out of scope this pass / deferred to slice 5b.**
+- **Chat agent rate limiter** ([`api/agent.js`](api/agent.js)). Vercel serverless functions are stateless per invocation, so a token-bucket needs an external store (Vercel KV or Upstash Redis). Both add a paid-tier dependency for an abuse vector that doesn't exist yet (zero paid traffic, zero DDoS pattern in the chat agent logs). Deferred until paid ads actually flip on — the right rate-limit numbers depend on real traffic shape, and shipping a generous default now risks both under-protection (still abusable) and over-restriction (legit visitors throttled).
+- **Build-in-public discipline + paid-ad geo discipline** (v2 P2 items). Both are operational — Nash on LinkedIn 3x/week, Charlotte MSA-only ads with founder-faces creative. Not in-repo work.
+
+**Voice notes.** New copy passed through the humanizer rules. The WhyUs row labels avoid the symmetric contrast pattern even where it would have read naturally — "Founder direct support (no ticket queue)" instead of "Founder direct, not ticket queue" — because the parenthetical reads as a clarification rather than a contrastive rhythm. Same logic for "Charlotte / Gaston local (no offshoring, no account managers)." The Contact form's subject-prefix + custom-field framing keeps the founders' inbox readable: `[hvac]` is short enough to scan, `source: hvac` is plainly named.
+
+**Principle reinforced.** *Drift is the cost of not standardizing once.* The scarcity copy started from the same source phrase ("Ten spots, last project start July 13") and split into four variants over two weeks of independent edits. Each individual variant was reasonable in its local context; the cumulative effect was inconsistency. The fix is a single standardization pass + a written rule (this entry) so future surfaces start from the same phrase. Same logic for the `?ref=` capture: the breadcrumbs were laid one CTA at a time across ten days with the intent of "we'll wire it to the inbox later" — and "later" never arrives unless someone draws the line. Slice 5a draws it.
+
+---
+
 ### 2026-04-26 — Slice 4: Missed Call Calculator (/missed-call-calculator + embedded on /pricing)
 
 **What.** Free-tool funnel calculator with two consumers: a standalone page at `/missed-call-calculator` (SERP / sharing surface) and an embedded section on `/pricing` (in-context for buyers comparing tiers). Four-question form (trade · unanswered hours/week · average ticket size · average jobs/week), no signup, no email gate, instant on-page report with three computed numbers (missed calls/week, lost revenue/month, annual revenue at risk) plus a one-paragraph "what TSD would do here" callout and a CTA into the AI Receptionist setup.

@@ -316,7 +316,7 @@ function ClosingCTA({ trade }) {
         fontFamily: "var(--font-display)", fontStyle: "italic",
         fontSize: "20px", lineHeight: 1.5, color: v("text"), marginBottom: "28px",
       }}>
-        Ten setup spots. Last start: <span style={{ color: v("accent") }}>July 13</span>.
+        Ten spots. Last start: <span style={{ color: v("accent") }}>July 13</span>.
       </p>
       <Link to={contactHref}>
         <RippleButton variant="primary" style={{ padding: "14px 36px", fontSize: "15px" }}>
