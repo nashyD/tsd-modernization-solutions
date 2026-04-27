@@ -6,6 +6,7 @@ import { C, v, useTheme, DiamondDivider, RippleButton } from "./shared";
 import { TSDLogo, SunIcon, MoonIcon, MenuIcon, XIcon } from "./icons";
 import { trackPageView } from "./analytics.js";
 import TSDAgent from "./components/TSDAgent.jsx";
+import CallButton from "./components/CallButton.jsx";
 
 const NAV_ITEMS = [
   { label: "Services", to: "/services" },
@@ -375,6 +376,7 @@ export default function Layout() {
       </footer>
       <Analytics />
       <TSDAgent />
+      <CallButton />
     </>
   );
 }
