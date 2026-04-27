@@ -98,7 +98,7 @@ const ROUTE_META = {
   },
   "/contact": {
     title: "Contact Us — Book a Free Consultation | TSD Modernization Solutions",
-    description: "Reserve a Summer 2026 founding-cohort spot. Free 1-2 hour consultation, then a written proposal within 48 hours. Call 704-275-1410 or send us a message.",
+    description: "Reserve a Summer 2026 founding-cohort spot. Free 1-2 hour consultation, then a written proposal within 48 hours. Call 704-741-1746 or send us a message.",
   },
 };
 
@@ -366,7 +366,7 @@ export default function Layout() {
           Serving the Charlotte metro area including Gastonia, Belmont, and surrounding communities.
         </p>
         <p style={{ fontSize: "12px", color: v("text-dim"), marginTop: "8px" }}>
-          <a href="tel:+17042751410" style={{ color: "inherit" }}>(704) 275-1410</a>
+          <a href="tel:+17047411746" style={{ color: "inherit" }}>(704) 741-1746</a>
           {" · Open every day, 8am – 8pm"}
         </p>
         <p style={{ fontSize: "12px", color: v("text-dim"), marginTop: "16px" }}>

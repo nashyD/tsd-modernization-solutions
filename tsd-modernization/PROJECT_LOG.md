@@ -121,6 +121,72 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-27 — Published phone number swapped from GV (704) 275-1410 to Twilio (704) 741-1746
+
+**What.** TSD's published phone number on the website + agent knowledge changed from the Google Voice line `(704) 275-1410` to the new Twilio-owned line `(704) 741-1746`. Same Charlotte 704 area code; cosmetically identical to a caller. Nine source-of-truth references updated across seven files.
+
+**Why.** Slice 6b set up the voice receptionist on a Twilio number with the intent to forward GV → Twilio so the GV number stayed published. Two blockers killed that path: (1) Google Voice refuses to verify Twilio numbers as linked-forwarding destinations because GV detects them as VoIP and rejects voice verification; (2) Twilio inbound SMS for the GV verification code requires A2P 10DLC registration, which requires an EIN that hadn't arrived from the NC SoS yet. The cleanest unblock is to skip GV entirely — publish the Twilio number directly so calls arrive at the receptionist with no intermediate carrier hop. This is also the same architecture TSD will deploy to client receptionists in summer 2026 (each client gets a Twilio number, no GV layer), so building TSD's own line this way makes the client-deploy story coherent.
+
+The old GV number `(704) 275-1410` is being retired from public-facing surfaces but stays alive on Nash's GV account as a personal/overflow line until cancellation.
+
+**Files touched.**
+- [`index.html`](index.html) — JSON-LD `ProfessionalService.telephone` field updated for Google Knowledge Panel + structured data consumers.
+- [`content/tsd-knowledge.md`](content/tsd-knowledge.md) — "Other ways to reach us" section. Both the chat agent (this repo) and the voice receptionist (separate repo) read this file at startup, so updating here propagates to every agent surface.
+- [`api/agent.js`](api/agent.js) — three lead-capture failure-mode messages that fall back to "ask the visitor to call (704) ... directly" when Web3Forms is down.
+- [`src/Layout.jsx`](src/Layout.jsx) — footer phone link (visible on every page) + ROUTE_META description for `/contact` (used as SERP snippet + link-preview text).
+- [`src/pages/Contact.jsx`](src/pages/Contact.jsx) — NAP block (Name, Address, Phone — local-SEO signal).
+- [`src/pages/Team.jsx`](src/pages/Team.jsx) — three founder business-card components.
+
+**Companion changes in the [voice-receptionist repo](https://github.com/nashyD/voice-receptionist) (separate commit, [960a148](https://github.com/nashyD/voice-receptionist/commit/960a148)).**
+- [`tsd-knowledge.md`](https://github.com/nashyD/voice-receptionist/blob/main/tsd-knowledge.md) — synced to match this repo's brain.
+- [`tools.py`](https://github.com/nashyD/voice-receptionist/blob/main/tools.py) — `transfer_to_human` switched from Twilio SMS (which needs A2P 10DLC + EIN) to Twilio outbound voice (no compliance gating). On-call founder hears a TTS alert with the caller's number + reason + context; voicemail catches it if the founder doesn't answer.
+- [`main.py`](https://github.com/nashyD/voice-receptionist/blob/main/main.py) — `/twilio/voice` TwiML now starts with an optional `<Dial timeout="15">` block before `<Connect><Stream>` so calls ring the founder's cell first; if no pickup within 15s, TwiML falls through to the AI. Set `ON_CALL_FOUNDER_PHONE` in Fly secrets to enable; unset to have AI answer everything immediately.
+
+**Verification.** Dev preview at `/` confirms the footer renders `(704) 741-1746` linked to `tel:+17047411746`, with zero remaining references to the old number anywhere in the rendered DOM. No console errors. Voice repo `python -c 'import ast; ast.parse(open(...))'` passes for `main.py` + `tools.py`. Nash will run `fly deploy` to push the voice repo changes (Fly auto-deploy on GitHub push hasn't been reliable for this app — manual `fly deploy` from a local clone is the workaround until Fly's GitHub integration is reconfigured).
+
+**Voice notes.** No copy in the user-facing surfaces required tone changes — every reference was a phone number swap, no surrounding sentence needed editing. The chat agent's three "call (704) ... directly" fallback messages still read the same; only the digits changed.
+
+**Principle reinforced.** *Pick the simpler architecture when the elaborate one fights you.* The GV-fronts-Twilio plan was elegant on paper — keep the published number, layer AI behind it — but two hard blockers (GV's VoIP-detection refusal + Twilio's A2P-EIN gate) stacked up on it within an hour of starting setup. Switching to "publish the Twilio number directly" cost ~30 minutes of edits and zero ongoing complexity, vs. the stack of A2P registration + sole-prop SSN brand approval + waiting on GV to maybe accept the Twilio number on a re-verify. The number being a fresh Charlotte 704 made the cost of switching essentially zero — same area code, same local-feel for callers. Pre-launch is exactly when this kind of swap is cheap; doing it after the first signed client would have been much more painful.
+
+---
+
+### 2026-04-27 — Slice 6a: extracted shared agent knowledge into content/tsd-knowledge.md
+
+**What.** Pulled the TSD-facts portion of the chat agent's `SYSTEM_PROMPT` out of [`api/agent.js`](api/agent.js) and into a standalone markdown file at [`content/tsd-knowledge.md`](content/tsd-knowledge.md). The chat agent now composes its system prompt at module init by reading the markdown brain + concatenating a chat-surface delivery layer that stays inline. This sets up reuse: the upcoming voice receptionist (slice 6b, separate Python repo) reads the same brain and adds its own voice-surface delivery layer.
+
+The split:
+
+| Layer | Lives in | Contents |
+|---|---|---|
+| **Brain (shared)** | [`content/tsd-knowledge.md`](content/tsd-knowledge.md) | Who we are, operating window, service area, what we sell, anti-SaaS comparison, build mechanics, money mechanics, honest framing, **universal voice rules** (no X-not-Y, banned vocab, no fake clients) |
+| **Chat-surface delivery** | inline in [`api/agent.js`](api/agent.js) `CHAT_DELIVERY` const | "you are the chat widget", paragraph-style guidance, `capture_lead` tool instructions, chat-flavored tone calibration ("how much for a website" → good/bad responses) |
+| **Voice-surface delivery** | will live in the voice receptionist repo (slice 6b) | "you are the phone receptionist", short-sentence rules, no-markdown rule, plain-spoken numbers, `transfer_to_human` + voice-flavored `capture_caller_lead` tools, voice-flavored tone calibration |
+
+The brain explicitly documents the layering pattern at the top so a future maintainer (or a future TSD agent surface — SMS, email, in-app) understands the contract: edit facts in the brain, edit delivery in the surface.
+
+The brain also resolves a stale TODO from the earlier system prompt: it used to say *"AI receptionist stack: Still being finalized."* Now it specifies *"Pipecat (open-source voice framework) running on Fly.io, with Twilio for the phone line, Claude Haiku for the brain, ElevenLabs for the voice, and Deepgram for speech recognition. Each client deploy is a separate GitHub repo + Fly.io account that transfers at handoff."* That makes the chat agent's answer to "what stack do you use for the receptionist" specific instead of vague — and matches the actual stack TSD will deploy in slice 6b.
+
+**Why.** Two needs were colliding inside one prompt — the *facts* about TSD (price, founders, offers) and the *delivery rules for the chat surface* (paragraph-style, markdown bullets fine, capture_lead tool). The voice agent needs the same facts but very different delivery rules (short sentences, no markdown that gets read aloud, different tool names). Keeping a single prompt meant either copy-pasting facts into a second prompt and accepting drift, or generating runtime conditionals that fragment the prompt for different surfaces. Extracting facts to a standalone .md gives both surfaces one source of truth and lets each compose its own delivery layer cleanly.
+
+The standalone markdown is also better for editing as a *document* rather than as a JS template literal. Future fact updates (next pricing change, next founder addition, next offer) are now plain markdown edits with proper rendering and diff readability — no `\`...\`` template-literal escape gotchas, no risk of breaking the JS module.
+
+**Files touched.**
+- [`content/tsd-knowledge.md`](content/tsd-knowledge.md) (new) — the shared brain. ~110 lines of markdown. Documents the layering pattern at the top for future maintainers, then nine sections of facts + universal voice rules. The "AI receptionist stack" line specifies Pipecat + Fly.io + Twilio + Claude Haiku + ElevenLabs + Deepgram so the chat agent stops saying "still being finalized."
+- [`api/agent.js`](api/agent.js) — added `readFileSync` + `join` imports; replaced the inline ~110-line `SYSTEM_PROMPT` template literal with `TSD_KNOWLEDGE = readFileSync(...)` + a `CHAT_DELIVERY` const containing only the chat-surface-specific bits (header naming the surface, paragraph rule, `capture_lead` tool instructions, three sample chat exchanges); composed `SYSTEM_PROMPT = TSD_KNOWLEDGE + CHAT_DELIVERY`. Net change: ~-110 lines (template literal moved out).
+- [`vercel.json`](vercel.json) — added `functions["api/agent.js"].includeFiles = "content/**"` so the serverless function bundle includes the markdown file. Without this, Vercel's file-trace might or might not pick up the runtime `readFileSync` call; explicit `includeFiles` removes the ambiguity.
+
+**Verification.** `node --check api/agent.js` passes. Smoke test: read `content/tsd-knowledge.md` from Node and confirm it loads as 7830 chars with the expected first line. `npm run build` passes — all 19 prerendered routes regenerated, sitemap rebuilt. The chat agent's runtime behavior change is dev-untestable (existing Vite + serverless-function gotcha) but the system prompt content is byte-equivalent to the previous inline version (modulo intentional edits: removed the chat-only "one short paragraph" rule from the universal section, added the surface header, updated the "AI receptionist stack" line from "Still being finalized" to the now-specified Pipecat stack). Real verification happens after the next Vercel deploy by chatting with the agent.
+
+**Out of scope this pass / queued for slice 6b.**
+- The voice receptionist repo (Python + Pipecat). Will be a separate local repo at `/Users/nashdavis/Documents/TSD/TSD Modernization Solution/voice-receptionist/`, not pushed to GitHub until Nash picks the repo name + visibility.
+- Syncing `tsd-knowledge.md` between the two repos. Initial approach: copy-by-hand when the brain changes (rare). If sync friction becomes real, promote to a shared package or git submodule later.
+
+**Voice notes.** The brain's "Universal voice rules" section was carefully separated from chat-only rules. "One short paragraph at a time" stayed in `CHAT_DELIVERY` (chat surface) because voice doesn't have paragraphs. Markdown-emphasis rules also stayed in `CHAT_DELIVERY` because voice can't render markdown. Everything else (contractions, banned vocab, no fake clients, no exclamation overuse, no three-item parallel lists, no customer-service tics, no X-not-Y) is universal and lives in the brain — the voice agent inherits all of it without restating.
+
+**Principle reinforced.** *Separate the facts from the delivery, even before you have a second surface.* The chat agent worked fine with one combined prompt for ten weeks. The cost of the combined-prompt design wasn't visible until a second surface (voice) became the obvious next step. The right time to split was before drift created two slightly-different versions of the facts — i.e. now, before the voice agent ships. Same logic that drove the trades-data + relationships-data + TradePage / RelationshipPage split in slices 3a/3b: extract the data when you have evidence the structure will be reused, not before, but also not after the second consumer is already half-built with its own copy.
+
+---
+
 ### 2026-04-26 — Slice 5b: chat agent rate limit upgraded to Upstash (distributed)
 
 **What.** Replaced the in-memory per-IP rate limit on `/api/agent` with a distributed sliding-window limit backed by Upstash Redis. The previous implementation was self-acknowledged as "best-effort" — it held state in a module-level `Map` shared within a single Vercel container, but cold-start scaling created parallel instances that an attacker could spread requests across. Upstash gives shared state across every container so the limit holds globally.

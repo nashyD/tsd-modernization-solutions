@@ -8,7 +8,7 @@ import PageShell from "./PageShell";
 function ContactInfo() {
   const [ref, fadeStyle] = useFadeIn(0);
   const blocks = [
-    { label: "Call", value: "(704) 275-1410", href: "tel:+17042751410" },
+    { label: "Call", value: "(704) 741-1746", href: "tel:+17047411746" },
     { label: "Hours", value: "Every day · 8am – 8pm" },
     { label: "Service area", value: "Charlotte · Gastonia · Belmont" },
   ];
