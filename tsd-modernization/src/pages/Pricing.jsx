@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { C, v, useFadeIn, SectionHeader, Card, RippleButton } from "../shared";
 import { CheckIcon } from "../icons";
 import PageShell from "./PageShell";
+import MissedCallCalculatorWidget from "../components/MissedCallCalculatorWidget";
 
 /* Live scarcity counter — update these as contracts sign so the counter
    on each tier card stays honest. Currently 0 closed contracts; all open. */
@@ -389,6 +390,16 @@ export default function Pricing() {
           ))}
         </div>
         <WedgePointer />
+        <div style={{ padding: "80px 0 0" }}>
+          <SectionHeader
+            center
+            label="Free Tool"
+            title="See what your phone is"
+            titleAccent="costing you."
+            sub="Four questions, one number. No signup. Built for Charlotte HVAC, electricians, and plumbers."
+          />
+        </div>
+        <MissedCallCalculatorWidget />
         <FAQSection />
         <ClosingNote />
       </div>

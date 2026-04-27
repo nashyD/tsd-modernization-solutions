@@ -121,6 +121,63 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-26 — Slice 4: Missed Call Calculator (/missed-call-calculator + embedded on /pricing)
+
+**What.** Free-tool funnel calculator with two consumers: a standalone page at `/missed-call-calculator` (SERP / sharing surface) and an embedded section on `/pricing` (in-context for buyers comparing tiers). Four-question form (trade · unanswered hours/week · average ticket size · average jobs/week), no signup, no email gate, instant on-page report with three computed numbers (missed calls/week, lost revenue/month, annual revenue at risk) plus a one-paragraph "what TSD would do here" callout and a CTA into the AI Receptionist setup.
+
+The form + report + math live in a reusable widget at [`src/components/MissedCallCalculatorWidget.jsx`](src/components/MissedCallCalculatorWidget.jsx). Two consumers wrap it:
+
+- [`/missed-call-calculator`](src/pages/MissedCallCalculator.jsx) — standalone page chrome (Hero with "Free Tool · Charlotte Trades" masthead + ClosingCTA pointing at `/ai-receptionist`).
+- [`/pricing`](src/pages/Pricing.jsx) — embedded section between the wedge pointer and the FAQ, with its own SectionHeader ("◆ Free Tool · See what your phone is *costing you.*").
+
+The widget owns its own input state via `useState`; the Report only renders when an input snapshot exists, recomputes via `useMemo` whenever inputs change, and re-clicking the now-labelled "Recalculate" button updates it in place. Both consumers get identical form + report behavior.
+
+**Math.** Three constants drive the model:
+
+| Trade | Calls per off-hour | Source |
+|---|---|---|
+| HVAC | 0.10 | Conservative stage-zero estimate (peak summer can be 2–3× higher) |
+| Electrical | 0.04 | Conservative stage-zero estimate |
+| Plumbing | 0.08 | Conservative stage-zero estimate |
+
+Plus the v2 checklist's `NO_CALLBACK_RATE = 0.85` (industry benchmark for "of voicemails left during unanswered hours, ~85% of callers never call back").
+
+The pipeline: `unanswered_hours × call_density[trade] = calls_during_unanswered_hours` → `× 0.85 = lost_calls/week` → `× ticket_size × 4.33 = lost_revenue/month` → `× 12 = annual_revenue_at_risk`. A `lost_jobs/year` supporting number uses `lost_calls/week × 52`.
+
+The first-pass call-density values were 1.0 / 0.4 / 0.6 — sanity-checking with realistic inputs (HVAC, 80 unanswered hrs, $850 ticket) produced ~$3M/year at risk, which fails the credibility test before the buyer reaches the CTA. Tuned to 0.10 / 0.04 / 0.08 — the same inputs now produce $300K/year, which is high-but-believable for a busy peak-summer HVAC shop. Constants live at the top of the file so cohort data can refine them in one edit.
+
+**No PDF library.** Marc's "screenshot-worthy" rule is satisfied by the on-page report styling (large gradient hero number, three supporting stat cards, "What TSD would do here" Carolina-tinted callout). A small "Print or save as PDF" button at the bottom of the report fires `window.print()`; a print-only `@media print` block in the page's `<style>` hides the nav, footer, form, and Print button, leaving just the report when the buyer hits Save as PDF in their browser. Adds zero bytes vs ~150KB for jsPDF; can revisit if a real branded PDF turns out to be the conversion lever.
+
+**Report content.** Hero number ("Annual revenue at risk") + three supporting stats (Missed calls/week, Lost revenue/month, Lost jobs/year) — each with a small "how this was computed" note. Below that, a Carolina-bordered "What TSD would do here" callout in italic display font, three checkmark bullets (setup in a week, risk reversal, August 31 ownership transfer), and dual CTAs ("Reserve a setup spot" → `/contact?ref=calculator`, "See the full spec" → `/ai-receptionist`). A method footnote at the bottom explains the call-density benchmark + 85%-no-callback assumption and labels the output as "directional, not a quote" so the calculator stays honest when a buyer plugs in extreme inputs.
+
+**Why.** Free tools are the cheapest acquisition channel TSD can ship. A useful calculator is shareable in a way that a sales pitch isn't — an HVAC owner who runs the numbers and sees $300K/year at risk has a concrete reason to forward the link to a peer. The calculator also doubles as proof-of-work: a prospect who clicks "Reserve a setup spot" after seeing the math has self-qualified twice (knows the problem, believes the magnitude).
+
+The four-question shape matches Marc's friction-vs-value rule — every additional question costs completions; we asked the minimum needed for a believable estimate. No email gate by design; signup-gated calculators convert worse than open ones in Marc's published data, and the shareability premium of a no-gate tool compounds when the buyer screenshots the result.
+
+The CTA into `/ai-receptionist` (rather than a separate calculator-specific buy flow) keeps the funnel canonical: every cold path eventually lands on the same product page, where the anti-SaaS positioning + price + risk reversal close the buyer. The calculator's job is to surface the *number* in the buyer's head; `/ai-receptionist` does the rest.
+
+**Files touched.**
+- [`src/components/MissedCallCalculatorWidget.jsx`](src/components/MissedCallCalculatorWidget.jsx) (new) — reusable widget, ~310 lines. Owns the form state + report computation. Internal sub-components: `CalculatorForm` (controlled inputs + `valid` gate on submit), `Report` (`useMemo`-driven number computation + screenshot-worthy layout + print button), `ReportStat`. Constants `TRADE_CALL_DENSITY`, `TRADE_LABELS`, `NO_CALLBACK_RATE` at the top of the file. Print stylesheet inside the default export strips nav/footer/form for the "Save as PDF" path.
+- [`src/pages/MissedCallCalculator.jsx`](src/pages/MissedCallCalculator.jsx) (new) — standalone page wrapper, ~80 lines. Imports the widget and surrounds it with `Hero` (with `CalculatorMasthead` "Free Tool · Charlotte Trades · Summer MMXXVI") and `ClosingCTA`.
+- [`src/pages/Pricing.jsx`](src/pages/Pricing.jsx) — added the widget import + a new section between `<WedgePointer />` and `<FAQSection />`. The section has its own `SectionHeader` ("◆ Free Tool / See what your phone is *costing you.* / Four questions, one number. No signup. Built for Charlotte HVAC, electricians, and plumbers.") above the widget.
+- [`src/routes.jsx`](src/routes.jsx) — added `MissedCallCalculator` import and a `/missed-call-calculator` route entry placed between the relationship pages and `/testimonials`.
+- [`src/Layout.jsx`](src/Layout.jsx) — added the `/missed-call-calculator` `ROUTE_META` entry. Title leads with "Missed Call Calculator for Charlotte HVAC, Electricians & Plumbers" so the SERP and link-preview lead with the wedge.
+- `.claude/launch.json` (outside the repo) — repo path updated from `Claude TSD V Site` → `TSD Modernization Solution` to match the parent-directory rename that happened mid-slice. The `tsd-dev` server config now points at the live repo. Without this, the dev server fails to start because `cd` errors out on the now-deleted path.
+
+**Verification.** Restarted the dev server against the new path. On `/missed-call-calculator`: filled the form via `preview_fill` (HVAC default, 80 unanswered hours, $850 ticket, 25 jobs/week), clicked submit, eval-confirmed the rendered Report contains: missed calls/week = 7 (math: 80 × 0.10 × 0.85 = 6.8 → rounded), lost revenue/month = $25,027 (6.8 × $850 × 4.33), annual revenue at risk = $300,329 (the on-the-fly chain produces a slightly different last digit than the rounded intermediate; that's fine — the page does the multiplication in one expression). On `/pricing`: filled with different inputs (HVAC, 120 unanswered hours, $900 ticket, 30 jobs/week), confirmed in-page report renders below the form with annual at risk = $476,993 and lost revenue/month = $39,749 (math checks). The 3 pricing tiers, FAQ, and ClosingNote still render in their original positions; the calculator section sits between the wedge pointer and the FAQ as designed. No console errors on either page.
+
+**Out of scope this pass.**
+- **Server-side `?ref=` tagging.** The CTA passes `?ref=calculator` in the URL, so GA4 / Plausible see it. Capturing it as a tag in the Web3Forms inbox (so a calculator lead stands out from a generic contact-form lead) is the same P3 task that's pending for every other `?ref=` link on the site (`?ref=hvac`, `?ref=salons`, etc.). Wiring it for one source means wiring it for all — handled together in slice 5.
+- **Real PDF generation.** The print stylesheet covers the "I want a PDF of this" use case for now. A jsPDF-based branded PDF download is a future enhancement if conversions warrant the ~150KB bundle add.
+- **Discovery surface for the calculator.** No homepage or trade-page link to `/missed-call-calculator` yet. Initial traffic will come from sharing the URL directly (Marc's "build for sharing" rule applies — the product is the marketing). A small "Try the missed-call calculator →" callout on the trade pages or the homepage is a candidate for slice 5 if the calculator pulls real traffic.
+- **Industry-data citations.** The 0.10 / 0.04 / 0.08 call-density values are stage-zero estimates flagged as "directional, not a quote" in the page footnote. As the first cohort lands, replace these with real measured values per trade and tighten the language.
+
+**Voice notes.** Page copy passed through the humanizer rules — no "X, not Y" contrastive constructions, no imperative trio cadence, no banned vocabulary. The "What TSD would do here" callout uses operator-direct sentences (no marketing softeners like "we'd be happy to" or "we'd love to"). The method footnote is plainly worded ("Your real numbers will vary by season, geography, and ad spend — this is a directional estimate, not a quote") so a numerate buyer doesn't bounce on perceived overclaim.
+
+**Principle reinforced.** *Honest defaults outperform inflated ones.* The first-pass call densities produced numbers that would have made the calculator unusable as a credibility tool. A buyer who runs a $1.5M HVAC shop and sees "$3M/year at risk" knows the calculator is overclaiming and stops trusting the page — and the CTA below it. Tuning to defaults that produce believable numbers (the same shop now sees $300K/year, which is high-but-plausible) keeps the buyer engaged through the CTA. Same logic that drives the chat agent's "no clients yet, Summer 2026 is our first cohort" honesty rule: trust earned by undersold-but-true beats trust lost by oversold-and-doubted, every time.
+
+---
+
 ### 2026-04-26 — Slice 3b: relationship-channel landing pages (/salons, /auto-shops, /restaurants)
 
 **What.** Three new flat-URL landing pages for the relationship motion — the warm-lead channel that runs in parallel to the cold-trades channel slice 3a built. Each page is bundle-led (NOT receptionist-led) and is the destination URL a founder can DM or text to a warm vertical lead so they land on copy that recognizes their business type without committing the homepage to all six verticals.

@@ -13,6 +13,7 @@ import TradePage from "./pages/TradePage";
 import { TRADES } from "./trades-data";
 import RelationshipPage from "./pages/RelationshipPage";
 import { RELATIONSHIPS } from "./relationships-data";
+import MissedCallCalculator from "./pages/MissedCallCalculator";
 
 /* Trade-specific landing pages — flat URLs (/hvac, /electricians, /plumbers)
    so ad copy and word-of-mouth stay short. Each is the destination URL for
@@ -58,6 +59,7 @@ export const routes = [
       { path: "salons", Component: SalonsPage },
       { path: "auto-shops", Component: AutoShopsPage },
       { path: "restaurants", Component: RestaurantsPage },
+      { path: "missed-call-calculator", Component: MissedCallCalculator },
       { path: "testimonials", Component: Testimonials },
       { path: "team", Component: Team },
       { path: "contact", Component: Contact },

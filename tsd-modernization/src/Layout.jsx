@@ -84,6 +84,10 @@ const ROUTE_META = {
     title: "Custom Website + AI for Charlotte Restaurants | TSD Modernization Solutions",
     description: "Custom website and AI tools for Charlotte restaurants, bakeries, and food trucks — reservations, online ordering, AI chat for menu and hours. Built in 2-4 weeks. $2,000 founding-cohort rate (anchor $4,000), source code yours from day one.",
   },
+  "/missed-call-calculator": {
+    title: "Missed Call Calculator for Charlotte HVAC, Electricians & Plumbers | TSD Modernization Solutions",
+    description: "Free four-question calculator for Charlotte trades. Estimate the annual revenue your phone is losing to voicemail, with no signup or email gate. Built for HVAC, electricians, and plumbers.",
+  },
   "/testimonials": {
     title: "Case Studies Coming Soon | TSD Modernization Solutions",
     description: "We're shipping our first client projects now. Real results, real outcomes, documented here — coming soon.",
