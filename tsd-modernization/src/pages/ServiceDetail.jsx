@@ -4,6 +4,12 @@ import { C, v, Card, Tag, DiamondDivider, RippleButton } from "../shared";
 import { CheckIcon, ArrowRightIcon } from "../icons";
 import PageShell from "./PageShell";
 import { getServiceBySlug } from "../services-data";
+import ChatbotDemo from "../components/ChatbotDemo";
+
+function GalleryEmbed({ name }) {
+  if (name === "chatbot-demo") return <ChatbotDemo />;
+  return null;
+}
 
 function PlayIcon({ size = 48 }) {
   return (
@@ -59,7 +65,11 @@ function GallerySlideshow({ slides, gradient }) {
   return (
     <div>
       <div style={{ position: "relative", borderRadius: "16px", overflow: "hidden", border: `1px solid ${v("border")}` }}>
-        {slide.image ? (
+        {slide.embed ? (
+          <div style={{ height: "450px", position: "relative", overflow: "hidden", background: "#06101e" }}>
+            <GalleryEmbed name={slide.embed} />
+          </div>
+        ) : slide.image ? (
           <div style={{ height: "320px", position: "relative", overflow: "hidden", background: "#0a1628" }}>
             <img
               src={slide.image}
