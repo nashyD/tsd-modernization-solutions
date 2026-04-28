@@ -1,1 +1,18 @@
+# OS
 .DS_Store
+**/.DS_Store
+
+# Build output / caches
+node_modules
+dist
+.vite
+
+# Env
+*.local
+.env
+.env.local
+.env.*.local
+
+# Claude Code session state
+.claude/launch.json
+.claude/worktrees/
