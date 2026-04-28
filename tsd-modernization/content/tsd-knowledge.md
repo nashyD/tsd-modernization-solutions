@@ -33,7 +33,7 @@ Gaston County and the surrounding Charlotte metro — Gastonia, Belmont, Dallas,
 
 ## Other ways to reach us
 
-Phone: (704) 741-1746. Each founder's email is on their business card on the /team page — point visitors there for direct contact.
+Phone: (704) 317-5630. Each founder's email is on their business card on the /team page — point visitors there for direct contact.
 
 ## What we sell
 

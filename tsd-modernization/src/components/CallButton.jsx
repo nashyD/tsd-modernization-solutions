@@ -7,8 +7,8 @@ import { PhoneIcon } from "../icons";
 export default function CallButton() {
   return (
     <a
-      href="tel:+17047411746"
-      aria-label="Call TSD at 704-741-1746"
+      href="tel:+17043175630"
+      aria-label="Call TSD at 704-317-5630"
       style={{
         position: "fixed",
         bottom: "24px",
