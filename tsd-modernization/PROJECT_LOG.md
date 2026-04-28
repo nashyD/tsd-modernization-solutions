@@ -121,6 +121,42 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-28 — Carrier migration: Twilio → Telnyx, phone (704) 741-1746 → (704) 317-5630
+
+**What.** TSD's voice receptionist line moved from Twilio to Telnyx end-to-end. New published number is `(704) 317-5630` (Telnyx-owned), retiring `(704) 741-1746` (Twilio-owned, released and account closed). Inbound call flow rebuilt on Telnyx Call Control (`actions/answer` + `actions/streaming_start` with `stream_bidirectional_codec="PCMU"` forced). Outbound founder pages (the `transfer_to_human` tool) rewired to Telnyx Call Control's REST `POST /v2/calls` + `actions/speak` instead of Twilio's TwiML-via-Calls-API. All Twilio code paths stripped from the voice-receptionist repo. Thirteen references to the old number updated across seven files in this repo.
+
+**Why.** Two compounding pressures forced the swap:
+
+1. **Twilio's product drift away from SMB voice.** Trying to set up a mobile dialer so the founders could place outbound calls from the TSD number turned into a multi-hour failure tour: Twilio Flex SSO setup with Google Workspace SAML (worked, but the Flex mobile app sits at version 0.15, 8 App Store ratings, last updated 6 months ago), then Twilio Frontline (the *purpose-built* SMB sales-rep product) — discontinued in 2024 with no replacement. Twilio has explicitly pivoted upmarket to enterprise contact centers and out of the SMB voice market TSD lives in. OpenPhone/Dialpad/Aircall exist precisely because of this gap.
+
+2. **Cost.** Telnyx is ~30–50% cheaper per inbound minute than Twilio (~$0.005/min vs. $0.0085). For TSD's own line this is pocket change; for the multi-client deploy story it compounds.
+
+The Telnyx-side rebuild also surfaced an API-design lesson worth keeping. TeXML's `<Connect><Stream>` with `bidirectional_codec="PCMU"` *appeared* to work — our pipeline sent audio successfully and the WebSocket reported no errors — but Telnyx silently wasn't relaying that outbound audio back to the caller. Verb-level codec parameters seem to get dropped in the Connect/Stream verb flow even though the Twilio-equivalent setup works. Switching to Call Control (REST `actions/answer` + `actions/streaming_start` with explicit `stream_bidirectional_codec` + `stream_bidirectional_target_legs="self"`) gave reliable bidirectional audio. TeXML is great for "Twilio-compat" marketing claims; the moment you need anything not exactly matching Twilio's behavior, Call Control is the more honest API.
+
+**Files touched.**
+- [`index.html`](index.html) — JSON-LD `ProfessionalService.telephone` field (Google Knowledge Panel + structured-data consumers).
+- [`content/tsd-knowledge.md`](content/tsd-knowledge.md) — shared agent brain (also synced to voice-receptionist repo).
+- [`api/agent.js`](api/agent.js) — three lead-capture failure-mode fallback messages.
+- [`src/Layout.jsx`](src/Layout.jsx) — footer phone link (visible on every page) + ROUTE_META description for `/contact` (used as SERP snippet).
+- [`src/components/CallButton.jsx`](src/components/CallButton.jsx) — floating call-us pill (visible site-wide), `tel:` href + aria-label.
+- [`src/pages/Contact.jsx`](src/pages/Contact.jsx) — NAP block (local-SEO signal).
+- [`src/pages/Team.jsx`](src/pages/Team.jsx) — three founder business-card components.
+
+**Companion changes in the [voice-receptionist repo](https://github.com/nashyD/voice-receptionist).**
+- [`5a7b084`](https://github.com/nashyD/voice-receptionist/commit/5a7b084) — initial parallel Telnyx support alongside Twilio (added `/telnyx/voice` endpoint, `TelnyxFrameSerializer`, carrier detection in `/ws`).
+- [`6f5291f`](https://github.com/nashyD/voice-receptionist/commit/6f5291f) — passed `outbound_encoding`/`inbound_encoding` to the Telnyx serializer (it requires both); dynamic `PipelineParams` sample rate based on negotiated codec.
+- [`cb859c7`](https://github.com/nashyD/voice-receptionist/commit/cb859c7) — switched Telnyx inbound from TeXML to Call Control after TeXML wouldn't relay audio bidirectionally.
+- [`f988b1a`](https://github.com/nashyD/voice-receptionist/commit/f988b1a) — `transfer_to_human` migrated to Telnyx Call Control. Alert text base64-encoded into `client_state` so it survives the request gap between `POST /v2/calls` and the `call.answered` webhook that fires when the founder picks up; main.py decodes and calls `actions/speak` (Polly.Matthew voice).
+- [`d5664c8`](https://github.com/nashyD/voice-receptionist/commit/d5664c8) — stripped all Twilio code paths (endpoints, `TwilioFrameSerializer`, env-var fallbacks); knowledge-brain phone swap in `tsd-knowledge.md`.
+
+**Verification.** Site preview at `/`, `/contact`, `/team` confirms footer + Call us pill + Contact NAP + founder cards all render `(704) 317-5630` and tap-to-dial uses `tel:+17043175630`. DOM grep across the three routes returns zero remaining references to `741-1746`. End-to-end voice test against `+17043175630`: Austin greets, captures lead, fires `transfer_to_human` → on-call founder cell rings, alert plays via Polly.Matthew TTS → branded transcript email arrives at `nashdavis@tsd-ventures.com` after hangup.
+
+**Verification gotchas worth remembering.** Two debugging cycles burned because (a) the running Fly machine kept the old `TELNYX_API_KEY` in its env even after `fly secrets set` reported success and the digest in `fly secrets list` had updated — required a manual `fly machine restart` for both machines, and even that wasn't enough until the secret was re-set; (b) early in the migration there was a phantom outer copy of the site source at `tsd-modernization/src/...` (a bogus root commit), with the *real* tracked source at `tsd-modernization/tsd-modernization/src/...`. First round of edits hit the phantom copies and got wiped on `git reset --hard origin/main`. When in doubt, `git ls-files | head` to see what git actually tracks before editing.
+
+**Principle reinforced.** *When your vendor's roadmap diverges from your use case, migrate early — the cost only grows.* Twilio's sunset of Frontline + abandonment of Flex Mobile were the loud signals that the SMB voice market wasn't where Twilio was investing. The migration cost ~four hours of focused work and a brief transcript-email outage during cutover. Doing it after a paying client had been onboarded on (704) 741-1746 would have meant either telling that client "we're changing your published number" or running both Twilio and Telnyx stacks in parallel indefinitely. Pre-launch is the cheapest possible window for infrastructure swaps; the longer you wait, the more your number is in printed materials, signed contracts, and external systems you don't control.
+
+---
+
 ### 2026-04-27 — Published phone number swapped from GV (704) 275-1410 to Twilio (704) 741-1746
 
 **What.** TSD's published phone number on the website + agent knowledge changed from the Google Voice line `(704) 275-1410` to the new Twilio-owned line `(704) 741-1746`. Same Charlotte 704 area code; cosmetically identical to a caller. Nine source-of-truth references updated across seven files.
