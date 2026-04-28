@@ -59,21 +59,36 @@ function GallerySlideshow({ slides, gradient }) {
   return (
     <div>
       <div style={{ position: "relative", borderRadius: "16px", overflow: "hidden", border: `1px solid ${v("border")}` }}>
-        <div style={{
-          height: "320px", background: gradient,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          flexDirection: "column", gap: "12px", padding: "32px",
-        }}>
-          <span style={{ opacity: 0.85, color: "#fff" }}>
-            {slide.Icon ? <slide.Icon size={48} /> : null}
-          </span>
-          <span style={{ fontSize: "16px", fontWeight: 600, color: "#fff", textAlign: "center", textShadow: "0 2px 8px rgba(0,0,0,0.3)" }}>{slide.title}</span>
-          <span style={{
-            position: "absolute", bottom: "10px", right: "12px",
-            background: "rgba(0,0,0,0.6)", borderRadius: "6px",
-            padding: "2px 8px", fontSize: "12px", color: "#fff", fontWeight: 600,
-          }}>Placeholder</span>
-        </div>
+        {slide.image ? (
+          <div style={{ height: "320px", position: "relative", overflow: "hidden", background: "#0a1628" }}>
+            <img
+              src={slide.image}
+              alt={slide.title}
+              loading="lazy"
+              style={{
+                width: "100%", height: "100%",
+                objectFit: "cover", objectPosition: "center",
+                display: "block",
+              }}
+            />
+          </div>
+        ) : (
+          <div style={{
+            height: "320px", background: gradient,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            flexDirection: "column", gap: "12px", padding: "32px",
+          }}>
+            <span style={{ opacity: 0.85, color: "#fff" }}>
+              {slide.Icon ? <slide.Icon size={48} /> : null}
+            </span>
+            <span style={{ fontSize: "16px", fontWeight: 600, color: "#fff", textAlign: "center", textShadow: "0 2px 8px rgba(0,0,0,0.3)" }}>{slide.title}</span>
+            <span style={{
+              position: "absolute", bottom: "10px", right: "12px",
+              background: "rgba(0,0,0,0.6)", borderRadius: "6px",
+              padding: "2px 8px", fontSize: "12px", color: "#fff", fontWeight: 600,
+            }}>Placeholder</span>
+          </div>
+        )}
         {slides.length > 1 && (
           <>
             <button onClick={prev} style={arrowBtn("left")} aria-label="Previous slide">&#8249;</button>
