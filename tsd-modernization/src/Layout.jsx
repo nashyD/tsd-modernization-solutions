@@ -26,8 +26,8 @@ const NAV_ITEMS = [
 const SITE_URL = "https://tsd-modernization.com";
 const ROUTE_META = {
   "/": {
-    title: "AI Receptionist for Charlotte HVAC, Electricians & Plumbers | TSD Modernization Solutions",
-    description: "Custom AI receptionist for Charlotte trades — HVAC, electricians, and plumbers. Books the after-hours job and transfers to you on August 31. $497 founding setup, ten spots, Summer 2026 cohort.",
+    title: "Charlotte Website + AI · Summer 2026 Cohort | TSD Modernization Solutions",
+    description: "Ten Charlotte main-street builds between May 7 and August 10, 2026. Custom website, working AI, source code yours from day one — $2,000 fixed. Three founders, ten projects, hard close August 10. No retainers, no subscriptions.",
   },
   "/services": {
     title: "Services — AI, Websites & Automation | TSD Modernization Solutions",
@@ -35,15 +35,15 @@ const ROUTE_META = {
   },
   "/services/ai-integration": {
     title: "AI Integration & Business Automation for Small Businesses | TSD Modernization Solutions",
-    description: "Custom AI chatbots, workflow automation with Make and Zapier, and AI-powered reporting for Charlotte-area small businesses. Projects start at $250, launched in 1-2 weeks.",
+    description: "Custom AI chatbots, workflow automation with Make and Zapier, and AI-powered reporting for Charlotte-area small businesses. Included in the $2,000 Website + AI Bundle (anchor $4,000), launched in 1-2 weeks.",
   },
   "/services/websites": {
     title: "Custom Website Design & Redesign | Charlotte Small Business Web Developer",
-    description: "Fast, mobile-first websites with on-page SEO, analytics wiring, and full handoff docs so your team can manage content. 5-8 page sites from $250, launched in 2-4 weeks.",
+    description: "Fast, mobile-first websites with on-page SEO, analytics wiring, and full handoff docs so your team can manage content. 5-8 page sites at $2,000 founding rate (anchor $4,000), launched in 2-4 weeks.",
   },
   "/services/process-modernization": {
     title: "Tech Audits & Process Modernization for Small Businesses | TSD Modernization Solutions",
-    description: "Structured tech audits and written modernization roadmaps for Charlotte-area small businesses. Identify bottlenecks, get cost estimates and ROI projections. From $150.",
+    description: "Structured tech audits and written modernization roadmaps for Charlotte-area small businesses. Identify bottlenecks, get cost estimates and ROI projections. $1,500 founding rate (anchor $3,000).",
   },
   "/why-us": {
     title: "Why Us — Local, Accountable, Main-Street Priced | TSD Modernization Solutions",
@@ -51,7 +51,7 @@ const ROUTE_META = {
   },
   "/process": {
     title: "Our Process — From Audit to Launch | TSD Modernization Solutions",
-    description: "How we work: free consultation, written proposal within 48 hours, hands-on implementation, and training so your team owns what we build.",
+    description: "How we work: free fit call, written proposal within 48 hours, hands-on implementation, and training so your team owns what we build.",
   },
   "/pricing": {
     title: "Pricing — Founding Cohort, Summer 2026 | TSD Modernization Solutions",
@@ -59,7 +59,7 @@ const ROUTE_META = {
   },
   "/ai-receptionist": {
     title: "AI Receptionist for Charlotte Trades — $497, Yours to Keep | TSD Modernization Solutions",
-    description: "Custom AI answers the after-hours call, qualifies the lead, and books the job. Built for Charlotte HVAC, electricians, and plumbers. $497 founding setup plus $97/mo through Aug 31, then the agent transfers to you. No subscription forever.",
+    description: "Custom AI answers the after-hours call, qualifies the lead, and books the job. Built for Charlotte HVAC, electricians, and plumbers. $497 founding setup, paid once. The agent transfers to you on August 31. No subscription forever.",
   },
   "/hvac": {
     title: "AI Receptionist for Charlotte HVAC Contractors | TSD Modernization Solutions",
@@ -98,8 +98,8 @@ const ROUTE_META = {
     description: "Meet the founders of TSD Modernization Solutions — a local Charlotte team of small-business modernization specialists.",
   },
   "/contact": {
-    title: "Contact Us — Book a Free Consultation | TSD Modernization Solutions",
-    description: "Reserve a Summer 2026 founding-cohort spot. Free 1-2 hour consultation, then a written proposal within 48 hours. Call 704-317-5630 or send us a message.",
+    title: "Contact Us — Apply for a Founding Slot | TSD Modernization Solutions",
+    description: "Apply for a Summer 2026 founding-cohort slot. Free 1-2 hour fit call, then a written proposal within 48 hours. Three founders, ten projects, hard close August 10.",
   },
 };
 
@@ -334,7 +334,7 @@ export default function Layout() {
                 <div style={{ height: "1px", background: v("divider"), margin: "8px 16px" }} />
                 <Link to="/contact" onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "4px" }}>
                   <RippleButton variant="primary" style={{ width: "100%", padding: "12px 0", fontSize: "13px" }}>
-                    Free Consultation
+                    Apply for a Slot
                   </RippleButton>
                 </Link>
               </div>
@@ -362,6 +362,12 @@ export default function Layout() {
         </div>
         <p style={{ fontSize: "13px", color: v("text-dim"), marginBottom: "8px" }}>
           TSD Modernization Solutions — A brand of TSD Ventures, LLC
+        </p>
+        <p style={{
+          fontFamily: "var(--font-display)", fontStyle: "italic",
+          fontSize: "13px", color: v("text-muted"), marginBottom: "8px",
+        }}>
+          Three founders. Ten Charlotte main-street builds. May 7 through August 10, 2026 — then we close.
         </p>
         <p style={{ fontSize: "12px", color: v("text-dim") }}>
           Serving the Charlotte metro area including Gastonia, Belmont, and surrounding communities.

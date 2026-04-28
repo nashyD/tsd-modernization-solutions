@@ -261,7 +261,7 @@ function TheOffer({ trade }) {
               marginBottom: "10px",
             }}>$497</div>
             <div style={{ fontSize: "13px", color: v("text-muted"), marginBottom: "6px" }}>Founding setup, paid once.</div>
-            <div style={{ fontSize: "13px", color: v("text-muted") }}>Plus $97/mo through August 31, 2026.</div>
+            <div style={{ fontSize: "13px", color: v("text-muted") }}>Agent transfers to you on August 31, 2026. No subscription, no recurring fee.</div>
           </div>
 
           <div style={{

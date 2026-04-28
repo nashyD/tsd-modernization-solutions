@@ -98,7 +98,7 @@ function RelationshipHero({ rel }) {
       }}>
         <Link to={contactHref}>
           <RippleButton variant="primary" style={{ padding: "16px 36px", fontSize: "15px" }}>
-            Book a free consultation <ArrowRightIcon size={16} />
+            Apply for a founding slot <ArrowRightIcon size={16} />
           </RippleButton>
         </Link>
         <Link to="/pricing">
@@ -169,7 +169,7 @@ function ClosingCTA({ rel }) {
       <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
         <Link to={contactHref}>
           <RippleButton variant="primary" style={{ padding: "14px 32px", fontSize: "15px" }}>
-            Book a free consultation <ArrowRightIcon size={16} />
+            Apply for a founding slot <ArrowRightIcon size={16} />
           </RippleButton>
         </Link>
         <Link to="/pricing">

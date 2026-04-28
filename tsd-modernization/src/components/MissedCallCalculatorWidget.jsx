@@ -285,13 +285,13 @@ function Report({ inputs }) {
           fontFamily: "var(--font-display)", fontStyle: "italic",
           fontSize: "clamp(16px, 2vw, 19px)", lineHeight: 1.6, color: v("text"), marginBottom: "20px",
         }}>
-          Your AI receptionist takes the call, qualifies the emergency, books the slot from your calendar, and texts you a one-paragraph summary. Setup runs $497 once and $97/month through August 31. After that, the agent transfers to you — credentials, call log, the whole stack. No subscription forever.
+          Your AI receptionist takes the call, qualifies the emergency, books the slot from your calendar, and texts you a one-paragraph summary. Setup runs $497 once. On August 31, the agent transfers to you — credentials, call log, the whole stack. No subscription forever.
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "24px" }}>
           {[
             "Setup in a week — your AI is live before next weekend",
             "Risk reversal: zero bookings in 30 days, every dollar back",
-            "August 31 ownership transfer — no monthly bill in year two",
+            "August 31 ownership transfer — agent and credentials are yours, no recurring fees",
           ].map((bullet, i) => (
             <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
               <CheckIcon size={16} style={{ color: C.success, flexShrink: 0, marginTop: "3px" }} />

@@ -193,14 +193,14 @@ export default function ServiceDetail() {
             Ready to get started?
           </h3>
           <p style={{ fontSize: "15px", lineHeight: 1.65, color: "rgba(255,255,255,0.9)", maxWidth: "500px", margin: "0 auto 24px" }}>
-            Free consultation, 48-hour proposal, 100% money-back guarantee.
+            Free fit call, 48-hour written proposal, 100% money-back guarantee.
           </p>
           <Link to="/contact">
             <RippleButton variant="secondary" style={{
               padding: "14px 32px", fontSize: "14px",
               background: "#fff", color: C.navy, borderColor: "transparent",
             }}>
-              Book a Free Consultation <ArrowRightIcon size={14} />
+              Apply for a founding slot <ArrowRightIcon size={14} />
             </RippleButton>
           </Link>
         </section>

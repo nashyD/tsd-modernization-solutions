@@ -242,7 +242,7 @@ function TheOffer() {
               marginBottom: "10px",
             }}>$497</div>
             <div style={{ fontSize: "13px", color: v("text-muted"), marginBottom: "6px" }}>Founding setup, paid once.</div>
-            <div style={{ fontSize: "13px", color: v("text-muted") }}>Plus $97/mo through August 31, 2026.</div>
+            <div style={{ fontSize: "13px", color: v("text-muted") }}>Agent transfers to you on August 31, 2026. No subscription, no recurring fee.</div>
           </div>
 
           <div style={{
@@ -329,7 +329,7 @@ function ClosingCTA() {
    format makes the price + ownership delta unmissable at a glance. */
 const SAAS_COMPARISON = [
   { axis: "Setup", saas: "Self-serve, remote", tsd: "Three founders, in-person" },
-  { axis: "Pricing", saas: "$95–$199/mo forever", tsd: "$497 + $97/mo for 4 months, then yours" },
+  { axis: "Pricing", saas: "$95–$199/mo forever", tsd: "$497 once, then yours" },
   { axis: "Ownership", saas: "Theirs — you rent it", tsd: "Yours — agent + credentials transfer Aug 31" },
   { axis: "Where they are", saas: "Anywhere in the country", tsd: "Charlotte / Gaston" },
 ];
@@ -342,7 +342,7 @@ function TheDifference() {
         label="The Difference"
         num="03"
         title="The national SaaS rents you an AI. We sell you one."
-        sub="Smith.ai, NextPhone, Marlie, RealVoice AI — they all charge a monthly subscription that never ends. TSD is a one-time setup plus four months of upkeep, then the agent and credentials transfer to you. Three months from now, your AI is a line item; ours is an asset."
+        sub="Smith.ai, NextPhone, Marlie, RealVoice AI — they all charge a monthly subscription that never ends. TSD is one-time setup, then the agent and credentials transfer to you on August 31. Three months from now, theirs is a line item; yours is an asset."
       />
 
       <div style={{ overflowX: "auto", borderRadius: "16px", border: `1px solid ${v("surface-border")}` }}>

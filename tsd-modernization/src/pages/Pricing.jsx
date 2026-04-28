@@ -202,7 +202,46 @@ function TierCard({ tier, delay }) {
           {tier.objection}
         </p>
       )}
+      <div style={{
+        marginTop: "18px", paddingTop: "16px",
+        borderTop: `1px solid ${v("divider")}`,
+        display: "flex", flexDirection: "column", gap: "8px",
+      }}>
+        {UNIVERSAL_GUARANTEES.map((g, i) => (
+          <div key={i} style={{
+            display: "flex", alignItems: "flex-start", gap: "8px",
+          }}>
+            <CheckIcon size={12} style={{ color: C.success, flexShrink: 0, marginTop: "3px" }} />
+            <span style={{ fontSize: "12px", color: v("text-dim"), lineHeight: 1.5 }}>{g}</span>
+          </div>
+        ))}
+      </div>
     </Card>
+  );
+}
+
+const UNIVERSAL_GUARANTEES = [
+  "100% money-back guarantee",
+  "48-hour written proposal",
+  "No retainers, no subscriptions",
+];
+
+function QualificationNote() {
+  const [ref, fade] = useFadeIn(180);
+  return (
+    <div ref={ref} style={{
+      ...fade,
+      maxWidth: "720px", margin: "0 auto 56px",
+      textAlign: "center", padding: "0 24px",
+    }}>
+      <p style={{
+        fontFamily: "var(--font-display)", fontStyle: "italic",
+        fontSize: "17px", lineHeight: 1.6, color: v("text-muted"),
+      }}>
+        Three founders. Ten Charlotte main-street builds. May 7 through August 10, then we close.
+        We don't take retainers, we don't sell subscriptions, and we will not be your long-term agency.
+      </p>
+    </div>
   );
 }
 
@@ -283,7 +322,7 @@ const TIERS = [
     features: [
       "Phase I audit included",
       "Phase II Bundle (everything in the middle column)",
-      "AI receptionist setup + first 4 months",
+      "AI receptionist setup included",
       "Monthly optimization check-ins through August 31",
       "Named ops handholding from Bishop — calendar, proposals, weekly status",
     ],
@@ -317,7 +356,7 @@ function WedgePointer() {
 const FAQS = [
   { q: "Why are your prices so much lower than agencies?", a: "We're a lean team of three founders with minimal overhead. Our founding-cohort rates are deliberately half what we'll charge after Summer 2026, set so we can build our portfolio and earn client trust. You get the same quality at 3-5x less than agency rates." },
   { q: "How does the Summer 2026 cohort work?", a: "We operate from May 7 to August 10, 2026 — three founders running together over the summer, capped at ten clients so every project gets the time it needs. Last project start is July 13. After August 10 we hand off; one founder stays on call for fixes through August 31." },
-  { q: "How does the free consultation work?", a: "We schedule a 1-2 hour session (in-person or remote) where we walk through your current operations, tools, and pain points. You'll get actionable insights on the spot — no sales pressure. If there's a fit, we'll follow up with a written proposal within 48 hours." },
+  { q: "How does the free fit call work?", a: "A 1-2 hour conversation, in-person or remote, where we walk through your business, your operations, and what you'd want modernized. You leave with a clear read on whether we're the right fit. If we're a match, the next step is a $1,500 Phase I Discovery audit or a written proposal for the Phase II Bundle within 48 hours." },
   { q: "What happens after my project is done?", a: "Every project ends with handoff documentation, video tutorials, and a live training session. You'll run everything independently from there. One founder stays on call for fixes through August 31, 2026; past that, the season closes." },
   { q: "Do I need to know anything about AI?", a: "Not at all. That's what we're here for. We'll explain everything in plain English, recommend only tools that genuinely fit your needs, and handle all the technical setup. You just tell us what's slowing your business down." },
   { q: "How long does a typical project take?", a: "Tech audits are done in a single session. Website builds and AI integrations typically take 2-4 weeks from proposal to handoff." },
@@ -379,6 +418,7 @@ export default function Pricing() {
           sub="Three engagements. Single prices, scope spelled out before you sign."
         />
         <GuaranteeBlock />
+        <QualificationNote />
         <div style={{
           display: "grid",
           gridTemplateColumns: "1fr 1.15fr 1fr",

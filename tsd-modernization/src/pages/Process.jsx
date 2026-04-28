@@ -2,7 +2,7 @@ import { C, v, SectionHeader, Card, useFadeIn } from "../shared";
 import PageShell from "./PageShell";
 
 const STEPS = [
-  { num: "01", title: "Discovery", desc: "We schedule a 1-2 hour session where we walk through your current operations, tools, and pain points. You get actionable insights on the spot.", detail: "In-person or remote. No sales pressure. Free for qualified businesses." },
+  { num: "01", title: "Fit call", desc: "A 1-2 hour conversation where we walk through your business, your operations, and what you'd want modernized. You leave with a clear read on whether we're the right fit.", detail: "In-person or remote. Free, no commitment. If we're a match, the next step is a $1,500 Phase I Discovery audit or a written proposal for the Phase II Bundle." },
   { num: "02", title: "Proposal", desc: "Within 48 hours, you receive a written modernization roadmap with clear scope, timeline, and pricing. No surprises.", detail: "Typically 2-4 pages. Includes technical approach, deliverables, and payment schedule." },
   { num: "03", title: "Build", desc: "We execute the project on a 2-4 week timeline with regular check-ins. You see progress throughout, not just at the end.", detail: "Weekly updates. Revisions included. We don't disappear." },
   { num: "04", title: "Handoff", desc: "Every project ends with written documentation, video tutorials, and a live training session. You own the source code, the credentials, and the deployment when we're done.", detail: "One founder stays on call for fixes through August 31, 2026." },

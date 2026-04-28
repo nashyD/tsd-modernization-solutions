@@ -113,8 +113,8 @@ function ContactForm() {
 
   return (
     <div style={{ padding: "40px 48px", maxWidth: "700px", margin: "0 auto" }}>
-      <SectionHeader center label="Let's Talk" title="Start your" titleAccent="project"
-        sub="Tell us what you need and we'll get back to you within 24 hours." />
+      <SectionHeader center label="Apply" title="Start your" titleAccent="project"
+        sub="Tell us about your business. We respond within 24 hours and decline most projects." />
       <div ref={ref} style={{
         ...fadeStyle, padding: "48px", borderRadius: "24px",
         background: v("surface"), border: `1px solid ${v("surface-border")}`,
@@ -182,7 +182,7 @@ function ContactForm() {
             <RippleButton type="submit" disabled={sending} style={{
               width: "100%", padding: "16px 0", opacity: sending ? 0.7 : 1,
             }}>
-              {sending ? "Sending..." : "Send Message"}
+              {sending ? "Sending..." : "Apply"}
             </RippleButton>
           </form>
         )}

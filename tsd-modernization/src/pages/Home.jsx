@@ -127,39 +127,39 @@ function Hero() {
           color: "#fff", marginBottom: "20px",
           textShadow: "0 2px 18px rgba(0,0,0,0.65), 0 1px 4px rgba(0,0,0,0.8)",
         }}>
-          Stop losing after-hours service calls.
+          Ten Charlotte builds between May and August.
           <br />
           <span style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
             color: "#f4f9fd",
             textShadow: "0 2px 24px rgba(0,0,0,0.75), 0 1px 6px rgba(0,0,0,0.85)",
-          }}>Your AI books the job — and the agent is yours.</span>
+          }}>Then we close.</span>
         </h1>
 
         <DiamondDivider width={160} style={{ marginBottom: "20px" }} />
 
         <p ref={r3} style={{
           ...f3, fontSize: "17px", lineHeight: 1.7, color: "#fff", fontWeight: 500,
-          maxWidth: "560px", margin: "0 auto 36px",
+          maxWidth: "580px", margin: "0 auto 36px",
           textShadow: "0 2px 14px rgba(0,0,0,0.75), 0 1px 4px rgba(0,0,0,0.85)",
         }}>
-          Custom AI receptionist for Charlotte HVAC, electricians, and plumbers.
-          $497 once, then the agent is yours. No subscription forever.
+          Custom website, working AI, source code yours from day one. $2,000 fixed.
+          We don't take retainers and we will not be your long-term agency.
         </p>
 
         <div ref={r4} style={{ ...f4, display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
-          <Link to="/ai-receptionist">
+          <Link to="/contact">
             <RippleButton variant="primary" style={{ padding: "16px 36px", fontSize: "15px" }}>
-              See the AI Receptionist <ArrowRightIcon size={16} />
+              Apply for a founding slot <ArrowRightIcon size={16} />
             </RippleButton>
           </Link>
-          <Link to="/contact">
+          <Link to="/pricing">
             <RippleButton variant="secondary" style={{
               padding: "16px 36px", fontSize: "15px",
               background: "rgba(255,255,255,0.1)", borderColor: "rgba(255,255,255,0.25)",
               backdropFilter: "blur(8px)", color: "#fff",
             }}>
-              Book a free consultation
+              See pricing
             </RippleButton>
           </Link>
         </div>
