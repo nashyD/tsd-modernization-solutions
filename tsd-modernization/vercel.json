@@ -1,13 +1,5 @@
 {
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
-  ],
-  "functions": {
-    "api/agent.js": {
-      "includeFiles": "content/**"
-    },
-    "api/chat-transcript.js": {
-      "includeFiles": "content/**"
-    }
-  }
+  ]
 }
