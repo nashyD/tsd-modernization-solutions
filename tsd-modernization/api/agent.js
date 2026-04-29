@@ -2,7 +2,8 @@ import Anthropic from "@anthropic-ai/sdk";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 // Vercel: extend the function timeout from the 10s default. Streaming
 // responses are short (Haiku 4.5 typically finishes in <5s) but the
@@ -23,11 +24,16 @@ export const maxDuration = 30;
  *      a voice agent reading aloud).
  *
  * Vercel: the .md file is bundled with the function via vercel.json's
- * functions["api/agent.js"].includeFiles = "content/**". process.cwd()
- * resolves to the project root in the serverless runtime.
+ * functions["api/agent.js"].includeFiles = "content/**". The path is
+ * resolved relative to THIS file's location (using import.meta.url)
+ * rather than process.cwd(), because Vercel's deployment root sits
+ * one directory above where the actual app code lives in this nested
+ * project layout — process.cwd() returns /var/task/, not the inner
+ * project dir, so a cwd-relative path 404s at runtime.
  */
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const TSD_KNOWLEDGE = readFileSync(
-  join(process.cwd(), "content", "tsd-knowledge.md"),
+  join(__dirname, "..", "content", "tsd-knowledge.md"),
   "utf-8",
 );
 
