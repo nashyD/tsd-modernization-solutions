@@ -31,7 +31,7 @@ export const SERVICES = [
     ],
     gallery: [
       { Icon: BotIcon, embed: "chatbot-demo", title: "Custom Chatbot Interface", desc: "Branded chatbot widget embedded on a client's homepage, answering FAQs and capturing leads 24/7." },
-      { Icon: BoltIcon, title: "Make Automation Flow", desc: "Multi-step automation connecting a contact form to CRM, email sequences, and calendar booking." },
+      { Icon: BoltIcon, embed: "make-flow-demo", title: "Make Automation Flow", desc: "Multi-step automation connecting a contact form to CRM, email sequences, and calendar booking." },
       { Icon: ChartBarIcon, title: "AI Reporting Dashboard", desc: "Real-time analytics dashboard with AI-generated summaries and trend detection." },
       { Icon: CalendarIcon, title: "Smart Scheduling", desc: "Automated calendar system that syncs availability, sends reminders, and handles rescheduling." },
     ],

@@ -5,9 +5,11 @@ import { CheckIcon, ArrowRightIcon } from "../icons";
 import PageShell from "./PageShell";
 import { getServiceBySlug } from "../services-data";
 import ChatbotDemo from "../components/ChatbotDemo";
+import MakeFlowDemo from "../components/MakeFlowDemo";
 
 function GalleryEmbed({ name }) {
   if (name === "chatbot-demo") return <ChatbotDemo />;
+  if (name === "make-flow-demo") return <MakeFlowDemo />;
   return null;
 }
 
