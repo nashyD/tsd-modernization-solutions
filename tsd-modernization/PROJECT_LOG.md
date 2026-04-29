@@ -121,6 +121,25 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-29 — Hero theme-aware: dark-navy band swapped for var(--c-bg)
+
+**What.** The home `Hero` in [`Home.jsx`](src/pages/Home.jsx) no longer leaves a hardcoded dark-navy band at the top and bottom edges of the section in light mode. Three coordinated changes:
+
+- **Section bg.** `#0c1524` → `v("bg")`. Cosmetic in practice (masked by the video + poster the moment they paint) but consistent with every other section in the codebase.
+- **Reveal-overlay gradient.** Top + bottom stops `#0c1524` → `var(--c-bg)`. Top transition is tightened (`bg → transparent` from 0–10%, was 0–20%) so the editorial masthead at ~16% from the top of the section sits on pure video, not on a cream-tinted bg zone where the cream eyebrow text would otherwise vanish. Bottom transition is widened (`transparent 78% → bg 94%`, was `transparent 82% → bg 90%`) so the fade has 16% of section height to absorb the color clash between the video's edge colors and the cream theme bg — that 8%-tall transition was the "torn-edge" failure mode that killed an earlier attempt at this fix.
+- **Radial vignette.** Center shifted up to `50% / 42%` (was `50% / 48%`) and ellipse height extended to `70%` (was `60%`). The masthead previously drew its dark backdrop from the reveal overlay's wide bg-tint zone; now that zone is gone, the vignette has to reach further up to provide the same readable contrast in either theme.
+
+**Why.** Toggling to light mode left the hero stranded — the cream nav (`v("nav-bg")` = `rgba(240,235,225,0.92)`) sat over a dark band at the top, and another hard line cut between the hero's bottom edge and the cream `TradesStrip` below. The prior inline comment explained the hardcoded navy as a workaround for "torn-edge fades in light mode where the video's natural colors clashed with the cream theme bg." That was true under the old stop placement, but it confused a gradient-shape problem with a theming problem. Two adjustments make the theme-aware version work: the wider bottom transition gives the gradient enough room to absorb the color clash, and the tighter top transition keeps the cream masthead off the cream bg zone where it would otherwise erase.
+
+**Files touched.**
+- [`src/pages/Home.jsx`](src/pages/Home.jsx) — section bg, reveal-overlay gradient stops, vignette geometry; inline comments rewritten to document the new trade-offs (top-fade tight on purpose, bottom-fade wide on purpose, vignette pulled up to cover the masthead).
+
+**Verification.** `npm run build` succeeds; all 19 prerendered routes render. `dist/index.html` contains six `var(--c-bg)` references in the hero block and zero remaining `#0c1524` in the overlay layer — the one surviving `#0c1524` is the `<video>` element's own fallback bg (paint-during-load, theme-independent on purpose).
+
+**Principle reinforced.** *Theme-awareness has to propagate through every visible surface — the moment one section opts out of the design tokens, the toggle stops being a toggle and becomes a half-feature.* The earlier hardcoded fix wasn't wrong; it was a local workaround for a gradient-stop problem misdiagnosed as a theming problem. Solving the underlying issue — transition zones too narrow to absorb color clashes, and a masthead anchored in a bg-tint zone — lets the design tokens reach the places they should.
+
+---
+
 ### 2026-04-28 — Carrier migration: Twilio → Telnyx, phone (704) 741-1746 → (704) 317-5630
 
 **What.** TSD's voice receptionist line moved from Twilio to Telnyx end-to-end. New published number is `(704) 317-5630` (Telnyx-owned), retiring `(704) 741-1746` (Twilio-owned, released and account closed). Inbound call flow rebuilt on Telnyx Call Control (`actions/answer` + `actions/streaming_start` with `stream_bidirectional_codec="PCMU"` forced). Outbound founder pages (the `transfer_to_human` tool) rewired to Telnyx Call Control's REST `POST /v2/calls` + `actions/speak` instead of Twilio's TwiML-via-Calls-API. All Twilio code paths stripped from the voice-receptionist repo. Thirteen references to the old number updated across seven files in this repo.

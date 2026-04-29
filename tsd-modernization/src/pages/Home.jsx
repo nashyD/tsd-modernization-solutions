@@ -50,7 +50,7 @@ function Hero() {
     <section style={{
       minHeight: "100vh", position: "relative", overflow: "hidden",
       display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start",
-      background: "#0c1524",
+      background: v("bg"),
       paddingTop: "140px", paddingBottom: "80px",
     }}>
       {/* Storefront image — base layer and mobile fallback */}
@@ -84,22 +84,41 @@ function Hero() {
         )}
       </video>
 
-      {/* Reveal overlay — sliver of solid bg at the top (tucks behind the nav and frames the hero), then clears to reveal the video, then solid bg at the bottom. Hardcoded to the dark navy so the hero stays cinematic in both light and dark site themes — letting it follow --c-bg produced torn-edge fades in light mode where the video's natural colors clashed with the cream theme bg. */}
+      {/* Reveal overlay — frames the hero with the page bg color so the
+          section blends with the active theme rather than presenting a
+          dark-navy band against a cream page in light mode. Two trade-offs
+          baked into the stop placement:
+          • Top fade is tight (bg ends at 5%, transparent by 10%) so the
+            editorial masthead at ~16% from the top sits on pure video,
+            not on a half-faded bg tint. In light mode a wide bg-tint zone
+            would put cream text on a cream-tinted backdrop and erase it.
+            The radial vignette below this layer does the contrast work
+            for the masthead instead.
+          • Bottom fade is widened (transparent → bg over 16% of section
+            height vs the prior 8%) so the exit into the next section
+            doesn't show banding where the video's edge colors meet the
+            cream theme bg — that was the "torn-edge" failure mode that
+            killed an earlier attempt at this fix. */}
       <div style={{
         position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
         background: `linear-gradient(to bottom,
-          #0c1524 0%,
-          #0c1524 8%,
-          transparent 20%,
-          transparent 82%,
-          #0c1524 90%,
-          #0c1524 100%)`,
+          var(--c-bg) 0%,
+          var(--c-bg) 5%,
+          transparent 10%,
+          transparent 78%,
+          var(--c-bg) 94%,
+          var(--c-bg) 100%)`,
       }} />
 
-      {/* Editorial gradient vignette — tighter and stronger than before so the text block sits on a readable backdrop without needing heavy per-letter outlines. The radial is centered on the content block (~48% from top) so the footer of the frame stays visually clear. */}
+      {/* Editorial gradient vignette — provides a theme-independent dark
+          backdrop for the white headline and cream eyebrow text. Center
+          shifted up to 42% (was 48%) and height extended to 70% (was 60%)
+          so the masthead also gets coverage, now that the reveal overlay's
+          top fade is too short to tint the masthead zone. Without this the
+          masthead would sit on raw video sky in light mode and bleed. */}
       <div style={{
         position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
-        background: "radial-gradient(ellipse 70% 60% at 50% 48%, rgba(5,10,20,0.62) 0%, rgba(5,10,20,0.42) 45%, rgba(5,10,20,0.18) 75%, transparent 92%)",
+        background: "radial-gradient(ellipse 75% 70% at 50% 42%, rgba(5,10,20,0.62) 0%, rgba(5,10,20,0.42) 45%, rgba(5,10,20,0.18) 75%, transparent 92%)",
       }} />
 
       {/* Content */}
