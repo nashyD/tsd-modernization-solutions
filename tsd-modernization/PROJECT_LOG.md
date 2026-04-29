@@ -121,6 +121,30 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-29 — Missed-call calculator: paired number + slider inputs
+
+**What.** The three numeric inputs in [`MissedCallCalculatorWidget.jsx`](src/components/MissedCallCalculatorWidget.jsx) — unanswered hours per week, average ticket size, average jobs per week — each got a paired range slider beneath the number field. Both controls bind to the same string state, so a user can drag for fast adjustment or type for precision; the typed input has no clamp (you can enter $7,500 even though the slider stops at $5,000), the slider clamps to its bounds. Min/max bound labels render under each slider with formatted units (`0 hrs` / `168 hrs`, `$0` / `$5,000`, `0 / wk` / `100 / wk`). When the input is empty (initial state) the slider parks at min — the calculator still requires non-zero values before computing, so the "you haven't answered yet" affordance survives.
+
+**Why.** Two failure modes the prior form earned:
+1. On mobile, a number field forces keyboard → tap-tap-tap → close for every input. A slider lets the user park "around 80 hours" with a single drag.
+2. A blank number field with placeholder `e.g. 80` gives no affordance about plausible range. A 0-168 slider with a labelled `168 hrs` max conveys "this is a fraction of the 168 hours in a week" without making the user do the math.
+
+A calculator's job is to lower the activation cost of getting a number out the other end. Sliders do that for ballpark inputs; the number field stays for users who already know their numbers and want to be precise.
+
+**Implementation notes.**
+- Extracted the three duplicated input blocks into a shared `NumericField` subcomponent. To do that cleanly, the form-level `inputStyle` / `labelStyle` / `hintStyle` consts moved to module scope; defining `NumericField` inside `CalculatorForm` would have re-created its identity on every render and dropped focus from the active input on each keystroke — a real bug, not a theoretical one.
+- Slider styling uses the existing design tokens: `var(--c-accent)` for the thumb and filled track, `var(--c-surface-border)` for the unfilled track, `var(--c-bg)` for the thumb's outline ring (so the thumb reads against both the navy and cream surfaces).
+- Webkit has no `::progress` pseudo, so the filled portion of the track is painted via a `linear-gradient` on the input's background whose hard stop is driven by a per-instance `--slider-pct` custom property set inline by React. Firefox uses `::-moz-range-progress` for the same effect natively.
+
+**Files touched.**
+- [`src/components/MissedCallCalculatorWidget.jsx`](src/components/MissedCallCalculatorWidget.jsx) — lifted shared form styles to module scope, added `NumericField` subcomponent, replaced the three numeric input blocks, added slider CSS to the existing `<style>` block.
+
+**Verification.** `npm run build` succeeds. `dist/missed-call-calculator/index.html` and `dist/pricing/index.html` (the two consumers) each contain three `<input type="range">` elements, eleven references to the `tsd-slider` className (1 inline per input × 3 + 8 in the CSS rules), and six `--slider-pct` references (3 inline custom-prop sets + 3 in the gradient-stop CSS). Both pages grew ~3.5 KiB from the added markup + styles.
+
+**Principle reinforced.** *A calculator should make the easy entry obvious and the precise entry available.* The buyer who knows their numbers wants to type; the buyer who's never measured wants to drag. Both should land at the same answer.
+
+---
+
 ### 2026-04-29 — Hero theme-aware: dark-navy band swapped for var(--c-bg)
 
 **What.** The home `Hero` in [`Home.jsx`](src/pages/Home.jsx) no longer leaves a hardcoded dark-navy band at the top and bottom edges of the section in light mode. Three coordinated changes:
