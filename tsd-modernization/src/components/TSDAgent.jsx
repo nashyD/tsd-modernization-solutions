@@ -138,21 +138,13 @@ function loadFromStorage() {
       window.localStorage.removeItem(STORAGE_KEY);
       return null;
     }
-    return {
-      messages: data.messages,
-      leadCaptured: Boolean(data.leadCaptured),
-      // Backward-compat: pre-transcript-emailing storage blobs won't have
-      // these. Treat missing as null/0 so behavior degrades cleanly.
-      conversationId: data.conversationId || null,
-      startedAt: data.startedAt || null,
-      lastSentCount: Number(data.lastSentCount) || 0,
-    };
+    return { messages: data.messages, leadCaptured: Boolean(data.leadCaptured) };
   } catch {
     return null;
   }
 }
 
-function saveToStorage(messages, leadCaptured, conversationId, startedAt, lastSentCount) {
+function saveToStorage(messages, leadCaptured) {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.setItem(
@@ -161,9 +153,6 @@ function saveToStorage(messages, leadCaptured, conversationId, startedAt, lastSe
         version: STORAGE_VERSION,
         messages,
         leadCaptured,
-        conversationId: conversationId || null,
-        startedAt: startedAt || null,
-        lastSentCount: Number(lastSentCount) || 0,
         savedAt: Date.now(),
       }),
     );
@@ -191,40 +180,15 @@ export default function TSDAgent() {
   const inputRef = useRef(null);
   const hydratedRef = useRef(false);
 
-  // Refs supporting the end-of-conversation transcript email. These
-  // mirror state values so the pagehide listener (attached once with
-  // an empty deps array) can read the latest values without
-  // re-attaching every render.
-  const conversationIdRef = useRef(null);
-  const startedAtRef = useRef(null);
-  const lastSentCountRef = useRef(0);
-  const messagesRef = useRef(messages);
-  const sendingRef = useRef(false);
-
   // Hydrate from localStorage on mount (client-only — useEffect doesn't run during SSR prerender).
   useEffect(() => {
     const persisted = loadFromStorage();
     if (persisted) {
       setMessages(persisted.messages);
       if (persisted.leadCaptured) setLeadCaptured(true);
-      // Restore the transcript-email state too so a returning visitor
-      // doesn't trigger a duplicate email for content that already shipped.
-      conversationIdRef.current = persisted.conversationId;
-      startedAtRef.current = persisted.startedAt;
-      lastSentCountRef.current = persisted.lastSentCount || 0;
     }
     hydratedRef.current = true;
   }, []);
-
-  // Keep refs in sync with state so the pagehide/visibilitychange
-  // listeners — attached once below — always see the latest messages
-  // without needing to re-bind.
-  useEffect(() => {
-    messagesRef.current = messages;
-  }, [messages]);
-  useEffect(() => {
-    sendingRef.current = sending;
-  }, [sending]);
 
   // Persist to localStorage whenever messages or leadCaptured change.
   // Skip the initial render (before hydration) so we don't overwrite a
@@ -236,13 +200,7 @@ export default function TSDAgent() {
       clearStorage();
       return;
     }
-    saveToStorage(
-      messages,
-      leadCaptured,
-      conversationIdRef.current,
-      startedAtRef.current,
-      lastSentCountRef.current,
-    );
+    saveToStorage(messages, leadCaptured);
   }, [messages, leadCaptured]);
 
   useEffect(() => {
@@ -263,122 +221,9 @@ export default function TSDAgent() {
     if (open) trackEvent("agent_opened");
   }, [open]);
 
-  /* ── End-of-conversation transcript email ─────────────────────────
-   *
-   * Fires a POST to /api/chat-transcript with the full conversation
-   * when the visitor leaves the page or closes the chat widget.
-   *
-   * Uses navigator.sendBeacon — the only browser API designed for
-   * "fire-and-forget POST that completes during page unload." Falls
-   * back to fetch with keepalive:true on the rare browser without
-   * sendBeacon support.
-   *
-   * Server dedups by conversation_id + message count so multiple
-   * triggers (pagehide AND widget close AND visibility change) only
-   * produce one email per unique conversation state. lastSentCountRef
-   * keeps the client side in sync so we don't even bother POSTing
-   * when there's nothing new since the last send.
-   */
-  const sendTranscript = useCallback(() => {
-    const conversationId = conversationIdRef.current;
-    const currentMessages = messagesRef.current;
-    if (!conversationId) return;
-    if (!Array.isArray(currentMessages) || !currentMessages.length) return;
-    if (currentMessages.length <= lastSentCountRef.current) return;
-
-    // Skip empty/AI-only conversations (visitor never typed anything).
-    const hasUserMsg = currentMessages.some(
-      (m) =>
-        m?.role === "user" &&
-        typeof m.content === "string" &&
-        m.content.trim(),
-    );
-    if (!hasUserMsg) return;
-
-    const payload = {
-      conversation_id: conversationId,
-      messages: currentMessages,
-      page_url:
-        typeof window !== "undefined" ? window.location.href : "",
-      started_at: startedAtRef.current,
-    };
-
-    try {
-      if (
-        typeof navigator !== "undefined" &&
-        typeof navigator.sendBeacon === "function"
-      ) {
-        const blob = new Blob([JSON.stringify(payload)], {
-          type: "application/json",
-        });
-        const ok = navigator.sendBeacon("/api/chat-transcript", blob);
-        if (ok) {
-          lastSentCountRef.current = currentMessages.length;
-        }
-      } else if (typeof fetch === "function") {
-        // Fallback path. keepalive lets the request survive a tab close
-        // similar to sendBeacon, with broader header support.
-        fetch("/api/chat-transcript", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-          keepalive: true,
-        })
-          .then((res) => {
-            if (res.status < 400) {
-              lastSentCountRef.current = currentMessages.length;
-            }
-          })
-          .catch(() => {});
-      }
-    } catch {
-      // Swallow — this fires during page unload, no UI to surface to.
-    }
-  }, []);
-
-  // Attach pagehide + visibilitychange listeners once. pagehide is the
-  // canonical "user is leaving" signal (more reliable than beforeunload,
-  // works on iOS). visibilitychange catches the case where the user
-  // backgrounds the tab without actually closing it.
-  useEffect(() => {
-    if (typeof window === "undefined") return undefined;
-    const onPagehide = () => sendTranscript();
-    const onVisibility = () => {
-      if (
-        typeof document !== "undefined" &&
-        document.visibilityState === "hidden"
-      ) {
-        sendTranscript();
-      }
-    };
-    window.addEventListener("pagehide", onPagehide);
-    document.addEventListener("visibilitychange", onVisibility);
-    return () => {
-      window.removeEventListener("pagehide", onPagehide);
-      document.removeEventListener("visibilitychange", onVisibility);
-    };
-  }, [sendTranscript]);
-
   const send = useCallback(async () => {
     const text = input.trim();
     if (!text || sending) return;
-
-    // First real visitor message in this conversation? Mint a fresh
-    // conversation_id + start time so the transcript email has a
-    // stable handle to dedup on. crypto.randomUUID is available in
-    // every browser back to ~2020, fine for our audience.
-    if (!conversationIdRef.current) {
-      try {
-        conversationIdRef.current =
-          typeof crypto !== "undefined" && crypto.randomUUID
-            ? crypto.randomUUID()
-            : `c_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
-      } catch {
-        conversationIdRef.current = `c_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
-      }
-      startedAtRef.current = new Date().toISOString();
-      lastSentCountRef.current = 0;
-    }
 
     const next = [...messages, { role: "user", content: text }];
     setMessages(next);
@@ -475,30 +320,13 @@ export default function TSDAgent() {
 
   const clearConversation = useCallback(() => {
     if (sending) return;
-    // Fire one last transcript before wiping local state — the visitor
-    // explicitly chose to clear, but the founders should still see what
-    // was discussed up to that point.
-    sendTranscript();
     setMessages([{ role: "assistant", content: INITIAL_GREETING }]);
     setLeadCaptured(false);
     setStreamingText("");
     setError("");
     clearStorage();
-    // Reset conversation-tracking refs so the next message starts a
-    // fresh conversation_id (and, therefore, a fresh email thread).
-    conversationIdRef.current = null;
-    startedAtRef.current = null;
-    lastSentCountRef.current = 0;
     trackEvent("agent_cleared");
-  }, [sending, sendTranscript]);
-
-  // Wraps setOpen(false) so closing the widget with content present
-  // also flushes the transcript to the founders. Server dedups so this
-  // doesn't double-email when pagehide eventually fires.
-  const closeWidget = useCallback(() => {
-    sendTranscript();
-    setOpen(false);
-  }, [sendTranscript]);
+  }, [sending]);
 
   const renderable = toRenderable(messages);
   const hasHistory = messages.length > 1 || leadCaptured;
@@ -635,7 +463,7 @@ export default function TSDAgent() {
                 </button>
               )}
               <button
-                onClick={closeWidget}
+                onClick={() => setOpen(false)}
                 aria-label="Close chat"
                 style={{
                   width: "32px",
