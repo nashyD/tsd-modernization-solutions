@@ -110,6 +110,14 @@
     }
     </script>
 
+    <!-- Calendly embed widget — loaded once globally so the inline embed on
+         /book and the popup CTAs across the site (BookCallButton.jsx) all
+         have window.Calendly available without per-component script
+         management. The async attribute keeps it off the critical render
+         path; book-flow consumers poll briefly if it hasn't resolved yet. -->
+    <link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css" />
+    <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+
     <!-- Apply saved theme before paint to avoid a flash -->
     <script>
       (function () {

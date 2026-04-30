@@ -1,31 +1,62 @@
-import { useEffect, useState } from "react";
-import Cal from "@calcom/embed-react";
+import { useEffect, useRef, useState } from "react";
 import { C, v, useFadeIn, DiamondDivider } from "../shared";
 import PageShell from "./PageShell";
 
-/* /book — synchronous conversion surface. Inline Cal.com embed for the
-   30-minute round-robin "Fit Call" event (host pool: Nash, Bishop,
-   Grant). Sibling page to /contact: contact runs the async Web3Forms
-   track for prospects who'd rather write a longer message; /book is
-   for the "I'm ready to talk now" crowd.
+/* /book — synchronous conversion surface. Inline Calendly embed for the
+   30-minute "Fit Call" event. Sibling page to /contact: contact runs the
+   async Web3Forms track for prospects who'd rather write a longer
+   message; /book is for the "I'm ready to talk now" crowd.
 
-   Cal API is initialized globally in Layout.jsx (theme: auto, brandColor
-   matches --c-accent). The mounted gate prevents the iframe from
-   rendering during vite-react-ssg's static prerender pass — Cal's embed
-   is a client-only component. */
+   Calendly's widget script + CSS load once globally in index.html, so
+   window.Calendly is available by the time this component mounts. The
+   `mounted` gate prevents Calendly's iframe from being injected during
+   vite-react-ssg's static prerender pass — the widget is client-only.
 
-const CAL_NAMESPACE = "fit-call";
-const CAL_LINK = "tsd-ventures/fit-call";
+   Today the URL is on Nash's individual Calendly schedule
+   (`nashdavis-tsd-ventures/30min`); when Bishop + Grant join a Calendly
+   Teams workspace the URL constant swaps to a team round-robin event. */
+
+const CALENDLY_URL =
+  "https://calendly.com/nashdavis-tsd-ventures/30min?primary_color=4B9CD3&hide_gdpr_banner=1";
 
 export default function Book() {
   const [r1, f1] = useFadeIn(100);
   const [r2, f2] = useFadeIn(300);
   const [r3, f3] = useFadeIn(500);
+  const calendlyRef = useRef(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!mounted || !calendlyRef.current) return;
+    let cancelled = false;
+
+    function tryInit() {
+      if (cancelled) return;
+      if (window.Calendly && calendlyRef.current) {
+        // Clear any prior children in case the SPA re-mounted this route;
+        // otherwise we'd stack a second iframe on top of the first.
+        calendlyRef.current.innerHTML = "";
+        window.Calendly.initInlineWidget({
+          url: CALENDLY_URL,
+          parentElement: calendlyRef.current,
+        });
+      } else {
+        // Calendly script may still be in flight (slow network, blockers).
+        // Poll briefly. The async <script> in index.html means this usually
+        // resolves within ~200ms after first paint.
+        setTimeout(tryInit, 100);
+      }
+    }
+
+    tryInit();
+    return () => {
+      cancelled = true;
+    };
+  }, [mounted]);
 
   return (
     <PageShell>
@@ -68,35 +99,33 @@ export default function Book() {
           ...f3, fontSize: "17px", lineHeight: 1.7, color: v("text-muted"),
           maxWidth: "640px", margin: "0 auto 40px", textAlign: "center",
         }}>
-          One of us — Nash, Bishop, or Grant — hops on a thirty-minute call to
-          walk through what you're trying to fix and which of our three
-          founding-cohort offers fits the shape of the problem. No commitment,
-          no slide deck, written proposal within 48 hours if there's a fit.
+          One of us hops on a thirty-minute call to walk through what you're
+          trying to fix and which of our three founding-cohort offers fits
+          the shape of the problem. No commitment, no slide deck, written
+          proposal within 48 hours if there's a fit.
         </p>
 
-        <div style={{
-          background: v("surface"),
-          border: `1px solid ${v("surface-border")}`,
-          borderRadius: "20px",
-          overflow: "hidden",
-          minHeight: "640px",
-        }}>
-          {mounted && (
-            <Cal
-              namespace={CAL_NAMESPACE}
-              calLink={CAL_LINK}
-              style={{ width: "100%", height: "100%", minHeight: "640px" }}
-              config={{ layout: "month_view" }}
-            />
-          )}
-        </div>
+        <div
+          ref={calendlyRef}
+          style={{
+            minHeight: "700px",
+            background: v("surface"),
+            border: `1px solid ${v("surface-border")}`,
+            borderRadius: "20px",
+            overflow: "hidden",
+          }}
+        />
 
         <p style={{
           marginTop: "32px", textAlign: "center",
           fontSize: "13px", color: v("text-dim"),
           fontFamily: "var(--font-display)", fontStyle: "italic",
         }}>
-          Prefer to write us a longer note? <a href="/contact" style={{ color: v("accent"), textDecoration: "underline" }}>Use the contact form instead</a>.
+          Prefer to write us a longer note?{" "}
+          <a href="/contact" style={{ color: v("accent"), textDecoration: "underline" }}>
+            Use the contact form instead
+          </a>
+          .
         </p>
       </section>
     </PageShell>

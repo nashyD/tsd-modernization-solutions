@@ -7,7 +7,6 @@ import { TSDLogo, SunIcon, MoonIcon, MenuIcon, XIcon } from "./icons";
 import { trackPageView } from "./analytics.js";
 import TSDAgent from "./components/TSDAgent.jsx";
 import CallButton from "./components/CallButton.jsx";
-import { getCalApi } from "@calcom/embed-react";
 
 const NAV_ITEMS = [
   { label: "Services", to: "/services" },
@@ -137,23 +136,6 @@ export default function Layout() {
     const fn = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
-  }, []);
-
-  /* Initialize the Cal.com "fit-call" namespace once globally. The "Book a
-     fit call" buttons across the site (BookCallButton.jsx) trigger Cal's
-     modal via data-cal-* attributes; the inline embed on /book uses the
-     same namespace. brandColor matches --c-accent (Carolina blue) so the
-     booking widget reads as part of the site, not a third-party drop-in. */
-  useEffect(() => {
-    (async function () {
-      const cal = await getCalApi({ namespace: "fit-call" });
-      cal("ui", {
-        theme: "auto",
-        styles: { branding: { brandColor: "#4B9CD3" } },
-        hideEventTypeDetails: false,
-        layout: "month_view",
-      });
-    })();
   }, []);
 
   useEffect(() => {
