@@ -506,8 +506,14 @@ function ChatButton({ pressed, opacity }) {
 // ── Chat widget ─────────────────────────────────────────────────────────────
 
 function ChatWidget({ openProgress, messages, typing, inputText, sendingFlash }) {
-  const widgetW = 280;
-  const widgetH = 400;
+  // Widget dimensions intentionally sized so the chat reads as substantial
+  // in the wide-shot intro (when the camera hasn't zoomed yet) AND fills the
+  // frame at peak zoom. Bumped from 280×400 → 340×460 to make the widget
+  // visible across the full 15.5s loop, not just the zoomed phase. The zoom
+  // target below depends on the widget's stage-coordinate center; if these
+  // dimensions change, recompute targetX/targetY in Scene().
+  const widgetW = 340;
+  const widgetH = 460;
   const tx = (1 - openProgress) * 40;
   const op = openProgress;
   const scale = 0.95 + 0.05 * openProgress;
@@ -708,7 +714,12 @@ function Scene() {
   const zoomT = interpolate([2.7, 3.6], [0, 1], Easing.easeInOutCubic)(t);
   const finalScale = 2.1;
   const zoomScale = 1 + zoomT * (finalScale - 1);
-  const targetX = 1112, targetY = 492;
+  // Zoom target = stage-coordinate center of the chat widget.
+  // Widget is 340×460 anchored at right:28, bottom:28 in a 1280×720 stage:
+  //   left edge = 1280 - 28 - 340 = 912; right edge = 1252; horizontal center = 1082
+  //   top edge  = 720  - 28 - 460 = 232; bottom edge = 692; vertical center  = 462
+  // If widget dimensions change above, recompute these.
+  const targetX = 1082, targetY = 462;
   const stageW = 1280, stageH = 720;
   const targetTx = stageW / 2 - targetX * finalScale;
   const targetTy = stageH / 2 - targetY * finalScale;

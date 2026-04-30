@@ -68,7 +68,12 @@ function GallerySlideshow({ slides, gradient }) {
     <div>
       <div style={{ position: "relative", borderRadius: "16px", overflow: "hidden", border: `1px solid ${v("border")}` }}>
         {slide.embed ? (
-          <div style={{ height: "450px", position: "relative", overflow: "hidden", background: "#06101e" }}>
+          // Embed slides (animated demos like ChatbotDemo, MakeFlowDemo) get
+          // a taller container than image/placeholder slides so the demos
+          // have more vertical real estate to scale into. The Stage inside
+          // the demos preserves its 1280×720 aspect ratio and scales to fit
+          // this box — taller container → larger rendered demo.
+          <div style={{ height: "520px", position: "relative", overflow: "hidden", background: "#06101e" }}>
             <GalleryEmbed name={slide.embed} />
           </div>
         ) : slide.image ? (
