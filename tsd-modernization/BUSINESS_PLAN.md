@@ -1,6 +1,6 @@
 # TSD Modernization Solutions — Business Plan
 
-*Extracted from [github.com/nashyD/tsd-modernization-solutions/tree/main/tsd-modernization](https://github.com/nashyD/tsd-modernization-solutions/tree/main/tsd-modernization) on 2026-04-26; refreshed against live source on 2026-04-29 (pricing restructure, vertical reframe, Twilio→Telnyx migration, route additions). Sourced from `README.md`, `index.html` (JSON-LD), all page components in `src/pages/`, `services-data.js`, and the `PROJECT_LOG.md` audit/changelog.*
+*Extracted from [github.com/nashyD/tsd-modernization-solutions/tree/main/tsd-modernization](https://github.com/nashyD/tsd-modernization-solutions/tree/main/tsd-modernization) on 2026-04-26; refreshed against live source on 2026-04-30 (pricing restructure, vertical reframe, Twilio→Telnyx migration, route additions, Cal.com booking funnel). Sourced from `README.md`, `index.html` (JSON-LD), all page components in `src/pages/`, `services-data.js`, and the `PROJECT_LOG.md` audit/changelog.*
 
 ---
 
@@ -169,6 +169,7 @@ A Hormozi-style audit run on 2026-04-25 named the constraint as a **lead problem
 | Founder DMs to non-trades operators | Live | `/salons` · `/auto-shops` · `/restaurants` (relationship-channel pages, same offer, different framing) |
 | Missed-call cost calculator | Live (added 2026-04-26) | `/missed-call-calculator` standalone + embedded on `/pricing`. Free four-question calculator that estimates revenue lost to voicemail; converts to wedge CTA. |
 | Site-to-form contact | Live | `/contact` (Web3Forms backend) |
+| Self-serve booking | Live (added 2026-04-30) | `/book` standalone + sibling "Book a fit call" CTAs on Home, Pricing (per-tier), AIReceptionist, all three Trade pages, both Relationship-page CTA blocks, and the global nav dropdown. Cal.com Teams round-robin event (`tsd-ventures/fit-call`, 30 min) distributes bookings across Nash / Bishop / Grant by availability. `?ref=<source>` attribution rides on the Cal URL the same way it does on the contact-form path. |
 | On-site AI chat agent | Live (added 2026-04-25, hardened with Upstash distributed rate limit 2026-04-26) | Captures lead in chat → posts to Web3Forms tagged `[Chat agent]` |
 
 ### 8.3 The chat agent as eat-our-own-dog-food
@@ -224,6 +225,7 @@ Promise: *"You're not on your own. One founder stays on call for fixes through A
 | Routing | `react-router-dom` v6 | Pinned to v6 (vite-react-ssg requirement) |
 | Hosting / deploy | Vercel | Auto-deploys `main` branch; serverless functions in `/api/` |
 | Form backend | Web3Forms | No server code; one access key. `?ref=<source>` query param captured into the form post for source attribution. |
+| Booking | Cal.com Teams (`@calcom/embed-react`) | Round-robin "Fit Call" event at `tsd-ventures/fit-call` (30 min, three-host pool: Nash / Bishop / Grant). Inline embed on `/book`; modal triggers on conversion-page CTAs via `data-cal-*` attributes. Brand color `#4B9CD3` matches `--c-accent`. |
 | Chat agent | `@anthropic-ai/sdk` (Claude Haiku 4.5) | `/api/agent.js` Vercel serverless function with streaming, persistence, lead validation; ~$0.008/conversation |
 | Chat agent rate limit | Upstash Redis (distributed) | Replaced in-memory rate limit on 2026-04-26 so multi-region Vercel instances share the bucket |
 | Voice routing | Telnyx Call Control | TSD's published number `(704) 317-5630` is a Telnyx number; webhooks point at the voice-receptionist Fly app. Replaced Twilio on 2026-04-28 for cost + Frontline-discontinuation reasons. |
@@ -310,6 +312,7 @@ Refreshed from `PROJECT_LOG.md`. Items checked off were live-verified against th
 - ✅ AI integration page chatbot mockup replaced with animated demo (2026-04-28); demo enlargement pass (2026-04-29).
 - ✅ Hero theme-aware fix so the cinematic frame follows the page bg in light mode (2026-04-29).
 - ✅ Missed-call calculator inputs paired with range sliders for ballpark entry (2026-04-29).
+- ✅ Cal.com booking system live: `/book` route, sibling "Book a fit call" CTAs across all conversion pages, round-robin Teams event across the three founders (2026-04-30).
 
 **Still open:**
 

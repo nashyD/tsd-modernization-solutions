@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { C, v, useFadeIn, RippleButton, DiamondDivider } from "../shared";
 import { CheckIcon, ArrowRightIcon } from "../icons";
 import PageShell from "./PageShell";
+import BookCallButton from "../components/BookCallButton";
 
 /* Relationship-channel landing page — sibling of TradePage.jsx but lighter
    and bundle-led (not receptionist-led). Three sections + closing:
@@ -101,6 +102,9 @@ function RelationshipHero({ rel }) {
             Apply for a founding slot <ArrowRightIcon size={16} />
           </RippleButton>
         </Link>
+        <BookCallButton variant="secondary" refSource={rel.slug} style={{ padding: "16px 36px", fontSize: "15px" }}>
+          Book a fit call
+        </BookCallButton>
         <Link to="/pricing">
           <RippleButton variant="ghost" style={{ padding: "16px 36px", fontSize: "15px" }}>
             See pricing
@@ -172,6 +176,9 @@ function ClosingCTA({ rel }) {
             Apply for a founding slot <ArrowRightIcon size={16} />
           </RippleButton>
         </Link>
+        <BookCallButton variant="secondary" refSource={rel.slug} style={{ padding: "14px 32px", fontSize: "15px" }}>
+          Book a fit call
+        </BookCallButton>
         <Link to="/pricing">
           <RippleButton variant="ghost" style={{ padding: "14px 32px", fontSize: "15px" }}>
             See all three tiers

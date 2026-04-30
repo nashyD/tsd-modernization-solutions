@@ -121,6 +121,35 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-30 — Cal.com booking system: `/book` route + modal CTAs across the conversion pages
+
+**What.** Wired Cal.com self-serve booking into the site. New `/book` route with an inline Cal embed (round-robin "Fit Call" event at `cal.com/tsd-ventures/fit-call`, 30 minutes, three-host pool: Nash / Bishop / Grant). Reusable `BookCallButton` component carries Cal's `data-cal-*` attributes and slots in as a sibling to the existing primary "Apply for a founding slot" / "Reserve a setup spot" CTAs across Home, Pricing (per-tier), AIReceptionist, all three Trade pages (`/hvac`, `/electricians`, `/plumbers`), and both Relationship-page CTA blocks (`/salons`, `/auto-shops`, `/restaurants`). Same `?ref=<source>` attribution pattern as `/contact` — passes through as a Cal URL param so the founder sees which surface drove the booking. Cal API is initialized once globally in [`Layout.jsx`](src/Layout.jsx) (theme: auto, brandColor `#4B9CD3` to match `--c-accent`); the dropdown menu in the global nav also gets a "Book a fit call" secondary CTA below the existing "Apply for a Slot" primary so the booking surface is reachable from every page without a body-level CTA in view.
+
+**Why.** Closes the audit item from 2026-04-16 (§2 of the first-iteration audit, which named "one form, one page, one shot" as the conversion ceiling). The contact form (Web3Forms async track) stays for prospects who want to write a longer note; `/book` adds the synchronous "ready to talk now" path so the funnel offers two intents instead of forcing every visitor through the same form. The `?ref=<source>` attribution pattern is preserved on the booking side via Cal URL params, so the source-of-lead data isn't lost when prospects pick the synchronous path. Round-robin host config means the three of us share booking load by availability without manually swapping a single-host link week-to-week — and aligns the booking distribution with the same on-call rotation Austin uses for `transfer_to_human` in the voice receptionist.
+
+**Implementation notes.**
+- The Cal embed is client-only (it injects an iframe). [`Book.jsx`](src/pages/Book.jsx) uses a `mounted` boolean set in a `useEffect` so the component skips rendering during the vite-react-ssg static prerender pass — without that gate the build would crash with a `window is not defined` error from inside Cal's embed script.
+- [`BookCallButton`](src/components/BookCallButton.jsx) wraps the existing `RippleButton` and spreads `data-cal-*` attributes onto the underlying `<button>`. `RippleButton`'s own click handler runs first (paints the ripple, calls the consumer's `onClick`), and Cal's document-level click delegation fires the modal off the data attributes — no conflict.
+- The `ROUTE_META` entry for `/book` ships the per-route `<title>` + meta description so the page lands with proper SEO on direct shares (e.g. `tsd-modernization.com/book` pasted into iMessage shows the right preview, not the homepage shell).
+- Voice agent (`voice-receptionist` repo) is unchanged on this pass. Austin still runs the "capture preferred day → founder follows up to lock time" flow because spoken URLs translate badly. The next pass through the voice prompt will reference `tsd-modernization.com/book` in the founder-followup language so the followup itself is faster (paste a Cal link instead of negotiating slots in DM).
+
+**Files touched.**
+- New: [`src/pages/Book.jsx`](src/pages/Book.jsx), [`src/components/BookCallButton.jsx`](src/components/BookCallButton.jsx).
+- [`src/routes.jsx`](src/routes.jsx) — `/book` route wiring.
+- [`src/Layout.jsx`](src/Layout.jsx) — global Cal API init, `ROUTE_META` entry, nav-dropdown "Book a fit call" CTA.
+- [`src/pages/Home.jsx`](src/pages/Home.jsx) — hero CTA picks up the Book button between "Apply" and "See pricing."
+- [`src/pages/Pricing.jsx`](src/pages/Pricing.jsx) — per-tier "Or book a fit call" sibling under each Apply button.
+- [`src/pages/AIReceptionist.jsx`](src/pages/AIReceptionist.jsx) — hero CTA gains a Book sibling.
+- [`src/pages/TradePage.jsx`](src/pages/TradePage.jsx) — same hero pattern across `/hvac`, `/electricians`, `/plumbers`.
+- [`src/pages/RelationshipPage.jsx`](src/pages/RelationshipPage.jsx) — Book button on the hero and ClosingCTA blocks across `/salons`, `/auto-shops`, `/restaurants`.
+- `package.json` — adds `@calcom/embed-react` dependency.
+
+**Companion plan updates.** [`BUSINESS_PLAN.md`](BUSINESS_PLAN.md) §8.2 (acquisition channels: new "Self-serve booking" row), §11.1 (technology stack: Cal.com Teams row added), §14 (booking item joins the "Done" list), and the front-matter "refreshed against live source" date bumped to 2026-04-30. [`.claude/CLAUDE.md`](.claude/CLAUDE.md) trigger table picks up a row mapping `/book`, `BookCallButton.jsx`, and the Cal slug to §8.2 / §11 of the plan so future Claude sessions know the booking surface is one of the change-set fences.
+
+**Principle reinforced.** *A funnel needs more than one shape.* Async (form), synchronous (booking), and live (chat) are three different commitment levels for the same buying intent. The previous site had one shape — the form — which meant the visitor who wanted to talk now had to write the same email a hesitant visitor would. Splitting the funnel into a contact form (async) and a booking page (synchronous) lets each visitor self-select into the path that matches their state, without forcing them to pretend they're in another. The `?ref=` attribution on both paths means the source-of-lead data still rolls up into one bucket so we don't lose insight when buyers pick the faster path.
+
+---
+
 ### 2026-04-29 — AI Receptionist wedge: $97/mo recurring fee scratched
 
 **What.** The AI Receptionist wedge is now `$497 one-time, no recurring charge`. Removed every remaining reference to the prior `$497 setup + $97/mo through Aug 31, 2026` framing in [`BUSINESS_PLAN.md`](BUSINESS_PLAN.md) (§6 wedge sub-section + §12 financial-model row + realistic-scenarios table) and in the [`.claude/CLAUDE.md`](.claude/CLAUDE.md) trigger table. The user-facing site (`Pricing.jsx`, `AIReceptionist.jsx`, `content/tsd-knowledge.md`) was already $97-clean — this is the trailing documentation cleanup.

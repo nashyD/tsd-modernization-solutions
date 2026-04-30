@@ -7,6 +7,7 @@ import { TSDLogo, SunIcon, MoonIcon, MenuIcon, XIcon } from "./icons";
 import { trackPageView } from "./analytics.js";
 import TSDAgent from "./components/TSDAgent.jsx";
 import CallButton from "./components/CallButton.jsx";
+import { getCalApi } from "@calcom/embed-react";
 
 const NAV_ITEMS = [
   { label: "Services", to: "/services" },
@@ -97,6 +98,10 @@ const ROUTE_META = {
     title: "Our Team — Nash Davis, Bishop Switzer, Grant Tadlock | TSD Modernization Solutions",
     description: "Meet the founders of TSD Modernization Solutions — a local Charlotte team of small-business modernization specialists.",
   },
+  "/book": {
+    title: "Book a Fit Call — 30 Minutes with TSD | TSD Modernization Solutions",
+    description: "Pick a 30-minute slot with one of the three founders — Nash, Bishop, or Grant. Walk through what you're trying to fix and see whether our $1,500 audit, $2,000 website + AI bundle, or $5,000 Founding Partnership fits the shape of the problem. No slide deck, no commitment.",
+  },
   "/contact": {
     title: "Contact Us — Apply for a Founding Slot | TSD Modernization Solutions",
     description: "Apply for a Summer 2026 founding-cohort slot. Free 1-2 hour fit call, then a written proposal within 48 hours. Three founders, ten projects, hard close August 10.",
@@ -132,6 +137,23 @@ export default function Layout() {
     const fn = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
+  }, []);
+
+  /* Initialize the Cal.com "fit-call" namespace once globally. The "Book a
+     fit call" buttons across the site (BookCallButton.jsx) trigger Cal's
+     modal via data-cal-* attributes; the inline embed on /book uses the
+     same namespace. brandColor matches --c-accent (Carolina blue) so the
+     booking widget reads as part of the site, not a third-party drop-in. */
+  useEffect(() => {
+    (async function () {
+      const cal = await getCalApi({ namespace: "fit-call" });
+      cal("ui", {
+        theme: "auto",
+        styles: { branding: { brandColor: "#4B9CD3" } },
+        hideEventTypeDetails: false,
+        layout: "month_view",
+      });
+    })();
   }, []);
 
   useEffect(() => {
@@ -335,6 +357,11 @@ export default function Layout() {
                 <Link to="/contact" onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "4px" }}>
                   <RippleButton variant="primary" style={{ width: "100%", padding: "12px 0", fontSize: "13px" }}>
                     Apply for a Slot
+                  </RippleButton>
+                </Link>
+                <Link to="/book" onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "4px" }}>
+                  <RippleButton variant="secondary" style={{ width: "100%", padding: "12px 0", fontSize: "13px" }}>
+                    Book a fit call
                   </RippleButton>
                 </Link>
               </div>

@@ -16,6 +16,11 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://tsd-modernization.com/book</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://tsd-modernization.com/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>

@@ -15,6 +15,7 @@ If you touch any of the following, the matching plan section needs a correspondi
 | `src/pages/Pricing.jsx`, `src/services-data.js`, JSON-LD `priceRange` in `index.html` | §6 Pricing & Packaging, §12 Financial Model |
 | `src/pages/AIReceptionist.jsx`, wedge messaging, the $497 one-time fee, ownership-transfer terms | §5.4, §6 (wedge sub-section), §12 |
 | `src/pages/Home.jsx` hero / wedge framing, `src/pages/TradePage.jsx`, `src/pages/RelationshipPage.jsx`, new vertical landing pages | §4 Market & Opportunity (vertical positioning), §8.2 Acquisition channels |
+| `src/pages/Book.jsx`, `src/components/BookCallButton.jsx`, Cal.com slug (`tsd-ventures/fit-call`), event-type config, presence/absence of "Book a fit call" CTAs on conversion pages | §8.2 Acquisition channels (booking row), §11.1 Technology & Infrastructure (booking row) |
 | `src/pages/Team.jsx`, founder roles / emails / schools | §3 Founders & Roles |
 | Phone number anywhere (`+17043175630` is canonical), JSON-LD `telephone`, contracts contracting party | §2 Company Overview |
 | Operating window dates (May 7 / Aug 10 / Aug 31 / July 13), cohort caps | §1, §2, §7, §14 |

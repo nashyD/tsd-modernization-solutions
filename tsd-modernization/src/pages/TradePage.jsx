@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { C, v, useFadeIn, Card, RippleButton, DiamondDivider } from "../shared";
 import { CheckIcon, ArrowRightIcon } from "../icons";
 import PageShell from "./PageShell";
+import BookCallButton from "../components/BookCallButton";
 
 /* Trade-specific landing page — lighter sibling of /ai-receptionist.
    Hero + Math come from the per-trade data file (trades-data.js); the
@@ -100,6 +101,9 @@ function TradeHero({ trade }) {
             Reserve a setup spot <ArrowRightIcon size={16} />
           </RippleButton>
         </Link>
+        <BookCallButton variant="secondary" refSource={trade.slug} style={{ padding: "16px 36px", fontSize: "15px" }}>
+          Book a fit call
+        </BookCallButton>
         <Link to="/ai-receptionist">
           <RippleButton variant="ghost" style={{ padding: "16px 36px", fontSize: "15px" }}>
             See the full spec

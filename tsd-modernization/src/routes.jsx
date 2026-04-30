@@ -14,6 +14,7 @@ import { TRADES } from "./trades-data";
 import RelationshipPage from "./pages/RelationshipPage";
 import { RELATIONSHIPS } from "./relationships-data";
 import MissedCallCalculator from "./pages/MissedCallCalculator";
+import Book from "./pages/Book";
 
 /* Trade-specific landing pages — flat URLs (/hvac, /electricians, /plumbers)
    so ad copy and word-of-mouth stay short. Each is the destination URL for
@@ -62,6 +63,7 @@ export const routes = [
       { path: "missed-call-calculator", Component: MissedCallCalculator },
       { path: "testimonials", Component: Testimonials },
       { path: "team", Component: Team },
+      { path: "book", Component: Book },
       { path: "contact", Component: Contact },
       { path: "*", Component: Home },
     ],

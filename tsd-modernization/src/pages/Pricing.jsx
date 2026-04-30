@@ -4,6 +4,7 @@ import { C, v, useFadeIn, SectionHeader, Card, RippleButton } from "../shared";
 import { CheckIcon } from "../icons";
 import PageShell from "./PageShell";
 import MissedCallCalculatorWidget from "../components/MissedCallCalculatorWidget";
+import BookCallButton from "../components/BookCallButton";
 
 /* Live scarcity counter — update these as contracts sign so the counter
    on each tier card stays honest. Currently 0 closed contracts; all open. */
@@ -191,6 +192,9 @@ function TierCard({ tier, delay }) {
           {tier.btn}
         </RippleButton>
       </Link>
+      <BookCallButton variant="secondary" refSource="pricing" style={{ width: "100%", padding: "12px 0", marginTop: "10px", fontSize: "13px" }}>
+        Or book a fit call
+      </BookCallButton>
       {tier.objection && (
         <p style={{
           marginTop: "14px",

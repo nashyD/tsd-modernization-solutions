@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { C, v, useFadeIn, Card, RippleButton, DiamondDivider } from "../shared";
 import { CheckIcon, ArrowRightIcon } from "../icons";
 import PageShell from "./PageShell";
+import BookCallButton from "../components/BookCallButton";
 
 /* Section header in the established editorial pattern: ◆ LABEL / hairline / § 0N */
 function ChapterHead({ label, num, title, sub }) {
@@ -85,6 +86,9 @@ function ReceptionistHero() {
             Reserve a setup spot <ArrowRightIcon size={16} />
           </RippleButton>
         </Link>
+        <BookCallButton variant="secondary" refSource="ai-receptionist" style={{ padding: "16px 36px", fontSize: "15px" }}>
+          Book a fit call
+        </BookCallButton>
       </div>
 
       <div ref={r5} style={{

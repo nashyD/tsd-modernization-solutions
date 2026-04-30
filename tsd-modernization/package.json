@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.91.1",
+    "@calcom/embed-react": "^1.5.3",
     "@sentry/react": "^10.50.0",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.37.0",
