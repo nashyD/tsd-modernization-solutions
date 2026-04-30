@@ -121,6 +121,24 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-29 — AI Receptionist wedge: $97/mo recurring fee scratched
+
+**What.** The AI Receptionist wedge is now `$497 one-time, no recurring charge`. Removed every remaining reference to the prior `$497 setup + $97/mo through Aug 31, 2026` framing in [`BUSINESS_PLAN.md`](BUSINESS_PLAN.md) (§6 wedge sub-section + §12 financial-model row + realistic-scenarios table) and in the [`.claude/CLAUDE.md`](.claude/CLAUDE.md) trigger table. The user-facing site (`Pricing.jsx`, `AIReceptionist.jsx`, `content/tsd-knowledge.md`) was already $97-clean — this is the trailing documentation cleanup.
+
+**Companion changes in the [voice-receptionist sister repo](https://github.com/nashyD/voice-receptionist).** `tsd-knowledge.md` re-synced from this repo's canonical `content/tsd-knowledge.md` (the receptionist-side copy had been left at the older `$97/mo` framing). `prompt.py` two voice-variant lines updated to drop the "ninety-seven a month" mentions. `README.md` cost-tier paragraph rewritten to describe the pass-through-at-handoff economics rather than a $97/mo client subscription.
+
+**Why.** The $97/mo originally existed to cover the underlying API costs (Telnyx + Deepgram + Anthropic + ElevenLabs + Fly) during the four-month operating window before ownership transfers Aug 31. Once the cost-pass-through model became "client takes over their own provider accounts at handoff," the recurring fee was double-charging — TSD's actual operational cost per client during the window is ~$15-20/mo, easily absorbed into the $497 setup. Scratching the recurring line tightens the offer ("$497 once, then it's yours") and removes the re-frame moment in discovery calls where every "plus monthly" creates friction. It also brings the wedge fully in line with the "no subscription forever" promise that's the whole point of the offer.
+
+**Financial-model impact.** §12 max-revenue ceiling drops by $3,880 (10 wedge clients × $97 × ~4 mo) → the "Full cohort + 5 standalone audits + 5 standalone wedge" scenario moves from $46,925 to $44,985. Bundle-only and partnership-only scenarios unchanged (wedge is folded into both).
+
+**Files touched.**
+- [`BUSINESS_PLAN.md`](BUSINESS_PLAN.md) — §6 wedge price line; §12 revenue-ceiling table (row removed); §12 realistic-scenarios table (bottom-row math updated).
+- [`.claude/CLAUDE.md`](.claude/CLAUDE.md) — trigger table updated to drop the stale "$97 mechanics" wording so future Claude sessions don't carry the assumption forward.
+
+**Principle reinforced.** *Doc drift is silent and corrosive.* The user-facing site had been $97-clean for some time, but the business plan and the sister-repo voice agent still pitched the old recurring fee — the chat agent was honest, the voice agent was selling stale terms, and the plan disagreed with the homepage. The `.claude/CLAUDE.md` instruction added in commit `eabb3d2` is precisely the guardrail that prevents this kind of drift; this entry is the first test of it. The trigger fires when a change to pricing pages requires the plan to update — and the lesson generalizes: every change that affects the business narrative should carry the plan with it in the same change set.
+
+---
+
 ### 2026-04-29 — Missed-call calculator: paired number + slider inputs
 
 **What.** The three numeric inputs in [`MissedCallCalculatorWidget.jsx`](src/components/MissedCallCalculatorWidget.jsx) — unanswered hours per week, average ticket size, average jobs per week — each got a paired range slider beneath the number field. Both controls bind to the same string state, so a user can drag for fast adjustment or type for precision; the typed input has no clamp (you can enter $7,500 even though the slider stops at $5,000), the slider clamps to its bounds. Min/max bound labels render under each slider with formatted units (`0 hrs` / `168 hrs`, `$0` / `$5,000`, `0 / wk` / `100 / wk`). When the input is empty (initial state) the slider parks at min — the calculator still requires non-zero values before computing, so the "you haven't answered yet" affordance survives.

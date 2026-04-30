@@ -123,7 +123,7 @@ Three tiers on `/pricing` (Phase I, Phase II, Founding Partnership) plus a wedge
 - **Note:** Cancel any time after handoff. No retainer trap.
 
 ### Wedge — AI Receptionist setup (`/ai-receptionist`)
-- **Price:** $497 founding setup (anchor $1,500) + $97/mo through Aug 31, 2026
+- **Price:** $497 founding setup (anchor $1,500) — one-time fee, no recurring charge
 - **Cap:** 10 setup spots, last start July 13
 - **After Aug 31:** Ownership transfers — buyer owns the agent, credentials, and call log; continues the underlying service directly with their own Telnyx + Deepgram + Anthropic accounts
 - **Risk reversal:** If the AI doesn't book a single appointment in the first 30 days, every dollar comes back
@@ -257,7 +257,6 @@ Promise: *"You're not on your own. One founder stays on call for fixes through A
 | Phase II Bundle (founding rate) | $2,000 | 10 | $20,000 |
 | Founding Partnership (Phase III) | $5,000 | 3 | $15,000 |
 | AI Receptionist setup (standalone) | $497 | 10 | $4,970 |
-| AI Receptionist monthly | $97/mo × ~4 mo | 10 | $3,880 |
 
 **Notes on stacking:**
 - Phase II's "AI Receptionist included" bonus is the same wedge product folded into the bundle — selling Phase II to a buyer who'd also have bought the $497 setup is a $497 absorption, not additional revenue.
@@ -271,7 +270,7 @@ Promise: *"You're not on your own. One founder stays on call for fixes through A
 | Conservative (5 bundles, 0 partnerships) | 5 | 0 | 0 | 0 | $10,000 |
 | Mid (8 bundles, 1 partnership, 2 audits) | 8 | 1 | 2 | 0 | $24,000 |
 | Full cohort (10 bundles, 3 partnerships) | 10 | 3 | 0 | 0 | $35,000 |
-| Full cohort + 5 standalone audits + 5 standalone wedge | 10 | 3 | 5 | 5 (setup + 4mo) | $35,000 + $7,500 + $4,425 = **$46,925** |
+| Full cohort + 5 standalone audits + 5 standalone wedge | 10 | 3 | 5 | 5 (one-time) | $35,000 + $7,500 + $2,485 = **$44,985** |
 
 ### Implied gross per founder
 At full-cohort base ($35K / 3 founders): ~$11,667 per founder over the 14-week summer. At mid scenario ($24K / 3): ~$8,000 per founder. At conservative ($10K / 3): ~$3,333 per founder.
