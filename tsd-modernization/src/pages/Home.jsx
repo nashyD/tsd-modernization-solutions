@@ -168,17 +168,8 @@ function Hero() {
         </p>
 
         <div ref={r4} style={{ ...f4, display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
-          <Link to="/contact">
-            <RippleButton variant="primary" style={{ padding: "16px 36px", fontSize: "15px" }}>
-              Apply for a founding slot <ArrowRightIcon size={16} />
-            </RippleButton>
-          </Link>
-          <BookCallButton variant="secondary" refSource="home-hero" style={{
-            padding: "16px 36px", fontSize: "15px",
-            background: "rgba(255,255,255,0.1)", borderColor: "rgba(255,255,255,0.25)",
-            backdropFilter: "blur(8px)", color: "#fff",
-          }}>
-            Book a fit call
+          <BookCallButton variant="primary" refSource="home-hero" style={{ padding: "16px 36px", fontSize: "15px" }}>
+            Book a fit call <ArrowRightIcon size={16} />
           </BookCallButton>
           <Link to="/pricing">
             <RippleButton variant="secondary" style={{

@@ -121,6 +121,21 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-04-30 — Home hero: promote "Book a fit call" to primary, drop the Apply CTA
+
+**What.** The Home hero CTA cluster shrank from three buttons to two. Removed the `<Link to="/contact">Apply for a founding slot</Link>` button entirely, promoted [`<BookCallButton>`](src/components/BookCallButton.jsx) from `variant="secondary"` (glassy on the video background) to `variant="primary"` (blue-gradient prism), kept "See pricing" as the secondary glassy CTA. The Book button picked up the `<ArrowRightIcon>` glyph that the Apply button used to carry, so the lead-CTA visual weight is preserved. The "Apply for a founding slot" path is intact everywhere else on the site — nav dropdown primary CTA, Pricing tier buttons, AIReceptionist + Trade page heroes (as "Reserve a setup spot"), Relationship page heroes — just no longer the lead button on the homepage.
+
+**Why.** Three CTAs in a hero is too many — visitors stall when the page asks them to choose between equally-weighted options, and the third button often gets ignored entirely. Cutting to two clarifies the intended action: book the call. "Apply" was the heavier ask (write a longer message via the contact form); "Book" is the lighter ask (pick a 30-minute slot, no commitment). For a pre-revenue summer cohort recruiting its founding ten, the lighter-ask CTA is the smart lead — buyers who weren't going to apply on first visit get a softer conversion path, and buyers who already wanted to apply still find the path one click deeper (nav dropdown, Pricing tier cards). The Calendly booking system shipped earlier today made this promotion possible: before this morning's booking work, Book was a stub-quality dual-CTA experiment, not a replacement-grade primary.
+
+**Files touched.**
+- [`src/pages/Home.jsx`](src/pages/Home.jsx) — hero CTA cluster: removed the Apply Link block, promoted `BookCallButton` to `variant="primary"` and dropped its glassy overrides, added the `ArrowRightIcon` glyph.
+
+**Companion plan update.** [`BUSINESS_PLAN.md`](BUSINESS_PLAN.md) §8.2 row reworked to call out that Book is now the primary on the Home hero (not a sibling), with sibling-pattern still in force on the other conversion pages.
+
+**Principle reinforced.** *A hero gets one primary CTA.* Two buttons are fine when the second is a clearly different intent — "See pricing" as a low-commitment scan path beside the booking action. Three competing primaries fight against themselves; the visitor's eye doesn't know where to land. Picking the lightest-ask high-quality conversion as the lead beats picking the highest-revenue conversion every time, because the lightest-ask is the one buyers actually take on first contact.
+
+---
+
 ### 2026-04-30 — Calendly migration: replace Cal.com booking integration
 
 **What.** Swapped the booking integration from Cal.com to Calendly. Removed the `@calcom/embed-react` dep, added Calendly's widget script + CSS to [`index.html`](index.html) so `window.Calendly` is available globally. Rewrote [`BookCallButton.jsx`](src/components/BookCallButton.jsx) to call `window.Calendly.initPopupWidget({url})` from a click handler (replacing the `data-cal-*` attribute pattern), and rewrote [`Book.jsx`](src/pages/Book.jsx) to call `window.Calendly.initInlineWidget({url, parentElement})` from a `useEffect` (replacing the `<Cal>` component). Dropped the corresponding `getCalApi` init `useEffect` from [`Layout.jsx`](src/Layout.jsx) — Calendly doesn't need a global namespace init. The Calendly URL is `calendly.com/nashdavis-tsd-ventures/30min`, on Nash's individual schedule today; round-robin across the three founders is the path forward when Bishop + Grant onboard onto a Calendly Teams workspace, at which point one constant in `BookCallButton.jsx` and one in `Book.jsx` swap from the per-user URL to a team-event URL (`calendly.com/d/<team-id>/30min` shape) — no other code change.
