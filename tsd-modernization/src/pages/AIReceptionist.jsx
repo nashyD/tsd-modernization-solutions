@@ -273,9 +273,9 @@ function TheOffer() {
             <div style={{
               fontSize: "10px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase",
               color: v("accent"), marginBottom: "6px",
-            }}>{"◆ Bundle bonus"}</div>
+            }}>{"◆ Build bonus"}</div>
             <p style={{ fontSize: "13px", color: v("text"), lineHeight: 1.55 }}>
-              Add the Phase II Bundle within 30 days of setup and save $1,000 — full Website + AI Bundle for $4,000 instead of $5,000.
+              Add the Website + AI Build within 30 days of setup and save $1,000 — full Build for $4,000 instead of $5,000.
             </p>
           </div>
 

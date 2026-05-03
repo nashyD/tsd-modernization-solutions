@@ -749,7 +749,7 @@ function FoundingClientOffer() {
           fontSize: "16px", lineHeight: 1.7, color: "rgba(255,255,255,0.92)",
           maxWidth: "620px", margin: "0 auto 32px",
         }}>
-          Founding-cohort pricing on every offer — half what we'll charge after Summer 2026. Direct founder access. Source code yours from day one. Two public tiers: the Website + AI Bundle at $5,000 and the Founding Partnership at $10,000 (capped at three spots). A $1,500 discovery audit is available on request.
+          Founding-cohort pricing on every offer — half what we'll charge after Summer 2026. Direct founder access. Source code yours from day one. Two public tiers: the Website + AI Build at $5,000 and the Full Modernization at $10,000 (by application). A $1,500 discovery audit is available on request.
         </p>
         <Link to="/pricing">
           <RippleButton variant="secondary" style={{

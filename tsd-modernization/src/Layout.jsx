@@ -35,11 +35,11 @@ const ROUTE_META = {
   },
   "/services/ai-integration": {
     title: "AI Integration & Business Automation for Small Businesses | TSD Modernization Solutions",
-    description: "Custom AI chatbots, workflow automation with Make and Zapier, and AI-powered reporting for Charlotte-area small businesses. Included in the $5,000 Website + AI Bundle (anchor $10,000), launched in 1-2 weeks.",
+    description: "Custom AI chatbots, workflow automation with Make and Zapier, and AI-powered reporting for Charlotte-area small businesses. Included in the $5,000 Website + AI Build, launched in 1-2 weeks.",
   },
   "/services/websites": {
     title: "Custom Website Design & Redesign | Charlotte Small Business Web Developer",
-    description: "Fast, mobile-first websites with on-page SEO, analytics wiring, and full handoff docs so your team can manage content. 5-8 page sites at $5,000 founding rate (anchor $10,000), launched in 2-4 weeks.",
+    description: "Fast, mobile-first websites with on-page SEO, analytics wiring, and full handoff docs so your team can manage content. 5-8 page sites at $5,000 founding rate, launched in 2-4 weeks.",
   },
   "/services/process-modernization": {
     title: "Tech Audits & Process Modernization for Small Businesses | TSD Modernization Solutions",
@@ -55,7 +55,7 @@ const ROUTE_META = {
   },
   "/pricing": {
     title: "Pricing — Founding Cohort, Summer 2026 | TSD Modernization Solutions",
-    description: "Founding-cohort pricing for ten Charlotte-area small businesses. Phase II Website + AI Bundle at $5,000 (anchor $10,000) plus the Founding Partnership at $10,000 (anchor $20,000, three spots). A $1,500 discovery audit is also available on request. Last project start July 13, 2026.",
+    description: "Founding-cohort pricing for ten Charlotte-area small businesses. Website + AI Build at $5,000 plus the Full Modernization at $10,000 (by application). A $1,500 discovery audit is also available on request. Last project start July 13, 2026.",
   },
   "/ai-receptionist": {
     title: "AI Receptionist for Charlotte Trades — $497, Yours to Keep | TSD Modernization Solutions",
@@ -99,7 +99,7 @@ const ROUTE_META = {
   },
   "/book": {
     title: "Book a Fit Call — 30 Minutes with TSD | TSD Modernization Solutions",
-    description: "Pick a 30-minute slot with one of the three founders — Nash, Bishop, or Grant. Walk through what you're trying to fix and see whether our $5,000 website + AI bundle or $10,000 Founding Partnership fits the shape of the problem. No slide deck, no commitment.",
+    description: "Pick a 30-minute slot with one of the three founders — Nash, Bishop, or Grant. Walk through what you're trying to fix and see whether our $5,000 Website + AI Build or $10,000 Full Modernization fits the shape of the problem. No slide deck, no commitment.",
   },
   "/contact": {
     title: "Contact Us — Apply for a Founding Slot | TSD Modernization Solutions",

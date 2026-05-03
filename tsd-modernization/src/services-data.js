@@ -23,7 +23,7 @@ export const SERVICES = [
       "Staff training on every tool we deploy",
     ],
     timeline: "1-2 weeks from kickoff to launch.",
-    price: "Included in the Summer 2026 Website + AI Bundle: $5,000 founding rate (standard $10,000). Also included in the $10,000 Founding Partnership (anchor $20,000), which adds an integration into whatever system you currently use plus custom AI re-training on your real call data.",
+    price: "Included in the Summer 2026 Website + AI Build at $5,000 founding rate. Also included in the $10,000 Full Modernization (by application), which adds an integration into whatever system you currently use plus custom AI re-training on your real call data.",
     videos: [
       { title: "Chatbot Setup Walkthrough", desc: "See how we build and train a custom AI chatbot for your business in under a week." },
       { title: "Workflow Automation Demo", desc: "Watch a Make/Zapier automation route leads, schedule calls, and update your CRM automatically." },
@@ -54,7 +54,7 @@ export const SERVICES = [
       "Founder on call for fixes through Aug 31, 2026",
     ],
     timeline: "2-4 weeks from approved mockup to launch.",
-    price: "Bundled with the Summer 2026 Website + AI offer: $5,000 founding rate (standard $10,000).",
+    price: "Bundled with the Summer 2026 Website + AI Build at $5,000 founding rate.",
     videos: [
       { title: "Design to Launch Process", desc: "Follow a website build from initial mockup through to live deployment." },
       { title: "SEO & Analytics Setup", desc: "How we wire up Google Analytics, Search Console, and on-page SEO from day one." },
@@ -83,7 +83,7 @@ export const SERVICES = [
       "No obligation to continue with us",
     ],
     timeline: "Audit completed in a single session. Written roadmap delivered within 48 hours.",
-    price: "$1,500 founding rate (standard $3,000). Available as a stepping-stone offer in qualifying conversations — ask about it on your fit call if you'd rather start with a paid scope-and-recommend before committing to a full build. Money-back if we can't find $25K of opportunities. Also included in the $10,000 Founding Partnership.",
+    price: "$1,500 founding rate (standard $3,000). Available as a stepping-stone offer in qualifying conversations — ask about it on your fit call if you'd rather start with a paid scope-and-recommend before committing to a full build. Money-back if we can't find $25K of opportunities. Also included in the $10,000 Full Modernization.",
     videos: [
       { title: "Tech Audit Session Preview", desc: "A preview of what a structured tech audit looks like and the questions we walk through." },
       { title: "Roadmap Walkthrough", desc: "See an example modernization roadmap with priorities, costs, and ROI estimates." },

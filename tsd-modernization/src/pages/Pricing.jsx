@@ -6,12 +6,11 @@ import PageShell from "./PageShell";
 import MissedCallCalculatorWidget from "../components/MissedCallCalculatorWidget";
 import BookCallButton from "../components/BookCallButton";
 
-/* Live scarcity counter — update these as contracts sign so the counter
-   on each tier card stays honest. Currently 0 closed contracts; all open. */
-const SPOTS = {
-  bundle: { remaining: 10, total: 10 },
-  partnership: { remaining: 3, total: 3 },
-};
+/* Per-tier scarcity counters removed 2026-05-03. Empty scarcity ("10 of 10
+   spots remaining") reads as "nobody bought yet" — worse than no badge.
+   Re-enable by adding entries here AND setting tier.spotsKey on the tier
+   below, once 3+ contracts have closed and the remaining count is honest. */
+const SPOTS = {};
 
 /* Editorial masthead — pairs with the Home/Team mastheads. Frames the page
    so every dollar amount below sits inside the cohort scarcity context. */
@@ -163,6 +162,14 @@ function TierCard({ tier, delay }) {
         </div>
       )}
 
+      {tier.intro && (
+        <p style={{
+          fontSize: "14px", color: v("text-muted"), lineHeight: 1.6,
+          marginBottom: "22px", textAlign: "center",
+          fontFamily: "var(--font-display)", fontStyle: "italic",
+        }}>{tier.intro}</p>
+      )}
+
       <div style={{ display: "flex", flexDirection: "column", gap: "14px", marginBottom: tier.bonus ? "20px" : "32px" }}>
         {tier.features.map((f, j) => (
           <div key={j} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
@@ -279,20 +286,20 @@ function ClosingNote() {
   );
 }
 
-/* The standalone $1,500 Phase I Discovery audit was removed from the public
-   pricing tiers on 2026-05-02 per the Hormozi-style audit (Path B2 — demote
-   to a stepping-stone offer for prospects who push back on a bundle commit).
-   The audit still exists as a deliverable inside the Founding Partnership and
-   as an internal sales tool — see AUDIT_OFFER_PLAYBOOK.md at the repo root
-   for when to offer it in qualifying conversations. */
+/* Tier copy refresh 2026-05-03: Set C plain-English names, anchor prices
+   removed (no buyer has paid the anchor — fake anchors smell fake), Bishop's
+   name pulled out of deliverables (a person doesn't scale; a deliverable
+   does), guarantee tightened from 8 leads in 60 days to 15 leads by Aug 31
+   (the ROI calculator math has 3-30× headroom on this — see roi-template.xlsx).
+   The standalone $1,500 Phase I Discovery audit remains a stepping-stone
+   offer for qualifying conversations only — see AUDIT_OFFER_PLAYBOOK.md. */
 const TIERS = [
   {
-    phase: "Phase II",
-    label: "Website + AI Bundle",
-    anchor: "$10,000",
+    phase: "Build",
+    label: "Website + AI Build",
     price: "$5,000",
     range: "Founding rate",
-    spotsKey: "bundle",
+    intro: "A modern site that captures leads, shipped in 14 days. You own the code.",
     features: [
       "Custom responsive website",
       "AI chatbot or workflow automation",
@@ -301,29 +308,28 @@ const TIERS = [
       "Founder on call for fixes through August 31, 2026",
       "Full source code ownership",
     ],
-    bonus: "Already bought the AI Receptionist? Save $1,000 on this bundle within 30 days of your setup — Phase II becomes $4,000 instead of $5,000.",
-    btn: "Claim Founding Spot",
+    bonus: "Already bought After-Hours Lead Capture? Save $1,000 on this build within 30 days of your setup — Website + AI Build becomes $4,000 instead of $5,000.",
+    btn: "Claim a Build Slot",
     featured: true,
     objection: "Live in 14 days from contract signature or 25% back ($1,250). 3 AI-captured leads in the first 30 days post-launch or we refund the AI portion and rebuild it free.",
   },
   {
-    phase: "Partnership",
-    label: "Founding Partnership",
-    anchor: "$20,000",
+    phase: "Modernization",
+    label: "The Full Modernization",
     price: "$10,000",
     range: "Founding rate · By application",
-    spotsKey: "partnership",
+    intro: "An outcome engagement. We work the system with you until the leads number hits — whatever it takes.",
     features: [
-      "Everything in the Phase II Website + AI Bundle (custom site · AI integration · SEO · analytics · docs · source code yours)",
       "Discovery audit + written modernization roadmap",
-      "AI receptionist setup included",
-      "One additional integration into whatever system you currently use — ServiceTitan, QuickBooks, Jobber, or another",
+      "Custom website + AI receptionist (call + chat capture)",
+      "One operational integration: ServiceTitan, QuickBooks, Jobber, or another system you use",
       "Custom AI re-training on your real call data — starts after week 1, continues through August 31",
-      "Monthly business review with Bishop — 1-hour meeting + written recap within 24 hours",
-      "Named ops handholding from Bishop — calendar, proposals, weekly status",
+      "Weekly written status report — what shipped, what's next, what we need from you",
+      "Monthly 1-hour business review with your TSD partner + 24-hour written recap",
+      "Full source code ownership",
     ],
-    btn: "Apply for Partnership",
-    objection: "8+ qualified leads in the first 60 days post-launch or 50% back ($5,000) and the AI integration rebuilt free. Cancel any time after handoff. No retainer trap.",
+    btn: "Apply for the Full Modernization",
+    objection: "15+ qualified leads in your pipeline before August 31, 2026, or $5,000 back and the AI integration rebuilt free. Cancel any time after handoff. No retainer trap.",
   },
 ];
 
@@ -334,11 +340,11 @@ function WedgePointer() {
       textAlign: "center",
     }}>
       <p style={{ fontSize: "13px", color: v("text-dim"), lineHeight: 1.6 }}>
-        Looking for the smaller wedge? See the{" "}
+        Looking for the smaller wedge? See{" "}
         <Link to="/ai-receptionist" style={{
           color: v("accent"), textDecoration: "underline", fontWeight: 600,
         }}>
-          AI receptionist setup, $497
+          After-Hours Lead Capture, $497
         </Link>
         {" "}— built for HVAC, electricians, and plumbers.
       </p>
@@ -352,7 +358,7 @@ function WedgePointer() {
 const FAQS = [
   { q: "Why are your prices so much lower than agencies?", a: "We're a lean team of three founders with minimal overhead. Our founding-cohort rates are deliberately half what we'll charge after Summer 2026, set so we can build our portfolio and earn client trust. You get the same quality at 3-5x less than agency rates." },
   { q: "How does the Summer 2026 cohort work?", a: "We operate from May 7 to August 10, 2026 — three founders running together over the summer, capped at ten clients so every project gets the time it needs. Last project start is July 13. After August 10 we hand off; one founder stays on call for fixes through August 31." },
-  { q: "How does the free fit call work?", a: "A 1-2 hour conversation, in-person or remote, where we walk through your business, your operations, and what you'd want modernized. You leave with a clear read on whether we're the right fit. If we're a match, the next step is a written proposal for the Phase II Bundle or the Founding Partnership within 48 hours. We also offer a standalone $1,500 discovery audit on request — ask about it on your fit call if you'd rather start with a paid scope-and-recommend before committing to a full build." },
+  { q: "How does the free fit call work?", a: "A 1-2 hour conversation, in-person or remote, where we walk through your business, your operations, and what you'd want modernized. You leave with a clear read on whether we're the right fit. If we're a match, the next step is a written proposal for the Website + AI Build or the Full Modernization within 48 hours. We also offer a standalone $1,500 discovery audit on request — ask about it on your fit call if you'd rather start with a paid scope-and-recommend before committing to a full build." },
   { q: "What happens after my project is done?", a: "Every project ends with handoff documentation, video tutorials, and a live training session. You'll run everything independently from there. One founder stays on call for fixes through August 31, 2026; past that, the season closes." },
   { q: "Do I need to know anything about AI?", a: "Not at all. That's what we're here for. We'll explain everything in plain English, recommend only tools that genuinely fit your needs, and handle all the technical setup. You just tell us what's slowing your business down." },
   { q: "How long does a typical project take?", a: "Tech audits are done in a single session. Website builds and AI integrations typically take 2-4 weeks from proposal to handoff." },

@@ -242,13 +242,15 @@ function PricingTier({ phase, title, oldPrice, price, rateLabel, badge, popular,
         color: isPopular ? "#1c4870" : "#7fc6e6",
       }}>{title}</div>
 
-      <div style={{
-        textAlign: "center", marginTop: 14,
-        fontFamily: SERIF, fontStyle: "italic",
-        fontSize: 22, fontWeight: 500,
-        textDecoration: "line-through",
-        color: isPopular ? "rgba(10,22,40,0.45)" : "rgba(220,232,245,0.35)",
-      }}>{oldPrice}</div>
+      {oldPrice && (
+        <div style={{
+          textAlign: "center", marginTop: 14,
+          fontFamily: SERIF, fontStyle: "italic",
+          fontSize: 22, fontWeight: 500,
+          textDecoration: "line-through",
+          color: isPopular ? "rgba(10,22,40,0.45)" : "rgba(220,232,245,0.35)",
+        }}>{oldPrice}</div>
+      )}
 
       <div style={{
         textAlign: "center",
@@ -256,7 +258,7 @@ function PricingTier({ phase, title, oldPrice, price, rateLabel, badge, popular,
         fontSize: 64, fontWeight: 500,
         lineHeight: 1,
         color: isPopular ? "#0a1628" : "#dce8f5",
-        marginTop: 4,
+        marginTop: oldPrice ? 4 : 18,
         letterSpacing: "-0.02em",
       }}>{price}</div>
 
@@ -267,21 +269,23 @@ function PricingTier({ phase, title, oldPrice, price, rateLabel, badge, popular,
         color: isPopular ? "#1c4870" : "#7fc6e6",
       }}>{rateLabel}</div>
 
-      <div style={{
-        margin: "14px auto 0",
-        display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-        padding: "5px 12px",
-        borderRadius: 12,
-        background: isPopular ? "rgba(10,22,40,0.18)" : "rgba(95,176,216,0.1)",
-        color: isPopular ? "#0a1628" : "#7fc6e6",
-        fontFamily: SANS, fontSize: 10, fontWeight: 600,
-        letterSpacing: "0.05em",
-        width: "fit-content",
-        border: isPopular ? "1px solid rgba(10,22,40,0.2)" : "1px solid rgba(95,176,216,0.2)",
-      }}>
-        <span style={{ width: 5, height: 5, borderRadius: 3, background: MINT }} />
-        {features.spotsLabel}
-      </div>
+      {features.spotsLabel && (
+        <div style={{
+          margin: "14px auto 0",
+          display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+          padding: "5px 12px",
+          borderRadius: 12,
+          background: isPopular ? "rgba(10,22,40,0.18)" : "rgba(95,176,216,0.1)",
+          color: isPopular ? "#0a1628" : "#7fc6e6",
+          fontFamily: SANS, fontSize: 10, fontWeight: 600,
+          letterSpacing: "0.05em",
+          width: "fit-content",
+          border: isPopular ? "1px solid rgba(10,22,40,0.2)" : "1px solid rgba(95,176,216,0.2)",
+        }}>
+          <span style={{ width: 5, height: 5, borderRadius: 3, background: MINT }} />
+          {features.spotsLabel}
+        </div>
+      )}
 
       <div style={{ marginTop: 18, display: "flex", flexDirection: "column", gap: 8 }}>
         {features.list.map((f, i) => (
@@ -398,15 +402,13 @@ function PricingPage({ shift }) {
           fade={1}
         />
         <PricingTier
-          phase="PHASE II"
-          title="WEBSITE + AI BUNDLE"
-          oldPrice="$10,000"
+          phase="BUILD"
+          title="WEBSITE + AI BUILD"
           price="$5,000"
           rateLabel="FOUNDING RATE"
           badge="MOST POPULAR"
           popular
           features={{
-            spotsLabel: "10 OF 10 SPOTS REMAINING",
             list: [
               "Custom responsive website",
               "AI chatbot or workflow automation",
@@ -415,9 +417,9 @@ function PricingPage({ shift }) {
               "Founder on call for fixes through August 31, 2026",
               "Full source code ownership",
             ],
-            bonus: "AI receptionist setup ($497 value) included with the bundle.",
+            bonus: "Already bought After-Hours Lead Capture? Save $1,000 on this build within 30 days.",
           }}
-          cta="Claim Founding Spot"
+          cta="Claim a Build Slot"
           footer={{
             italic: "Final fee. Delivered by handoff. Source code is yours from day one.",
             list: [
@@ -428,22 +430,21 @@ function PricingPage({ shift }) {
           fade={1}
         />
         <PricingTier
-          phase="PARTNERSHIP"
-          title="FOUNDING PARTNERSHIP"
-          oldPrice="$10,000"
-          price="$5,000"
+          phase="MODERNIZATION"
+          title="THE FULL MODERNIZATION"
+          price="$10,000"
           rateLabel="FOUNDING RATE · BY APPLICATION"
           features={{
-            spotsLabel: "3 OF 3 SPOTS REMAINING",
             list: [
-              "Phase I audit included",
-              "Phase II Bundle (everything in the middle column)",
-              "AI receptionist setup included",
-              "Monthly optimization check-ins through August 31",
-              "Named ops handholding from Bishop — calendar, proposals, weekly status",
+              "Discovery audit + written modernization roadmap",
+              "Custom website + AI receptionist (call + chat capture)",
+              "One operational integration (ServiceTitan, QuickBooks, Jobber, or another)",
+              "Custom AI re-training on your real call data through August 31",
+              "Weekly written status report + monthly business review with your TSD partner",
+              "Full source code ownership",
             ],
           }}
-          cta="Apply for Partnership"
+          cta="Apply for the Full Modernization"
           footer={{
             italic: "Cancel any time after handoff. No retainer trap.",
             list: [
@@ -768,18 +769,18 @@ function buildConversation(t) {
   const greetEnd = 3.0;
   const greeting = "Hi — I'm the chat agent for TSD Modernization Solutions. Ask me about pricing, the cohort, or what we build. If you want to talk to a founder, just say so.";
 
-  const u1 = "What's in the Website + AI Bundle?";
+  const u1 = "What's in the Website + AI Build?";
   const u1TypeStart = 4.0, u1TypeEnd = 5.6;
   const u1Send = 5.8;
   const u1BotTypingStart = 6.0, u1BotTypingEnd = 6.8;
-  const u1BotReply = "The $5,000 bundle: custom responsive site, AI chatbot, on-page SEO + analytics, written + video docs, founder on call through Aug 31, 2026, and full source code. Wedge customers (the $497 AI Receptionist setup) save $1,000 on this bundle within 30 days of setup.";
+  const u1BotReply = "The $5,000 Website + AI Build: custom responsive site, AI chatbot or workflow automation, on-page SEO + analytics, written + video docs, founder on call through Aug 31, 2026, and full source code. Wedge customers (the $497 After-Hours Lead Capture) save $1,000 on this build within 30 days of setup.";
   const u1BotEnd = 8.2;
 
   const u2 = "How many spots are left?";
   const u2TypeStart = 9.0, u2TypeEnd = 10.2;
   const u2Send = 10.4;
   const u2BotTypingStart = 10.6, u2BotTypingEnd = 11.3;
-  const u2BotReply = "10 of 10 founding spots remain on the bundle. Founding Partnership has 3 of 3 spots open. Want me to put you on a quick call with Bishop?";
+  const u2BotReply = "We're capping the founding cohort at ten total Charlotte builds for Summer 2026 — last project start is July 13. Want me to put you on a quick fit call with one of the founders?";
   const u2BotEnd = 12.6;
 
   const u3 = "Yes, book a call.";

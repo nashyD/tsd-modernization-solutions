@@ -63,7 +63,7 @@ function RelationshipHero({ rel }) {
         color: v("text-muted"), marginBottom: "32px", flexWrap: "wrap",
       }}>
         <span style={{ flex: "0 0 44px", height: "1px", background: v("divider") }} />
-        <span>Website + AI Bundle</span>
+        <span>Website + AI Build</span>
         <span style={{ color: v("accent"), fontSize: "7px" }}>{"◆"}</span>
         <span>{rel.vertical}</span>
         <span style={{ color: v("accent"), fontSize: "7px" }}>{"◆"}</span>
