@@ -279,23 +279,13 @@ function ClosingNote() {
   );
 }
 
+/* The standalone $1,500 Phase I Discovery audit was removed from the public
+   pricing tiers on 2026-05-02 per the Hormozi-style audit (Path B2 — demote
+   to a stepping-stone offer for prospects who push back on a bundle commit).
+   The audit still exists as a deliverable inside the Founding Partnership and
+   as an internal sales tool — see AUDIT_OFFER_PLAYBOOK.md at the repo root
+   for when to offer it in qualifying conversations. */
 const TIERS = [
-  {
-    phase: "Phase I",
-    label: "Discovery",
-    anchor: "$3,000",
-    price: "$1,500",
-    range: "Founding rate · One-time",
-    features: [
-      "2-3 hour structured tech audit",
-      "Written modernization roadmap",
-      "Tool & platform recommendations",
-      "Priority areas identified",
-      "No obligation to continue",
-    ],
-    btn: "Book Tech Audit",
-    objection: "Money-back if we can't find $25K of opportunities.",
-  },
   {
     phase: "Phase II",
     label: "Website + AI Bundle",
@@ -319,19 +309,21 @@ const TIERS = [
   {
     phase: "Partnership",
     label: "Founding Partnership",
-    anchor: "$10,000",
-    price: "$5,000",
+    anchor: "$20,000",
+    price: "$10,000",
     range: "Founding rate · By application",
     spotsKey: "partnership",
     features: [
-      "Phase I audit included",
-      "Phase II Bundle (everything in the middle column)",
+      "Everything in the Phase II Website + AI Bundle (custom site · AI integration · SEO · analytics · docs · source code yours)",
+      "Discovery audit + written modernization roadmap",
       "AI receptionist setup included",
-      "Monthly optimization check-ins through August 31",
+      "One additional integration into whatever system you currently use — ServiceTitan, QuickBooks, Jobber, or another",
+      "Custom AI re-training on your real call data — starts after week 1, continues through August 31",
+      "Monthly business review with Bishop — 1-hour meeting + written recap within 24 hours",
       "Named ops handholding from Bishop — calendar, proposals, weekly status",
     ],
     btn: "Apply for Partnership",
-    objection: "Cancel any time after handoff. No retainer trap.",
+    objection: "8+ qualified leads in the first 60 days post-launch or 50% back ($5,000) and the AI integration rebuilt free. Cancel any time after handoff. No retainer trap.",
   },
 ];
 
@@ -360,7 +352,7 @@ function WedgePointer() {
 const FAQS = [
   { q: "Why are your prices so much lower than agencies?", a: "We're a lean team of three founders with minimal overhead. Our founding-cohort rates are deliberately half what we'll charge after Summer 2026, set so we can build our portfolio and earn client trust. You get the same quality at 3-5x less than agency rates." },
   { q: "How does the Summer 2026 cohort work?", a: "We operate from May 7 to August 10, 2026 — three founders running together over the summer, capped at ten clients so every project gets the time it needs. Last project start is July 13. After August 10 we hand off; one founder stays on call for fixes through August 31." },
-  { q: "How does the free fit call work?", a: "A 1-2 hour conversation, in-person or remote, where we walk through your business, your operations, and what you'd want modernized. You leave with a clear read on whether we're the right fit. If we're a match, the next step is a $1,500 Phase I Discovery audit or a written proposal for the Phase II Bundle within 48 hours." },
+  { q: "How does the free fit call work?", a: "A 1-2 hour conversation, in-person or remote, where we walk through your business, your operations, and what you'd want modernized. You leave with a clear read on whether we're the right fit. If we're a match, the next step is a written proposal for the Phase II Bundle or the Founding Partnership within 48 hours. We also offer a standalone $1,500 discovery audit on request — ask about it on your fit call if you'd rather start with a paid scope-and-recommend before committing to a full build." },
   { q: "What happens after my project is done?", a: "Every project ends with handoff documentation, video tutorials, and a live training session. You'll run everything independently from there. One founder stays on call for fixes through August 31, 2026; past that, the season closes." },
   { q: "Do I need to know anything about AI?", a: "Not at all. That's what we're here for. We'll explain everything in plain English, recommend only tools that genuinely fit your needs, and handle all the technical setup. You just tell us what's slowing your business down." },
   { q: "How long does a typical project take?", a: "Tech audits are done in a single session. Website builds and AI integrations typically take 2-4 weeks from proposal to handoff." },
@@ -425,7 +417,7 @@ export default function Pricing() {
         <QualificationNote />
         <div style={{
           display: "grid",
-          gridTemplateColumns: "1fr 1.15fr 1fr",
+          gridTemplateColumns: "1.15fr 1fr",
           gap: "24px",
           alignItems: "start",
         }} className="pricing-grid">

@@ -181,7 +181,7 @@ function ClosingCTA({ rel }) {
         </BookCallButton>
         <Link to="/pricing">
           <RippleButton variant="ghost" style={{ padding: "14px 32px", fontSize: "15px" }}>
-            See all three tiers
+            See both tiers
           </RippleButton>
         </Link>
       </div>

@@ -779,7 +779,7 @@ function buildConversation(t) {
   const u2TypeStart = 9.0, u2TypeEnd = 10.2;
   const u2Send = 10.4;
   const u2BotTypingStart = 10.6, u2BotTypingEnd = 11.3;
-  const u2BotReply = "10 of 10 founding spots remain on the bundle. Phase I has rolling availability. Want me to put you on a quick call with Bishop?";
+  const u2BotReply = "10 of 10 founding spots remain on the bundle. Founding Partnership has 3 of 3 spots open. Want me to put you on a quick call with Bishop?";
   const u2BotEnd = 12.6;
 
   const u3 = "Yes, book a call.";

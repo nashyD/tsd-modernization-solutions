@@ -55,7 +55,7 @@ const ROUTE_META = {
   },
   "/pricing": {
     title: "Pricing — Founding Cohort, Summer 2026 | TSD Modernization Solutions",
-    description: "Founding-cohort pricing for ten Charlotte-area small businesses. Phase I audit at $1,500 (anchor $3,000), Phase II Website + AI Bundle at $5,000 (anchor $10,000), Founding Partnership at $5,000 (anchor $10,000, three spots). Last project start July 13, 2026.",
+    description: "Founding-cohort pricing for ten Charlotte-area small businesses. Phase II Website + AI Bundle at $5,000 (anchor $10,000) plus the Founding Partnership at $10,000 (anchor $20,000, three spots). A $1,500 discovery audit is also available on request. Last project start July 13, 2026.",
   },
   "/ai-receptionist": {
     title: "AI Receptionist for Charlotte Trades — $497, Yours to Keep | TSD Modernization Solutions",
@@ -99,7 +99,7 @@ const ROUTE_META = {
   },
   "/book": {
     title: "Book a Fit Call — 30 Minutes with TSD | TSD Modernization Solutions",
-    description: "Pick a 30-minute slot with one of the three founders — Nash, Bishop, or Grant. Walk through what you're trying to fix and see whether our $1,500 audit, $5,000 website + AI bundle, or $5,000 Founding Partnership fits the shape of the problem. No slide deck, no commitment.",
+    description: "Pick a 30-minute slot with one of the three founders — Nash, Bishop, or Grant. Walk through what you're trying to fix and see whether our $5,000 website + AI bundle or $10,000 Founding Partnership fits the shape of the problem. No slide deck, no commitment.",
   },
   "/contact": {
     title: "Contact Us — Apply for a Founding Slot | TSD Modernization Solutions",

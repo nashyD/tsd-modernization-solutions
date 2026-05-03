@@ -1,12 +1,12 @@
 # TSD Modernization Solutions — Business Plan
 
-*Extracted from [github.com/nashyD/tsd-modernization-solutions/tree/main/tsd-modernization](https://github.com/nashyD/tsd-modernization-solutions/tree/main/tsd-modernization) on 2026-04-26; refreshed against live source on 2026-05-02 (Phase II bundle raised to $5,000 founding rate / $10,000 anchor + Phase II guarantee replaced with two operationalizable triggers + wedge decoupled from the bundle with a $1,000-off-within-30-days credit, all per Hormozi-style audit; prior changes: pricing restructure, vertical reframe, Twilio→Telnyx migration, route additions, Calendly booking funnel). Sourced from `README.md`, `index.html` (JSON-LD), all page components in `src/pages/`, `services-data.js`, and the `PROJECT_LOG.md` audit/changelog.*
+*Extracted from [github.com/nashyD/tsd-modernization-solutions/tree/main/tsd-modernization](https://github.com/nashyD/tsd-modernization-solutions/tree/main/tsd-modernization) on 2026-04-26; refreshed against live source on 2026-05-02 (Phase II bundle raised to $5,000 founding rate / $10,000 anchor + Phase II guarantee replaced with two operationalizable triggers + wedge decoupled from the bundle with a $1,000-off-within-30-days credit + Founding Partnership raised to $10,000 / $20,000 anchor with new scope and outcome guarantee + Phase I discovery audit demoted from a public tier card to a stepping-stone offer, all per Hormozi-style audit; prior changes: pricing restructure, vertical reframe, Twilio→Telnyx migration, route additions, Calendly booking funnel). Sourced from `README.md`, `index.html` (JSON-LD), all page components in `src/pages/`, `services-data.js`, and the `PROJECT_LOG.md` audit/changelog.*
 
 ---
 
 ## 1. Executive Summary
 
-**TSD Modernization Solutions** is a summer-only (May 7 – August 10, 2026) tech-modernization service for Charlotte-area small businesses. Three founders, hard cap of ten Phase II clients (with three additional Founding Partnership slots), three packaged tiers plus a wedge product.
+**TSD Modernization Solutions** is a summer-only (May 7 – August 10, 2026) tech-modernization service for Charlotte-area small businesses. Three founders, hard cap of ten Phase II clients (with three additional Founding Partnership slots), two public packaged tiers (Phase II Bundle at $5,000, Founding Partnership at $10,000) plus a $497 wedge product on `/ai-receptionist`. A $1,500 discovery audit exists as a stepping-stone offer for qualifying conversations only — pulled from public `/pricing` tier cards on 2026-05-02 per the Hormozi-style audit.
 
 The thesis: ~50,000 small businesses in the Charlotte metro, fewer than 30% with modern tools — a gap caused by agency pricing, not buyer reluctance. TSD bills at "main-street prices" (founding-cohort rates explicitly set at half of standard), guarantees a 48-hour written proposal, ships in 2–4 weeks, and backs every engagement with a 100% money-back guarantee.
 
@@ -100,13 +100,15 @@ A productized, narrow offer aimed at HVAC + trades. The pitch: industry data put
 
 ## 6. Pricing & Packaging
 
-Three tiers on `/pricing` (Phase I, Phase II, Founding Partnership) plus a wedge product on `/ai-receptionist`. All founding-cohort rates are explicitly half of the post-cohort standard, with the standard struck through on the page as the anchor.
+Two tiers on `/pricing` (Phase II Website + AI Bundle at $5,000, Founding Partnership at $10,000) plus a wedge product on `/ai-receptionist` ($497 AI Receptionist setup). The $1,500 Discovery audit was demoted from a public tier on 2026-05-02 (Path B2 of the Hormozi-style audit) and is now a stepping-stone offer surfaced in qualifying conversations only. All founding-cohort rates are explicitly half of the post-cohort standard, with the standard struck through on the page as the anchor.
 
-### Phase I — Discovery audit
-- **Price:** $1,500 founding rate (anchor $3,000)
+### Discovery audit (stepping-stone offer, not on `/pricing` tier cards as of 2026-05-02)
+- **Price:** $1,500 founding rate (anchor $3,000) — unchanged from the prior Phase I tier; only the public visibility changed.
 - **Deliverable:** 2–3 hour structured tech audit + written modernization roadmap + tool recommendations + priority areas. No obligation to continue.
 - **Risk reversal:** Money-back if we can't find $25K of opportunities.
-- **Use:** Standalone audit, or stacked into Phase III. Phase I is **not** included in Phase II.
+- **Public visibility:** Pulled from `/pricing` tier cards on 2026-05-02 (Path B2 of the Hormozi-style audit). The `/pricing` FAQ mentions it as available on request; the chat agent and the fit-call script offer it case-by-case when one of four triggers fires (prospect explicitly asks for paid discovery, "not ready for full build" signal, Founding Partnership prospect pushing back on the $10K commit, second-opinion ask). Operator playbook lives in [`AUDIT_OFFER_PLAYBOOK.md`](AUDIT_OFFER_PLAYBOOK.md).
+- **Continues to be included in:** the Founding Partnership ($10,000) — buyers at that tier still receive the audit as part of the package.
+- **Why pulled from public tiers:** Sitting on `/pricing` as a third tier card next to Phase II ($5,000) and Founding Partnership ($10,000) gave hesitant buyers a cheaper escape hatch from the bundle conversation. For prospects who are a clear bundle fit but flinching on price, the audit-as-public-tier was a worse outcome than walking them through their objections — because the audit is a one-time engagement that doesn't build, while Phase II is the actual outcome they wanted. Pulling the audit off the public page commits the funnel to bundle-or-walk-away for the default buyer, while preserving the audit as a sales tool for the buyers it actually fits.
 
 ### Phase II — Website + AI Bundle (Featured)
 - **Price:** $5,000 founding rate (anchor $10,000) — raised from $2,000 / $4,000 on 2026-05-02 per Hormozi-style audit
@@ -116,10 +118,11 @@ Three tiers on `/pricing` (Phase I, Phase II, Founding Partnership) plus a wedge
 - **Risk reversal:** Two operationalizable triggers added 2026-05-02 per Hormozi-style audit, replacing the prior generic "if we missed the mark by handoff" line. (1) Site live within 14 days of contract signature (clock pauses if buyer hasn't delivered content + integration credentials within 7 days of signature) or 25% refund ($1,250). (2) AI captures at least 3 qualified leads in the first 30 days post-launch or refund the AI portion (case-by-case dollar amount per actual AI scope, no public anchor) plus rebuild the AI integration free of additional charge. Qualified-lead definition (name + service request + contact info, captured by the AI integration), verification mechanics, and refund benchmarks live in [`GUARANTEE_VERIFICATION.md`](GUARANTEE_VERIFICATION.md); customer-facing contract clauses in [`contracts/phase-ii-guarantee-terms-2026-05-02.md`](contracts/phase-ii-guarantee-terms-2026-05-02.md) for paste into `agreement-of-work-template.docx`.
 - **CTA:** "Claim Founding Spot"
 
-### Founding Partnership (Phase III, application-only)
-- **Price:** $5,000 founding rate (anchor $10,000)
+### Founding Partnership (application-only)
+- **Price:** $10,000 founding rate (anchor $20,000) — raised from $5,000 / $10,000 on 2026-05-02 per Hormozi-style audit Phase 4 to restore a positive premium over the à la carte component absorption (audit + Phase II + wedge = $6,997).
 - **Cap:** 3 founding-partnership spots
-- **Includes:** Phase I audit · Phase II Bundle in full · AI Receptionist setup · Monthly optimization check-ins through Aug 31 · Named ops handholding from Bishop (calendar, proposals, weekly status)
+- **Includes:** Phase II Website + AI Bundle in full (custom site, AI integration, SEO, analytics, docs, source code yours) · Discovery audit + written modernization roadmap · AI Receptionist setup included · One additional integration into whatever system the client currently uses (ServiceTitan, QuickBooks, Jobber, or another) · Custom AI re-training on real call data starting after week 1, continuing through Aug 31 · Monthly business review with Bishop (1-hour meeting + 24-hour written recap) · Named ops handholding from Bishop (calendar, proposals, weekly status) · Founder on call for fixes through Aug 31, 2026.
+- **Risk reversal:** 8+ qualified leads captured by the AI integration in the first 60 days post-launch or 50% refund ($5,000) and the AI integration rebuilt free. Stacks with the Phase II 14-day-or-25%-back delivery guarantee (since Founding Partnership is Phase II in full plus premium adds).
 - **CTA:** "Apply for Partnership"
 - **Note:** Cancel any time after handoff. No retainer trap.
 
@@ -257,14 +260,14 @@ Promise: *"You're not on your own. One founder stays on call for fixes through A
 
 | Line | Unit price | Max units | Max revenue |
 |---|---|---|---|
-| Phase I Discovery (standalone) | $1,500 | n/a (ungated) | — |
 | Phase II Bundle (founding rate) | $5,000 | 10 | $50,000 |
-| Founding Partnership (Phase III) | $5,000 | 3 | $15,000 |
+| Founding Partnership (founding rate) | $10,000 | 3 | $30,000 |
 | AI Receptionist setup (standalone) | $497 | 10 | $4,970 |
+| Discovery audit (stepping-stone, on request) | $1,500 | rare — internal sales tool only | — |
 
 **Notes on stacking:**
 - Phase II is no longer bundled with the AI Receptionist as of 2026-05-02 (wedge decoupled per Hormozi-style audit). A buyer who wants both pays $497 + $5,000 = $5,497 standalone, OR $497 + $4,000 = $4,497 by sequencing wedge → Phase II within 30 days and using the $1,000 wedge-customer credit. The $1,000 credit is the cost of running the two-step funnel; the wedge's revenue function is restored as a low-friction first yes.
-- Founding Partnership ($5,000) **includes** Phase I + Phase II + AI Receptionist setup — at the post-2026-05-02 pricing, that's $1,500 + $5,000 + $497 = $6,997 of absorbed value, which **exceeds the Partnership price by $1,997**. Founding Partnership is now structurally cheaper than buying all three à la carte, an inversion flagged for Phase 4 of the Hormozi-style audit work (raise Founding Partnership to restore a positive premium with real scope difference).
+- Founding Partnership ($10,000) **includes** the discovery audit + Phase II Bundle in full + AI Receptionist setup + one additional system integration + custom AI re-training + monthly business review + named ops handholding. The bare-component absorption (audit + Phase II + wedge) is $1,500 + $5,000 + $497 = $6,997; the $10,000 Partnership price leaves a **$3,003 positive premium** for the integration, AI re-training, monthly review, and named ops support. Phase 4 of the Hormozi-style audit raised Founding Partnership from $5,000 to $10,000 on 2026-05-02 specifically to restore this positive premium — at the prior $5,000 price, the Partnership was structurally $1,997 cheaper than buying its components à la carte, which inverted the price-to-value relationship of the offer ladder.
 - Standalone wedge revenue accrues fully when the wedge sells outside a Founding Partnership; if a wedge buyer subsequently uses the $1,000 credit toward Phase II, the wedge revenue ($497) still accrues, and Phase II accrues at $4,000 instead of $5,000.
 
 ### Realistic scenarios (assuming bundle-only or partnership-only buyers)
@@ -272,12 +275,12 @@ Promise: *"You're not on your own. One founder stays on call for fixes through A
 | Scenario | Bundles | Partnerships | Standalone audits | Standalone wedge | Revenue |
 |---|---|---|---|---|---|
 | Conservative (5 bundles, 0 partnerships) | 5 | 0 | 0 | 0 | $25,000 |
-| Mid (8 bundles, 1 partnership, 2 audits) | 8 | 1 | 2 | 0 | $48,000 |
-| Full cohort (10 bundles, 3 partnerships) | 10 | 3 | 0 | 0 | $65,000 |
-| Full cohort + 5 standalone audits + 5 standalone wedge | 10 | 3 | 5 | 5 (one-time) | $65,000 + $7,500 + $2,485 = **$74,985** |
+| Mid (8 bundles, 1 partnership, 2 audits) | 8 | 1 | 2 | 0 | $40,000 + $10,000 + $3,000 = **$53,000** |
+| Full cohort (10 bundles, 3 partnerships) | 10 | 3 | 0 | 0 | $50,000 + $30,000 = **$80,000** |
+| Full cohort + 5 standalone audits + 5 standalone wedge | 10 | 3 | 5 | 5 (one-time) | $80,000 + $7,500 + $2,485 = **$89,985** |
 
 ### Implied gross per founder
-At full-cohort base ($65K / 3 founders): ~$21,667 per founder over the 14-week summer. At mid scenario ($48K / 3): ~$16,000 per founder. At conservative ($25K / 3): ~$8,333 per founder.
+At full-cohort base ($80K / 3 founders): ~$26,667 per founder over the 14-week summer. At mid scenario ($53K / 3): ~$17,667 per founder. At conservative ($25K / 3): ~$8,333 per founder. The full-cohort number is up from $11,667 pre-Hormozi-audit ($35K base) and from $21,667 after the Phase 1-3 work alone — Phase 4 (Founding Partnership raise to $10K) accounts for the remaining $5,000 lift per founder at full cohort.
 
 ### Cost base
 Materially zero infrastructure cost (~$30/month operating across the chat agent, voice-receptionist's Fly bill, and Telnyx usage at TSD's volume). The business is a labor partnership, not a venture vehicle. The standard anchors ($3,000 / $4,000 / $10,000) exist to make founding rates read as half-price, and to set the post-cohort price for any future season.
