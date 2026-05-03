@@ -1,6 +1,6 @@
 # TSD Modernization Solutions — Business Plan
 
-*Extracted from [github.com/nashyD/tsd-modernization-solutions/tree/main/tsd-modernization](https://github.com/nashyD/tsd-modernization-solutions/tree/main/tsd-modernization) on 2026-04-26; refreshed against live source on 2026-05-02 (Phase II bundle raised to $5,000 founding rate / $10,000 anchor per Hormozi-style audit; prior changes: pricing restructure, vertical reframe, Twilio→Telnyx migration, route additions, Calendly booking funnel). Sourced from `README.md`, `index.html` (JSON-LD), all page components in `src/pages/`, `services-data.js`, and the `PROJECT_LOG.md` audit/changelog.*
+*Extracted from [github.com/nashyD/tsd-modernization-solutions/tree/main/tsd-modernization](https://github.com/nashyD/tsd-modernization-solutions/tree/main/tsd-modernization) on 2026-04-26; refreshed against live source on 2026-05-02 (Phase II bundle raised to $5,000 founding rate / $10,000 anchor + Phase II guarantee replaced with two operationalizable triggers per Hormozi-style audit; prior changes: pricing restructure, vertical reframe, Twilio→Telnyx migration, route additions, Calendly booking funnel). Sourced from `README.md`, `index.html` (JSON-LD), all page components in `src/pages/`, `services-data.js`, and the `PROJECT_LOG.md` audit/changelog.*
 
 ---
 
@@ -113,6 +113,7 @@ Three tiers on `/pricing` (Phase I, Phase II, Founding Partnership) plus a wedge
 - **Cap:** 10 founding-cohort spots
 - **Includes:** Custom responsive website · AI chatbot or workflow automation · On-page SEO + analytics · Written + video documentation · Founder on call for fixes through Aug 31, 2026 · Full source-code ownership
 - **Bonus:** AI Receptionist setup ($497 value) included
+- **Risk reversal:** Two operationalizable triggers added 2026-05-02 per Hormozi-style audit, replacing the prior generic "if we missed the mark by handoff" line. (1) Site live within 14 days of contract signature (clock pauses if buyer hasn't delivered content + integration credentials within 7 days of signature) or 25% refund ($1,250). (2) AI captures at least 3 qualified leads in the first 30 days post-launch or refund the AI portion (case-by-case dollar amount per actual AI scope, no public anchor) plus rebuild the AI integration free of additional charge. Qualified-lead definition (name + service request + contact info, captured by the AI integration), verification mechanics, and refund benchmarks live in [`GUARANTEE_VERIFICATION.md`](GUARANTEE_VERIFICATION.md); customer-facing contract clauses in [`contracts/phase-ii-guarantee-terms-2026-05-02.md`](contracts/phase-ii-guarantee-terms-2026-05-02.md) for paste into `agreement-of-work-template.docx`.
 - **CTA:** "Claim Founding Spot"
 
 ### Founding Partnership (Phase III, application-only)
@@ -294,6 +295,7 @@ Materially zero infrastructure cost (~$30/month operating across the chat agent,
 | **AI agent abuse / cost spike** | Upstash Redis distributed rate limit shipped 2026-04-26 (replaced the in-memory bucket so multi-region Vercel instances share state). Sentry monitors errors. |
 | **No GBP, no directory presence** | Identified in audit §8; on Nash's queue. |
 | **Carrier-side voice infra (single-vendor risk)** | Mitigated 2026-04-28 by migrating off Twilio (which had discontinued Frontline and abandoned Flex Mobile, signaling SMB voice exit) onto Telnyx. Same code path supports both via Pipecat's serializers if a future migration becomes necessary. |
+| **Phase II guarantee was generic** | Mitigated 2026-05-02 per Hormozi-style audit. Replaced "if we missed the mark by handoff" with two operationalizable triggers: 14-day delivery (25% refund if missed) + 3 qualified AI-captured leads in 30 days post-launch (AI-portion refund + rebuild free). Phase II's risk reversal now matches Phase I's "money-back if no $25K of opportunities" in operational specificity. See §6.2; verification mechanics in [`GUARANTEE_VERIFICATION.md`](GUARANTEE_VERIFICATION.md). |
 
 ---
 

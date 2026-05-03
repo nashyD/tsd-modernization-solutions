@@ -314,7 +314,7 @@ const TIERS = [
     bonus: "AI receptionist setup ($497 value) included with the bundle.",
     btn: "Claim Founding Spot",
     featured: true,
-    objection: "Fixed fee. Delivered by handoff. Source code is yours from day one.",
+    objection: "Live in 14 days from contract signature or 25% back ($1,250). 3 AI-captured leads in the first 30 days post-launch or we refund the AI portion and rebuild it free.",
   },
   {
     phase: "Partnership",
