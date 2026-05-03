@@ -23,7 +23,7 @@ export const SERVICES = [
       "Staff training on every tool we deploy",
     ],
     timeline: "1-2 weeks from kickoff to launch.",
-    price: "Included in the Summer 2026 Website + AI Bundle: $2,000 founding rate (standard $4,000). Start with a $1,500 Phase I Discovery audit to scope the integration.",
+    price: "Included in the Summer 2026 Website + AI Bundle: $5,000 founding rate (standard $10,000). Start with a $1,500 Phase I Discovery audit to scope the integration.",
     videos: [
       { title: "Chatbot Setup Walkthrough", desc: "See how we build and train a custom AI chatbot for your business in under a week." },
       { title: "Workflow Automation Demo", desc: "Watch a Make/Zapier automation route leads, schedule calls, and update your CRM automatically." },
@@ -54,7 +54,7 @@ export const SERVICES = [
       "Founder on call for fixes through Aug 31, 2026",
     ],
     timeline: "2-4 weeks from approved mockup to launch.",
-    price: "Bundled with the Summer 2026 Website + AI offer: $2,000 founding rate (standard $4,000).",
+    price: "Bundled with the Summer 2026 Website + AI offer: $5,000 founding rate (standard $10,000).",
     videos: [
       { title: "Design to Launch Process", desc: "Follow a website build from initial mockup through to live deployment." },
       { title: "SEO & Analytics Setup", desc: "How we wire up Google Analytics, Search Console, and on-page SEO from day one." },

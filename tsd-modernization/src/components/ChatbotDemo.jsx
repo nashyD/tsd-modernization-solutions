@@ -400,8 +400,8 @@ function PricingPage({ shift }) {
         <PricingTier
           phase="PHASE II"
           title="WEBSITE + AI BUNDLE"
-          oldPrice="$4,000"
-          price="$2,000"
+          oldPrice="$10,000"
+          price="$5,000"
           rateLabel="FOUNDING RATE"
           badge="MOST POPULAR"
           popular
@@ -772,7 +772,7 @@ function buildConversation(t) {
   const u1TypeStart = 4.0, u1TypeEnd = 5.6;
   const u1Send = 5.8;
   const u1BotTypingStart = 6.0, u1BotTypingEnd = 6.8;
-  const u1BotReply = "The $2,000 bundle: custom responsive site, AI chatbot, on-page SEO + analytics, written + video docs, founder on call through Aug 31, 2026, and full source code. Plus a free AI receptionist ($497 value).";
+  const u1BotReply = "The $5,000 bundle: custom responsive site, AI chatbot, on-page SEO + analytics, written + video docs, founder on call through Aug 31, 2026, and full source code. Plus a free AI receptionist ($497 value).";
   const u1BotEnd = 8.2;
 
   const u2 = "How many spots are left?";

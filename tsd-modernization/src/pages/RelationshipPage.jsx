@@ -12,7 +12,7 @@ import BookCallButton from "../components/BookCallButton";
      3. ClosingCTA — links to /pricing for the offer + /contact for direct
 
    The relationship buyer arrived via founder DM and already heard the
-   $2,000 bundle pitch over text. The page's job is recognition (yes we
+   $5,000 bundle pitch over text. The page's job is recognition (yes we
    work with your vertical), not conversion. Skip the offer card; link
    to /pricing for the full three-tier breakdown. */
 
@@ -160,7 +160,7 @@ function ClosingCTA({ rel }) {
         fontFamily: "var(--font-display)", fontStyle: "italic",
         fontSize: "20px", lineHeight: 1.5, color: v("text"), marginBottom: "10px",
       }}>
-        $2,000 founding rate (anchor $4,000).
+        $5,000 founding rate (anchor $10,000).
       </p>
       <p style={{
         fontSize: "15px", lineHeight: 1.65, color: v("text-muted"),

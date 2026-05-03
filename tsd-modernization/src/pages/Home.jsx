@@ -163,7 +163,7 @@ function Hero() {
           maxWidth: "580px", margin: "0 auto 36px",
           textShadow: "0 2px 14px rgba(0,0,0,0.75), 0 1px 4px rgba(0,0,0,0.85)",
         }}>
-          Custom website, working AI, source code yours from day one. $2,000 fixed.
+          Custom website, working AI, source code yours from day one. $5,000 fixed.
           We don't take retainers and we will not be your long-term agency.
         </p>
 
@@ -257,7 +257,7 @@ function ServiceTicker() {
 function Stats() {
   const [headRef, headFade] = useFadeIn(0);
   const [count48, ref48] = useCountUp(48, 1600);
-  const [count2k, ref2k] = useCountUp(2000, 1800);
+  const [count2k, ref2k] = useCountUp(5000, 1800);
   const [count100, ref100] = useCountUp(100, 1400);
 
   return (
@@ -354,7 +354,7 @@ function Stats() {
           <SupportStat
             forwardRef={ref2k}
             value={`$${count2k.toLocaleString()}`}
-            label="Founding-cohort rate (standard $4,000)"
+            label="Founding-cohort rate (standard $10,000)"
             note="Half-price for our first ten."
           />
           <SupportStat
@@ -749,7 +749,7 @@ function FoundingClientOffer() {
           fontSize: "16px", lineHeight: 1.7, color: "rgba(255,255,255,0.92)",
           maxWidth: "620px", margin: "0 auto 32px",
         }}>
-          Founding-cohort pricing on every offer — half what we'll charge after Summer 2026. Direct founder access. Source code yours from day one. Three tiers: the audit at $1,500, the website + AI bundle at $2,000, and the Founding Partnership at $5,000 (capped at three spots).
+          Founding-cohort pricing on every offer — half what we'll charge after Summer 2026. Direct founder access. Source code yours from day one. Three tiers: the audit at $1,500, the website + AI bundle at $5,000, and the Founding Partnership at $5,000 (capped at three spots).
         </p>
         <Link to="/pricing">
           <RippleButton variant="secondary" style={{

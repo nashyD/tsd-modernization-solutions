@@ -121,6 +121,36 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-05-02 — Phase II bundle raised: $2,000 → $5,000 (anchor $4,000 → $10,000)
+
+**What.** Raised the Phase II Website + AI Bundle founding rate from $2,000 to $5,000 across the live site. Anchor (post-cohort standard) bumped from $4,000 to $10,000 so the founding rate still reads as half the standard. The Phase II tier card on [`Pricing.jsx`](src/pages/Pricing.jsx), the chatbot demo's sample bundle reply on [`ChatbotDemo.jsx`](src/components/ChatbotDemo.jsx), the Home hero's "$X,000 fixed" line + the animated counter (`useCountUp(2000, 1800)` → `useCountUp(5000, 1800)`) + the long-form tier summary block on [`Home.jsx`](src/pages/Home.jsx), the price strings in [`services-data.js`](src/services-data.js) (used on both `/services/ai-integration` and `/services/websites`), the relationship-channel bundle pitch on [`RelationshipPage.jsx`](src/pages/RelationshipPage.jsx), the route metaDescriptions for `/`, `/services/ai-integration`, `/services/websites`, `/pricing`, `/salons`, `/auto-shops`, `/restaurants`, `/book` in [`Layout.jsx`](src/Layout.jsx), and the matching `routeMetaDesc` strings in [`relationships-data.js`](src/relationships-data.js) all moved to the new numbers. JSON-LD `priceRange` in [`index.html`](index.html) was deliberately *not* touched — Phase II at $5K matches Founding Partnership at $5K, so the existing range `$1500 - $5000` still covers; that ceiling moves only if Founding Partnership goes up later.
+
+**Why.** A Hormozi-style audit run today named the offer (not the lead pipeline) as the binding pre-cohort constraint. Phase II at $2,000 was sitting 60-70% below Charlotte web-shop comps for the same scope (custom React site + AI chatbot/automation + SEO + analytics + handoff docs + on-call support). Underpricing relative to comps was probably *suppressing* close rate rather than helping it — buyers smell a missing piece when the price reads out of band. At $5,000 with the same scope and the same value:price ratio still landing in 5-8× territory (reasonable Charlotte trades operator nets ~$25-50K of marginal revenue from the build over 12 months), the offer reads as priced at value rather than priced to apologize. Same labor, ~1.85× the per-founder summer take at full cohort ($11,667 → $21,667 each).
+
+**Implementation notes.**
+- Two separate places display Phase II pricing on `/pricing` itself: the `TIERS` array consumed by the cards above the FAQ. ChatbotDemo's `<PricingTier oldPrice="..." price="..." />` mock — both updated.
+- Home hero counter: `count2k` (variable name kept for diff readability — the value moved to 5000) animates from 0 to the hero stat on scroll-into-view. Renamed mid-flight would have rippled through `ref2k` / forwardRef wiring; the literal-value swap is the minimum touch.
+- Three relationship-page meta descriptions (`/salons`, `/auto-shops`, `/restaurants`) and three route entries in Layout.jsx share the exact phrase `$2,000 founding-cohort rate (anchor $4,000), source code yours from day one.` — both files updated via `replace_all`.
+- Calendly event description (`calendly.com/nashdavis-tsd-ventures/30min`) still references the old price externally and needs a manual edit on the Calendly side. Flagged for follow-up.
+- A grep pass `grep -rn -E '\$2,?000|\$2K|\$4,?000|\$4K' src/ index.html` returned clean post-edit.
+
+**Files touched.**
+- [`src/pages/Pricing.jsx`](src/pages/Pricing.jsx) — `TIERS[1].anchor: "$4,000" → "$10,000"`, `TIERS[1].price: "$2,000" → "$5,000"`.
+- [`src/pages/Home.jsx`](src/pages/Home.jsx) — hero "$2,000 fixed" → "$5,000 fixed"; `useCountUp(2000, 1800)` → `useCountUp(5000, 1800)`; SupportStat `label="Founding-cohort rate (standard $4,000)"` → `(standard $10,000)`; long-form tier summary "the website + AI bundle at $2,000" → "$5,000".
+- [`src/services-data.js`](src/services-data.js) — `ai-integration` and `websites` `price:` strings updated.
+- [`src/relationships-data.js`](src/relationships-data.js) — `salons`, `auto-shops`, `restaurants` `routeMetaDesc:` strings updated (replace_all on shared phrase).
+- [`src/Layout.jsx`](src/Layout.jsx) — `ROUTE_META` entries for `/`, `/services/ai-integration`, `/services/websites`, `/pricing`, `/salons`, `/auto-shops`, `/restaurants`, `/book` updated.
+- [`src/pages/RelationshipPage.jsx`](src/pages/RelationshipPage.jsx) — pricing line in the closing CTA, plus the in-file comment that referenced the old "$2,000 bundle pitch".
+- [`src/components/ChatbotDemo.jsx`](src/components/ChatbotDemo.jsx) — mocked `<PricingTier>` in the chatbot demo + the `u1BotReply` line in `buildConversation()`.
+
+**Companion plan updates.** [`BUSINESS_PLAN.md`](BUSINESS_PLAN.md) §6 (Phase II price + anchor), §12 Financial Model (full-cohort scenario revenue: $35K → $65K, mid-cohort: $24K → $48K, conservative: $10K → $25K, per-founder shares recomputed), front-matter "refreshed against live source on 2026-04-30" → "2026-05-02 (Hormozi-style audit, Phase II raised to $5K)".
+
+**Rollback trigger.** Pre-committed: if 3 of the next 5 sales conversations balk specifically on price (not value), drop to $4,000. Track conversation-by-conversation with date / source / vertical / objection-type tags.
+
+**Principle reinforced.** *Underpricing relative to category comps suppresses close rate.* The intuition that "lower price = higher conversion" is wrong below the band where buyers smell a missing piece. For a service offer with a quantifiable post-build outcome, the right price reads as a fraction of the value the buyer expects — not a fraction of the lowest competitor's number. Hormozi's frame: price to be a no-brainer at a credible price band, not to be the cheapest option.
+
+---
+
 ### 2026-04-30 — Home hero: promote "Book a fit call" to primary, drop the Apply CTA
 
 **What.** The Home hero CTA cluster shrank from three buttons to two. Removed the `<Link to="/contact">Apply for a founding slot</Link>` button entirely, promoted [`<BookCallButton>`](src/components/BookCallButton.jsx) from `variant="secondary"` (glassy on the video background) to `variant="primary"` (blue-gradient prism), kept "See pricing" as the secondary glassy CTA. The Book button picked up the `<ArrowRightIcon>` glyph that the Apply button used to carry, so the lead-CTA visual weight is preserved. The "Apply for a founding slot" path is intact everywhere else on the site — nav dropdown primary CTA, Pricing tier buttons, AIReceptionist + Trade page heroes (as "Reserve a setup spot"), Relationship page heroes — just no longer the lead button on the homepage.

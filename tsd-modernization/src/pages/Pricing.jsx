@@ -299,8 +299,8 @@ const TIERS = [
   {
     phase: "Phase II",
     label: "Website + AI Bundle",
-    anchor: "$4,000",
-    price: "$2,000",
+    anchor: "$10,000",
+    price: "$5,000",
     range: "Founding rate",
     spotsKey: "bundle",
     features: [

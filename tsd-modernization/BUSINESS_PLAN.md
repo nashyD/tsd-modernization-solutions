@@ -1,6 +1,6 @@
 # TSD Modernization Solutions — Business Plan
 
-*Extracted from [github.com/nashyD/tsd-modernization-solutions/tree/main/tsd-modernization](https://github.com/nashyD/tsd-modernization-solutions/tree/main/tsd-modernization) on 2026-04-26; refreshed against live source on 2026-04-30 (pricing restructure, vertical reframe, Twilio→Telnyx migration, route additions, Calendly booking funnel — pivoted from Cal.com same day). Sourced from `README.md`, `index.html` (JSON-LD), all page components in `src/pages/`, `services-data.js`, and the `PROJECT_LOG.md` audit/changelog.*
+*Extracted from [github.com/nashyD/tsd-modernization-solutions/tree/main/tsd-modernization](https://github.com/nashyD/tsd-modernization-solutions/tree/main/tsd-modernization) on 2026-04-26; refreshed against live source on 2026-05-02 (Phase II bundle raised to $5,000 founding rate / $10,000 anchor per Hormozi-style audit; prior changes: pricing restructure, vertical reframe, Twilio→Telnyx migration, route additions, Calendly booking funnel). Sourced from `README.md`, `index.html` (JSON-LD), all page components in `src/pages/`, `services-data.js`, and the `PROJECT_LOG.md` audit/changelog.*
 
 ---
 
@@ -109,7 +109,7 @@ Three tiers on `/pricing` (Phase I, Phase II, Founding Partnership) plus a wedge
 - **Use:** Standalone audit, or stacked into Phase III. Phase I is **not** included in Phase II.
 
 ### Phase II — Website + AI Bundle (Featured)
-- **Price:** $2,000 founding rate (anchor $4,000)
+- **Price:** $5,000 founding rate (anchor $10,000) — raised from $2,000 / $4,000 on 2026-05-02 per Hormozi-style audit
 - **Cap:** 10 founding-cohort spots
 - **Includes:** Custom responsive website · AI chatbot or workflow automation · On-page SEO + analytics · Written + video documentation · Founder on call for fixes through Aug 31, 2026 · Full source-code ownership
 - **Bonus:** AI Receptionist setup ($497 value) included
@@ -256,26 +256,26 @@ Promise: *"You're not on your own. One founder stays on call for fixes through A
 | Line | Unit price | Max units | Max revenue |
 |---|---|---|---|
 | Phase I Discovery (standalone) | $1,500 | n/a (ungated) | — |
-| Phase II Bundle (founding rate) | $2,000 | 10 | $20,000 |
+| Phase II Bundle (founding rate) | $5,000 | 10 | $50,000 |
 | Founding Partnership (Phase III) | $5,000 | 3 | $15,000 |
 | AI Receptionist setup (standalone) | $497 | 10 | $4,970 |
 
 **Notes on stacking:**
 - Phase II's "AI Receptionist included" bonus is the same wedge product folded into the bundle — selling Phase II to a buyer who'd also have bought the $497 setup is a $497 absorption, not additional revenue.
-- Founding Partnership ($5,000) **includes** Phase I + Phase II + AI Receptionist setup — selling Partnership to a buyer who'd also have bought all three à la carte is an absorption of $1,500 + $2,000 + $497 = $3,997, with the Partnership premium being $1,003 plus the named-ops handholding.
+- Founding Partnership ($5,000) **includes** Phase I + Phase II + AI Receptionist setup — at the post-2026-05-02 pricing, that's $1,500 + $5,000 + $497 = $6,997 of absorbed value, which **exceeds the Partnership price by $1,997**. Founding Partnership is now structurally cheaper than buying all three à la carte, an inversion flagged for Phase 4 of the Hormozi-style audit work (raise Founding Partnership to restore a positive premium with real scope difference).
 - Standalone wedge revenue accrues only when the wedge sells outside a bundle / partnership.
 
 ### Realistic scenarios (assuming bundle-only or partnership-only buyers)
 
 | Scenario | Bundles | Partnerships | Standalone audits | Standalone wedge | Revenue |
 |---|---|---|---|---|---|
-| Conservative (5 bundles, 0 partnerships) | 5 | 0 | 0 | 0 | $10,000 |
-| Mid (8 bundles, 1 partnership, 2 audits) | 8 | 1 | 2 | 0 | $24,000 |
-| Full cohort (10 bundles, 3 partnerships) | 10 | 3 | 0 | 0 | $35,000 |
-| Full cohort + 5 standalone audits + 5 standalone wedge | 10 | 3 | 5 | 5 (one-time) | $35,000 + $7,500 + $2,485 = **$44,985** |
+| Conservative (5 bundles, 0 partnerships) | 5 | 0 | 0 | 0 | $25,000 |
+| Mid (8 bundles, 1 partnership, 2 audits) | 8 | 1 | 2 | 0 | $48,000 |
+| Full cohort (10 bundles, 3 partnerships) | 10 | 3 | 0 | 0 | $65,000 |
+| Full cohort + 5 standalone audits + 5 standalone wedge | 10 | 3 | 5 | 5 (one-time) | $65,000 + $7,500 + $2,485 = **$74,985** |
 
 ### Implied gross per founder
-At full-cohort base ($35K / 3 founders): ~$11,667 per founder over the 14-week summer. At mid scenario ($24K / 3): ~$8,000 per founder. At conservative ($10K / 3): ~$3,333 per founder.
+At full-cohort base ($65K / 3 founders): ~$21,667 per founder over the 14-week summer. At mid scenario ($48K / 3): ~$16,000 per founder. At conservative ($25K / 3): ~$8,333 per founder.
 
 ### Cost base
 Materially zero infrastructure cost (~$30/month operating across the chat agent, voice-receptionist's Fly bill, and Telnyx usage at TSD's volume). The business is a labor partnership, not a venture vehicle. The standard anchors ($3,000 / $4,000 / $10,000) exist to make founding rates read as half-price, and to set the post-cohort price for any future season.

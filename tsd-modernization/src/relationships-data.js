@@ -17,7 +17,7 @@ export const RELATIONSHIPS = {
     slug: "salons",
     vertical: "Charlotte Salons",
     routeMetaTitle: "Custom Website + AI for Charlotte Salons | TSD Modernization Solutions",
-    routeMetaDesc: "Custom website and AI tools for Charlotte hair salons, nail studios, and spas — booking automation, after-hours chat, missed-call recovery. Built in 2-4 weeks. $2,000 founding-cohort rate (anchor $4,000), source code yours from day one.",
+    routeMetaDesc: "Custom website and AI tools for Charlotte hair salons, nail studios, and spas — booking automation, after-hours chat, missed-call recovery. Built in 2-4 weeks. $5,000 founding-cohort rate (anchor $10,000), source code yours from day one.",
     hero: {
       h1: "Charlotte salons. Your booth doesn't book itself.",
       h1Italic: "Let your website do the work.",
@@ -41,7 +41,7 @@ export const RELATIONSHIPS = {
     slug: "auto-shops",
     vertical: "Charlotte Auto Shops",
     routeMetaTitle: "Custom Website + AI for Charlotte Auto Shops | TSD Modernization Solutions",
-    routeMetaDesc: "Custom website and AI tools for Charlotte auto repair, body shops, and tire stores — online quote requests, service catalogs, after-hours intake. Built in 2-4 weeks. $2,000 founding-cohort rate (anchor $4,000), source code yours from day one.",
+    routeMetaDesc: "Custom website and AI tools for Charlotte auto repair, body shops, and tire stores — online quote requests, service catalogs, after-hours intake. Built in 2-4 weeks. $5,000 founding-cohort rate (anchor $10,000), source code yours from day one.",
     hero: {
       h1: "Charlotte auto shops. Half your bay is empty Tuesday morning.",
       h1Italic: "Fill it from your phone.",
@@ -65,7 +65,7 @@ export const RELATIONSHIPS = {
     slug: "restaurants",
     vertical: "Charlotte Restaurants",
     routeMetaTitle: "Custom Website + AI for Charlotte Restaurants | TSD Modernization Solutions",
-    routeMetaDesc: "Custom website and AI tools for Charlotte restaurants, bakeries, and food trucks — reservations, online ordering, AI chat for menu and hours. Built in 2-4 weeks. $2,000 founding-cohort rate (anchor $4,000), source code yours from day one.",
+    routeMetaDesc: "Custom website and AI tools for Charlotte restaurants, bakeries, and food trucks — reservations, online ordering, AI chat for menu and hours. Built in 2-4 weeks. $5,000 founding-cohort rate (anchor $10,000), source code yours from day one.",
     hero: {
       h1: "Charlotte restaurants. The phone keeps ringing through dinner service.",
       h1Italic: "Let the website take the order.",

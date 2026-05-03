@@ -27,7 +27,7 @@ const SITE_URL = "https://tsd-modernization.com";
 const ROUTE_META = {
   "/": {
     title: "Charlotte Website + AI · Summer 2026 Cohort | TSD Modernization Solutions",
-    description: "Ten Charlotte main-street builds between May 7 and August 10, 2026. Custom website, working AI, source code yours from day one — $2,000 fixed. Three founders, ten projects, hard close August 10. No retainers, no subscriptions.",
+    description: "Ten Charlotte main-street builds between May 7 and August 10, 2026. Custom website, working AI, source code yours from day one — $5,000 fixed. Three founders, ten projects, hard close August 10. No retainers, no subscriptions.",
   },
   "/services": {
     title: "Services — AI, Websites & Automation | TSD Modernization Solutions",
@@ -35,11 +35,11 @@ const ROUTE_META = {
   },
   "/services/ai-integration": {
     title: "AI Integration & Business Automation for Small Businesses | TSD Modernization Solutions",
-    description: "Custom AI chatbots, workflow automation with Make and Zapier, and AI-powered reporting for Charlotte-area small businesses. Included in the $2,000 Website + AI Bundle (anchor $4,000), launched in 1-2 weeks.",
+    description: "Custom AI chatbots, workflow automation with Make and Zapier, and AI-powered reporting for Charlotte-area small businesses. Included in the $5,000 Website + AI Bundle (anchor $10,000), launched in 1-2 weeks.",
   },
   "/services/websites": {
     title: "Custom Website Design & Redesign | Charlotte Small Business Web Developer",
-    description: "Fast, mobile-first websites with on-page SEO, analytics wiring, and full handoff docs so your team can manage content. 5-8 page sites at $2,000 founding rate (anchor $4,000), launched in 2-4 weeks.",
+    description: "Fast, mobile-first websites with on-page SEO, analytics wiring, and full handoff docs so your team can manage content. 5-8 page sites at $5,000 founding rate (anchor $10,000), launched in 2-4 weeks.",
   },
   "/services/process-modernization": {
     title: "Tech Audits & Process Modernization for Small Businesses | TSD Modernization Solutions",
@@ -55,7 +55,7 @@ const ROUTE_META = {
   },
   "/pricing": {
     title: "Pricing — Founding Cohort, Summer 2026 | TSD Modernization Solutions",
-    description: "Founding-cohort pricing for ten Charlotte-area small businesses. Phase I audit at $1,500 (anchor $3,000), Phase II Website + AI Bundle at $2,000 (anchor $4,000), Founding Partnership at $5,000 (anchor $10,000, three spots). Last project start July 13, 2026.",
+    description: "Founding-cohort pricing for ten Charlotte-area small businesses. Phase I audit at $1,500 (anchor $3,000), Phase II Website + AI Bundle at $5,000 (anchor $10,000), Founding Partnership at $5,000 (anchor $10,000, three spots). Last project start July 13, 2026.",
   },
   "/ai-receptionist": {
     title: "AI Receptionist for Charlotte Trades — $497, Yours to Keep | TSD Modernization Solutions",
@@ -75,15 +75,15 @@ const ROUTE_META = {
   },
   "/salons": {
     title: "Custom Website + AI for Charlotte Salons | TSD Modernization Solutions",
-    description: "Custom website and AI tools for Charlotte hair salons, nail studios, and spas — booking automation, after-hours chat, missed-call recovery. Built in 2-4 weeks. $2,000 founding-cohort rate (anchor $4,000), source code yours from day one.",
+    description: "Custom website and AI tools for Charlotte hair salons, nail studios, and spas — booking automation, after-hours chat, missed-call recovery. Built in 2-4 weeks. $5,000 founding-cohort rate (anchor $10,000), source code yours from day one.",
   },
   "/auto-shops": {
     title: "Custom Website + AI for Charlotte Auto Shops | TSD Modernization Solutions",
-    description: "Custom website and AI tools for Charlotte auto repair, body shops, and tire stores — online quote requests, service catalogs, after-hours intake. Built in 2-4 weeks. $2,000 founding-cohort rate (anchor $4,000), source code yours from day one.",
+    description: "Custom website and AI tools for Charlotte auto repair, body shops, and tire stores — online quote requests, service catalogs, after-hours intake. Built in 2-4 weeks. $5,000 founding-cohort rate (anchor $10,000), source code yours from day one.",
   },
   "/restaurants": {
     title: "Custom Website + AI for Charlotte Restaurants | TSD Modernization Solutions",
-    description: "Custom website and AI tools for Charlotte restaurants, bakeries, and food trucks — reservations, online ordering, AI chat for menu and hours. Built in 2-4 weeks. $2,000 founding-cohort rate (anchor $4,000), source code yours from day one.",
+    description: "Custom website and AI tools for Charlotte restaurants, bakeries, and food trucks — reservations, online ordering, AI chat for menu and hours. Built in 2-4 weeks. $5,000 founding-cohort rate (anchor $10,000), source code yours from day one.",
   },
   "/missed-call-calculator": {
     title: "Missed Call Calculator for Charlotte HVAC, Electricians & Plumbers | TSD Modernization Solutions",
@@ -99,7 +99,7 @@ const ROUTE_META = {
   },
   "/book": {
     title: "Book a Fit Call — 30 Minutes with TSD | TSD Modernization Solutions",
-    description: "Pick a 30-minute slot with one of the three founders — Nash, Bishop, or Grant. Walk through what you're trying to fix and see whether our $1,500 audit, $2,000 website + AI bundle, or $5,000 Founding Partnership fits the shape of the problem. No slide deck, no commitment.",
+    description: "Pick a 30-minute slot with one of the three founders — Nash, Bishop, or Grant. Walk through what you're trying to fix and see whether our $1,500 audit, $5,000 website + AI bundle, or $5,000 Founding Partnership fits the shape of the problem. No slide deck, no commitment.",
   },
   "/contact": {
     title: "Contact Us — Apply for a Founding Slot | TSD Modernization Solutions",
