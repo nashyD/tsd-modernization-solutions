@@ -40,7 +40,7 @@ function Hero() {
 
       <h1 ref={r1} style={{
         ...f1, fontFamily: "var(--font-body)", fontWeight: 800,
-        fontSize: "clamp(32px, 5.2vw, 52px)", letterSpacing: "-1.5px", lineHeight: 1.1,
+        fontSize: "clamp(32px, 5.2vw, 52px)", letterSpacing: "-1.5px", lineHeight: 1.18,
         color: v("text"), marginBottom: "20px",
       }}>
         How much are missed calls costing you?

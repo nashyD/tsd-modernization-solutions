@@ -143,7 +143,7 @@ function Hero() {
 
         <h1 ref={r2} style={{
           ...f2, fontFamily: "var(--font-body)", fontWeight: 800,
-          fontSize: "clamp(32px, 5.5vw, 64px)", letterSpacing: "-2px", lineHeight: 1.08,
+          fontSize: "clamp(32px, 5.5vw, 64px)", letterSpacing: "-2px", lineHeight: 1.18,
           color: "#fff", marginBottom: "20px",
           textShadow: "0 2px 18px rgba(0,0,0,0.65), 0 1px 4px rgba(0,0,0,0.8)",
         }}>
@@ -321,9 +321,9 @@ function Stats() {
           <div style={{ position: "relative" }}>
             <div className="stats-hero-num" style={{
               fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-              fontSize: "clamp(120px, 16vw, 180px)", lineHeight: 0.85, letterSpacing: "-4px",
+              fontSize: "clamp(120px, 16vw, 180px)", lineHeight: 1, letterSpacing: "-4px",
               background: C.gradientAccent, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-              marginBottom: "12px",
+              marginBottom: "0",
             }}>
               {count48}
               <span style={{
@@ -444,7 +444,7 @@ function WhyWeDo() {
       <div style={{ maxWidth: "820px", marginBottom: "56px" }}>
         <h2 style={{
           fontFamily: "var(--font-body)", fontWeight: 800, fontSize: "clamp(28px, 4vw, 44px)",
-          letterSpacing: "-0.5px", lineHeight: 1.1, color: v("text"), marginBottom: "20px",
+          letterSpacing: "-0.5px", lineHeight: 1.2, color: v("text"), marginBottom: "20px",
         }}>
           Main street built Charlotte.{" "}
           <span style={{
@@ -489,7 +489,7 @@ function WhyCard({ beat, index }) {
         }}>
           <span style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-            fontSize: "52px", lineHeight: 0.9, color: v("accent"), letterSpacing: "-2px",
+            fontSize: "52px", lineHeight: 1, color: v("accent"), letterSpacing: "-2px",
           }}>01</span>
           <span style={{
             fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase",
@@ -503,7 +503,7 @@ function WhyCard({ beat, index }) {
       header: (
         <div style={{ marginBottom: "20px", borderBottom: `1px solid ${v("divider")}`, paddingBottom: "16px" }}>
           <div style={{
-            fontSize: "44px", color: v("accent"), lineHeight: 0.7,
+            fontSize: "44px", color: v("accent"), lineHeight: 1,
             marginBottom: "14px", letterSpacing: "6px",
           }}>
             {"\u25C6 \u25C6 \u25C6"}
@@ -521,7 +521,7 @@ function WhyCard({ beat, index }) {
         <div style={{ marginBottom: "20px", borderBottom: `1px solid ${v("divider")}`, paddingBottom: "16px" }}>
           <div style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-            fontSize: "72px", lineHeight: 0.6, color: v("accent"), opacity: 0.4,
+            fontSize: "72px", lineHeight: 0.95, color: v("accent"), opacity: 0.4,
             marginBottom: "8px",
           }}>&ldquo;</div>
           <span style={{
@@ -621,7 +621,7 @@ function FoundersStrip() {
       }}>
         <div aria-hidden="true" style={{
           fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-          fontSize: "clamp(80px, 10vw, 140px)", lineHeight: 0.7,
+          fontSize: "clamp(80px, 10vw, 140px)", lineHeight: 0.95,
           color: v("accent"), opacity: 0.35, marginTop: "-8px",
         }}>&ldquo;</div>
         <div>
@@ -692,7 +692,7 @@ function FounderPortrait({ founder, delay }) {
         }}>
           <div style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-            fontSize: "22px", color: "#fff", letterSpacing: "-0.2px", lineHeight: 1.1,
+            fontSize: "22px", color: "#fff", letterSpacing: "-0.2px", lineHeight: 1.2,
           }}>
             {founder.name}
           </div>

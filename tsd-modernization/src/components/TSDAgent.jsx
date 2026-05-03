@@ -604,7 +604,7 @@ export default function TSDAgent() {
                   fontStyle: "italic",
                   fontWeight: 700,
                   fontSize: "18px",
-                  lineHeight: 1.1,
+                  lineHeight: 1.2,
                 }}
               >
                 TSD Modernization

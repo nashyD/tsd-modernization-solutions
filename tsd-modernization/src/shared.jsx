@@ -121,7 +121,7 @@ export function SectionHeader({ label, title, titleAccent, sub, center }) {
       )}
       <h2 style={{
         fontFamily: "var(--font-body)", fontWeight: 800, fontSize: "clamp(28px, 4vw, 44px)",
-        letterSpacing: "-0.5px", lineHeight: 1.1, color: v("text"), marginBottom: sub ? "16px" : 0,
+        letterSpacing: "-0.5px", lineHeight: 1.2, color: v("text"), marginBottom: sub ? "16px" : 0,
       }}>
         {title}{" "}
         {titleAccent && (

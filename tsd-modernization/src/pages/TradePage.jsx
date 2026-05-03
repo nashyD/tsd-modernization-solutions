@@ -71,7 +71,7 @@ function TradeHero({ trade }) {
 
       <h1 ref={r2} style={{
         ...f2, fontFamily: "var(--font-body)", fontWeight: 800,
-        fontSize: "clamp(32px, 5.2vw, 56px)", letterSpacing: "-1.5px", lineHeight: 1.1,
+        fontSize: "clamp(32px, 5.2vw, 56px)", letterSpacing: "-1.5px", lineHeight: 1.18,
         color: v("text"), marginBottom: "20px",
       }}>
         {trade.hero.h1}
@@ -252,13 +252,13 @@ function TheOffer({ trade }) {
           <div style={{ marginBottom: "20px" }}>
             <div style={{
               fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 600,
-              fontSize: "20px", color: v("text-dim"), lineHeight: 1,
+              fontSize: "20px", color: v("text-dim"), lineHeight: 1.2,
               textDecoration: "line-through", textDecorationColor: v("text-dim"),
               textDecorationThickness: "1px", marginBottom: "8px",
             }}>$1,500 standard</div>
             <div style={{
               fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-              fontSize: "56px", letterSpacing: "-1px", lineHeight: 1.1,
+              fontSize: "56px", letterSpacing: "-1px", lineHeight: 1.18,
               paddingBottom: "4px",
               background: C.gradientAccent, WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent", backgroundClip: "text",

@@ -50,7 +50,7 @@ function GuaranteeBlock() {
     }} className="guarantee-block">
       <div style={{
         fontFamily: "var(--font-display)", fontStyle: "italic", fontSize: "84px",
-        lineHeight: 1.1, flexShrink: 0,
+        lineHeight: 1.2, flexShrink: 0,
         paddingBottom: "4px",
         background: C.gradientAccent, WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent", backgroundClip: "text",
@@ -115,14 +115,14 @@ function TierCard({ tier, delay }) {
           <>
             <div style={{
               fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 600,
-              fontSize: "20px", color: v("text-dim"), lineHeight: 1,
+              fontSize: "20px", color: v("text-dim"), lineHeight: 1.2,
               textDecoration: "line-through", textDecorationColor: v("text-dim"),
               textDecorationThickness: "1px",
               marginBottom: "8px",
             }}>{tier.anchor}</div>
             <div style={{
               fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-              fontSize: "60px", letterSpacing: "-1px", lineHeight: 1,
+              fontSize: "60px", letterSpacing: "-1px", lineHeight: 1.15,
               background: C.gradientAccent, WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent", backgroundClip: "text",
               marginBottom: "10px",

@@ -81,7 +81,7 @@ export default function Book() {
 
         <h1 ref={r2} style={{
           ...f2, fontFamily: "var(--font-body)", fontWeight: 800,
-          fontSize: "clamp(32px, 5.2vw, 56px)", letterSpacing: "-1.5px", lineHeight: 1.1,
+          fontSize: "clamp(32px, 5.2vw, 56px)", letterSpacing: "-1.5px", lineHeight: 1.18,
           color: v("text"), marginBottom: "20px", textAlign: "center",
         }}>
           Pick a time.

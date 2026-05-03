@@ -58,7 +58,7 @@ export default function Testimonials() {
         <div ref={introRef} style={{ ...introFade, marginBottom: "72px" }}>
           <h1 style={{
             fontFamily: "var(--font-body)", fontWeight: 800, fontSize: "clamp(36px, 6vw, 68px)",
-            letterSpacing: "-2px", lineHeight: 1.05, color: v("text"), marginBottom: "24px",
+            letterSpacing: "-2px", lineHeight: 1.18, color: v("text"), marginBottom: "24px",
             maxWidth: "900px",
           }}>
             We're booking founding clients now.{" "}

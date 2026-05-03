@@ -230,13 +230,15 @@ export default function Layout() {
           position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
           overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
         }
-        /* A11y: skip link — visible only when focused via keyboard */
+        /* A11y: skip link — visible only when focused via keyboard.
+           Uses position:fixed so the rubber-band overscroll on the body
+           doesn't drag this off-screen pill into view. */
         .skip-link {
-          position: absolute; top: 8px; left: 8px; z-index: 2000;
+          position: fixed; top: 8px; left: 8px; z-index: 2000;
           padding: 10px 16px; border-radius: 8px;
           background: var(--c-accent); color: #fff;
           font-size: 14px; font-weight: 600; text-decoration: none;
-          transform: translateY(-120%); transition: transform 0.2s ease;
+          transform: translateY(-150%); transition: transform 0.2s ease;
         }
         .skip-link:focus, .skip-link:focus-visible { transform: translateY(0); outline: none; }
         /* A11y: keyboard focus ring on interactive elements */

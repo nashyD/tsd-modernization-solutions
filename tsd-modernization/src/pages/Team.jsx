@@ -193,7 +193,7 @@ function FounderSpread({ member, index, onView }) {
         </div>
         <h2 style={{
           fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-          fontSize: "clamp(36px, 5vw, 58px)", lineHeight: 1.05, letterSpacing: "-1px",
+          fontSize: "clamp(36px, 5vw, 58px)", lineHeight: 1.18, letterSpacing: "-1px",
           color: v("text"), marginBottom: "8px",
         }}>
           {member.name}
@@ -307,7 +307,7 @@ export default function Team() {
 
         <h1 style={{
           fontFamily: "var(--font-body)", fontWeight: 800, fontSize: "clamp(36px, 6vw, 72px)",
-          letterSpacing: "-2px", lineHeight: 1.02, color: v("text"), marginBottom: "24px",
+          letterSpacing: "-2px", lineHeight: 1.18, color: v("text"), marginBottom: "24px",
         }}>
           Three founders.{" "}
           <span style={{

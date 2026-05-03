@@ -285,7 +285,7 @@ function Report({ inputs }) {
           }}>Annual revenue at risk</div>
           <div style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-            fontSize: "clamp(56px, 10vw, 96px)", lineHeight: 1, letterSpacing: "-2px",
+            fontSize: "clamp(56px, 10vw, 96px)", lineHeight: 1.18, letterSpacing: "-2px",
             background: C.gradientAccent, WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent", backgroundClip: "text",
             marginBottom: "12px",

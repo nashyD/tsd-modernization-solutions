@@ -70,7 +70,7 @@ export default function Process() {
             }}>
               <div style={{
                 fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-                fontSize: "42px", color: v("accent"), lineHeight: 1, letterSpacing: "-1px",
+                fontSize: "42px", color: v("accent"), lineHeight: 1.18, letterSpacing: "-1px",
               }}>{s.num}</div>
               <div>
                 <h3 style={{ fontSize: "20px", fontWeight: 700, color: v("text"), marginBottom: "8px" }}>{s.title}</h3>
