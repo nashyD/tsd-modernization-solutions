@@ -772,7 +772,7 @@ function buildConversation(t) {
   const u1TypeStart = 4.0, u1TypeEnd = 5.6;
   const u1Send = 5.8;
   const u1BotTypingStart = 6.0, u1BotTypingEnd = 6.8;
-  const u1BotReply = "The $5,000 bundle: custom responsive site, AI chatbot, on-page SEO + analytics, written + video docs, founder on call through Aug 31, 2026, and full source code. Plus a free AI receptionist ($497 value).";
+  const u1BotReply = "The $5,000 bundle: custom responsive site, AI chatbot, on-page SEO + analytics, written + video docs, founder on call through Aug 31, 2026, and full source code. Wedge customers (the $497 AI Receptionist setup) save $1,000 on this bundle within 30 days of setup.";
   const u1BotEnd = 8.2;
 
   const u2 = "How many spots are left?";

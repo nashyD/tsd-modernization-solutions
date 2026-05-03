@@ -1,6 +1,6 @@
 # TSD Modernization Solutions — Business Plan
 
-*Extracted from [github.com/nashyD/tsd-modernization-solutions/tree/main/tsd-modernization](https://github.com/nashyD/tsd-modernization-solutions/tree/main/tsd-modernization) on 2026-04-26; refreshed against live source on 2026-05-02 (Phase II bundle raised to $5,000 founding rate / $10,000 anchor + Phase II guarantee replaced with two operationalizable triggers per Hormozi-style audit; prior changes: pricing restructure, vertical reframe, Twilio→Telnyx migration, route additions, Calendly booking funnel). Sourced from `README.md`, `index.html` (JSON-LD), all page components in `src/pages/`, `services-data.js`, and the `PROJECT_LOG.md` audit/changelog.*
+*Extracted from [github.com/nashyD/tsd-modernization-solutions/tree/main/tsd-modernization](https://github.com/nashyD/tsd-modernization-solutions/tree/main/tsd-modernization) on 2026-04-26; refreshed against live source on 2026-05-02 (Phase II bundle raised to $5,000 founding rate / $10,000 anchor + Phase II guarantee replaced with two operationalizable triggers + wedge decoupled from the bundle with a $1,000-off-within-30-days credit, all per Hormozi-style audit; prior changes: pricing restructure, vertical reframe, Twilio→Telnyx migration, route additions, Calendly booking funnel). Sourced from `README.md`, `index.html` (JSON-LD), all page components in `src/pages/`, `services-data.js`, and the `PROJECT_LOG.md` audit/changelog.*
 
 ---
 
@@ -112,7 +112,7 @@ Three tiers on `/pricing` (Phase I, Phase II, Founding Partnership) plus a wedge
 - **Price:** $5,000 founding rate (anchor $10,000) — raised from $2,000 / $4,000 on 2026-05-02 per Hormozi-style audit
 - **Cap:** 10 founding-cohort spots
 - **Includes:** Custom responsive website · AI chatbot or workflow automation · On-page SEO + analytics · Written + video documentation · Founder on call for fixes through Aug 31, 2026 · Full source-code ownership
-- **Bonus:** AI Receptionist setup ($497 value) included
+- **Wedge credit (replaces the prior bundled "AI Receptionist included" bonus):** Decoupled 2026-05-02 per Hormozi-style audit so the wedge keeps its job (low-friction first yes) and there's a documented upsell path. Wedge customers (anyone who bought the $497 AI Receptionist) save $1,000 on Phase II within 30 days of their setup — Phase II becomes $4,000 instead of $5,000 for them. Surfaced on the Phase II tier card on `/pricing` (in the existing dashed-border bonus block) and the matching `Bundle bonus` strip on `/ai-receptionist`.
 - **Risk reversal:** Two operationalizable triggers added 2026-05-02 per Hormozi-style audit, replacing the prior generic "if we missed the mark by handoff" line. (1) Site live within 14 days of contract signature (clock pauses if buyer hasn't delivered content + integration credentials within 7 days of signature) or 25% refund ($1,250). (2) AI captures at least 3 qualified leads in the first 30 days post-launch or refund the AI portion (case-by-case dollar amount per actual AI scope, no public anchor) plus rebuild the AI integration free of additional charge. Qualified-lead definition (name + service request + contact info, captured by the AI integration), verification mechanics, and refund benchmarks live in [`GUARANTEE_VERIFICATION.md`](GUARANTEE_VERIFICATION.md); customer-facing contract clauses in [`contracts/phase-ii-guarantee-terms-2026-05-02.md`](contracts/phase-ii-guarantee-terms-2026-05-02.md) for paste into `agreement-of-work-template.docx`.
 - **CTA:** "Claim Founding Spot"
 
@@ -128,6 +128,7 @@ Three tiers on `/pricing` (Phase I, Phase II, Founding Partnership) plus a wedge
 - **Cap:** 10 setup spots, last start July 13
 - **After Aug 31:** Ownership transfers — buyer owns the agent, credentials, and call log; continues the underlying service directly with their own Telnyx + Deepgram + Anthropic accounts
 - **Risk reversal:** If the AI doesn't book a single appointment in the first 30 days, every dollar comes back
+- **Bundle upsell:** Wedge buyers can add the Phase II Website + AI Bundle within 30 days of their setup and save $1,000 (Phase II at $4,000 instead of $5,000). The wedge price stays paid; the $1,000 credit applies to Phase II only. Decoupled from Phase II as a separately-priced product on 2026-05-02 — previously Phase II included the wedge as a bundled "$497 value" bonus, which neutered the wedge's job as a low-friction first yes. Surfaced on `/ai-receptionist`'s "Bundle bonus" strip and on the Phase II tier card's bonus block on `/pricing`.
 
 ### Risk reversal (all engagements)
 > *"You sign the scope. We deliver. If we missed the mark by handoff, every dollar comes back inside a week."*
@@ -166,7 +167,7 @@ A Hormozi-style audit run on 2026-04-25 named the constraint as a **lead problem
 | Channel | Status | Funnel destination |
 |---|---|---|
 | Founder relationship outreach | **Live — pipeline building** | Trade pages or relationship pages by vertical, with `?ref=<source>` query param captured into Web3Forms |
-| Paid Facebook / Google Local against trade keywords | Planned for cohort launch | `/hvac` · `/electricians` · `/plumbers` (trade-specific landing pages added 2026-04-26) → `/ai-receptionist` wedge ($497 entry, easier yes than $2,000) |
+| Paid Facebook / Google Local against trade keywords | Planned for cohort launch | `/hvac` · `/electricians` · `/plumbers` (trade-specific landing pages added 2026-04-26) → `/ai-receptionist` wedge ($497 entry, much easier yes than the $5,000 bundle). Wedge buyers convert upward via the $1,000-off-within-30-days credit toward Phase II (wedge decoupled from the bundle 2026-05-02 per Hormozi-style audit, so the two-step funnel works as intended: low-friction wedge yes → 30-day relationship → bundle upsell at $4,000). |
 | Founder DMs to non-trades operators | Live | `/salons` · `/auto-shops` · `/restaurants` (relationship-channel pages, same offer, different framing) |
 | Missed-call cost calculator | Live (added 2026-04-26) | `/missed-call-calculator` standalone + embedded on `/pricing`. Free four-question calculator that estimates revenue lost to voicemail; converts to wedge CTA. |
 | Site-to-form contact | Live | `/contact` (Web3Forms backend) |
@@ -262,9 +263,9 @@ Promise: *"You're not on your own. One founder stays on call for fixes through A
 | AI Receptionist setup (standalone) | $497 | 10 | $4,970 |
 
 **Notes on stacking:**
-- Phase II's "AI Receptionist included" bonus is the same wedge product folded into the bundle — selling Phase II to a buyer who'd also have bought the $497 setup is a $497 absorption, not additional revenue.
+- Phase II is no longer bundled with the AI Receptionist as of 2026-05-02 (wedge decoupled per Hormozi-style audit). A buyer who wants both pays $497 + $5,000 = $5,497 standalone, OR $497 + $4,000 = $4,497 by sequencing wedge → Phase II within 30 days and using the $1,000 wedge-customer credit. The $1,000 credit is the cost of running the two-step funnel; the wedge's revenue function is restored as a low-friction first yes.
 - Founding Partnership ($5,000) **includes** Phase I + Phase II + AI Receptionist setup — at the post-2026-05-02 pricing, that's $1,500 + $5,000 + $497 = $6,997 of absorbed value, which **exceeds the Partnership price by $1,997**. Founding Partnership is now structurally cheaper than buying all three à la carte, an inversion flagged for Phase 4 of the Hormozi-style audit work (raise Founding Partnership to restore a positive premium with real scope difference).
-- Standalone wedge revenue accrues only when the wedge sells outside a bundle / partnership.
+- Standalone wedge revenue accrues fully when the wedge sells outside a Founding Partnership; if a wedge buyer subsequently uses the $1,000 credit toward Phase II, the wedge revenue ($497) still accrues, and Phase II accrues at $4,000 instead of $5,000.
 
 ### Realistic scenarios (assuming bundle-only or partnership-only buyers)
 

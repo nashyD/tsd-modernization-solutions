@@ -311,7 +311,7 @@ const TIERS = [
       "Founder on call for fixes through August 31, 2026",
       "Full source code ownership",
     ],
-    bonus: "AI receptionist setup ($497 value) included with the bundle.",
+    bonus: "Already bought the AI Receptionist? Save $1,000 on this bundle within 30 days of your setup — Phase II becomes $4,000 instead of $5,000.",
     btn: "Claim Founding Spot",
     featured: true,
     objection: "Live in 14 days from contract signature or 25% back ($1,250). 3 AI-captured leads in the first 30 days post-launch or we refund the AI portion and rebuild it free.",

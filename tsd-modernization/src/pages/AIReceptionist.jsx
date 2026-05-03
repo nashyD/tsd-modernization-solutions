@@ -275,7 +275,7 @@ function TheOffer() {
               color: v("accent"), marginBottom: "6px",
             }}>{"◆ Bundle bonus"}</div>
             <p style={{ fontSize: "13px", color: v("text"), lineHeight: 1.55 }}>
-              Add the Phase II Bundle within 30 days of setup and save $500 off the bundle price.
+              Add the Phase II Bundle within 30 days of setup and save $1,000 — full Website + AI Bundle for $4,000 instead of $5,000.
             </p>
           </div>
 
