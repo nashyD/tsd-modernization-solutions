@@ -254,10 +254,12 @@ function TheOffer({ trade }) {
             <div style={{
               fontFamily: "var(--font-body)", fontWeight: 800,
               fontSize: "clamp(56px, 8vw, 76px)", letterSpacing: "-2.5px",
-              lineHeight: 1.0,
+              lineHeight: 1.1,
               background: C.gradientAccent, WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent", backgroundClip: "text",
-              marginBottom: SPACE.sm, fontFeatureSettings: '"tnum" 1',
+              marginBottom: SPACE.sm,
+              paddingBottom: "0.08em",
+              fontFeatureSettings: '"tnum" 1',
             }}>$497</div>
             <p style={{ fontSize: "14px", color: v("text-muted"), marginBottom: "4px" }}>
               <strong style={{ color: v("text"), fontWeight: 700 }}>Founding setup, paid once.</strong>

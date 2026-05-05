@@ -248,10 +248,11 @@ function Report({ inputs }) {
           <div style={{
             fontFamily: "var(--font-body)", fontWeight: 800,
             fontSize: "clamp(64px, 11vw, 112px)",
-            lineHeight: 1, letterSpacing: "-3px",
+            lineHeight: 1.1, letterSpacing: "-3px",
             background: C.gradientAccent, WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent", backgroundClip: "text",
             marginBottom: SPACE.md,
+            paddingBottom: "0.08em",
             fontFeatureSettings: '"tnum" 1',
           }}>{fmt$(numbers.lostRevenuePerYear)}</div>
           <p style={{

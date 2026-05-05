@@ -50,10 +50,11 @@ function GuaranteeBlock() {
       <div style={{
         fontFamily: "var(--font-display)", fontStyle: "italic",
         fontSize: "clamp(72px, 9vw, 120px)",
-        lineHeight: 1, flexShrink: 0,
+        lineHeight: 1.1, flexShrink: 0,
         background: C.gradientAccent, WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent", backgroundClip: "text",
         textAlign: "center",
+        paddingBottom: "0.05em",
       }}>{"§"}</div>
       <div>
         <Eyebrow style={{ marginBottom: "12px" }}>Risk Reversal</Eyebrow>
@@ -148,10 +149,12 @@ function TierCard({ tier, delay }) {
             <div style={{
               fontFamily: "var(--font-body)", fontWeight: 800,
               fontSize: "clamp(56px, 7vw, 72px)", letterSpacing: "-2px",
-              lineHeight: 1.05,
+              lineHeight: 1.1,
               background: C.gradientAccent, WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent", backgroundClip: "text",
-              marginBottom: "10px", fontFeatureSettings: '"tnum" 1',
+              marginBottom: "10px",
+              paddingBottom: "0.08em",
+              fontFeatureSettings: '"tnum" 1',
             }}>{tier.price}</div>
             <Eyebrow>{tier.range}</Eyebrow>
           </>

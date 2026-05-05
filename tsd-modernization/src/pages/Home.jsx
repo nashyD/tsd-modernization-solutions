@@ -384,10 +384,11 @@ function Stats() {
           <div style={{ position: "relative" }}>
             <div className="stats-hero-num" style={{
               fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-              fontSize: "clamp(120px, 16vw, 188px)", lineHeight: 1, letterSpacing: "-4px",
+              fontSize: "clamp(120px, 16vw, 188px)", lineHeight: 1.05, letterSpacing: "-4px",
               background: C.gradientAccent,
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
               marginBottom: 0,
+              paddingBottom: "0.08em",
               fontFeatureSettings: '"tnum" 1',
             }}>
               {count48}
@@ -456,8 +457,9 @@ function SupportStat({ forwardRef, value, label, note }) {
         fontFamily: "var(--font-body)", fontSize: "32px", fontWeight: 800, letterSpacing: "-1px",
         background: C.gradientAccent,
         WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-        lineHeight: 1,
+        lineHeight: 1.1,
         marginBottom: "10px",
+        paddingBottom: "0.08em",
         fontFeatureSettings: '"tnum" 1',
       }}>
         {value}
@@ -564,10 +566,12 @@ function WhyCard({ beat, index }) {
         }}>
           <span style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-            fontSize: "60px", lineHeight: 0.9,
+            fontSize: "60px", lineHeight: 1.05,
             background: C.gradientAccent,
             WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
             letterSpacing: "-3px",
+            paddingBottom: "0.08em",
           }}>01</span>
           <Eyebrow color={v("text-muted")} diamond={false}>{beat.label}</Eyebrow>
         </div>
