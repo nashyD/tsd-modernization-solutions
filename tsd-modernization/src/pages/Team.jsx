@@ -12,7 +12,7 @@ const TEAM = [
   {
     number: "01",
     initials: "ND", name: "Nash Davis", role: "CEO & Head of Modernization",
-    school: "UNC Chapel Hill",
+    school: "UNC Chapel Hill", schoolId: "chapelhill",
     pullQuote: "When it breaks, you call me — not a ticket queue.",
     bio: "AI and technology strategy. Leads technical delivery, client engagement, and custom solution architecture.",
     ships: ["Custom AI chatbots & integrations", "Site architecture & build", "Solution scoping and delivery"],
@@ -27,7 +27,7 @@ const TEAM = [
   {
     number: "02",
     initials: "BS", name: "Bishop Switzer", role: "COO \u2014 Operations",
-    school: "UNC Wilmington",
+    school: "UNC Wilmington", schoolId: "wilmington",
     pullQuote: "Every proposal is documented. Every handoff is yours to keep.",
     bio: "Operations and process management. Oversees project tracking, proposals, invoicing, and handoff documentation.",
     ships: ["Project tracking & timelines", "Proposals & invoicing", "Handoff documentation & training"],
@@ -42,7 +42,7 @@ const TEAM = [
   {
     number: "03",
     initials: "GT", name: "Grant Tadlock", role: "CFO & Sales Lead",
-    school: "UNC Charlotte",
+    school: "UNC Charlotte", schoolId: "charlotte",
     pullQuote: "Main-street pricing is a promise, not a pitch.",
     bio: "Financial planning and client acquisition. Drives sales pipeline, pricing strategy, and relationship development.",
     ships: ["Financial planning & pricing", "Sales pipeline & intake", "Client relationships"],
@@ -55,6 +55,180 @@ const TEAM = [
     },
   },
 ];
+
+/* ── School banner ─────────────────────────────────────────────
+   Each founder gets a varsity-letterhead-style banner above their
+   name in the founder spread. Brand-color field, accent stripes
+   top + bottom, white roundel logo on the left.
+
+   `logoSrc` points to an official school mark in /public. Drop the
+   SVG/PNG file from each school's brand kit at that path and the
+   banner picks it up. While the file is missing the <img> errors
+   and we render `Fallback` — a stylized monogram — so the banner
+   never breaks. */
+const SCHOOLS = {
+  chapelhill: {
+    name: "UNC Chapel Hill",
+    nickname: "Tar Heels",
+    bg: "#4B9CD3",       /* Carolina blue */
+    bgDark: "#3a7db0",
+    accent: "#13294B",   /* Carolina navy */
+    logoSrc: "/UNC_primary_mark_blue.svg",
+    logoAlt: "UNC Chapel Hill logo",
+    /* Roughly square mark — round medallion. */
+    medallion: { shape: "round", width: 44, height: 44, padding: 6 },
+    Fallback: () => (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <text x="12" y="17" textAnchor="middle"
+              fontFamily="Playfair Display, Georgia, serif"
+              fontStyle="italic" fontWeight="700" fontSize="15"
+              letterSpacing="-1.4"
+              fill="currentColor">NC</text>
+      </svg>
+    ),
+  },
+  wilmington: {
+    name: "UNC Wilmington",
+    nickname: "Seahawks",
+    bg: "#006666",       /* UNCW teal */
+    bgDark: "#004d4d",
+    accent: "#F1D45A",   /* UNCW gold */
+    logoSrc: "/uncw-logo.png",
+    logoAlt: "UNC Wilmington logo",
+    /* Wordmark + columns — wider rounded rectangle so the mark breathes. */
+    medallion: { shape: "rect", width: 64, height: 44, padding: 6 },
+    Fallback: () => (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M 4 7 L 7 17 L 10 11 L 12 17 L 14 11 L 17 17 L 20 7"
+              stroke="currentColor" strokeWidth="2.4"
+              strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M 5 20 Q 8 18.5 11 20 T 17 20"
+              stroke="currentColor" strokeWidth="1.4"
+              strokeLinecap="round" fill="none" opacity="0.65" />
+      </svg>
+    ),
+  },
+  charlotte: {
+    name: "UNC Charlotte",
+    nickname: "49ers",
+    bg: "#00703C",       /* UNCC green */
+    bgDark: "#00502b",
+    accent: "#B9975B",   /* UNCC gold */
+    logoSrc: "/charlotte-49ers.svg",
+    logoAlt: "UNC Charlotte logo",
+    /* Horizontal composition — wider rounded rectangle. */
+    medallion: { shape: "rect", width: 64, height: 44, padding: 6 },
+    Fallback: () => (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M 4 8 L 6 4 L 9 7 L 12 3 L 15 7 L 18 4 L 20 8 L 19.5 11 L 4.5 11 Z" />
+        <text x="12" y="21" textAnchor="middle"
+              fontFamily="Inter, sans-serif"
+              fontWeight="800" fontSize="11"
+              letterSpacing="0.5"
+              fill="currentColor">49</text>
+      </svg>
+    ),
+  },
+};
+
+/* Loads the official logo from /public; on 404/load error it swaps
+   to the inline Fallback monogram so the banner is never empty.
+   The image fills the medallion's content box (less the padding) and
+   uses object-fit: contain so a wide wordmark scales to fit without
+   distortion. */
+function SchoolLogo({ school }) {
+  const [errored, setErrored] = useState(false);
+  const m = school.medallion || { width: 40, height: 40, padding: 7 };
+  const innerW = m.width - m.padding * 2;
+  const innerH = m.height - m.padding * 2;
+  if (errored || !school.logoSrc) {
+    const F = school.Fallback;
+    return <F />;
+  }
+  return (
+    <img
+      src={school.logoSrc}
+      alt={school.logoAlt}
+      style={{
+        display: "block",
+        width: `${innerW}px`,
+        height: `${innerH}px`,
+        objectFit: "contain",
+        objectPosition: "center",
+      }}
+      onError={() => setErrored(true)}
+    />
+  );
+}
+
+function SchoolBanner({ schoolId }) {
+  const s = SCHOOLS[schoolId];
+  if (!s) return null;
+  const m = s.medallion || { shape: "round", width: 40, height: 40, padding: 7 };
+  return (
+    <div style={{
+      display: "inline-flex", alignItems: "center", gap: "14px",
+      padding: "10px 18px 10px 10px",
+      borderRadius: RADIUS.md,
+      background: `linear-gradient(180deg, ${s.bg} 0%, ${s.bgDark} 100%)`,
+      borderTop: `3px solid ${s.accent}`,
+      borderBottom: `3px solid ${s.accent}`,
+      borderLeft: "1px solid rgba(255,255,255,0.10)",
+      borderRight: "1px solid rgba(255,255,255,0.10)",
+      marginBottom: SPACE.md,
+      boxShadow: "0 8px 24px rgba(7,13,26,0.22), inset 0 1px 0 rgba(255,255,255,0.20)",
+      position: "relative",
+      overflow: "hidden",
+    }}>
+      {/* Subtle diagonal sheen */}
+      <span aria-hidden="true" style={{
+        position: "absolute", inset: 0, pointerEvents: "none",
+        background: "linear-gradient(115deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 38%)",
+      }} />
+
+      {/* Logo medallion — white field ringed in the school's accent color.
+          Round for square marks, rounded rectangle for wide wordmarks.
+          Renders the official mark from /public if present, otherwise the
+          stylized fallback monogram. */}
+      <span style={{
+        width: `${m.width}px`,
+        height: `${m.height}px`,
+        borderRadius: m.shape === "rect" ? "10px" : RADIUS.full,
+        background: "#fff",
+        color: s.bg,
+        display: "inline-flex", alignItems: "center", justifyContent: "center",
+        flexShrink: 0,
+        boxShadow: `inset 0 0 0 2px ${s.accent}, 0 2px 6px rgba(7,13,26,0.18)`,
+        position: "relative", zIndex: 1,
+        overflow: "hidden",
+      }}>
+        <SchoolLogo school={s} />
+      </span>
+
+      <div style={{
+        display: "flex", flexDirection: "column", gap: "2px",
+        position: "relative", zIndex: 1,
+      }}>
+        <span style={{
+          fontSize: "12px", fontWeight: 800, letterSpacing: "2.5px",
+          textTransform: "uppercase",
+          color: "#fff", lineHeight: 1.15,
+          textShadow: "0 1px 2px rgba(0,0,0,0.25)",
+        }}>
+          {s.name}
+        </span>
+        <span style={{
+          fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 600,
+          fontSize: "13px", lineHeight: 1.2,
+          color: s.accent,
+          letterSpacing: "0.3px",
+        }}>
+          {s.nickname}
+        </span>
+      </div>
+    </div>
+  );
+}
 
 /* ── CSS Business Card (pixel-matches the PDF) ────────────────── */
 function BusinessCard({ data }) {
@@ -190,12 +364,7 @@ function FounderSpread({ member, index, onView }) {
 
       {/* Copy */}
       <div style={{ order: reverse ? 1 : 2 }}>
-        <div style={{
-          fontSize: "11px", fontWeight: 700, letterSpacing: "3px", textTransform: "uppercase",
-          color: v("text-dim"), marginBottom: "10px",
-        }}>
-          {member.school}
-        </div>
+        <SchoolBanner schoolId={member.schoolId} />
         <h2 style={{
           fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
           fontSize: "clamp(36px, 5vw, 58px)", lineHeight: 1.18, letterSpacing: "-1px",
