@@ -237,7 +237,10 @@ export function ChapterRule({ label, num, style }) {
 }
 
 /* Editorial masthead strip — the long [— FOUNDING COHORT ◆ EDITION ◆ … —]
-   bar used at the top of Hero, Pricing, AI Receptionist, etc. */
+   bar used at the top of Hero, Pricing, AI Receptionist, etc.
+   Lines flex-grow equally so the content is always anchored at center
+   regardless of label widths. Labels are nowrap so they don't break
+   awkwardly between letters. */
 export function EditorialMasthead({ items = [], color, style }) {
   return (
     <div style={{
@@ -248,14 +251,23 @@ export function EditorialMasthead({ items = [], color, style }) {
       color: color || v("text-muted"),
       ...style,
     }}>
-      <span style={{ flex: "0 0 44px", height: "1px", background: "currentColor", opacity: 0.35 }} />
+      <span style={{
+        flex: "1 1 60px", minWidth: "32px", maxWidth: "120px",
+        height: "1px", background: "currentColor", opacity: 0.35,
+      }} />
       {items.map((item, i) => (
-        <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: "14px" }}>
+        <span key={i} style={{
+          display: "inline-flex", alignItems: "center", gap: "14px",
+          whiteSpace: "nowrap",
+        }}>
           {i > 0 && <span style={{ color: v("accent"), fontSize: "7px" }}>{"◆"}</span>}
           <span>{item}</span>
         </span>
       ))}
-      <span style={{ flex: "0 0 44px", height: "1px", background: "currentColor", opacity: 0.35 }} />
+      <span style={{
+        flex: "1 1 60px", minWidth: "32px", maxWidth: "120px",
+        height: "1px", background: "currentColor", opacity: 0.35,
+      }} />
     </div>
   );
 }

@@ -328,7 +328,12 @@ function FounderSpread({ member, index, onView }) {
       <style>{`
         @media (max-width: 820px) {
           .founder-spread { grid-template-columns: 1fr !important; }
-          .founder-portrait { max-width: 420px; margin: 0 auto !important; }
+          .founder-portrait {
+            max-width: 420px;
+            margin: 0 auto !important;
+            order: 1 !important;
+          }
+          .founder-copy { order: 2 !important; }
         }
       `}</style>
       {/* Portrait */}
@@ -363,7 +368,7 @@ function FounderSpread({ member, index, onView }) {
       </div>
 
       {/* Copy */}
-      <div style={{ order: reverse ? 1 : 2 }}>
+      <div className="founder-copy" style={{ order: reverse ? 1 : 2 }}>
         <SchoolBanner schoolId={member.schoolId} />
         <h2 style={{
           fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
