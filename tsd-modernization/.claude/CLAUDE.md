@@ -17,7 +17,7 @@ If you touch any of the following, the matching plan section needs a correspondi
 | `src/pages/Home.jsx` hero / wedge framing, `src/pages/TradePage.jsx`, `src/pages/RelationshipPage.jsx`, new vertical landing pages | §4 Market & Opportunity (vertical positioning), §8.2 Acquisition channels |
 | `src/pages/Book.jsx`, `src/components/BookCallButton.jsx`, Calendly URL (`calendly.com/nashdavis-tsd-ventures/30min`), event config, presence/absence of "Book a fit call" CTAs on conversion pages | §8.2 Acquisition channels (booking row), §11.1 Technology & Infrastructure (booking row) |
 | `src/pages/Team.jsx`, founder roles / emails / schools | §3 Founders & Roles |
-| Phone number anywhere (`+17043175630` is canonical), JSON-LD `telephone`, contracts contracting party | §2 Company Overview |
+| Phone number anywhere (`+19802279003` is canonical for the company line; founders also have individual TSD work lines: Nash `+19802274913`, Grant `+19802274917`, Bishop `+19802274702`), JSON-LD `telephone`, contracts contracting party | §2 Company Overview, §3 Founders & Roles |
 | Operating window dates (May 7 / Aug 10 / Aug 31 / July 13), cohort caps | §1, §2, §7, §14 |
 | Tech stack additions/removals (analytics, error monitoring, rate limiting, voice carrier, sister repos like `voice-receptionist` / `tsd-dialer`) | §11 Technology & Infrastructure |
 | New `PROJECT_LOG.md` entries that ship features or close audit items | §14 Roadmap (move items between "open" and "done"), §13 Risks (close mitigated risks) |

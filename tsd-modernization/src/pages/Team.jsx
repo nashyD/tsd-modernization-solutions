@@ -21,7 +21,7 @@ const TEAM = [
       company: "TSD MODERNIZATION SOLUTIONS",
       name: "NASH DAVIS", title: "Chief Executive Officer",
       email: "nashdavis@tsd-ventures.com", website: "tsd-ventures.com",
-      location: "Charlotte, North Carolina", phone: "+1 704-317-5630",
+      location: "Charlotte, North Carolina", phone: "+1 980-227-4913",
     },
   },
   {
@@ -36,7 +36,7 @@ const TEAM = [
       company: "TSD \u00b7 VENTURES",
       name: "BISHOP SWITZER", title: "Chief Operating Officer",
       email: "bishopswitzer@tsd-ventures.com", website: "tsd-ventures.com",
-      location: "Charlotte, North Carolina", phone: "+1 704-317-5630",
+      location: "Charlotte, North Carolina", phone: "+1 980-227-4702",
     },
   },
   {
@@ -51,7 +51,7 @@ const TEAM = [
       company: "TSD \u00b7 VENTURES",
       name: "GRANT TADLOCK", title: "Chief Financial Officer  \u00b7  Sales",
       email: "granttadlock@tsd-ventures.com", website: "tsd-ventures.com",
-      location: "Charlotte, North Carolina", phone: "+1 704-317-5630",
+      location: "Charlotte, North Carolina", phone: "+1 980-227-4917",
     },
   },
 ];

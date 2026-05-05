@@ -121,6 +121,40 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-05-05 — Phone migration: Telnyx (704) → Vapi-managed (980); per-founder TSD work lines
+
+**What.** Migrated the published company line from Telnyx-owned `+17043175630` to Vapi-managed `+19802279003`. Also provisioned three additional Vapi-managed numbers for individual founder TSD work lines (Nash `+19802274913`, Grant `+19802274917`, Bishop `+19802274702`) — each bound to its own Vapi assistant in the `tsd-receptionist` repo (see assistant IDs `de002f7a-…` / `9e521691-…` / `937d2c4b-…` / `8c85ca50-…`). Updated every site, doc, and downstream surface that referenced the old number.
+
+**Why.** Vapi's BYO-Telnyx integration silently force-injected `sipVerb: "refer"` into every `transferCall` config — even on `warm-transfer-say-message` mode. Telnyx then rejected the SIP REFER in ~400ms with `D00 + NORMAL_CLEARING` (likely outbound REFER not honored on the SIP Connection or a related auth issue). After diagnosing through Vapi call logs + the deployed assistant config + Telnyx CDR codes, the cleanest path was to switch the four founder/company lines to Vapi-managed numbers. Vapi handles inbound + outbound + transfers within their own infrastructure, no SIP REFER dependency on a BYO carrier. Cost: ~$8/mo across 4 numbers. The four old Telnyx numbers stay on the Telnyx account for future SBO client deploys where the buyer-owns-the-number handoff story matters.
+
+**Files touched (this repo).**
+- [`src/Layout.jsx`](src/Layout.jsx) — footer call link + display number (`tel:+19802279003` and `(980) 227-9003`).
+- [`src/components/CallButton.jsx`](src/components/CallButton.jsx) — floating "Call us" pill.
+- [`src/pages/Contact.jsx`](src/pages/Contact.jsx) — Contact NAP block.
+- [`src/pages/Team.jsx`](src/pages/Team.jsx) — three founder business cards now show their individual Vapi-managed work lines instead of the shared company line. Nash `+1 980-227-4913`, Bishop `+1 980-227-4702`, Grant `+1 980-227-4917`.
+- [`index.html`](index.html) — JSON-LD `telephone` field (`+1-980-227-9003`).
+- [`api/agent.js`](api/agent.js) — chat-agent error fallback messages now point callers at the new number.
+- [`content/tsd-knowledge.md`](content/tsd-knowledge.md) — agent's shared brain updated; future syncs to `tsd-receptionist` should pick this up.
+- [`.claude/CLAUDE.md`](.claude/CLAUDE.md) — canonical phone-number reference updated, plus the per-founder lines added to the trigger row.
+- [`BUSINESS_PLAN.md`](BUSINESS_PLAN.md) — front-matter refresh date bumped; §2 Company Overview phone field rewritten with full migration history; §11.1 Voice routing row rewritten to reflect the Vapi-managed-first architecture.
+
+**Files touched (downstream repos, separate commits).**
+- `tsd-mobile-detailing`: CallButton + Layout footer point at `+19802279057` (mobile detailing's own Vapi-managed line — was previously sharing the modernization company line, now properly separated).
+- `tsd-ventures`: CallButton + Footer point at `+19802274914` (TSD Ventures legal-entity line).
+- `tsd-receptionist`: `prompts/tsd.md` system-prompt phone reference updated to `(980) 227-9003`. Vapi assistants are already bound to the new numbers in the Vapi dashboard.
+- `tsd-dialer`: caller-ID default + README + manifest + WebRTC client config point at `+19802279003` for now. Per-founder Vercel deploys (Grant + Bishop dialers, when those happen) will override `VITE_CALLER_ID` to their individual TSD work numbers.
+
+**Open follow-ups.**
+- Decide what to do with the four orphaned Telnyx numbers: release (~$5-7/mo savings), hold as forward-only, or initiate a port to Vapi (1-3 weeks). For now they sit unused on the Telnyx account.
+- The dialer's outbound dialing infrastructure may need re-architecture — the old Telnyx SIP Connection that backed `+17043175630` is gone, so outbound calls from the dialer need either a new Telnyx outbound config or a switch to Vapi's outbound-call API. Functional impact: outbound calls from the current single `tsd-dialer` deploy may not work until this is sorted.
+- Update business cards / printable contact info to use the new numbers (Nash, Grant, Bishop each get their individual TSD work line; the company line goes on shared/marketing collateral).
+- Sweep external surfaces for stragglers: Calendly event description, Web3Forms email templates, contracts boilerplate (`agreement-of-work-template.docx`), any cold-outreach scripts the founders are using.
+
+**Principle reinforced.** *Don't keep yak-shaving when a $8/mo line item solves the architectural problem cleanly.* We spent meaningful time debugging BYO-Telnyx SIP REFER behavior — Telnyx Outbound Voice Profile config, account balance, Numbers tab assignments, sipVerb overrides, Vapi transferPlan modes. Each layer revealed another. The pragmatic call was to escape the vendor combo entirely (BYO Telnyx → Vapi-managed) for the surfaces where the BYO ownership story doesn't actually matter (TSD's own founder lines). The Telnyx account stays for the surfaces where it does (SBO client deploys with the buyer-owns-the-number handoff promise). Right tool for the right job rather than forcing one tool to cover both.
+
+---
+
+
 ### 2026-05-04 — ELU session-replay analysis tag installed in `<head>`
 
 **What.** Inserted `<script async src="https://elu.dev/v1/elu_pk_live_ad7ZtTW8TKqABaBwRRNOTWAU6E.js"></script>` into [`index.html`](index.html), grouped with the other third-party scripts (after the Calendly widget block, before the pre-paint theme script). Hardcoded publishable key — the `elu_pk_live_*` prefix follows the standard SaaS-publishable-key convention (Stripe `pk_live_*`, PostHog `phc_*`, etc.) and is safe in client-side source.

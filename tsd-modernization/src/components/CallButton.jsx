@@ -13,8 +13,8 @@ export default function CallButton() {
   const [hovered, setHovered] = useState(false);
   return (
     <a
-      href="tel:+17043175630"
-      aria-label="Call TSD at 704-317-5630"
+      href="tel:+19802279003"
+      aria-label="Call TSD at 980-227-9003"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{

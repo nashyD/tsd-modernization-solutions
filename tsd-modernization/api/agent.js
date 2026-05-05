@@ -186,7 +186,7 @@ async function submitLead({ name, email, business, summary }) {
     return {
       ok: false,
       message:
-        "Lead capture failed: Web3Forms backend not configured. Apologize and ask the visitor to call (704) 317-5630 directly.",
+        "Lead capture failed: Web3Forms backend not configured. Apologize and ask the visitor to call (980) 227-9003 directly.",
     };
   }
   try {
@@ -217,12 +217,12 @@ async function submitLead({ name, email, business, summary }) {
     }
     return {
       ok: false,
-      message: `Lead submission failed: ${data.message || `HTTP ${res.status}`}. Apologize and ask the visitor to call (704) 317-5630 directly.`,
+      message: `Lead submission failed: ${data.message || `HTTP ${res.status}`}. Apologize and ask the visitor to call (980) 227-9003 directly.`,
     };
   } catch (e) {
     return {
       ok: false,
-      message: `Network error during lead submission: ${e.message}. Apologize and ask the visitor to call (704) 317-5630 directly.`,
+      message: `Network error during lead submission: ${e.message}. Apologize and ask the visitor to call (980) 227-9003 directly.`,
     };
   }
 }

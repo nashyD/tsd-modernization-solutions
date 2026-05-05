@@ -549,13 +549,13 @@ export default function Layout() {
                 fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px",
                 textTransform: "uppercase", color: v("accent"), marginBottom: "16px",
               }}>Reach us</div>
-              <a href="tel:+17043175630" style={{
+              <a href="tel:+19802279003" style={{
                 display: "block", marginBottom: "10px",
                 fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
                 fontSize: "20px", letterSpacing: "-0.3px",
                 color: v("text"),
               }}>
-                (704) 317-5630
+                (980) 227-9003
               </a>
               <p style={{ fontSize: "12px", color: v("text-dim"), marginBottom: "12px", lineHeight: 1.5 }}>
                 Open every day · 8am – 8pm
