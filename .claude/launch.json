@@ -7,6 +7,13 @@
       "runtimeArgs": ["run", "dev"],
       "port": 5173,
       "cwd": "tsd-modernization"
+    },
+    {
+      "name": "audit-app",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--", "-p", "3001"],
+      "port": 3001,
+      "cwd": "tsd-modernization-app"
     }
   ]
 }

@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-tarheel: #4b9cd3;
+  --color-tarheel-light: #7eb9e0;
+  --color-navy: #13294b;
+  --color-navy-soft: #1f3666;
+  --font-sans: var(--font-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-display), Georgia, serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+@media print {
+  body {
+    background: white;
+  }
+  main {
+    max-width: none;
+    padding: 0;
+  }
+}

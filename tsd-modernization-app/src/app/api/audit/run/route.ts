@@ -1,0 +1,37 @@
+import { NextResponse, type NextRequest } from "next/server";
+import { z } from "zod";
+import { env } from "@/lib/env";
+import { runAuditPipeline } from "@/lib/audit/run";
+import { AuditFormSchema } from "@/lib/audit/types";
+
+export const runtime = "nodejs";
+export const maxDuration = 60;
+
+const RunPayload = z.object({
+  auditId: z.string().uuid(),
+  leadId: z.string().uuid(),
+  input: AuditFormSchema,
+});
+
+export async function POST(req: NextRequest) {
+  const e = env();
+  const secret = req.headers.get("x-internal-secret");
+  if (secret !== e.INTERNAL_API_SECRET) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+  let body: z.infer<typeof RunPayload>;
+  try {
+    body = RunPayload.parse(await req.json());
+  } catch (err) {
+    return NextResponse.json(
+      { error: "invalid payload", detail: String(err) },
+      { status: 400 }
+    );
+  }
+  await runAuditPipeline({
+    auditId: body.auditId,
+    leadId: body.leadId,
+    input: body.input,
+  });
+  return NextResponse.json({ ok: true });
+}

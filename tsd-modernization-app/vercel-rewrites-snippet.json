@@ -1,0 +1,41 @@
+{
+  "_comment": "Drop these into the EXISTING Vite site's vercel.json (tsd-modernization/vercel.json) once the Next app is deployed. DO NOT delete the existing 'headers' block — merge into it. Replace MODERNIZATION_APP_URL with the live URL of the new Next.js project (e.g. https://tsd-modernization-app.vercel.app).",
+  "rewrites": [
+    {
+      "source": "/audit",
+      "destination": "https://MODERNIZATION_APP_URL/audit"
+    },
+    {
+      "source": "/audit/:path*",
+      "destination": "https://MODERNIZATION_APP_URL/audit/:path*"
+    },
+    {
+      "source": "/app",
+      "destination": "https://MODERNIZATION_APP_URL/app"
+    },
+    {
+      "source": "/app/:path*",
+      "destination": "https://MODERNIZATION_APP_URL/app/:path*"
+    },
+    {
+      "source": "/admin",
+      "destination": "https://MODERNIZATION_APP_URL/admin"
+    },
+    {
+      "source": "/admin/:path*",
+      "destination": "https://MODERNIZATION_APP_URL/admin/:path*"
+    },
+    {
+      "source": "/login",
+      "destination": "https://MODERNIZATION_APP_URL/login"
+    },
+    {
+      "source": "/auth/:path*",
+      "destination": "https://MODERNIZATION_APP_URL/auth/:path*"
+    },
+    {
+      "source": "/api/audit/:path*",
+      "destination": "https://MODERNIZATION_APP_URL/api/audit/:path*"
+    }
+  ]
+}
