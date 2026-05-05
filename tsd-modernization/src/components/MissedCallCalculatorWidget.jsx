@@ -1,26 +1,13 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { C, v, useFadeIn, RippleButton } from "../shared";
+import {
+  C, v, useFadeIn,
+  Button,
+  Eyebrow, ChapterRule,
+  SPACE, RADIUS, SHADOW,
+} from "../shared";
 import { ArrowRightIcon, CheckIcon } from "../icons";
 
-/* Self-contained Missed Call Calculator widget. Two consumers:
-
-     1. /missed-call-calculator — the standalone page wraps this with a
-        Hero, masthead, and ClosingCTA so it has SERP / sharing value.
-     2. /pricing — embeds this between the wedge pointer and the FAQ so a
-        buyer comparing tiers can size the loss the AI Receptionist solves.
-
-   The widget owns its own input state. Both consumers get the same form
-   + report behavior; the wrapping page chrome differs. The Report fades
-   in below the form when an input snapshot exists, recomputes via useMemo
-   when inputs change, and the submit button becomes "Recalculate". */
-
-/* Per-trade after-hours call density (calls per off-hour). Stage-zero
-   conservative estimates tunable in one constant when real cohort data
-   lands. Peak summer + storm weeks can push these 2-3x; off-peak runs
-   lower. Honest defaults outperform inflated ones — a calculator that
-   says $3M/year for a $1.5M shop fails the credibility test before the
-   buyer reads the CTA. */
 const TRADE_CALL_DENSITY = {
   hvac: 0.10,
   electrical: 0.04,
@@ -33,51 +20,32 @@ const TRADE_LABELS = {
   plumbing: "Plumbing",
 };
 
-/* Industry benchmark per the v2 checklist: of voicemails left during
-   unanswered hours, ~85% of callers never call back — they dial the
-   next listing. The remaining 15% are a callback opportunity (still at
-   risk, but at least surfaced). The calculator counts only the 85%. */
 const NO_CALLBACK_RATE = 0.85;
 
-/* Currency formatter — $1,234, no cents. */
 const fmt$ = (n) => "$" + Math.round(n).toLocaleString();
 
-/* Shared form styles — used by both `CalculatorForm` (the trade <select>)
-   and `NumericField` (the three numeric inputs). Lifted to module scope so
-   the subcomponent can read them by reference rather than via closure;
-   defining a stateful subcomponent inside `CalculatorForm` would create a
-   new component identity on every render and lose input focus on each
-   keystroke. The styles use `v("…")` which resolves to a `var(--c-…)`
-   string at module-load time, so theme switching still works. */
 const inputStyle = {
   width: "100%",
-  padding: "14px 18px", borderRadius: "12px",
+  padding: "14px 18px", borderRadius: RADIUS.md,
   border: `1px solid ${v("surface-border")}`,
-  background: v("surface"), color: v("text"),
+  background: v("bg-alt"),
+  color: v("text"),
   fontSize: "16px", fontFamily: "var(--font-body)",
-  transition: "border-color 0.2s ease",
+  transition: "border-color 0.2s ease, background 0.2s ease",
+  outline: "none",
 };
 
 const labelStyle = {
   display: "block",
-  fontSize: "11px", fontWeight: 700, letterSpacing: "2px", textTransform: "uppercase",
-  color: v("accent"), marginBottom: "8px",
+  fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase",
+  color: v("accent"), marginBottom: "10px",
 };
 
 const hintStyle = {
   fontSize: "12px", color: v("text-dim"),
-  marginTop: "6px", lineHeight: 1.5,
+  marginTop: "6px", lineHeight: 1.55,
 };
 
-/* Number field paired with a range slider — both bound to the same string
-   state in `CalculatorForm`. Two ways to enter a value:
-   • Type into the number input for precision (any number, no clamp).
-   • Drag the slider for fast adjustment (clamped to [min, max]).
-   When the input is empty (initial state), the slider parks visually at
-   `min` rather than forcing a default value into the input — keeps the
-   "you haven't answered yet" affordance intact. The `--slider-pct` custom
-   property drives the filled portion of the track in webkit (which has no
-   `::progress` pseudo); Firefox uses `::-moz-range-progress` instead. */
 function NumericField({
   id, label, value, onChange,
   min, max, step,
@@ -102,6 +70,8 @@ function NumericField({
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onFocus={(e) => { e.target.style.borderColor = C.carolina; e.target.style.background = v("surface"); }}
+        onBlur={(e) => { e.target.style.borderColor = v("surface-border"); e.target.style.background = v("bg-alt"); }}
         style={inputStyle}
       />
       <input
@@ -119,6 +89,7 @@ function NumericField({
         display: "flex", justifyContent: "space-between",
         fontSize: "10px", fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase",
         color: v("text-dim"), marginTop: "8px", padding: "0 2px",
+        fontFeatureSettings: '"tnum" 1',
       }}>
         <span>{formatBound ? formatBound(min) : min.toLocaleString()}</span>
         <span>{formatBound ? formatBound(max) : max.toLocaleString()}</span>
@@ -151,14 +122,22 @@ function CalculatorForm({ onCompute, hasReport }) {
   };
 
   return (
-    <section style={{ padding: "20px 24px 40px", maxWidth: "780px", margin: "0 auto" }}>
+    <section style={{ padding: `${SPACE.lg} 24px ${SPACE.xl}`, maxWidth: "820px", margin: "0 auto" }}>
       <form onSubmit={handleSubmit} style={{
-        background: v("surface"),
+        background: `linear-gradient(180deg, ${v("surface")} 0%, ${v("bg-alt")} 100%)`,
         border: `1px solid ${v("surface-border")}`,
-        borderRadius: "20px",
-        padding: "clamp(28px, 4vw, 44px)",
-        display: "flex", flexDirection: "column", gap: "24px",
+        borderRadius: RADIUS["2xl"],
+        padding: "clamp(28px, 4vw, 48px)",
+        display: "flex", flexDirection: "column", gap: SPACE.lg,
+        boxShadow: SHADOW.md,
+        position: "relative",
       }}>
+        <span aria-hidden="true" style={{
+          position: "absolute", top: 0, left: "12%", right: "12%", height: "1px",
+          background: "linear-gradient(90deg, transparent, rgba(75,156,211,0.4), transparent)",
+          pointerEvents: "none",
+        }} />
+
         <div>
           <label htmlFor="trade" style={labelStyle}>Your trade</label>
           <select
@@ -173,18 +152,12 @@ function CalculatorForm({ onCompute, hasReport }) {
           </select>
         </div>
 
-        {/* Numeric inputs — each pairs a number field with a range slider
-            (see `NumericField`). Slider bounds reflect plausible operator
-            ranges for Charlotte trades, not absolute limits — typing past
-            the max is allowed; only the slider clamps. */}
         <NumericField
           id="unanswered"
           label="Unanswered hours per week"
           value={unansweredHours}
           onChange={setUnansweredHours}
-          min={0}
-          max={168}
-          step={1}
+          min={0} max={168} step={1}
           placeholder="e.g. 80"
           formatBound={(n) => `${n} hrs`}
           hint="Total hours per week your phone goes to voicemail. A typical 9-5, weekday-only operation has ~128 unanswered hours per week (nights, weekends)."
@@ -195,9 +168,7 @@ function CalculatorForm({ onCompute, hasReport }) {
           label="Average ticket size ($)"
           value={ticketSize}
           onChange={setTicketSize}
-          min={0}
-          max={5000}
-          step={50}
+          min={0} max={5000} step={50}
           placeholder="e.g. 850"
           formatBound={(n) => `$${n.toLocaleString()}`}
           hint="What an average emergency call books for. HVAC averages $700–$1,000; electrical and plumbing vary by job type."
@@ -208,25 +179,22 @@ function CalculatorForm({ onCompute, hasReport }) {
           label="Average jobs per week"
           value={jobsPerWeek}
           onChange={setJobsPerWeek}
-          min={0}
-          max={100}
-          step={1}
+          min={0} max={100} step={1}
           placeholder="e.g. 25"
           formatBound={(n) => `${n} / wk`}
           hint="How many jobs your team books in a typical week (for context — we report your missed calls separately)."
         />
 
-        <RippleButton
+        <Button
           type="submit"
           disabled={!valid}
-          style={{
-            width: "100%", padding: "16px 0", fontSize: "15px",
-            opacity: valid ? 1 : 0.5,
-            cursor: valid ? "pointer" : "not-allowed",
-          }}
+          variant="primary"
+          size="lg"
+          fullWidth
+          iconRight={<ArrowRightIcon size={16} />}
         >
-          {hasReport ? "Recalculate" : "Calculate my missed-call cost"} <ArrowRightIcon size={16} />
-        </RippleButton>
+          {hasReport ? "Recalculate" : "Calculate my missed-call cost"}
+        </Button>
       </form>
     </section>
   );
@@ -253,55 +221,53 @@ function Report({ inputs }) {
 
   return (
     <section ref={ref} style={{
-      ...fade, padding: "40px 24px 60px",
-      maxWidth: "920px", margin: "0 auto",
+      ...fade, padding: `${SPACE.xl} 24px ${SPACE["3xl"]}`,
+      maxWidth: "960px", margin: "0 auto",
     }} className="report-section">
-      <div style={{
-        display: "flex", alignItems: "baseline", gap: "16px", marginBottom: "32px",
-      }}>
-        <span style={{
-          fontSize: "11px", fontWeight: 700, letterSpacing: "3px", textTransform: "uppercase",
-          color: v("accent"), display: "inline-flex", alignItems: "center", gap: "8px",
-          whiteSpace: "nowrap",
-        }}>
-          <span style={{ fontSize: "8px" }}>{"◆"}</span> Your Estimate
-        </span>
-        <span style={{ flex: 1, height: "1px", background: v("divider"), minWidth: "40px" }} />
-        <span style={{ fontSize: "11px", color: v("text-dim"), letterSpacing: "2px", whiteSpace: "nowrap" }}>{tradeLabel}</span>
-      </div>
+      <ChapterRule label="Your Estimate" num={tradeLabel} style={{ marginBottom: SPACE.xl }} />
 
       <div style={{
-        background: v("surface"),
+        background: `linear-gradient(160deg, ${v("surface")} 0%, ${v("bg-alt")} 100%)`,
         border: `1px solid ${v("surface-border")}`,
-        borderRadius: "20px",
-        padding: "clamp(28px, 4vw, 44px)",
-        marginBottom: "24px",
+        borderRadius: RADIUS["2xl"],
+        padding: "clamp(32px, 4vw, 56px)",
+        marginBottom: SPACE.lg,
+        boxShadow: SHADOW.md,
+        position: "relative",
+        overflow: "hidden",
       }}>
-        {/* Hero number — annual revenue at risk */}
-        <div style={{ textAlign: "center", marginBottom: "32px" }}>
+        {/* Background decorative diamond */}
+        <span aria-hidden="true" style={{
+          position: "absolute", top: "-50px", right: "-50px",
+          fontSize: "260px", color: v("accent"), opacity: 0.05,
+          lineHeight: 1, pointerEvents: "none",
+        }}>{"◆"}</span>
+
+        <div style={{ textAlign: "center", marginBottom: SPACE.xl, position: "relative" }}>
+          <Eyebrow style={{ marginBottom: SPACE.md }}>Annual revenue at risk</Eyebrow>
           <div style={{
-            fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase",
-            color: v("accent"), marginBottom: "16px",
-          }}>Annual revenue at risk</div>
-          <div style={{
-            fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-            fontSize: "clamp(56px, 10vw, 96px)", lineHeight: 1.18, letterSpacing: "-2px",
+            fontFamily: "var(--font-body)", fontWeight: 800,
+            fontSize: "clamp(64px, 11vw, 112px)",
+            lineHeight: 1, letterSpacing: "-3px",
             background: C.gradientAccent, WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent", backgroundClip: "text",
-            marginBottom: "12px",
+            marginBottom: SPACE.md,
+            fontFeatureSettings: '"tnum" 1',
           }}>{fmt$(numbers.lostRevenuePerYear)}</div>
-          <p style={{ fontSize: "14px", color: v("text-muted"), maxWidth: "520px", margin: "0 auto", lineHeight: 1.55 }}>
+          <p style={{
+            fontSize: "14px", color: v("text-muted"),
+            maxWidth: "540px", margin: "0 auto", lineHeight: 1.55,
+          }}>
             Estimated value of jobs going to whoever picks up next when your phone is on voicemail.
           </p>
         </div>
 
-        <div style={{ height: "1px", background: v("divider"), margin: "0 0 28px" }} />
+        <div style={{ height: "1px", background: v("divider"), margin: `0 0 ${SPACE.xl}` }} />
 
-        {/* Supporting numbers grid */}
         <div style={{
           display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
-          gap: "20px",
+          gap: SPACE.md,
         }} className="report-grid">
           <ReportStat
             label="Missed calls / week"
@@ -321,70 +287,72 @@ function Report({ inputs }) {
         </div>
       </div>
 
-      {/* What TSD would do here */}
       <div style={{
-        background: "rgba(75,156,211,0.06)",
-        border: `1px solid ${C.carolina}`,
-        borderRadius: "20px",
-        padding: "clamp(28px, 4vw, 40px)",
-        marginBottom: "32px",
+        background: "linear-gradient(180deg, rgba(75,156,211,0.10) 0%, rgba(75,156,211,0.04) 100%)",
+        border: "1px solid rgba(75,156,211,0.4)",
+        borderRadius: RADIUS["2xl"],
+        padding: "clamp(28px, 4vw, 44px)",
+        marginBottom: SPACE.xl,
       }}>
-        <div style={{
-          fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase",
-          color: v("accent"), marginBottom: "14px",
-          display: "flex", alignItems: "center", gap: "8px",
-        }}>
-          <span style={{ fontSize: "8px" }}>{"◆"}</span> What TSD would do here
-        </div>
+        <Eyebrow style={{ marginBottom: SPACE.md }}>What TSD would do here</Eyebrow>
         <p style={{
           fontFamily: "var(--font-display)", fontStyle: "italic",
-          fontSize: "clamp(16px, 2vw, 19px)", lineHeight: 1.6, color: v("text"), marginBottom: "20px",
+          fontSize: "clamp(17px, 2vw, 20px)", lineHeight: 1.55, color: v("text"),
+          marginBottom: SPACE.lg,
+          letterSpacing: "-0.2px",
         }}>
           Your AI receptionist takes the call, qualifies the emergency, books the slot from your calendar, and texts you a one-paragraph summary. Setup runs $497 once. On August 31, the agent transfers to you — credentials, call log, the whole stack. No subscription forever.
         </p>
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "24px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: SPACE.lg }}>
           {[
             "Setup in a week — your AI is live before next weekend",
             "Risk reversal: zero bookings in 30 days, every dollar back",
             "August 31 ownership transfer — agent and credentials are yours, no recurring fees",
           ].map((bullet, i) => (
             <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-              <CheckIcon size={16} style={{ color: C.success, flexShrink: 0, marginTop: "3px" }} />
+              <div style={{
+                flexShrink: 0, marginTop: "2px",
+                width: "18px", height: "18px", borderRadius: RADIUS.full,
+                background: "rgba(6,214,160,0.16)",
+                display: "inline-flex", alignItems: "center", justifyContent: "center",
+                color: C.success,
+              }}>
+                <CheckIcon size={12} strokeWidth={2.5} />
+              </div>
               <span style={{ fontSize: "14px", color: v("text"), lineHeight: 1.55 }}>{bullet}</span>
             </div>
           ))}
         </div>
-        <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
-          <Link to="/contact?ref=calculator">
-            <RippleButton variant="primary" style={{ padding: "14px 28px", fontSize: "15px" }}>
-              Reserve a setup spot <ArrowRightIcon size={16} />
-            </RippleButton>
+        <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+          <Link to="/contact?ref=calculator" style={{ textDecoration: "none" }}>
+            <Button as="span" variant="primary" iconRight={<ArrowRightIcon size={14} />}>
+              Reserve a setup spot
+            </Button>
           </Link>
-          <Link to="/ai-receptionist">
-            <RippleButton variant="ghost" style={{ padding: "14px 28px", fontSize: "15px" }}>
+          <Link to="/ai-receptionist" style={{ textDecoration: "none" }}>
+            <Button as="span" variant="secondary">
               See the full spec
-            </RippleButton>
+            </Button>
           </Link>
         </div>
       </div>
 
-      {/* Method footnote — keeps the estimate honest */}
       <p style={{
-        fontSize: "12px", color: v("text-dim"), lineHeight: 1.6,
-        textAlign: "center", maxWidth: "640px", margin: "0 auto",
+        fontSize: "12px", color: v("text-dim"), lineHeight: 1.65,
+        textAlign: "center", maxWidth: "660px", margin: "0 auto",
       }}>
-        <strong style={{ color: v("text-muted") }}>How we calculated this:</strong>{" "}
+        <strong style={{ color: v("text-muted"), fontWeight: 700 }}>How we calculated this:</strong>{" "}
         Estimated calls during your unanswered hours use a {TRADE_LABELS[inputs.trade].toLowerCase()} after-hours call-density benchmark. We assume 85% of callers who reach voicemail never call back (industry average for service trades). Your real numbers will vary by season, geography, and ad spend — this is a directional estimate, not a quote.
       </p>
 
-      <div style={{ textAlign: "center", marginTop: "24px" }}>
+      <div style={{ textAlign: "center", marginTop: SPACE.lg }}>
         <button
           type="button"
           onClick={() => window.print()}
           style={{
             background: "none", border: "none", cursor: "pointer",
-            fontSize: "12px", color: v("accent"), fontWeight: 600,
-            letterSpacing: "1px", textTransform: "uppercase",
+            fontSize: "11px", color: v("accent"), fontWeight: 700,
+            letterSpacing: "2px", textTransform: "uppercase",
             padding: "8px 16px",
           }}
           className="print-button"
@@ -399,21 +367,22 @@ function Report({ inputs }) {
 function ReportStat({ label, value, note }) {
   return (
     <div style={{
-      padding: "20px",
-      borderRadius: "14px",
+      padding: SPACE.lg,
+      borderRadius: RADIUS.lg,
       background: v("bg-alt"),
-      border: `1px solid ${v("divider")}`,
+      border: `1px solid ${v("surface-border")}`,
     }}>
       <div style={{
         fontSize: "10px", fontWeight: 700, letterSpacing: "2px", textTransform: "uppercase",
-        color: v("text-dim"), marginBottom: "10px",
+        color: v("text-dim"), marginBottom: SPACE.sm,
       }}>{label}</div>
       <div style={{
-        fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-        fontSize: "32px", lineHeight: 1, letterSpacing: "-0.5px",
-        color: v("text"), marginBottom: "10px",
+        fontFamily: "var(--font-body)", fontWeight: 800,
+        fontSize: "34px", lineHeight: 1, letterSpacing: "-0.8px",
+        color: v("text"), marginBottom: SPACE.sm,
+        fontFeatureSettings: '"tnum" 1',
       }}>{value}</div>
-      <div style={{ fontSize: "12px", color: v("text-muted"), lineHeight: 1.5 }}>
+      <div style={{ fontSize: "12px", color: v("text-muted"), lineHeight: 1.55 }}>
         {note}
       </div>
     </div>
@@ -436,13 +405,6 @@ export default function MissedCallCalculatorWidget() {
           body { background: #fff !important; }
         }
 
-        /* ── Range slider for the calculator ──────────────────────────
-           Track + fill: webkit has no "::progress" pseudo, so the filled
-           portion is painted via a linear-gradient on the input bg whose
-           hard stop is driven by the per-instance --slider-pct custom
-           property. Firefox uses ::-moz-range-progress for the same
-           effect. Thumb is theme-aware via --c-accent / --c-bg so the
-           ring matches the cream surround in light mode. */
         .tsd-slider {
           -webkit-appearance: none;
           appearance: none;
@@ -478,7 +440,7 @@ export default function MissedCallCalculatorWidget() {
           border-radius: 50%;
           background: var(--c-accent);
           border: 3px solid var(--c-bg);
-          box-shadow: 0 2px 8px rgba(75,156,211,0.35);
+          box-shadow: 0 2px 10px rgba(75,156,211,0.4);
           cursor: grab;
           transition: transform 0.15s ease, box-shadow 0.15s ease;
         }
@@ -488,12 +450,12 @@ export default function MissedCallCalculatorWidget() {
           border-radius: 50%;
           background: var(--c-accent);
           border: 3px solid var(--c-bg);
-          box-shadow: 0 2px 8px rgba(75,156,211,0.35);
+          box-shadow: 0 2px 10px rgba(75,156,211,0.4);
           cursor: grab;
         }
         .tsd-slider::-webkit-slider-thumb:hover {
-          transform: scale(1.12);
-          box-shadow: 0 4px 14px rgba(75,156,211,0.5);
+          transform: scale(1.14);
+          box-shadow: 0 6px 18px rgba(75,156,211,0.55);
         }
         .tsd-slider::-webkit-slider-thumb:active { cursor: grabbing; }
         .tsd-slider:focus-visible {

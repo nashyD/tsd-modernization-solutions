@@ -1,13 +1,7 @@
-import { C, v, SectionHeader, useFadeIn } from "../shared";
+import { C, v, SectionHeader, useFadeIn, Eyebrow, SPACE, RADIUS, SHADOW } from "../shared";
 import { CheckIcon, XIcon } from "../icons";
 import PageShell from "./PageShell";
 
-/* Comparison axes — rewritten 2026-04-26 to swap generic claims (modern
-   stack, AI expertise, post-launch support — table stakes for any agency)
-   for actual structural differentiators a national agency or freelancer
-   can't match. The "Affordable" row was deliberately dropped per Marc's
-   rule: never compete on price as a positioning axis — it makes the offer
-   feel cheap and invites a race-to-the-bottom comparison. */
 const ROWS = [
   { feature: "Founder direct support (no ticket queue)", tsd: true, agency: false, freelancer: "varies", diy: "n/a" },
   { feature: "Source code + repo ownership at handoff", tsd: true, agency: "extra", freelancer: "varies", diy: true },
@@ -18,37 +12,85 @@ const ROWS = [
 ];
 
 function CellVal({ val }) {
-  if (val === true) return <CheckIcon size={18} style={{ color: C.success }} />;
-  if (val === false) return <XIcon size={16} style={{ color: "var(--c-text-dim)" }} />;
-  return <span style={{ fontSize: "12px", fontWeight: 600, color: "var(--c-text-dim)", textTransform: "uppercase" }}>{val}</span>;
+  if (val === true) return (
+    <span style={{
+      display: "inline-flex", alignItems: "center", justifyContent: "center",
+      width: "26px", height: "26px", borderRadius: RADIUS.full,
+      background: "rgba(6,214,160,0.16)",
+      color: C.success,
+    }}>
+      <CheckIcon size={14} strokeWidth={2.5} />
+    </span>
+  );
+  if (val === false) return (
+    <span style={{
+      display: "inline-flex", alignItems: "center", justifyContent: "center",
+      width: "26px", height: "26px", borderRadius: RADIUS.full,
+      background: v("surface"),
+      color: v("text-dim"),
+    }}>
+      <XIcon size={12} />
+    </span>
+  );
+  return (
+    <span style={{
+      fontSize: "11px", fontWeight: 700, color: v("text-dim"),
+      textTransform: "uppercase", letterSpacing: "1.5px",
+      fontStyle: "italic", fontFamily: "var(--font-display)",
+    }}>{val}</span>
+  );
 }
 
 export default function WhyUs() {
   const [ref, fade] = useFadeIn(100);
   return (
     <PageShell>
-      <div style={{ padding: "40px 48px 80px", maxWidth: "1000px", margin: "0 auto" }}>
+      <div style={{
+        padding: `${SPACE.xl} clamp(20px, 4vw, 48px) ${SPACE["4xl"]}`,
+        maxWidth: "1080px", margin: "0 auto",
+      }}>
         <SectionHeader center label="Why Choose Us" title="How we" titleAccent="compare"
           sub="We're not the only option, but we think we're the right one for small businesses." />
-        <div ref={ref} style={{ ...fade, overflowX: "auto", borderRadius: "20px", border: `1px solid ${v("surface-border")}` }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "600px" }}>
+
+        <div ref={ref} style={{
+          ...fade,
+          overflowX: "auto",
+          borderRadius: RADIUS.xl,
+          border: `1px solid ${v("surface-border")}`,
+          boxShadow: SHADOW.sm,
+        }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "640px" }}>
             <thead>
               <tr>
-                <th style={{ ...thStyle, textAlign: "left" }}>Feature</th>
-                <th style={{ ...thStyle, background: `rgba(75,156,211,0.1)`, color: C.carolina }}>
-                  TSD
-                  <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "1px", textTransform: "uppercase", color: C.carolinaLight, marginTop: "2px" }}>You are here</div>
+                <th style={{ ...thStyle, textAlign: "left" }}>
+                  <Eyebrow color={v("text-muted")} diamond={false}>Feature</Eyebrow>
                 </th>
-                <th style={thStyle}>Agency</th>
-                <th style={thStyle}>Freelancer</th>
-                <th style={thStyle}>DIY</th>
+                <th style={{
+                  ...thStyle,
+                  background: "linear-gradient(180deg, rgba(75,156,211,0.16) 0%, rgba(75,156,211,0.06) 100%)",
+                  position: "relative",
+                }}>
+                  <Eyebrow>TSD</Eyebrow>
+                  <div style={{
+                    fontSize: "9px", fontWeight: 700, letterSpacing: "1.5px",
+                    textTransform: "uppercase",
+                    color: C.carolinaLight, marginTop: "4px",
+                    fontStyle: "italic", fontFamily: "var(--font-display)",
+                  }}>You are here</div>
+                </th>
+                <th style={thStyle}><Eyebrow color={v("text-muted")} diamond={false}>Agency</Eyebrow></th>
+                <th style={thStyle}><Eyebrow color={v("text-muted")} diamond={false}>Freelancer</Eyebrow></th>
+                <th style={thStyle}><Eyebrow color={v("text-muted")} diamond={false}>DIY</Eyebrow></th>
               </tr>
             </thead>
             <tbody>
               {ROWS.map((r, i) => (
                 <tr key={i}>
-                  <td style={{ ...tdStyle, textAlign: "left", fontWeight: 600, color: v("text") }}>{r.feature}</td>
-                  <td style={{ ...tdStyle, background: `rgba(75,156,211,0.04)` }}><CellVal val={r.tsd} /></td>
+                  <td style={{
+                    ...tdStyle, textAlign: "left", fontWeight: 600, color: v("text"),
+                    fontSize: "14px",
+                  }}>{r.feature}</td>
+                  <td style={{ ...tdStyle, background: "rgba(75,156,211,0.04)" }}><CellVal val={r.tsd} /></td>
                   <td style={tdStyle}><CellVal val={r.agency} /></td>
                   <td style={tdStyle}><CellVal val={r.freelancer} /></td>
                   <td style={tdStyle}><CellVal val={r.diy} /></td>
@@ -63,12 +105,14 @@ export default function WhyUs() {
 }
 
 const thStyle = {
-  padding: "16px 20px", fontSize: "14px", fontWeight: 700, textAlign: "center",
-  color: "var(--c-text-muted)", borderBottom: `1px solid var(--c-surface-border)`,
+  padding: "20px 22px", textAlign: "center",
+  borderBottom: `1px solid var(--c-divider)`,
   background: "var(--c-surface)",
+  verticalAlign: "middle",
 };
 
 const tdStyle = {
-  padding: "14px 20px", fontSize: "14px", textAlign: "center",
-  color: "var(--c-text-muted)", borderBottom: `1px solid var(--c-surface-border)`,
+  padding: "16px 22px", fontSize: "14px", textAlign: "center",
+  color: "var(--c-text-muted)",
+  borderBottom: `1px solid var(--c-divider-soft)`,
 };

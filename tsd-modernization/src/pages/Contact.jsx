@@ -1,52 +1,82 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { C, v, useFadeIn, SectionHeader, RippleButton } from "../shared";
-import { CheckIcon } from "../icons";
+import {
+  C, v, useFadeIn,
+  SectionHeader, Button,
+  Eyebrow,
+  SPACE, RADIUS, SHADOW,
+} from "../shared";
+import { CheckIcon, PhoneIcon, ClockIcon, MapPinIcon } from "../icons";
 import PageShell from "./PageShell";
 
-/* ── Contact info (NAP block) ──────────────────────────────────── */
 function ContactInfo() {
   const [ref, fadeStyle] = useFadeIn(0);
   const blocks = [
-    { label: "Call", value: "(704) 317-5630", href: "tel:+17043175630" },
-    { label: "Hours", value: "Every day · 8am – 8pm" },
-    { label: "Service area", value: "Charlotte · Gastonia · Belmont" },
+    { label: "Call", value: "(704) 317-5630", href: "tel:+17043175630", Icon: PhoneIcon },
+    { label: "Hours", value: "Every day · 8am – 8pm", Icon: ClockIcon },
+    { label: "Service area", value: "Charlotte · Gastonia · Belmont", Icon: MapPinIcon },
   ];
-  const cardStyle = {
-    padding: "18px 22px", borderRadius: "14px",
-    background: v("surface"), border: `1px solid ${v("surface-border")}`,
-    textAlign: "center", transition: "border-color 0.2s ease",
-  };
+
   return (
     <div ref={ref} style={{
-      ...fadeStyle, padding: "40px 48px 0", maxWidth: "700px", margin: "0 auto",
+      ...fadeStyle,
+      padding: `${SPACE.xl} clamp(20px, 4vw, 48px) 0`,
+      maxWidth: "780px", margin: "0 auto",
     }}>
       <div style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-        gap: "14px",
+        gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))",
+        gap: SPACE.md,
       }}>
         {blocks.map((b, i) => {
           const inner = (
-            <>
-              <div style={{
-                fontSize: "11px", fontWeight: 700, letterSpacing: "2px",
-                textTransform: "uppercase", color: v("text-dim"), marginBottom: "6px",
-              }}>{b.label}</div>
-              <div style={{ fontSize: "15px", fontWeight: 600, color: v("text") }}>
-                {b.value}
+            <div style={{
+              padding: "20px 22px", borderRadius: RADIUS.lg,
+              background: v("surface"),
+              border: `1px solid ${v("surface-border")}`,
+              transition: "border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease",
+              display: "flex", alignItems: "center", gap: "14px",
+              height: "100%",
+            }}>
+              <span style={{
+                width: "40px", height: "40px", borderRadius: RADIUS.full,
+                background: "rgba(75,156,211,0.10)",
+                color: v("accent"),
+                display: "inline-flex", alignItems: "center", justifyContent: "center",
+                flexShrink: 0,
+              }}>
+                <b.Icon size={18} />
+              </span>
+              <div style={{ minWidth: 0 }}>
+                <div style={{
+                  fontSize: "10px", fontWeight: 700, letterSpacing: "2px",
+                  textTransform: "uppercase", color: v("text-dim"),
+                  marginBottom: "4px",
+                }}>{b.label}</div>
+                <div style={{ fontSize: "15px", fontWeight: 600, color: v("text"), lineHeight: 1.3 }}>
+                  {b.value}
+                </div>
               </div>
-            </>
+            </div>
           );
+
           return b.href ? (
             <a key={i} href={b.href}
-              style={{ ...cardStyle, display: "block", textDecoration: "none", color: "inherit" }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = v("accent"); }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = v("surface-border"); }}>
+              style={{ display: "block", textDecoration: "none", color: "inherit" }}
+              onMouseEnter={(e) => {
+                e.currentTarget.firstChild.style.borderColor = v("surface-border-hover");
+                e.currentTarget.firstChild.style.transform = "translateY(-2px)";
+                e.currentTarget.firstChild.style.boxShadow = SHADOW.md;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.firstChild.style.borderColor = v("surface-border");
+                e.currentTarget.firstChild.style.transform = "translateY(0)";
+                e.currentTarget.firstChild.style.boxShadow = "none";
+              }}>
               {inner}
             </a>
           ) : (
-            <div key={i} style={cardStyle}>{inner}</div>
+            <div key={i}>{inner}</div>
           );
         })}
       </div>
@@ -54,27 +84,23 @@ function ContactInfo() {
   );
 }
 
-/* ── Contact form ──────────────────────────────────────────────── */
 function ContactForm() {
   const [formData, setFormData] = useState({ name: "", email: "", business: "", message: "", botcheck: "" });
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const [ref, fadeStyle] = useFadeIn(0);
-  /* Lead-source attribution: every CTA on the site that wants to be tracked
-     passes ?ref={source} (e.g. /contact?ref=hvac, ?ref=calculator,
-     ?ref=ai-receptionist). We surface it as both a subject-line prefix
-     ("[hvac] New inquiry from...") and a custom `source` field in the
-     Web3Forms body so the founders can filter their inbox by channel. */
   const [searchParams] = useSearchParams();
   const refSource = searchParams.get("ref") || "";
 
   const inputStyle = {
-    padding: "14px 18px", borderRadius: "12px",
+    padding: "14px 18px", borderRadius: RADIUS.md,
     border: `1px solid ${v("surface-border")}`,
-    background: v("surface"), color: v("text"),
+    background: v("bg-alt"),
+    color: v("text"),
     fontSize: "15px", fontFamily: "var(--font-body)", width: "100%",
-    transition: "border-color 0.2s ease",
+    transition: "border-color 0.2s ease, background 0.2s ease",
+    outline: "none",
   };
 
   const handleSubmit = async (e) => {
@@ -112,48 +138,69 @@ function ContactForm() {
   };
 
   return (
-    <div style={{ padding: "40px 48px", maxWidth: "700px", margin: "0 auto" }}>
+    <div style={{
+      padding: `${SPACE["2xl"]} clamp(20px, 4vw, 48px) ${SPACE["3xl"]}`,
+      maxWidth: "780px", margin: "0 auto",
+    }}>
       <SectionHeader center label="Apply" title="Start your" titleAccent="project"
         sub="Tell us about your business. We respond within 24 hours and decline most projects." />
       <div ref={ref} style={{
-        ...fadeStyle, padding: "48px", borderRadius: "24px",
-        background: v("surface"), border: `1px solid ${v("surface-border")}`,
+        ...fadeStyle,
+        padding: "clamp(28px, 4vw, 48px)",
+        borderRadius: RADIUS["2xl"],
+        background: `linear-gradient(180deg, ${v("surface")} 0%, ${v("bg-alt")} 100%)`,
+        border: `1px solid ${v("surface-border")}`,
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
+        position: "relative",
+        boxShadow: SHADOW.md,
       }}>
+        {/* Top hairline */}
+        <span aria-hidden="true" style={{
+          position: "absolute", top: 0, left: "12%", right: "12%", height: "1px",
+          background: "linear-gradient(90deg, transparent, rgba(75,156,211,0.4), transparent)",
+          pointerEvents: "none",
+        }} />
+
         {submitted ? (
-          <div style={{ textAlign: "center", padding: "32px 0" }}>
+          <div style={{ textAlign: "center", padding: "40px 0" }}>
             <div style={{
-              width: "56px", height: "56px", borderRadius: "50%", background: "rgba(6,214,160,0.12)",
+              width: "64px", height: "64px", borderRadius: RADIUS.full,
+              background: "rgba(6,214,160,0.14)",
               display: "flex", alignItems: "center", justifyContent: "center",
-              margin: "0 auto 20px",
+              margin: "0 auto 24px",
+              color: C.success,
             }}>
-              <CheckIcon size={28} style={{ color: C.success }} />
+              <CheckIcon size={32} strokeWidth={2.5} />
             </div>
-            <h3 style={{ fontSize: "22px", fontWeight: 700, color: v("text"), marginBottom: "8px" }}>Thank you!</h3>
+            <h3 style={{
+              fontSize: "26px", fontWeight: 700, color: v("text"),
+              marginBottom: SPACE.sm, letterSpacing: "-0.4px",
+            }}>Thank you.</h3>
             <p style={{ fontSize: "15px", color: v("text-muted") }}>We'll be in touch within 24 hours.</p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-            {/* Honeypot */}
+          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: SPACE.md }}>
             <input type="text" name="botcheck" value={formData.botcheck}
               onChange={(e) => setFormData({ ...formData, botcheck: e.target.value })}
               style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px", opacity: 0 }}
               tabIndex={-1} autoComplete="off" aria-hidden="true" />
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: SPACE.md }} className="contact-form-row">
               <div>
                 <label htmlFor="contact-name" className="sr-only">Your name</label>
                 <input id="contact-name" style={inputStyle} type="text" placeholder="Your name" required
                   autoComplete="name"
                   value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  onFocus={(e) => { e.target.style.borderColor = C.carolina; }}
-                  onBlur={(e) => { e.target.style.borderColor = ""; }} />
+                  onFocus={(e) => { e.target.style.borderColor = C.carolina; e.target.style.background = v("surface"); }}
+                  onBlur={(e) => { e.target.style.borderColor = v("surface-border"); e.target.style.background = v("bg-alt"); }} />
               </div>
               <div>
                 <label htmlFor="contact-email" className="sr-only">Email address</label>
                 <input id="contact-email" style={inputStyle} type="email" placeholder="Email address" required
                   autoComplete="email"
                   value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  onFocus={(e) => { e.target.style.borderColor = C.carolina; }}
-                  onBlur={(e) => { e.target.style.borderColor = ""; }} />
+                  onFocus={(e) => { e.target.style.borderColor = C.carolina; e.target.style.background = v("surface"); }}
+                  onBlur={(e) => { e.target.style.borderColor = v("surface-border"); e.target.style.background = v("bg-alt"); }} />
               </div>
             </div>
             <div>
@@ -161,57 +208,66 @@ function ContactForm() {
               <input id="contact-business" style={inputStyle} type="text" placeholder="Business name"
                 autoComplete="organization"
                 value={formData.business} onChange={(e) => setFormData({ ...formData, business: e.target.value })}
-                onFocus={(e) => { e.target.style.borderColor = C.carolina; }}
-                onBlur={(e) => { e.target.style.borderColor = ""; }} />
+                onFocus={(e) => { e.target.style.borderColor = C.carolina; e.target.style.background = v("surface"); }}
+                onBlur={(e) => { e.target.style.borderColor = v("surface-border"); e.target.style.background = v("bg-alt"); }} />
             </div>
             <div>
               <label htmlFor="contact-message" className="sr-only">Tell us about your business</label>
-              <textarea id="contact-message" style={{ ...inputStyle, minHeight: "120px", resize: "vertical" }}
+              <textarea id="contact-message" style={{ ...inputStyle, minHeight: "140px", resize: "vertical", lineHeight: 1.5 }}
                 placeholder="Tell us about your business and what you're looking to modernize..."
                 value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                onFocus={(e) => { e.target.style.borderColor = C.carolina; }}
-                onBlur={(e) => { e.target.style.borderColor = ""; }} />
+                onFocus={(e) => { e.target.style.borderColor = C.carolina; e.target.style.background = v("surface"); }}
+                onBlur={(e) => { e.target.style.borderColor = v("surface-border"); e.target.style.background = v("bg-alt"); }} />
             </div>
             {error && (
               <div role="alert" style={{
-                padding: "12px 16px", borderRadius: "10px",
-                background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)",
+                padding: "12px 16px", borderRadius: RADIUS.md,
+                background: "rgba(239,68,68,0.10)",
+                border: "1px solid rgba(239,68,68,0.32)",
                 color: "#fca5a5", fontSize: "14px",
               }}>{error}</div>
             )}
-            <RippleButton type="submit" disabled={sending} style={{
-              width: "100%", padding: "16px 0", opacity: sending ? 0.7 : 1,
-            }}>
+            <Button type="submit" variant="primary" size="lg" fullWidth disabled={sending}>
               {sending ? "Sending..." : "Apply"}
-            </RippleButton>
+            </Button>
+            <p style={{
+              fontSize: "12px", color: v("text-dim"), textAlign: "center",
+              fontStyle: "italic", fontFamily: "var(--font-display)", marginTop: SPACE.sm,
+            }}>
+              Free fit call · 48-hour written proposal · 100% money-back guarantee.
+            </p>
           </form>
         )}
       </div>
+      <style>{`
+        @media (max-width: 540px) {
+          .contact-form-row { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </div>
   );
 }
 
-/* ── Service-area map — Charlotte metro centroid. TSD operates as a
-     service-area business (no storefront), so the map shows the city
-     centroid rather than a pinned address. Useful as a local-SEO signal
-     and as visitor reassurance that we're locally based. ────────── */
 function ServiceAreaMap() {
   const [ref, fadeStyle] = useFadeIn(0);
   return (
     <div ref={ref} style={{
-      ...fadeStyle, padding: "32px 48px 0", maxWidth: "700px", margin: "0 auto",
+      ...fadeStyle,
+      padding: `${SPACE.xl} clamp(20px, 4vw, 48px) 0`,
+      maxWidth: "780px", margin: "0 auto",
     }}>
       <div style={{
         position: "relative",
-        borderRadius: "14px", overflow: "hidden",
+        borderRadius: RADIUS.lg, overflow: "hidden",
         border: `1px solid ${v("surface-border")}`,
-        height: "280px",
+        height: "300px",
+        boxShadow: SHADOW.sm,
       }}>
         <iframe
           title="TSD Modernization Solutions service area — Charlotte, NC"
           src="https://www.google.com/maps?q=Charlotte%2C+NC&t=&z=11&ie=UTF8&iwloc=&output=embed"
           width="100%" height="100%"
-          style={{ border: 0, display: "block" }}
+          style={{ border: 0, display: "block", filter: "saturate(0.9)" }}
           allowFullScreen=""
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
@@ -221,7 +277,6 @@ function ServiceAreaMap() {
   );
 }
 
-/* ── Contact page ──────────────────────────────────────────────── */
 export default function Contact() {
   return (
     <PageShell>

@@ -1,20 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { C, v, useFadeIn, DiamondDivider } from "../shared";
+import {
+  v, useFadeIn,
+  DiamondDivider, EditorialMasthead, GradientText,
+  SPACE, RADIUS, SHADOW,
+} from "../shared";
 import PageShell from "./PageShell";
-
-/* /book — synchronous conversion surface. Inline Calendly embed for the
-   30-minute "Fit Call" event. Sibling page to /contact: contact runs the
-   async Web3Forms track for prospects who'd rather write a longer
-   message; /book is for the "I'm ready to talk now" crowd.
-
-   Calendly's widget script + CSS load once globally in index.html, so
-   window.Calendly is available by the time this component mounts. The
-   `mounted` gate prevents Calendly's iframe from being injected during
-   vite-react-ssg's static prerender pass — the widget is client-only.
-
-   Today the URL is on Nash's individual Calendly schedule
-   (`nashdavis-tsd-ventures/30min`); when Bishop + Grant join a Calendly
-   Teams workspace the URL constant swaps to a team round-robin event. */
 
 const CALENDLY_URL =
   "https://calendly.com/nashdavis-tsd-ventures/30min?primary_color=4B9CD3&hide_gdpr_banner=1";
@@ -26,9 +16,7 @@ export default function Book() {
   const calendlyRef = useRef(null);
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     if (!mounted || !calendlyRef.current) return;
@@ -37,67 +25,48 @@ export default function Book() {
     function tryInit() {
       if (cancelled) return;
       if (window.Calendly && calendlyRef.current) {
-        // Clear any prior children in case the SPA re-mounted this route;
-        // otherwise we'd stack a second iframe on top of the first.
         calendlyRef.current.innerHTML = "";
         window.Calendly.initInlineWidget({
           url: CALENDLY_URL,
           parentElement: calendlyRef.current,
         });
       } else {
-        // Calendly script may still be in flight (slow network, blockers).
-        // Poll briefly. The async <script> in index.html means this usually
-        // resolves within ~200ms after first paint.
         setTimeout(tryInit, 100);
       }
     }
 
     tryInit();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [mounted]);
 
   return (
     <PageShell>
       <section style={{
-        padding: "60px 24px 80px",
-        maxWidth: "1100px",
-        margin: "0 auto",
+        padding: `${SPACE["3xl"]} clamp(20px, 4vw, 48px) ${SPACE["4xl"]}`,
+        maxWidth: "1100px", margin: "0 auto",
       }}>
-        <div ref={r1} style={{
-          ...f1, display: "flex", alignItems: "center", justifyContent: "center", gap: "14px",
-          fontSize: "10px", fontWeight: 700, letterSpacing: "4px", textTransform: "uppercase",
-          color: v("text-muted"), marginBottom: "32px", flexWrap: "wrap",
-        }}>
-          <span style={{ flex: "0 0 44px", height: "1px", background: v("divider") }} />
-          <span>Fit Call</span>
-          <span style={{ color: v("accent"), fontSize: "7px" }}>{"◆"}</span>
-          <span>Thirty Minutes</span>
-          <span style={{ color: v("accent"), fontSize: "7px" }}>{"◆"}</span>
-          <span>No Slide Deck</span>
-          <span style={{ flex: "0 0 44px", height: "1px", background: v("divider") }} />
+        <div ref={r1} style={{ ...f1, marginBottom: SPACE.xl }}>
+          <EditorialMasthead items={["Fit Call", "Thirty Minutes", "No Slide Deck"]} />
         </div>
 
         <h1 ref={r2} style={{
           ...f2, fontFamily: "var(--font-body)", fontWeight: 800,
-          fontSize: "clamp(32px, 5.2vw, 56px)", letterSpacing: "-1.5px", lineHeight: 1.18,
-          color: v("text"), marginBottom: "20px", textAlign: "center",
+          fontSize: "clamp(36px, 5.6vw, 64px)",
+          letterSpacing: "-2px", lineHeight: 1.06,
+          color: v("text"), marginBottom: SPACE.lg,
+          textAlign: "center",
         }}>
           Pick a time.
           <br />
-          <span style={{
-            fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-            background: C.gradientAccent, WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent", backgroundClip: "text",
-          }}>Talk to a founder.</span>
+          <GradientText>Talk to a founder.</GradientText>
         </h1>
 
-        <DiamondDivider width={160} style={{ marginBottom: "20px" }} />
+        <DiamondDivider width={180} style={{ marginBottom: SPACE.lg }} />
 
         <p ref={r3} style={{
-          ...f3, fontSize: "17px", lineHeight: 1.7, color: v("text-muted"),
-          maxWidth: "640px", margin: "0 auto 40px", textAlign: "center",
+          ...f3, fontSize: "17px", lineHeight: 1.65, color: v("text-muted"),
+          maxWidth: "660px", margin: `0 auto ${SPACE["2xl"]}`,
+          textAlign: "center",
         }}>
           One of us hops on a thirty-minute call to walk through what you're
           trying to fix and which of our three founding-cohort offers fits
@@ -108,21 +77,26 @@ export default function Book() {
         <div
           ref={calendlyRef}
           style={{
-            minHeight: "700px",
+            minHeight: "720px",
             background: v("surface"),
             border: `1px solid ${v("surface-border")}`,
-            borderRadius: "20px",
+            borderRadius: RADIUS["2xl"],
             overflow: "hidden",
+            boxShadow: SHADOW.md,
           }}
         />
 
         <p style={{
-          marginTop: "32px", textAlign: "center",
+          marginTop: SPACE.xl, textAlign: "center",
           fontSize: "13px", color: v("text-dim"),
           fontFamily: "var(--font-display)", fontStyle: "italic",
         }}>
           Prefer to write us a longer note?{" "}
-          <a href="/contact" style={{ color: v("accent"), textDecoration: "underline" }}>
+          <a href="/contact" style={{
+            color: v("accent"), textDecoration: "underline",
+            textUnderlineOffset: "3px", textDecorationThickness: "1px",
+            fontWeight: 600,
+          }}>
             Use the contact form instead
           </a>
           .

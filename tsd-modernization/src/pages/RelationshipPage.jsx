@@ -1,47 +1,28 @@
 import { Link } from "react-router-dom";
-import { C, v, useFadeIn, RippleButton, DiamondDivider } from "../shared";
+import {
+  C, v, useFadeIn,
+  Button, DiamondDivider,
+  Eyebrow, ChapterRule, GradientText, EditorialMasthead,
+  SPACE, RADIUS,
+} from "../shared";
 import { CheckIcon, ArrowRightIcon } from "../icons";
 import PageShell from "./PageShell";
 import BookCallButton from "../components/BookCallButton";
 
-/* Relationship-channel landing page — sibling of TradePage.jsx but lighter
-   and bundle-led (not receptionist-led). Three sections + closing:
-
-     1. Hero  — vertical-specific H1 + sub + dual CTAs
-     2. The Build  — vertical-specific bullet list
-     3. ClosingCTA — links to /pricing for the offer + /contact for direct
-
-   The relationship buyer arrived via founder DM and already heard the
-   $5,000 bundle pitch over text. The page's job is recognition (yes we
-   work with your vertical), not conversion. Skip the offer card; link
-   to /pricing for the full three-tier breakdown. */
-
-/* Editorial section header — matches the ◆ LABEL / hairline / § 0N pattern
-   used on /ai-receptionist and /hvac etc. Inlined here so the relationship
-   pages stay self-contained. */
 function ChapterHead({ label, num, title, sub }) {
   const [ref, fade] = useFadeIn(0);
   return (
-    <div ref={ref} style={{ ...fade, marginBottom: "40px", maxWidth: "780px" }}>
-      <div style={{
-        display: "flex", alignItems: "baseline", gap: "16px", marginBottom: "20px",
-      }}>
-        <span style={{
-          fontSize: "11px", fontWeight: 700, letterSpacing: "3px", textTransform: "uppercase",
-          color: v("accent"), display: "inline-flex", alignItems: "center", gap: "8px",
-          whiteSpace: "nowrap",
-        }}>
-          <span style={{ fontSize: "8px" }}>{"◆"}</span> {label}
-        </span>
-        <span style={{ flex: 1, height: "1px", background: v("divider"), minWidth: "40px" }} />
-        <span style={{ fontSize: "11px", color: v("text-dim"), letterSpacing: "2px", whiteSpace: "nowrap" }}>§ {num}</span>
-      </div>
+    <div ref={ref} style={{ ...fade, marginBottom: SPACE.xl, maxWidth: "820px" }}>
+      <ChapterRule label={label} num={num} style={{ marginBottom: SPACE.lg }} />
       {title && <h2 style={{
         fontFamily: "var(--font-body)", fontWeight: 800,
-        fontSize: "clamp(28px, 4vw, 40px)", letterSpacing: "-0.5px", lineHeight: 1.15,
-        color: v("text"), marginBottom: sub ? "14px" : 0,
+        fontSize: "clamp(28px, 4vw, 42px)",
+        letterSpacing: "-0.6px", lineHeight: 1.12,
+        color: v("text"), marginBottom: sub ? SPACE.md : 0,
       }}>{title}</h2>}
-      {sub && <p style={{ fontSize: "16px", lineHeight: 1.65, color: v("text-muted") }}>{sub}</p>}
+      {sub && <p style={{
+        fontSize: "16px", lineHeight: 1.65, color: v("text-muted"),
+      }}>{sub}</p>}
     </div>
   );
 }
@@ -54,61 +35,60 @@ function RelationshipHero({ rel }) {
   const contactHref = `/contact?ref=${rel.slug}`;
   return (
     <section style={{
-      padding: "60px 24px 80px", maxWidth: "920px", margin: "0 auto",
+      padding: `${SPACE["3xl"]} 24px ${SPACE["4xl"]}`,
+      maxWidth: "960px", margin: "0 auto",
       textAlign: "center",
+      position: "relative",
     }}>
-      <div ref={r1} style={{
-        ...f1, display: "flex", alignItems: "center", justifyContent: "center", gap: "14px",
-        fontSize: "10px", fontWeight: 700, letterSpacing: "4px", textTransform: "uppercase",
-        color: v("text-muted"), marginBottom: "32px", flexWrap: "wrap",
-      }}>
-        <span style={{ flex: "0 0 44px", height: "1px", background: v("divider") }} />
-        <span>Website + AI Build</span>
-        <span style={{ color: v("accent"), fontSize: "7px" }}>{"◆"}</span>
-        <span>{rel.vertical}</span>
-        <span style={{ color: v("accent"), fontSize: "7px" }}>{"◆"}</span>
-        <span>Summer MMXXVI</span>
-        <span style={{ flex: "0 0 44px", height: "1px", background: v("divider") }} />
+      <div aria-hidden="true" style={{
+        position: "absolute", top: "5%", left: "50%", transform: "translateX(-50%)",
+        width: "70%", height: "60%",
+        background: "radial-gradient(ellipse, rgba(75,156,211,0.10) 0%, transparent 70%)",
+        pointerEvents: "none", zIndex: 0,
+      }} />
+
+      <div ref={r1} style={{ ...f1, marginBottom: SPACE.xl, position: "relative", zIndex: 1 }}>
+        <EditorialMasthead items={["Website + AI Build", rel.vertical, "Summer MMXXVI"]} />
       </div>
 
       <h1 ref={r2} style={{
         ...f2, fontFamily: "var(--font-body)", fontWeight: 800,
-        fontSize: "clamp(32px, 5.2vw, 56px)", letterSpacing: "-1.5px", lineHeight: 1.18,
-        color: v("text"), marginBottom: "20px",
+        fontSize: "clamp(34px, 5.4vw, 60px)",
+        letterSpacing: "-2px", lineHeight: 1.1,
+        color: v("text"), marginBottom: SPACE.lg,
+        position: "relative", zIndex: 1,
       }}>
         {rel.hero.h1}
         <br />
-        <span style={{
-          fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-          background: C.gradientAccent, WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent", backgroundClip: "text",
-        }}>{rel.hero.h1Italic}</span>
+        <GradientText>{rel.hero.h1Italic}</GradientText>
       </h1>
 
-      <DiamondDivider width={160} style={{ marginBottom: "20px" }} />
+      <DiamondDivider width={180} style={{ marginBottom: SPACE.lg }} />
 
       <p ref={r3} style={{
-        ...f3, fontSize: "17px", lineHeight: 1.7, color: v("text-muted"),
-        maxWidth: "620px", margin: "0 auto 32px",
+        ...f3, fontSize: "17px", lineHeight: 1.65, color: v("text-muted"),
+        maxWidth: "640px", margin: "0 auto 36px",
+        position: "relative", zIndex: 1,
       }}>
         {rel.hero.sub}
       </p>
 
       <div ref={r4} style={{
-        ...f4, display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap",
+        ...f4, display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap",
+        position: "relative", zIndex: 1,
       }}>
-        <Link to={contactHref}>
-          <RippleButton variant="primary" style={{ padding: "16px 36px", fontSize: "15px" }}>
-            Apply for a founding slot <ArrowRightIcon size={16} />
-          </RippleButton>
+        <Link to={contactHref} style={{ textDecoration: "none" }}>
+          <Button as="span" variant="primary" size="lg" iconRight={<ArrowRightIcon size={16} />}>
+            Apply for a founding slot
+          </Button>
         </Link>
-        <BookCallButton variant="secondary" refSource={rel.slug} style={{ padding: "16px 36px", fontSize: "15px" }}>
+        <BookCallButton variant="ghost" refSource={rel.slug}>
           Book a fit call
         </BookCallButton>
-        <Link to="/pricing">
-          <RippleButton variant="ghost" style={{ padding: "16px 36px", fontSize: "15px" }}>
+        <Link to="/pricing" style={{ textDecoration: "none" }}>
+          <Button as="span" variant="secondary" size="lg">
             See pricing
-          </RippleButton>
+          </Button>
         </Link>
       </div>
     </section>
@@ -119,26 +99,36 @@ function TheBuild({ rel }) {
   const [ref, fade] = useFadeIn(0);
   return (
     <section ref={ref} style={{
-      ...fade, padding: "40px 24px 80px",
+      ...fade, padding: `${SPACE.xl} 24px ${SPACE["4xl"]}`,
       maxWidth: "1100px", margin: "0 auto",
     }}>
-      <ChapterHead
-        label="The Build"
-        num="01"
-        title={rel.build.title}
-        sub={rel.build.sub}
-      />
+      <ChapterHead label="The Build" num="01" title={rel.build.title} sub={rel.build.sub} />
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "16px", maxWidth: "820px" }}>
+      <div style={{
+        display: "flex", flexDirection: "column", gap: "12px",
+        maxWidth: "820px",
+      }}>
         {rel.build.bullets.map((bullet, i) => (
           <div key={i} style={{
-            display: "flex", alignItems: "flex-start", gap: "14px",
-            padding: "18px 22px",
-            borderRadius: "12px",
+            display: "flex", alignItems: "flex-start", gap: "16px",
+            padding: "20px 24px",
+            borderRadius: RADIUS.lg,
             background: v("surface"),
             border: `1px solid ${v("surface-border")}`,
-          }}>
-            <CheckIcon size={18} style={{ color: C.success, flexShrink: 0, marginTop: "2px" }} />
+            transition: "border-color 0.25s ease",
+          }}
+            onMouseEnter={(e) => e.currentTarget.style.borderColor = v("surface-border-hover")}
+            onMouseLeave={(e) => e.currentTarget.style.borderColor = v("surface-border")}
+          >
+            <div style={{
+              flexShrink: 0, marginTop: "2px",
+              width: "22px", height: "22px", borderRadius: RADIUS.full,
+              background: "rgba(6,214,160,0.16)",
+              display: "inline-flex", alignItems: "center", justifyContent: "center",
+              color: C.success,
+            }}>
+              <CheckIcon size={13} strokeWidth={2.5} />
+            </div>
             <span style={{ fontSize: "15px", color: v("text"), lineHeight: 1.55 }}>{bullet}</span>
           </div>
         ))}
@@ -152,37 +142,40 @@ function ClosingCTA({ rel }) {
   const contactHref = `/contact?ref=${rel.slug}`;
   return (
     <section ref={ref} style={{
-      ...fade, padding: "20px 24px 100px", textAlign: "center",
-      maxWidth: "640px", margin: "0 auto",
+      ...fade, padding: `${SPACE.lg} 24px ${SPACE["4xl"]}`,
+      textAlign: "center",
+      maxWidth: "720px", margin: "0 auto",
     }}>
-      <DiamondDivider width={120} style={{ marginBottom: "24px" }} />
+      <DiamondDivider width={120} style={{ marginBottom: SPACE.lg }} />
       <p style={{
         fontFamily: "var(--font-display)", fontStyle: "italic",
-        fontSize: "20px", lineHeight: 1.5, color: v("text"), marginBottom: "10px",
+        fontSize: "22px", lineHeight: 1.45, color: v("text"),
+        marginBottom: SPACE.sm,
       }}>
-        $5,000 founding rate (anchor $10,000).
+        $5,000 founding rate <span style={{ color: v("text-dim") }}>(anchor $10,000).</span>
       </p>
       <p style={{
         fontSize: "15px", lineHeight: 1.65, color: v("text-muted"),
-        marginBottom: "28px",
+        marginBottom: SPACE.xl,
       }}>
         Ten spots. Last start: <span style={{
-          fontFamily: "var(--font-display)", fontStyle: "italic", color: v("accent"),
+          fontFamily: "var(--font-display)", fontStyle: "italic",
+          color: v("accent"), fontWeight: 600,
         }}>July 13</span>. 100% money-back guarantee.
       </p>
-      <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
-        <Link to={contactHref}>
-          <RippleButton variant="primary" style={{ padding: "14px 32px", fontSize: "15px" }}>
-            Apply for a founding slot <ArrowRightIcon size={16} />
-          </RippleButton>
+      <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+        <Link to={contactHref} style={{ textDecoration: "none" }}>
+          <Button as="span" variant="primary" size="lg" iconRight={<ArrowRightIcon size={16} />}>
+            Apply for a founding slot
+          </Button>
         </Link>
-        <BookCallButton variant="secondary" refSource={rel.slug} style={{ padding: "14px 32px", fontSize: "15px" }}>
+        <BookCallButton variant="ghost" refSource={rel.slug}>
           Book a fit call
         </BookCallButton>
-        <Link to="/pricing">
-          <RippleButton variant="ghost" style={{ padding: "14px 32px", fontSize: "15px" }}>
+        <Link to="/pricing" style={{ textDecoration: "none" }}>
+          <Button as="span" variant="secondary" size="lg">
             See both tiers
-          </RippleButton>
+          </Button>
         </Link>
       </div>
     </section>

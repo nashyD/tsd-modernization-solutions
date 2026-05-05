@@ -1,4 +1,9 @@
-import { C, v, SectionHeader, Card, useFadeIn } from "../shared";
+import {
+  C, v, useFadeIn,
+  SectionHeader, Card,
+  Eyebrow, ChapterRule, GradientText,
+  SPACE, RADIUS, SHADOW,
+} from "../shared";
 import PageShell from "./PageShell";
 
 const STEPS = [
@@ -8,46 +13,29 @@ const STEPS = [
   { num: "04", title: "Handoff", desc: "Every project ends with written documentation, video tutorials, and a live training session. You own the source code, the credentials, and the deployment when we're done.", detail: "One founder stays on call for fixes through August 31, 2026." },
 ];
 
-/* Post-season section — the Claude+GitHub support story.
-   Sits below the 4-step grid as a separate editorial section. Surfaces
-   the strongest post-handoff differentiator: clients aren't stuck calling
-   us for every change after the season closes — Claude knows their
-   codebase and they're the one steering it. */
 function PostSeason() {
   const [ref, fade] = useFadeIn(0);
   return (
-    <section ref={ref} style={{ ...fade, padding: "16px 48px 80px", maxWidth: "900px", margin: "0 auto" }}>
-      <div style={{
-        display: "flex", alignItems: "baseline", gap: "16px", marginBottom: "32px",
-        flexWrap: "wrap", marginTop: "40px",
-      }}>
-        <span style={{
-          fontSize: "11px", fontWeight: 700, letterSpacing: "3px", textTransform: "uppercase",
-          color: v("accent"), display: "inline-flex", alignItems: "center", gap: "8px",
-          whiteSpace: "nowrap",
-        }}>
-          <span style={{ fontSize: "8px" }}>{"◆"}</span> After August 31
-        </span>
-        <span style={{ flex: 1, height: "1px", background: v("divider"), minWidth: "40px" }} />
-        <span style={{ fontSize: "11px", color: v("text-dim"), letterSpacing: "2px" }}>§ 02</span>
-      </div>
+    <section ref={ref} style={{
+      ...fade,
+      padding: `${SPACE.lg} clamp(20px, 4vw, 48px) ${SPACE["4xl"]}`,
+      maxWidth: "920px", margin: "0 auto",
+    }}>
+      <ChapterRule label="After August 31" num="02" style={{ marginBottom: SPACE.xl, marginTop: SPACE.xl }} />
 
       <h2 style={{
         fontFamily: "var(--font-body)", fontWeight: 800,
-        fontSize: "clamp(28px, 4vw, 40px)", letterSpacing: "-0.5px", lineHeight: 1.15,
-        color: v("text"), marginBottom: "24px",
+        fontSize: "clamp(30px, 4vw, 44px)",
+        letterSpacing: "-0.8px", lineHeight: 1.1,
+        color: v("text"), marginBottom: SPACE.lg,
       }}>
-        You're not{" "}
-        <span style={{
-          fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-          background: C.gradientAccent, WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent", backgroundClip: "text",
-        }}>on your own.</span>
+        You're not <GradientText>on your own.</GradientText>
       </h2>
 
       <div style={{
-        display: "flex", flexDirection: "column", gap: "18px",
-        fontSize: "16px", lineHeight: 1.7, color: v("text-muted"), maxWidth: "720px",
+        display: "flex", flexDirection: "column", gap: "20px",
+        fontSize: "16px", lineHeight: 1.7, color: v("text-muted"),
+        maxWidth: "740px",
       }}>
         <p>Every TSD build ships on GitHub + Vercel — both free for small business. The repo, the deployment, and the domain belong to you from day one.</p>
         <p>During handoff we link your Claude account to your GitHub repo. When you want to make a change to your site, you screenshot what you want — anything from your hours to your hero photo — and send it to Claude. Claude commits the fix, and Vercel deploys it automatically. You learn the workflow in the training session, and after a few cycles it's muscle memory.</p>
@@ -60,25 +48,68 @@ function PostSeason() {
 export default function Process() {
   return (
     <PageShell>
-      <div style={{ padding: "40px 48px 24px", maxWidth: "900px", margin: "0 auto" }}>
+      <div style={{
+        padding: `${SPACE.xl} clamp(20px, 4vw, 48px) ${SPACE.lg}`,
+        maxWidth: "920px", margin: "0 auto",
+      }}>
         <SectionHeader center label="How It Works" title="Our" titleAccent="process"
           sub="From first meeting to final handoff, here's how every engagement works." />
-        <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-          {STEPS.map((s, i) => (
-            <Card key={i} delay={i * 100} style={{
-              display: "grid", gridTemplateColumns: "80px 1fr", gap: "24px", alignItems: "start",
-            }}>
-              <div style={{
-                fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-                fontSize: "42px", color: v("accent"), lineHeight: 1.18, letterSpacing: "-1px",
-              }}>{s.num}</div>
-              <div>
-                <h3 style={{ fontSize: "20px", fontWeight: 700, color: v("text"), marginBottom: "8px" }}>{s.title}</h3>
-                <p style={{ fontSize: "15px", lineHeight: 1.7, color: v("text-muted"), marginBottom: "8px" }}>{s.desc}</p>
-                <p style={{ fontSize: "13px", lineHeight: 1.6, color: v("text-dim"), fontStyle: "italic" }}>{s.detail}</p>
-              </div>
-            </Card>
-          ))}
+
+        <div style={{ position: "relative" }}>
+          {/* Vertical rail connecting the four steps */}
+          <div aria-hidden="true" className="step-rail" style={{
+            position: "absolute", top: "60px", bottom: "60px",
+            left: "39px",
+            width: "1px",
+            background: "linear-gradient(180deg, transparent, rgba(75,156,211,0.4) 10%, rgba(75,156,211,0.4) 90%, transparent)",
+            pointerEvents: "none",
+          }} />
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+            {STEPS.map((s, i) => (
+              <Card key={i} delay={i * 100} style={{
+                display: "grid", gridTemplateColumns: "80px 1fr",
+                gap: "28px", alignItems: "start",
+                padding: "32px",
+              }}>
+                <div style={{
+                  width: "80px", height: "80px",
+                  borderRadius: RADIUS.full,
+                  background: `linear-gradient(135deg, ${v("bg-alt")} 0%, ${v("surface")} 100%)`,
+                  border: `1px solid ${v("surface-border")}`,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  position: "relative", zIndex: 1,
+                  boxShadow: SHADOW.sm,
+                }}>
+                  <span style={{
+                    fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
+                    fontSize: "32px",
+                    background: C.gradientAccent,
+                    WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    letterSpacing: "-1px",
+                    fontFeatureSettings: '"tnum" 1',
+                  }}>{s.num}</span>
+                </div>
+                <div>
+                  <h3 style={{
+                    fontSize: "22px", fontWeight: 700, color: v("text"),
+                    marginBottom: SPACE.sm, letterSpacing: "-0.3px",
+                  }}>{s.title}</h3>
+                  <p style={{
+                    fontSize: "15px", lineHeight: 1.7,
+                    color: v("text-muted"), marginBottom: SPACE.sm,
+                  }}>{s.desc}</p>
+                  <p style={{
+                    fontSize: "13px", lineHeight: 1.65, color: v("text-dim"),
+                    fontStyle: "italic", fontFamily: "var(--font-display)",
+                  }}>{s.detail}</p>
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          <style>{`@media (max-width: 600px) { .step-rail { display: none !important; } }`}</style>
         </div>
       </div>
       <PostSeason />

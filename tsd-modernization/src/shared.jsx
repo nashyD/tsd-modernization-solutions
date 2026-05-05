@@ -9,13 +9,67 @@ export const C = {
   carolinaDark: "#3a7db0",
   steel: "#2c5f8a",
   cream: "#e8e0d4",
+  creamSoft: "#f0ebe1",
   gold: "#c9b896",
   success: "#06d6a0",
   error: "#ef4444",
 
+  /* Refined surface stack — used to layer cards/glass without going to raw hex. */
+  ink: "#070d1a",
+  inkSoft: "#0c1524",
+  inkRise: "#101c2e",
+  inkRiseHigh: "#16243a",
+
+  /* Two-stop gradients — the four-stop prism reads heavy on small surfaces.
+     Use `gradientPrism` for hero / large hero buttons; the two-stop pair
+     below for everything else. */
   gradientPrism: "linear-gradient(135deg, #7BB8E0 0%, #4B9CD3 35%, #2c5f8a 70%, #13294B 100%)",
   gradientAccent: "linear-gradient(135deg, #4B9CD3 0%, #7BB8E0 100%)",
+  gradientAccentSoft: "linear-gradient(135deg, #5fa8d8 0%, #87c2e6 100%)",
+  gradientNavy: "linear-gradient(135deg, #1d3a66 0%, #13294B 100%)",
   gradientSubtle: "linear-gradient(135deg, rgba(75,156,211,0.12) 0%, rgba(19,41,75,0.08) 100%)",
+  gradientFog: "linear-gradient(180deg, rgba(75,156,211,0.08) 0%, rgba(75,156,211,0) 100%)",
+};
+
+/* ── Design tokens ─────────────────────────────────────────────── */
+/* Single source for spacing/radius/shadow so every section uses the
+   same rhythm. Kept on a 4pt grid (Material) with the larger steps
+   stretching to editorial breathing room. */
+export const SPACE = {
+  xs: "4px",
+  sm: "8px",
+  md: "16px",
+  lg: "24px",
+  xl: "32px",
+  "2xl": "48px",
+  "3xl": "64px",
+  "4xl": "96px",
+  "5xl": "128px",
+};
+
+export const RADIUS = {
+  sm: "8px",
+  md: "12px",
+  lg: "16px",
+  xl: "20px",
+  "2xl": "24px",
+  "3xl": "32px",
+  full: "9999px",
+};
+
+export const SHADOW = {
+  none: "none",
+  /* Layered shadow for cards — ambient + key. The wide ambient gives a soft
+     halo, the tight key shadow grounds the surface. Both tinted with the
+     navy/accent so they never read as gray. */
+  sm: "0 1px 2px rgba(7,13,26,0.10), 0 1px 1px rgba(7,13,26,0.06)",
+  md: "0 4px 12px rgba(7,13,26,0.12), 0 2px 4px rgba(7,13,26,0.08)",
+  lg: "0 12px 32px rgba(7,13,26,0.18), 0 4px 12px rgba(7,13,26,0.10)",
+  xl: "0 24px 60px rgba(7,13,26,0.28), 0 10px 24px rgba(7,13,26,0.14)",
+  glow: "0 0 0 1px rgba(75,156,211,0.4), 0 12px 32px rgba(75,156,211,0.18)",
+  glowSoft: "0 12px 40px rgba(75,156,211,0.22)",
+  /* Press-state shadow — flatter, used during active state. */
+  press: "0 2px 6px rgba(7,13,26,0.16), inset 0 1px 0 rgba(255,255,255,0.04)",
 };
 
 /* ── CSS variable helpers (theme-aware) ────────────────────────── */
@@ -39,8 +93,8 @@ export function useFadeIn(delay = 0) {
     ref,
     {
       opacity: visible ? 1 : 0,
-      transform: visible ? "translateY(0)" : "translateY(24px)",
-      transition: `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}ms, transform 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}ms`,
+      transform: visible ? "translateY(0)" : "translateY(20px)",
+      transition: `opacity 0.8s cubic-bezier(0.16,1,0.3,1) ${delay}ms, transform 0.8s cubic-bezier(0.16,1,0.3,1) ${delay}ms`,
     },
   ];
 }
@@ -58,7 +112,9 @@ export function useCountUp(end, duration = 2000) {
         const t0 = performance.now();
         const tick = (now) => {
           const p = Math.min((now - t0) / duration, 1);
-          setCount(Math.round(p * end));
+          /* Ease-out so the count settles rather than ramming the final number. */
+          const eased = 1 - Math.pow(1 - p, 3);
+          setCount(Math.round(eased * end));
           if (p < 1) requestAnimationFrame(tick);
         };
         requestAnimationFrame(tick);
@@ -84,13 +140,28 @@ export function useTheme() {
   return { theme, setTheme, toggle };
 }
 
+/* Track pointer presence for hover-aware interactions. False on touch
+   so press-effects don't get stuck on tap-and-release. */
+export function useHasHover() {
+  const [hasHover, setHasHover] = useState(true);
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(hover: hover)");
+    setHasHover(mq.matches);
+    const fn = (e) => setHasHover(e.matches);
+    mq.addEventListener("change", fn);
+    return () => mq.removeEventListener("change", fn);
+  }, []);
+  return hasHover;
+}
+
 /* ── Shared components ─────────────────────────────────────────── */
 
 export function DiamondDivider({ width = 200, style }) {
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", width, margin: "0 auto", ...style }}>
       <div style={{ flex: 1, height: "1px", background: v("divider") }} />
-      <span style={{ color: v("accent"), fontSize: "8px", lineHeight: 1 }}>{"\u25C6"}</span>
+      <span style={{ color: v("accent"), fontSize: "8px", lineHeight: 1 }}>{"◆"}</span>
       <div style={{ flex: 1, height: "1px", background: v("divider") }} />
     </div>
   );
@@ -105,41 +176,187 @@ export function DoubleLine({ width = 200, style }) {
   );
 }
 
-export function SectionHeader({ label, title, titleAccent, sub, center }) {
-  const [ref, fade] = useFadeIn(0);
-  const align = center ? "center" : "left";
+/* Reusable text gradient — the accent italic on most headlines.
+   Inline-block so the bleed clipping doesn't crop descenders. */
+export function GradientText({ children, gradient = C.gradientAccent, italic = true, style }) {
   return (
-    <div ref={ref} style={{ ...fade, textAlign: align, marginBottom: "56px", maxWidth: center ? "700px" : "none", marginLeft: center ? "auto" : 0, marginRight: center ? "auto" : 0 }}>
-      {label && (
-        <div style={{
-          fontSize: "12px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "3px",
-          color: v("accent"), marginBottom: "16px", fontFamily: "var(--font-body)",
-          display: "flex", alignItems: "center", gap: "8px", justifyContent: center ? "center" : "flex-start",
-        }}>
-          <span style={{ fontSize: "8px" }}>{"\u25C6"}</span> {label}
-        </div>
-      )}
-      <h2 style={{
-        fontFamily: "var(--font-body)", fontWeight: 800, fontSize: "clamp(28px, 4vw, 44px)",
-        letterSpacing: "-0.5px", lineHeight: 1.2, color: v("text"), marginBottom: sub ? "16px" : 0,
-      }}>
-        {title}{" "}
-        {titleAccent && (
-          <span style={{
-            fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-            background: C.gradientAccent, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-          }}>{titleAccent}</span>
-        )}
-      </h2>
-      {sub && <p style={{ fontSize: "17px", lineHeight: 1.65, color: v("text-muted"), maxWidth: "580px", margin: center ? "0 auto" : 0 }}>{sub}</p>}
+    <span style={{
+      display: "inline-block",
+      fontFamily: italic ? "var(--font-display)" : "var(--font-body)",
+      fontStyle: italic ? "italic" : "normal",
+      fontWeight: 700,
+      background: gradient,
+      WebkitBackgroundClip: "text",
+      WebkitTextFillColor: "transparent",
+      backgroundClip: "text",
+      paddingBottom: "0.05em",
+      ...style,
+    }}>
+      {children}
+    </span>
+  );
+}
+
+/* Editorial eyebrow — the small uppercase caption with optional ◆.
+   Replaces the dozen hand-rolled copies of this pattern across pages. */
+export function Eyebrow({ children, diamond = true, color, style }) {
+  return (
+    <span style={{
+      display: "inline-flex", alignItems: "center", gap: "8px",
+      fontSize: "11px", fontWeight: 700, letterSpacing: "3px",
+      textTransform: "uppercase", lineHeight: 1,
+      color: color || v("accent"), fontFamily: "var(--font-body)",
+      ...style,
+    }}>
+      {diamond && <span style={{ fontSize: "7px" }}>{"◆"}</span>}
+      {children}
+    </span>
+  );
+}
+
+/* Chapter rule — the [◆ LABEL ──── § 0N] pattern used as a section header
+   on multiple pages. Hairline rule fills the space between label and §
+   number. Standardized into a single primitive so every page has the
+   exact same rhythm. */
+export function ChapterRule({ label, num, style }) {
+  return (
+    <div style={{
+      display: "flex", alignItems: "baseline", gap: "16px",
+      flexWrap: "wrap",
+      ...style,
+    }}>
+      {label && <Eyebrow>{label}</Eyebrow>}
+      <span style={{ flex: 1, height: "1px", background: v("divider"), minWidth: "40px" }} />
+      {num && <span style={{
+        fontSize: "11px", color: v("text-dim"),
+        letterSpacing: "2px", whiteSpace: "nowrap",
+        fontFeatureSettings: '"tnum" 1',
+      }}>§ {num}</span>}
     </div>
   );
 }
 
-export function Card({ children, style, delay = 0, hover = true, onClick }) {
+/* Editorial masthead strip — the long [— FOUNDING COHORT ◆ EDITION ◆ … —]
+   bar used at the top of Hero, Pricing, AI Receptionist, etc. */
+export function EditorialMasthead({ items = [], color, style }) {
+  return (
+    <div style={{
+      display: "flex", alignItems: "center", justifyContent: "center",
+      gap: "14px", flexWrap: "wrap",
+      fontSize: "10px", fontWeight: 700, letterSpacing: "4px",
+      textTransform: "uppercase", lineHeight: 1.4,
+      color: color || v("text-muted"),
+      ...style,
+    }}>
+      <span style={{ flex: "0 0 44px", height: "1px", background: "currentColor", opacity: 0.35 }} />
+      {items.map((item, i) => (
+        <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: "14px" }}>
+          {i > 0 && <span style={{ color: v("accent"), fontSize: "7px" }}>{"◆"}</span>}
+          <span>{item}</span>
+        </span>
+      ))}
+      <span style={{ flex: "0 0 44px", height: "1px", background: "currentColor", opacity: 0.35 }} />
+    </div>
+  );
+}
+
+/* Pill badge — small uppercase chip used for category labels. Replaces
+   the inline pill repeated in Pricing, TradePage, RelationshipPage. */
+export function PillBadge({ children, tone = "accent", style }) {
+  const tones = {
+    accent: { bg: "rgba(75,156,211,0.12)", border: "rgba(75,156,211,0.28)", color: v("accent") },
+    success: { bg: "rgba(6,214,160,0.12)", border: "rgba(6,214,160,0.32)", color: C.success },
+    surface: { bg: v("surface"), border: v("surface-border"), color: v("text-muted") },
+    solid: { bg: C.gradientPrism, border: "transparent", color: "#fff" },
+  };
+  const t = tones[tone] || tones.accent;
+  return (
+    <span style={{
+      display: "inline-flex", alignItems: "center", gap: "6px",
+      padding: "5px 12px", borderRadius: RADIUS.full,
+      fontSize: "10px", fontWeight: 700, letterSpacing: "2.5px",
+      textTransform: "uppercase", lineHeight: 1,
+      background: t.bg,
+      color: t.color,
+      border: `1px solid ${t.border}`,
+      ...style,
+    }}>
+      {children}
+    </span>
+  );
+}
+
+export function SectionHeader({ label, num, title, titleAccent, sub, center, style }) {
+  const [ref, fade] = useFadeIn(0);
+  const align = center ? "center" : "left";
+  return (
+    <div ref={ref} style={{
+      ...fade,
+      textAlign: align,
+      marginBottom: SPACE["3xl"],
+      maxWidth: center ? "780px" : "none",
+      marginLeft: center ? "auto" : 0,
+      marginRight: center ? "auto" : 0,
+      ...style,
+    }}>
+      {(label || num) && (
+        center ? (
+          <div style={{
+            display: "flex", justifyContent: "center", alignItems: "center", gap: "12px",
+            marginBottom: SPACE.md,
+          }}>
+            {label && <Eyebrow>{label}</Eyebrow>}
+            {num && (
+              <>
+                <span style={{ width: "32px", height: "1px", background: v("divider") }} />
+                <span style={{
+                  fontSize: "11px", color: v("text-dim"),
+                  letterSpacing: "2px",
+                  fontFeatureSettings: '"tnum" 1',
+                }}>§ {num}</span>
+              </>
+            )}
+          </div>
+        ) : (
+          <ChapterRule label={label} num={num} style={{ marginBottom: SPACE.lg }} />
+        )
+      )}
+      <h2 style={{
+        fontFamily: "var(--font-body)", fontWeight: 800,
+        fontSize: "clamp(28px, 4vw, 44px)",
+        letterSpacing: "-0.5px", lineHeight: 1.15,
+        color: v("text"),
+        marginBottom: sub ? SPACE.md : 0,
+      }}>
+        {title}
+        {titleAccent && (
+          <>
+            {" "}
+            <GradientText>{titleAccent}</GradientText>
+          </>
+        )}
+      </h2>
+      {sub && (
+        <p style={{
+          fontSize: "17px", lineHeight: 1.65,
+          color: v("text-muted"),
+          maxWidth: "620px",
+          margin: center ? "0 auto" : 0,
+        }}>
+          {sub}
+        </p>
+      )}
+    </div>
+  );
+}
+
+/* Card — the workhorse surface. Refined elevation: layered shadow,
+   subtle top-edge highlight, refined hover (lift + glow + border tint).
+   `interactive` toggles the hover affordance; default true. */
+export function Card({ children, style, delay = 0, hover = true, interactive = true, onClick, padded = true }) {
   const [ref, fade] = useFadeIn(delay);
   const [hovered, setHovered] = useState(false);
+  const lift = hovered && hover && interactive;
   return (
     <div
       ref={ref}
@@ -148,65 +365,245 @@ export function Card({ children, style, delay = 0, hover = true, onClick }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         ...fade,
-        padding: "36px",
-        borderRadius: "20px",
+        position: "relative",
+        padding: padded ? SPACE.xl : 0,
+        borderRadius: RADIUS.xl,
         background: v("surface"),
-        border: `1px solid ${hovered && hover ? v("accent") : v("surface-border")}`,
-        backdropFilter: "blur(8px)",
-        WebkitBackdropFilter: "blur(8px)",
-        transition: "border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease",
-        transform: hovered && hover ? "translateY(-4px)" : "translateY(0)",
-        boxShadow: hovered && hover ? `0 12px 40px ${v("glow")}` : "none",
+        border: `1px solid ${lift ? v("surface-border-hover") : v("surface-border")}`,
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
+        transition: "border-color 0.3s ease, transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s cubic-bezier(0.16,1,0.3,1)",
+        transform: lift ? "translateY(-3px)" : "translateY(0)",
+        boxShadow: lift ? SHADOW.lg : SHADOW.sm,
         cursor: onClick ? "pointer" : "default",
         ...style,
       }}
     >
+      {/* Top-edge highlight — invisible 1px gradient line that gives the
+          card a sense of physical presence. Stronger in dark mode. */}
+      <span aria-hidden="true" style={{
+        position: "absolute", top: 0, left: "12%", right: "12%",
+        height: "1px",
+        background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%)",
+        pointerEvents: "none",
+      }} />
       {children}
     </div>
   );
 }
 
-export function RippleButton({ children, style, variant = "primary", ...props }) {
-  const ref = useRef(null);
-  const handleClick = (e) => {
-    const btn = ref.current;
-    if (!btn) return;
-    const rect = btn.getBoundingClientRect();
-    const span = document.createElement("span");
-    const size = Math.max(rect.width, rect.height);
-    span.style.cssText = `position:absolute;border-radius:50%;background:rgba(255,255,255,0.3);width:${size}px;height:${size}px;left:${e.clientX - rect.left - size / 2}px;top:${e.clientY - rect.top - size / 2}px;animation:ripple 0.6s ease-out;pointer-events:none;`;
-    btn.appendChild(span);
-    setTimeout(() => span.remove(), 600);
-    props.onClick?.(e);
-  };
+/* Premium button system — `Button` is the new canonical CTA. Variants:
+     primary  — gradient, white text, layered shadow, scale-press
+     secondary — surface glass, outlined
+     ghost    — no fill, hover surface
+     editorial — outlined cream/navy, refined for hero / dark backgrounds
+   Sizes: sm | md | lg.
+   Use `<Button as="span">` to render inside a Link without nesting <button>. */
+export function Button({
+  as: Tag = "button",
+  variant = "primary",
+  size = "md",
+  fullWidth,
+  children,
+  style,
+  iconLeft,
+  iconRight,
+  ...rest
+}) {
+  const [hovered, setHovered] = useState(false);
+  const [pressed, setPressed] = useState(false);
 
-  const base = {
-    position: "relative", overflow: "hidden", border: "none", cursor: "pointer",
-    fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "15px",
-    padding: "14px 32px", borderRadius: "100px", transition: "all 0.3s ease",
-    display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "8px",
+  const sizes = {
+    sm: { pad: "10px 18px", font: "13px", icon: 14 },
+    md: { pad: "14px 28px", font: "14px", icon: 16 },
+    lg: { pad: "16px 36px", font: "15px", icon: 18 },
   };
+  const s = sizes[size] || sizes.md;
 
   const variants = {
-    primary: { background: C.gradientPrism, color: "#fff", boxShadow: `0 4px 20px rgba(75,156,211,0.3)` },
-    secondary: { background: "transparent", color: v("text"), border: `1.5px solid ${v("divider")}` },
-    ghost: { background: v("surface"), color: v("text"), border: `1px solid ${v("surface-border")}` },
+    primary: {
+      base: {
+        background: C.gradientAccent,
+        color: "#fff",
+        border: "1px solid transparent",
+        boxShadow: hovered
+          ? "0 12px 28px rgba(75,156,211,0.42), inset 0 1px 0 rgba(255,255,255,0.18)"
+          : "0 6px 18px rgba(75,156,211,0.32), inset 0 1px 0 rgba(255,255,255,0.18)",
+      },
+      hoverFilter: "brightness(1.04)",
+    },
+    primarySolid: {
+      base: {
+        background: C.gradientPrism,
+        color: "#fff",
+        border: "1px solid transparent",
+        boxShadow: hovered
+          ? "0 14px 32px rgba(19,41,75,0.42), inset 0 1px 0 rgba(255,255,255,0.18)"
+          : "0 6px 18px rgba(19,41,75,0.32), inset 0 1px 0 rgba(255,255,255,0.18)",
+      },
+    },
+    secondary: {
+      base: {
+        background: hovered ? v("surface-hover") : v("surface"),
+        color: v("text"),
+        border: `1px solid ${hovered ? v("surface-border-hover") : v("surface-border")}`,
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
+      },
+    },
+    ghost: {
+      base: {
+        background: hovered ? v("surface") : "transparent",
+        color: v("text"),
+        border: `1px solid ${v("divider")}`,
+      },
+    },
+    editorial: {
+      base: {
+        background: "rgba(255,255,255,0.10)",
+        color: "#fff",
+        border: "1px solid rgba(255,255,255,0.28)",
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
+      },
+    },
+    onAccent: {
+      base: {
+        background: "#fff",
+        color: C.navy,
+        border: "1px solid transparent",
+        boxShadow: hovered ? SHADOW.md : SHADOW.sm,
+      },
+    },
   };
+  const vstyle = variants[variant] || variants.primary;
 
   return (
-    <button ref={ref} {...props} onClick={handleClick} style={{ ...base, ...variants[variant], ...style }}>
+    <Tag
+      {...rest}
+      onMouseEnter={(e) => { setHovered(true); rest.onMouseEnter?.(e); }}
+      onMouseLeave={(e) => { setHovered(false); setPressed(false); rest.onMouseLeave?.(e); }}
+      onMouseDown={(e) => { setPressed(true); rest.onMouseDown?.(e); }}
+      onMouseUp={(e) => { setPressed(false); rest.onMouseUp?.(e); }}
+      style={{
+        display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "8px",
+        padding: s.pad,
+        borderRadius: RADIUS.full,
+        fontSize: s.font, fontWeight: 700,
+        fontFamily: "var(--font-body)",
+        letterSpacing: "0.1px",
+        cursor: rest.disabled ? "not-allowed" : "pointer",
+        position: "relative",
+        overflow: "hidden",
+        transition: "transform 0.15s cubic-bezier(0.16,1,0.3,1), box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease",
+        transform: pressed ? "scale(0.97)" : hovered ? "translateY(-1px)" : "translateY(0)",
+        filter: hovered ? vstyle.hoverFilter : "none",
+        width: fullWidth ? "100%" : undefined,
+        opacity: rest.disabled ? 0.5 : 1,
+        ...vstyle.base,
+        ...style,
+      }}
+    >
+      {iconLeft}
+      <span>{children}</span>
+      {iconRight}
+    </Tag>
+  );
+}
+
+/* RippleButton — kept for back-compat with all callers. Now wraps the
+   refined Button so visual upgrades flow through. The legacy ripple is
+   replaced with the cleaner press-scale + shadow lift. */
+export function RippleButton({ children, style, variant = "primary", ...props }) {
+  /* Map legacy variants to Button variants. */
+  const map = {
+    primary: "primarySolid",
+    secondary: "editorial",
+    ghost: "secondary",
+  };
+  return (
+    <Button {...props} variant={map[variant] || "primary"} size="md" style={style}>
       {children}
-    </button>
+    </Button>
   );
 }
 
 export function Tag({ children }) {
   return (
     <span style={{
-      display: "inline-block", padding: "5px 12px", borderRadius: "100px",
+      display: "inline-block", padding: "5px 12px", borderRadius: RADIUS.full,
       fontSize: "12px", fontWeight: 600, letterSpacing: "0.3px",
-      background: "rgba(75,156,211,0.1)", color: v("accent"),
-      border: `1px solid rgba(75,156,211,0.15)`,
+      background: "rgba(75,156,211,0.10)", color: v("accent"),
+      border: `1px solid rgba(75,156,211,0.18)`,
     }}>{children}</span>
+  );
+}
+
+/* StatTile — for the editorial "by the numbers" blocks. Tabular figures
+   so the numbers don't shift width. Optional supporting label & note. */
+export function StatTile({ value, label, note, large, fadeRef, style }) {
+  return (
+    <div ref={fadeRef} style={{
+      padding: large ? SPACE["2xl"] : SPACE.lg,
+      background: v("surface"),
+      borderRadius: large ? RADIUS["2xl"] : RADIUS.lg,
+      border: `1px solid ${v("surface-border")}`,
+      position: "relative",
+      overflow: "hidden",
+      ...style,
+    }}>
+      <div style={{
+        fontFamily: "var(--font-body)",
+        fontSize: large ? "clamp(56px, 10vw, 96px)" : "32px",
+        fontWeight: 800,
+        letterSpacing: "-1.5px",
+        lineHeight: 1,
+        background: C.gradientAccent,
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        backgroundClip: "text",
+        marginBottom: SPACE.sm,
+        fontFeatureSettings: '"tnum" 1, "lnum" 1',
+      }}>{value}</div>
+      <div style={{
+        fontSize: large ? "16px" : "13px",
+        fontWeight: 600, color: v("text"),
+        lineHeight: 1.45,
+        marginBottom: note ? SPACE.xs : 0,
+      }}>{label}</div>
+      {note && (
+        <div style={{
+          fontSize: "12px", fontStyle: "italic",
+          color: v("text-dim"),
+          fontFamily: "var(--font-display)",
+        }}>{note}</div>
+      )}
+    </div>
+  );
+}
+
+/* Surface — flexible container with theme-aware glass/solid backing.
+   Use it instead of inlining the same panel pattern. */
+export function Surface({ children, tone = "glass", radius = "xl", padding = "xl", style, ...rest }) {
+  const tones = {
+    glass: { bg: v("surface"), border: v("surface-border") },
+    solid: { bg: v("bg-alt"), border: v("divider") },
+    accent: { bg: "rgba(75,156,211,0.06)", border: "rgba(75,156,211,0.20)" },
+    inverse: { bg: C.gradientPrism, border: "transparent", color: "#fff" },
+  };
+  const t = tones[tone] || tones.glass;
+  return (
+    <div {...rest} style={{
+      background: t.bg,
+      border: `1px solid ${t.border}`,
+      borderRadius: RADIUS[radius] || radius,
+      padding: SPACE[padding] || padding,
+      color: t.color,
+      backdropFilter: tone === "glass" ? "blur(10px)" : "none",
+      WebkitBackdropFilter: tone === "glass" ? "blur(10px)" : "none",
+      ...style,
+    }}>
+      {children}
+    </div>
   );
 }

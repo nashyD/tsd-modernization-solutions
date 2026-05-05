@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { C, v } from "../shared";
+import { C, v, RADIUS } from "../shared";
 import { trackEvent } from "../analytics.js";
 
 /* ── TSD chat agent ────────────────────────────────────────────────
@@ -505,46 +505,66 @@ export default function TSDAgent() {
 
   return (
     <>
-      {/* Floating bubble — collapsed state */}
+      {/* Floating bubble — collapsed state. Paired with CallButton on the
+          opposite corner; both share the same surface/medallion vocabulary
+          so they read as one floating dock rather than two stacked widgets. */}
       {!open && (
         <button
           onClick={() => setOpen(true)}
           aria-label="Open chat with TSD"
           style={{
             position: "fixed",
-            bottom: "24px",
-            right: "24px",
+            bottom: "22px",
+            right: "22px",
             zIndex: 1000,
             display: "inline-flex",
             alignItems: "center",
             gap: "10px",
-            padding: "14px 22px",
-            borderRadius: "100px",
-            border: "none",
-            background: C.gradientPrism,
-            color: "#fff",
+            padding: "12px 14px 12px 20px",
+            borderRadius: RADIUS.full,
+            background: "var(--c-surface)",
+            color: "var(--c-text)",
+            border: "1px solid var(--c-surface-border)",
             fontFamily: "var(--font-body)",
-            fontSize: "14px",
+            fontSize: "13px",
             fontWeight: 600,
-            letterSpacing: "0.2px",
+            letterSpacing: "0.1px",
             cursor: "pointer",
+            backdropFilter: "blur(20px) saturate(140%)",
+            WebkitBackdropFilter: "blur(20px) saturate(140%)",
             boxShadow:
-              "0 12px 30px rgba(19,41,75,0.35), 0 4px 12px rgba(19,41,75,0.25)",
-            transition: "transform 0.2s ease, box-shadow 0.2s ease",
+              "0 12px 30px rgba(7,13,26,0.35), 0 4px 12px rgba(7,13,26,0.18)",
+            transition:
+              "transform 0.25s cubic-bezier(0.16,1,0.3,1), box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease",
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = "translateY(-2px)";
+            e.currentTarget.style.background = "var(--c-nav-bg)";
+            e.currentTarget.style.borderColor = "var(--c-surface-border-hover)";
             e.currentTarget.style.boxShadow =
-              "0 18px 40px rgba(19,41,75,0.4), 0 6px 16px rgba(19,41,75,0.28)";
+              "0 18px 44px rgba(7,13,26,0.45), 0 6px 18px rgba(7,13,26,0.25)";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.transform = "translateY(0)";
+            e.currentTarget.style.background = "var(--c-surface)";
+            e.currentTarget.style.borderColor = "var(--c-surface-border)";
             e.currentTarget.style.boxShadow =
-              "0 12px 30px rgba(19,41,75,0.35), 0 4px 12px rgba(19,41,75,0.25)";
+              "0 12px 30px rgba(7,13,26,0.35), 0 4px 12px rgba(7,13,26,0.18)";
           }}
         >
-          <ChatBubbleIcon size={18} />
           <span>Chat with TSD</span>
+          {/* Icon medallion — paired visual anchor with CallButton's left
+              medallion. Gradient backing, white icon, subtle inner highlight. */}
+          <span style={{
+            width: "28px", height: "28px", borderRadius: RADIUS.full,
+            background: C.gradientAccent,
+            display: "inline-flex", alignItems: "center", justifyContent: "center",
+            color: "#fff",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.18)",
+            flexShrink: 0,
+          }}>
+            <ChatBubbleIcon size={14} />
+          </span>
         </button>
       )}
 

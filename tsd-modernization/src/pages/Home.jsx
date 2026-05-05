@@ -1,20 +1,22 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { C, v, useFadeIn, useCountUp, DiamondDivider, Card, RippleButton, SectionHeader } from "../shared";
+import {
+  C, v, useFadeIn, useCountUp,
+  DiamondDivider, RippleButton, Button,
+  Eyebrow, ChapterRule, GradientText, EditorialMasthead, PillBadge,
+  SPACE, RADIUS, SHADOW,
+} from "../shared";
 import { ArrowRightIcon } from "../icons";
 import BookCallButton from "../components/BookCallButton";
 
 /* ── Hero ──────────────────────────────────────────────────────── */
 function Hero() {
-  const [r1, f1] = useFadeIn(200);
-  const [r2, f2] = useFadeIn(400);
-  const [r3, f3] = useFadeIn(600);
-  const [r4, f4] = useFadeIn(800);
-  const [r5, f5] = useFadeIn(1000);
+  const [r1, f1] = useFadeIn(150);
+  const [r2, f2] = useFadeIn(350);
+  const [r3, f3] = useFadeIn(550);
+  const [r4, f4] = useFadeIn(750);
+  const [r5, f5] = useFadeIn(950);
 
-  // Pick the right hero video for the viewport. Desktop gets the full 1080p
-  // landscape (with contain so the full frame shows). Mobile gets a portrait-
-  // cropped version so the storefront isn't reduced to a narrow middle slice.
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches
   );
@@ -25,10 +27,9 @@ function Hero() {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  // Defer video download until the page is idle. The poster image paints
-  // immediately (LCP candidate) and the video streams in afterwards. This
-  // keeps 15 MB of mp4 out of the critical-path download and improves
-  // Core Web Vitals — meaningful for SEO.
+  /* Defer video download until idle. The poster paints immediately
+     (LCP candidate); the video streams in afterward. Keeps 15 MB of
+     mp4 out of the critical path. */
   const videoRef = useRef(null);
   const [videoReady, setVideoReady] = useState(false);
   useEffect(() => {
@@ -50,11 +51,12 @@ function Hero() {
   return (
     <section style={{
       minHeight: "100vh", position: "relative", overflow: "hidden",
-      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start",
+      display: "flex", flexDirection: "column",
+      alignItems: "center", justifyContent: "center",
       background: v("bg"),
-      paddingTop: "140px", paddingBottom: "80px",
+      paddingTop: "140px", paddingBottom: "120px",
     }}>
-      {/* Storefront image — base layer and mobile fallback */}
+      {/* Storefront poster — base layer + LCP image */}
       <div className="hero-bg" style={{
         position: "absolute", inset: 0, zIndex: 0,
         backgroundImage: "url(/hero-storefront.webp)",
@@ -62,9 +64,6 @@ function Hero() {
         backgroundRepeat: "no-repeat",
       }} />
 
-      {/* Palindrome video loop — viewport-specific source & fit.
-          `key` forces React to remount on viewport change so the new <source> is picked up.
-          <source> is rendered only after idle so the mp4 stays out of the critical path. */}
       <video
         ref={videoRef}
         key={isMobile ? "mobile" : "desktop"}
@@ -77,7 +76,7 @@ function Hero() {
           width: "100%", height: "100%",
           objectFit: "cover",
           objectPosition: "center center",
-          background: "#0c1524",
+          background: "#0a1320",
         }}
       >
         {videoReady && (
@@ -85,130 +84,190 @@ function Hero() {
         )}
       </video>
 
-      {/* Reveal overlay — frames the hero with the page bg color so the
-          section blends with the active theme rather than presenting a
-          dark-navy band against a cream page in light mode. Two trade-offs
-          baked into the stop placement:
-          • Top fade is tight (bg ends at 5%, transparent by 10%) so the
-            editorial masthead at ~16% from the top sits on pure video,
-            not on a half-faded bg tint. In light mode a wide bg-tint zone
-            would put cream text on a cream-tinted backdrop and erase it.
-            The radial vignette below this layer does the contrast work
-            for the masthead instead.
-          • Bottom fade is widened (transparent → bg over 16% of section
-            height vs the prior 8%) so the exit into the next section
-            doesn't show banding where the video's edge colors meet the
-            cream theme bg — that was the "torn-edge" failure mode that
-            killed an earlier attempt at this fix. */}
-      <div style={{
+      {/* Theme blend — top + bottom fades into the page bg so the section
+          doesn't present a torn edge against the cream/navy backdrop. */}
+      <div aria-hidden="true" style={{
         position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
         background: `linear-gradient(to bottom,
           var(--c-bg) 0%,
-          var(--c-bg) 5%,
-          transparent 10%,
+          var(--c-bg) 4%,
+          transparent 12%,
           transparent 78%,
-          var(--c-bg) 94%,
+          var(--c-bg) 96%,
           var(--c-bg) 100%)`,
       }} />
 
-      {/* Editorial gradient vignette — provides a theme-independent dark
-          backdrop for the white headline and cream eyebrow text. Center
-          shifted up to 42% (was 48%) and height extended to 70% (was 60%)
-          so the masthead also gets coverage, now that the reveal overlay's
-          top fade is too short to tint the masthead zone. Without this the
-          masthead would sit on raw video sky in light mode and bleed. */}
-      <div style={{
+      {/* Center vignette — gives the headline a guaranteed dark backdrop
+          regardless of theme. Pulled tighter and richer than the prior
+          implementation so the white type stays anchored. */}
+      <div aria-hidden="true" style={{
         position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
-        background: "radial-gradient(ellipse 75% 70% at 50% 42%, rgba(5,10,20,0.62) 0%, rgba(5,10,20,0.42) 45%, rgba(5,10,20,0.18) 75%, transparent 92%)",
+        background: "radial-gradient(ellipse 70% 65% at 50% 50%, rgba(5,10,20,0.68) 0%, rgba(5,10,20,0.46) 45%, rgba(5,10,20,0.18) 75%, transparent 92%)",
+      }} />
+
+      {/* Subtle grain — adds a layer of premium texture over the video. */}
+      <div aria-hidden="true" style={{
+        position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none",
+        opacity: 0.06,
+        backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.7 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")`,
+        backgroundSize: "180px 180px",
+        mixBlendMode: "overlay",
       }} />
 
       {/* Content */}
-      <div style={{ maxWidth: "820px", textAlign: "center", position: "relative", zIndex: 3, padding: "0 24px" }}>
+      <div style={{
+        maxWidth: "880px", textAlign: "center", position: "relative", zIndex: 4,
+        padding: "0 24px",
+      }}>
 
-        {/* Editorial masthead — No. 01 · Charlotte Edition · 2026 */}
+        {/* Editorial masthead */}
         <div ref={r1} style={{
-          ...f1, display: "flex", alignItems: "center", justifyContent: "center", gap: "14px",
-          fontSize: "10px", fontWeight: 700, letterSpacing: "4px", textTransform: "uppercase",
-          color: "rgba(232,224,212,0.85)", marginBottom: "24px",
-          textShadow: "0 1px 4px rgba(0,0,0,0.8)",
+          ...f1, marginBottom: "28px",
+          color: "rgba(236,228,214,0.92)",
+          textShadow: "0 1px 4px rgba(0,0,0,0.85)",
         }}>
-          <span style={{ flex: "0 0 44px", height: "1px", background: "rgba(232,224,212,0.35)" }} />
-          <span>Founding Cohort</span>
-          <span style={{ color: C.carolinaLight, fontSize: "7px" }}>{"\u25C6"}</span>
-          <span>Charlotte Edition</span>
-          <span style={{ color: C.carolinaLight, fontSize: "7px" }}>{"\u25C6"}</span>
-          <span>Summer MMXXVI</span>
-          <span style={{ flex: "0 0 44px", height: "1px", background: "rgba(232,224,212,0.35)" }} />
+          <EditorialMasthead
+            items={["Founding Cohort", "Charlotte Edition", "Summer MMXXVI"]}
+            color="rgba(236,228,214,0.92)"
+          />
         </div>
 
         <h1 ref={r2} style={{
-          ...f2, fontFamily: "var(--font-body)", fontWeight: 800,
-          fontSize: "clamp(32px, 5.5vw, 64px)", letterSpacing: "-2px", lineHeight: 1.18,
-          color: "#fff", marginBottom: "20px",
-          textShadow: "0 2px 18px rgba(0,0,0,0.65), 0 1px 4px rgba(0,0,0,0.8)",
+          ...f2,
+          fontFamily: "var(--font-body)", fontWeight: 800,
+          fontSize: "clamp(36px, 5.8vw, 72px)",
+          letterSpacing: "-2.5px", lineHeight: 1.04,
+          color: "#fff", marginBottom: SPACE.lg,
+          textShadow: "0 2px 24px rgba(0,0,0,0.7), 0 1px 4px rgba(0,0,0,0.85)",
         }}>
-          Ten Charlotte builds between May and August.
+          Ten Charlotte builds
+          <br />
+          between May and August.
           <br />
           <span style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
             color: "#f4f9fd",
-            textShadow: "0 2px 24px rgba(0,0,0,0.75), 0 1px 6px rgba(0,0,0,0.85)",
+            textShadow: "0 2px 28px rgba(0,0,0,0.78), 0 1px 6px rgba(0,0,0,0.9)",
           }}>Then we close.</span>
         </h1>
 
-        <DiamondDivider width={160} style={{ marginBottom: "20px" }} />
+        <DiamondDivider width={180} style={{ marginBottom: SPACE.lg }} />
 
         <p ref={r3} style={{
-          ...f3, fontSize: "17px", lineHeight: 1.7, color: "#fff", fontWeight: 500,
-          maxWidth: "580px", margin: "0 auto 36px",
-          textShadow: "0 2px 14px rgba(0,0,0,0.75), 0 1px 4px rgba(0,0,0,0.85)",
+          ...f3,
+          fontSize: "18px", lineHeight: 1.6, fontWeight: 500,
+          color: "rgba(255,255,255,0.96)",
+          maxWidth: "620px", margin: "0 auto 40px",
+          textShadow: "0 2px 14px rgba(0,0,0,0.78), 0 1px 4px rgba(0,0,0,0.9)",
         }}>
-          Custom website, working AI, source code yours from day one. $5,000 fixed.
-          We don't take retainers and we will not be your long-term agency.
+          Custom website, working AI, source code yours from day one. <span style={{ fontWeight: 700, color: "#fff" }}>$5,000 fixed.</span>
+          {" "}We don't take retainers and we will not be your long-term agency.
         </p>
 
-        <div ref={r4} style={{ ...f4, display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
-          <BookCallButton variant="primary" refSource="home-hero" style={{ padding: "16px 36px", fontSize: "15px" }}>
-            Book a fit call <ArrowRightIcon size={16} />
+        <div ref={r4} style={{
+          ...f4, display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap",
+        }}>
+          <BookCallButton variant="primary" refSource="home-hero">
+            Book a fit call
           </BookCallButton>
-          <Link to="/pricing">
-            <RippleButton variant="secondary" style={{
-              padding: "16px 36px", fontSize: "15px",
-              background: "rgba(255,255,255,0.1)", borderColor: "rgba(255,255,255,0.25)",
-              backdropFilter: "blur(8px)", color: "#fff",
-            }}>
+          <Link to="/pricing" style={{ textDecoration: "none" }}>
+            <Button as="span" variant="editorial" size="lg">
               See pricing
-            </RippleButton>
+            </Button>
           </Link>
         </div>
 
-        {/* Cohort scarcity strip — surfaces the hard cap and the last-start
-            date so the time-bounded nature of the offer reads above the fold. */}
+        {/* Cohort scarcity strip — surfaces hard cap + last-start date so
+            the time-bounded nature reads above the fold. */}
         <div ref={r5} style={{
-          ...f5, marginTop: "36px",
-          display: "flex", alignItems: "center", gap: "14px", justifyContent: "center", flexWrap: "wrap",
-          fontSize: "11px", fontWeight: 600, letterSpacing: "2.5px", textTransform: "uppercase",
-          color: "rgba(232,224,212,0.78)",
+          ...f5, marginTop: "44px",
+          display: "flex", alignItems: "center", gap: "14px",
+          justifyContent: "center", flexWrap: "wrap",
+          fontSize: "11px", fontWeight: 600, letterSpacing: "2.5px",
+          textTransform: "uppercase",
+          color: "rgba(236,228,214,0.78)",
           textShadow: "0 1px 4px rgba(0,0,0,0.85)",
         }}>
-          <span style={{ flex: "0 0 32px", height: "1px", background: "rgba(232,224,212,0.3)" }} />
+          <span style={{ flex: "0 0 32px", height: "1px", background: "rgba(236,228,214,0.32)" }} />
           <span>Ten spots</span>
           <span style={{ color: C.carolinaLight, fontSize: "7px" }}>{"◆"}</span>
           <span>Last start</span>
           <span style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 600,
-            fontSize: "14px", letterSpacing: "0", textTransform: "none",
+            fontSize: "15px", letterSpacing: "0", textTransform: "none",
             color: "#f4f9fd",
           }}>July 13</span>
-          <span style={{ flex: "0 0 32px", height: "1px", background: "rgba(232,224,212,0.3)" }} />
+          <span style={{ flex: "0 0 32px", height: "1px", background: "rgba(236,228,214,0.32)" }} />
         </div>
       </div>
 
+      {/* Subtle scroll indicator */}
+      <div aria-hidden="true" style={{
+        position: "absolute", bottom: "32px", left: "50%", transform: "translateX(-50%)",
+        zIndex: 4,
+        display: "flex", flexDirection: "column", alignItems: "center", gap: "10px",
+        opacity: 0.6,
+        animation: "scrollBounce 2.4s ease-in-out infinite",
+      }}>
+        <span style={{
+          fontSize: "9px", fontWeight: 700, letterSpacing: "3px",
+          textTransform: "uppercase",
+          color: "rgba(236,228,214,0.7)",
+          textShadow: "0 1px 3px rgba(0,0,0,0.8)",
+        }}>Scroll</span>
+        <div style={{
+          position: "relative", width: "20px", height: "32px",
+          borderRadius: "10px",
+          border: "1.5px solid rgba(236,228,214,0.5)",
+        }}>
+          <div style={{
+            position: "absolute", top: "8px", left: "50%", marginLeft: "-2px",
+            width: "4px", height: "6px", borderRadius: "2px",
+            background: "rgba(236,228,214,0.85)",
+            animation: "scrollDot 1.6s ease-out infinite",
+          }} />
+        </div>
+      </div>
     </section>
   );
 }
 
-/* ── Service ticker — slow-scrolling editorial marquee ─────────── */
+/* ── Trades strip ─────────────────────────────────────────────── */
+function TradesStrip() {
+  const [ref, fade] = useFadeIn(0);
+  return (
+    <section ref={ref} style={{
+      ...fade,
+      padding: "32px 24px",
+      borderTop: `1px solid ${v("divider")}`,
+      borderBottom: `1px solid ${v("divider")}`,
+      background: v("bg-alt"),
+      position: "relative",
+    }}>
+      <div style={{
+        display: "flex", alignItems: "center", justifyContent: "center", gap: "24px",
+        flexWrap: "wrap", maxWidth: "1100px", margin: "0 auto",
+        textAlign: "center",
+      }}>
+        <Eyebrow style={{ whiteSpace: "nowrap" }}>Built for the trades</Eyebrow>
+        <span style={{
+          fontFamily: "var(--font-display)", fontStyle: "italic",
+          fontSize: "clamp(17px, 2.2vw, 22px)", color: v("text"),
+          lineHeight: 1.4, letterSpacing: "0.1px",
+        }}>
+          HVAC <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
+          Electrical <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
+          Plumbing <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
+          Garage Doors <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
+          Roofing <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
+          Home Services
+        </span>
+      </div>
+    </section>
+  );
+}
+
+/* ── Service ticker ────────────────────────────────────────────── */
 const TICKER_ITEMS = [
   "AI receptionists",
   "Custom websites",
@@ -221,31 +280,41 @@ const TICKER_ITEMS = [
 ];
 
 function ServiceTicker() {
-  // Double the list so the translate animation loops seamlessly at -50%.
   const loop = [...TICKER_ITEMS, ...TICKER_ITEMS];
   return (
     <section aria-hidden="true" style={{
       position: "relative", overflow: "hidden",
-      borderTop: `1px solid ${v("divider")}`,
       borderBottom: `1px solid ${v("divider")}`,
-      background: v("bg-alt"),
-      padding: "18px 0",
+      padding: "20px 0",
+      background: v("bg"),
     }}>
       <style>{`
         @keyframes tickerSlide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-        .ticker-track { animation: tickerSlide 55s linear infinite; }
+        .ticker-track { animation: tickerSlide 65s linear infinite; }
         @media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
       `}</style>
-      <div className="ticker-track" style={{ display: "flex", whiteSpace: "nowrap", gap: "48px", width: "max-content" }}>
+      {/* Edge fades so the ticker bleeds into the page rather than chopping
+          mid-letter at the viewport edges. */}
+      <div aria-hidden="true" style={{
+        position: "absolute", top: 0, left: 0, bottom: 0, width: "120px", zIndex: 2,
+        background: `linear-gradient(to right, ${v("bg")} 0%, transparent 100%)`,
+        pointerEvents: "none",
+      }} />
+      <div aria-hidden="true" style={{
+        position: "absolute", top: 0, right: 0, bottom: 0, width: "120px", zIndex: 2,
+        background: `linear-gradient(to left, ${v("bg")} 0%, transparent 100%)`,
+        pointerEvents: "none",
+      }} />
+      <div className="ticker-track" style={{ display: "flex", whiteSpace: "nowrap", gap: "56px", width: "max-content" }}>
         {loop.map((item, i) => (
           <span key={i} style={{
-            display: "inline-flex", alignItems: "center", gap: "48px",
+            display: "inline-flex", alignItems: "center", gap: "56px",
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 500,
             fontSize: "clamp(22px, 3vw, 34px)",
             color: v("text-muted"), letterSpacing: "0.5px",
           }}>
             {item}
-            <span style={{ color: v("accent"), fontSize: "10px", fontStyle: "normal" }}>{"\u25C6"}</span>
+            <span style={{ color: v("accent"), fontSize: "10px", fontStyle: "normal" }}>{"◆"}</span>
           </span>
         ))}
       </div>
@@ -253,7 +322,7 @@ function ServiceTicker() {
   );
 }
 
-/* ── Stats — asymmetric editorial "by the numbers" block ───────── */
+/* ── Stats — editorial "by the numbers" block ──────────────────── */
 function Stats() {
   const [headRef, headFade] = useFadeIn(0);
   const [count48, ref48] = useCountUp(48, 1600);
@@ -262,25 +331,15 @@ function Stats() {
 
   return (
     <section style={{
-      padding: "80px 48px 100px", maxWidth: "1200px", margin: "0 auto",
+      padding: `${SPACE["4xl"]} clamp(20px, 4vw, 48px) ${SPACE["3xl"]}`,
+      maxWidth: "1200px", margin: "0 auto",
     }}>
-      <div ref={headRef} style={{
-        ...headFade,
-        display: "flex", alignItems: "baseline", gap: "16px", marginBottom: "48px",
-        flexWrap: "wrap",
-      }}>
-        <span style={{
-          fontSize: "11px", fontWeight: 700, letterSpacing: "3px", textTransform: "uppercase",
-          color: v("accent"),
-        }}>
-          <span style={{ fontSize: "7px" }}>{"\u25C6"}</span>  By the Numbers
-        </span>
-        <span style={{ flex: 1, height: "1px", background: v("divider"), minWidth: "40px" }} />
-        <span style={{ fontSize: "11px", color: v("text-dim"), letterSpacing: "2px" }}>§ 01</span>
+      <div ref={headRef} style={{ ...headFade, marginBottom: SPACE["2xl"] }}>
+        <ChapterRule label="By the numbers" num="01" />
       </div>
 
       <div style={{
-        display: "grid", gap: "clamp(24px, 4vw, 56px)",
+        display: "grid", gap: "clamp(16px, 2.5vw, 32px)",
         gridTemplateColumns: "minmax(0, 1.4fr) minmax(0, 1fr)",
         alignItems: "stretch",
       }} className="stats-grid">
@@ -295,46 +354,53 @@ function Stats() {
         {/* Hero stat — the 48-hour proposal */}
         <div ref={ref48} className="stats-hero" style={{
           position: "relative",
-          padding: "48px", borderRadius: "24px",
-          background: v("surface"),
+          padding: "56px",
+          borderRadius: RADIUS["2xl"],
+          background: `linear-gradient(160deg, ${v("surface")} 0%, ${v("bg-alt")} 100%)`,
           border: `1px solid ${v("surface-border")}`,
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
           overflow: "hidden",
           display: "flex", flexDirection: "column", justifyContent: "space-between",
-          minHeight: "320px",
+          minHeight: "340px",
+          boxShadow: SHADOW.md,
         }}>
-          {/* Large decorative diamond in the background */}
+          {/* Background diamond — decorative */}
           <span aria-hidden="true" style={{
             position: "absolute", top: "-40px", right: "-40px",
-            fontSize: "220px", color: v("accent"), opacity: 0.06,
+            fontSize: "240px", color: v("accent"), opacity: 0.06,
             lineHeight: 1, pointerEvents: "none",
-          }}>{"\u25C6"}</span>
+          }}>{"◆"}</span>
 
-          <div style={{
-            fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase",
-            color: v("accent"), marginBottom: "24px", position: "relative",
-          }}>
-            The Differentiator
-          </div>
+          {/* Top hairline */}
+          <span aria-hidden="true" style={{
+            position: "absolute", top: 0, left: "12%", right: "12%", height: "1px",
+            background: "linear-gradient(90deg, transparent, rgba(75,156,211,0.45), transparent)",
+            pointerEvents: "none",
+          }} />
+
+          <Eyebrow>The Differentiator</Eyebrow>
 
           <div style={{ position: "relative" }}>
             <div className="stats-hero-num" style={{
               fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-              fontSize: "clamp(120px, 16vw, 180px)", lineHeight: 1, letterSpacing: "-4px",
-              background: C.gradientAccent, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-              marginBottom: "0",
+              fontSize: "clamp(120px, 16vw, 188px)", lineHeight: 1, letterSpacing: "-4px",
+              background: C.gradientAccent,
+              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+              marginBottom: 0,
+              fontFeatureSettings: '"tnum" 1',
             }}>
               {count48}
               <span style={{
-                fontFamily: "var(--font-body)", fontStyle: "normal", fontSize: "0.35em",
-                letterSpacing: "0", marginLeft: "8px",
+                fontFamily: "var(--font-body)", fontStyle: "normal", fontSize: "0.32em",
+                letterSpacing: "0", marginLeft: "10px", fontWeight: 600,
               }}>hrs</span>
             </div>
             <div style={{
-              fontFamily: "var(--font-body)", fontSize: "clamp(18px, 2.4vw, 24px)",
-              fontWeight: 700, color: v("text"), lineHeight: 1.25, marginBottom: "10px",
-              letterSpacing: "-0.3px",
+              fontFamily: "var(--font-body)", fontSize: "clamp(20px, 2.4vw, 26px)",
+              fontWeight: 700, color: v("text"), lineHeight: 1.2,
+              marginTop: SPACE.lg, marginBottom: SPACE.sm,
+              letterSpacing: "-0.4px",
             }}>
               From first call to custom proposal.
             </div>
@@ -347,8 +413,10 @@ function Stats() {
         </div>
 
         {/* Supporting stats — stacked column */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "1px",
-          background: v("divider"), borderRadius: "24px", overflow: "hidden",
+        <div style={{
+          display: "flex", flexDirection: "column", gap: "1px",
+          background: v("divider-soft"),
+          borderRadius: RADIUS["2xl"], overflow: "hidden",
           border: `1px solid ${v("surface-border")}`,
         }}>
           <SupportStat
@@ -377,27 +445,32 @@ function Stats() {
 function SupportStat({ forwardRef, value, label, note }) {
   return (
     <div ref={forwardRef} style={{
-      flex: 1, padding: "28px 32px", background: v("surface"),
+      padding: "26px 28px",
+      background: v("surface"),
       display: "flex", flexDirection: "column", justifyContent: "center",
-      minHeight: "104px",
+      minHeight: "108px",
+      transition: "background 0.25s ease",
+      minWidth: 0,
     }}>
-      <div style={{ display: "flex", alignItems: "baseline", gap: "14px", flexWrap: "wrap" }}>
-        <div style={{
-          fontFamily: "var(--font-body)", fontSize: "34px", fontWeight: 800, letterSpacing: "-1px",
-          background: C.gradientAccent, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-          lineHeight: 1, minWidth: "fit-content",
-        }}>
-          {value}
-        </div>
-        <div style={{
-          fontSize: "13px", fontWeight: 500, color: v("text"), lineHeight: 1.45, flex: 1,
-        }}>
-          {label}
-        </div>
+      <div style={{
+        fontFamily: "var(--font-body)", fontSize: "32px", fontWeight: 800, letterSpacing: "-1px",
+        background: C.gradientAccent,
+        WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+        lineHeight: 1,
+        marginBottom: "10px",
+        fontFeatureSettings: '"tnum" 1',
+      }}>
+        {value}
       </div>
       <div style={{
-        fontSize: "11px", fontStyle: "italic", color: v("text-dim"),
-        marginTop: "8px", fontFamily: "var(--font-display)",
+        fontSize: "13px", fontWeight: 500,
+        color: v("text"), lineHeight: 1.45,
+      }}>
+        {label}
+      </div>
+      <div style={{
+        fontSize: "12px", fontStyle: "italic", color: v("text-dim"),
+        marginTop: "6px", fontFamily: "var(--font-display)",
       }}>
         — {note}
       </div>
@@ -425,139 +498,148 @@ const WHY_BEATS = [
 ];
 
 function WhyWeDo() {
+  const [headRef, headFade] = useFadeIn(0);
   return (
-    <section style={{ padding: "0 48px 100px", maxWidth: "1200px", margin: "0 auto" }}>
-      <div style={{
-        display: "flex", alignItems: "baseline", gap: "16px", marginBottom: "32px",
-        flexWrap: "wrap",
-      }}>
-        <span style={{
-          fontSize: "11px", fontWeight: 700, letterSpacing: "3px", textTransform: "uppercase",
-          color: v("accent"),
-        }}>
-          <span style={{ fontSize: "7px" }}>{"\u25C6"}</span>  The Thesis
-        </span>
-        <span style={{ flex: 1, height: "1px", background: v("divider"), minWidth: "40px" }} />
-        <span style={{ fontSize: "11px", color: v("text-dim"), letterSpacing: "2px" }}>§ 03</span>
+    <section style={{
+      padding: `${SPACE["3xl"]} clamp(20px, 4vw, 48px) ${SPACE["4xl"]}`,
+      maxWidth: "1200px", margin: "0 auto",
+    }}>
+      <div ref={headRef} style={{ ...headFade, marginBottom: SPACE.xl }}>
+        <ChapterRule label="The Thesis" num="03" />
       </div>
 
-      <div style={{ maxWidth: "820px", marginBottom: "56px" }}>
+      <div style={{ maxWidth: "860px", marginBottom: SPACE["3xl"] }}>
         <h2 style={{
-          fontFamily: "var(--font-body)", fontWeight: 800, fontSize: "clamp(28px, 4vw, 44px)",
-          letterSpacing: "-0.5px", lineHeight: 1.2, color: v("text"), marginBottom: "20px",
+          fontFamily: "var(--font-body)", fontWeight: 800,
+          fontSize: "clamp(30px, 4.5vw, 52px)",
+          letterSpacing: "-1px", lineHeight: 1.08,
+          color: v("text"), marginBottom: SPACE.lg,
         }}>
           Main street built Charlotte.{" "}
-          <span style={{
-            fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-            background: C.gradientAccent, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-          }}>Let's keep it that way.</span>
+          <GradientText>Let's keep it that way.</GradientText>
         </h2>
-        <p style={{ fontSize: "17px", lineHeight: 1.65, color: v("text-muted"), maxWidth: "680px" }}>
+        <p style={{
+          fontSize: "18px", lineHeight: 1.6, color: v("text-muted"),
+          maxWidth: "720px",
+        }}>
           Fifty thousand small businesses in this metro, and fewer than a third have modern tools. It isn't because they don't want them — it's because nobody builds for them. That gap is why we exist.
         </p>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "24px" }}>
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+        gap: "20px",
+      }}>
         {WHY_BEATS.map((b, i) => (
           <WhyCard key={i} beat={b} index={i} />
         ))}
       </div>
 
-      <div style={{ textAlign: "center", marginTop: "56px" }}>
-        <Link to="/why-us">
-          <RippleButton variant="ghost" style={{ padding: "14px 32px" }}>
-            See how we compare <ArrowRightIcon size={16} />
-          </RippleButton>
+      <div style={{ textAlign: "center", marginTop: SPACE["3xl"] }}>
+        <Link to="/why-us" style={{ textDecoration: "none" }}>
+          <Button as="span" variant="ghost" iconRight={<ArrowRightIcon size={14} />}>
+            See how we compare
+          </Button>
         </Link>
       </div>
     </section>
   );
 }
 
-/* Each Why card gets its own visual treatment — numbered header / big diamond / pull-quote — so the three-up row doesn't read as a carbon-copy grid. */
+/* Each Why card has its own visual treatment so the row doesn't read as
+   a carbon-copy grid. */
 function WhyCard({ beat, index }) {
   const [ref, fade] = useFadeIn(index * 120);
+  const [hovered, setHovered] = useState(false);
 
   const variants = [
-    // 01 — large numbered marker
     {
       header: (
         <div style={{
-          display: "flex", alignItems: "baseline", gap: "14px", marginBottom: "20px",
-          borderBottom: `1px solid ${v("divider")}`, paddingBottom: "16px",
+          display: "flex", alignItems: "baseline", gap: "16px",
+          marginBottom: SPACE.lg,
+          paddingBottom: SPACE.md,
+          borderBottom: `1px solid ${v("divider-soft")}`,
         }}>
           <span style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-            fontSize: "52px", lineHeight: 1, color: v("accent"), letterSpacing: "-2px",
+            fontSize: "60px", lineHeight: 0.9,
+            background: C.gradientAccent,
+            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+            letterSpacing: "-3px",
           }}>01</span>
-          <span style={{
-            fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase",
-            color: v("text-muted"),
-          }}>{beat.label}</span>
+          <Eyebrow color={v("text-muted")} diamond={false}>{beat.label}</Eyebrow>
         </div>
       ),
     },
-    // 02 — oversized diamond glyph
     {
       header: (
-        <div style={{ marginBottom: "20px", borderBottom: `1px solid ${v("divider")}`, paddingBottom: "16px" }}>
+        <div style={{
+          marginBottom: SPACE.lg, paddingBottom: SPACE.md,
+          borderBottom: `1px solid ${v("divider-soft")}`,
+        }}>
           <div style={{
             fontSize: "44px", color: v("accent"), lineHeight: 1,
-            marginBottom: "14px", letterSpacing: "6px",
+            marginBottom: SPACE.md, letterSpacing: "8px",
           }}>
-            {"\u25C6 \u25C6 \u25C6"}
+            {"◆ ◆ ◆"}
           </div>
-          <span style={{
-            fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase",
-            color: v("text-muted"),
-          }}>{beat.label}</span>
+          <Eyebrow color={v("text-muted")} diamond={false}>{beat.label}</Eyebrow>
         </div>
       ),
     },
-    // 03 — pull-quote mark
     {
       header: (
-        <div style={{ marginBottom: "20px", borderBottom: `1px solid ${v("divider")}`, paddingBottom: "16px" }}>
+        <div style={{
+          marginBottom: SPACE.lg, paddingBottom: SPACE.md,
+          borderBottom: `1px solid ${v("divider-soft")}`,
+        }}>
           <div style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-            fontSize: "72px", lineHeight: 0.95, color: v("accent"), opacity: 0.4,
-            marginBottom: "8px",
+            fontSize: "78px", lineHeight: 0.9,
+            color: v("accent"), opacity: 0.45,
+            marginBottom: "4px",
           }}>&ldquo;</div>
-          <span style={{
-            fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase",
-            color: v("text-muted"),
-          }}>{beat.label}</span>
+          <Eyebrow color={v("text-muted")} diamond={false}>{beat.label}</Eyebrow>
         </div>
       ),
     },
   ];
 
   return (
-    <div ref={ref} style={{
-      ...fade,
-      padding: "32px",
-      borderRadius: "20px",
-      background: v("surface"),
-      border: `1px solid ${v("surface-border")}`,
-      backdropFilter: "blur(8px)",
-      WebkitBackdropFilter: "blur(8px)",
-    }}>
+    <div ref={ref}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        ...fade,
+        padding: SPACE.xl,
+        borderRadius: RADIUS.xl,
+        background: v("surface"),
+        border: `1px solid ${hovered ? v("surface-border-hover") : v("surface-border")}`,
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
+        transition: "border-color 0.3s ease, transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s cubic-bezier(0.16,1,0.3,1)",
+        transform: hovered ? "translateY(-3px)" : "translateY(0)",
+        boxShadow: hovered ? SHADOW.lg : SHADOW.sm,
+        position: "relative",
+      }}>
       {variants[index]?.header}
       <h3 style={{
         fontFamily: "var(--font-body)", fontSize: "22px", fontWeight: 700,
-        color: v("text"), marginBottom: "14px", lineHeight: 1.2, letterSpacing: "-0.3px",
+        color: v("text"), marginBottom: SPACE.md,
+        lineHeight: 1.2, letterSpacing: "-0.3px",
       }}>
         {beat.title}
       </h3>
-      <p style={{ fontSize: "14px", lineHeight: 1.75, color: v("text-muted") }}>
+      <p style={{ fontSize: "14px", lineHeight: 1.7, color: v("text-muted") }}>
         {beat.body}
       </p>
     </div>
   );
 }
 
-/* ── Founders strip — editorial portrait row ───────────────────── */
+/* ── Founders strip ────────────────────────────────────────────── */
 const FOUNDERS = [
   {
     number: "01",
@@ -580,72 +662,61 @@ const FOUNDERS = [
 ];
 
 function FoundersStrip() {
+  const [headRef, headFade] = useFadeIn(0);
   const [quoteRef, quoteFade] = useFadeIn(100);
   return (
-    <section style={{ padding: "0 48px 100px", maxWidth: "1200px", margin: "0 auto" }}>
-      <div style={{
-        display: "flex", alignItems: "baseline", gap: "16px", marginBottom: "56px",
-        flexWrap: "wrap",
-      }}>
-        <span style={{
-          fontSize: "11px", fontWeight: 700, letterSpacing: "3px", textTransform: "uppercase",
-          color: v("accent"),
-        }}>
-          <span style={{ fontSize: "7px" }}>{"\u25C6"}</span>  The Masthead
-        </span>
-        <span style={{ flex: 1, height: "1px", background: v("divider"), minWidth: "40px" }} />
-        <span style={{ fontSize: "11px", color: v("text-dim"), letterSpacing: "2px" }}>§ 02</span>
+    <section style={{
+      padding: `0 clamp(20px, 4vw, 48px) ${SPACE["4xl"]}`,
+      maxWidth: "1200px", margin: "0 auto",
+    }}>
+      <div ref={headRef} style={{ ...headFade, marginBottom: SPACE["3xl"] }}>
+        <ChapterRule label="The Masthead" num="02" />
       </div>
 
       <div style={{
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-        gap: "clamp(24px, 3vw, 40px)",
-        marginBottom: "56px",
+        gap: "clamp(24px, 3vw, 36px)",
+        marginBottom: SPACE["3xl"],
       }}>
         {FOUNDERS.map((f, i) => (
           <FounderPortrait key={i} founder={f} delay={i * 140} />
         ))}
       </div>
 
-      {/* Pull quote — editorial attribution strip */}
+      {/* Pull quote */}
       <div ref={quoteRef} style={{
         ...quoteFade,
-        padding: "40px clamp(24px, 4vw, 48px)",
+        padding: "44px clamp(24px, 4vw, 56px)",
         borderTop: `1px solid ${v("divider")}`,
         borderBottom: `1px solid ${v("divider")}`,
         display: "grid",
         gridTemplateColumns: "auto 1fr",
-        gap: "clamp(24px, 4vw, 48px)",
+        gap: "clamp(24px, 4vw, 56px)",
         alignItems: "center",
       }}>
         <div aria-hidden="true" style={{
           fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-          fontSize: "clamp(80px, 10vw, 140px)", lineHeight: 0.95,
-          color: v("accent"), opacity: 0.35, marginTop: "-8px",
+          fontSize: "clamp(80px, 10vw, 152px)", lineHeight: 0.92,
+          color: v("accent"), opacity: 0.4, marginTop: "-8px",
         }}>&ldquo;</div>
         <div>
           <p style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 400,
-            fontSize: "clamp(18px, 2.4vw, 26px)", lineHeight: 1.4, color: v("text"),
-            marginBottom: "16px", letterSpacing: "-0.2px",
+            fontSize: "clamp(20px, 2.6vw, 28px)", lineHeight: 1.4, color: v("text"),
+            marginBottom: SPACE.md, letterSpacing: "-0.3px",
           }}>
             When something breaks at 7pm, you talk to the person who built it. No account managers, no offshoring, no calling a ticketing queue for a password reset.
           </p>
-          <p style={{
-            fontSize: "12px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase",
-            color: v("accent"),
-          }}>
-            <span style={{ fontSize: "7px" }}>{"\u25C6"}</span>  Three founders, one phone number
-          </p>
+          <Eyebrow>Three founders, one phone number</Eyebrow>
         </div>
       </div>
 
-      <div style={{ textAlign: "center", marginTop: "48px" }}>
-        <Link to="/team">
-          <RippleButton variant="ghost" style={{ padding: "14px 32px" }}>
-            Meet the team <ArrowRightIcon size={16} />
-          </RippleButton>
+      <div style={{ textAlign: "center", marginTop: SPACE["2xl"] }}>
+        <Link to="/team" style={{ textDecoration: "none" }}>
+          <Button as="span" variant="ghost" iconRight={<ArrowRightIcon size={14} />}>
+            Meet the team
+          </Button>
         </Link>
       </div>
     </section>
@@ -654,51 +725,61 @@ function FoundersStrip() {
 
 function FounderPortrait({ founder, delay }) {
   const [ref, fade] = useFadeIn(delay);
+  const [hovered, setHovered] = useState(false);
   return (
-    <div ref={ref} style={{ ...fade }}>
+    <div ref={ref}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{ ...fade, cursor: "default" }}>
       <div style={{
         position: "relative",
         aspectRatio: "4 / 5",
-        borderRadius: "16px",
+        borderRadius: RADIUS.lg,
         overflow: "hidden",
-        border: `1px solid ${v("surface-border")}`,
+        border: `1px solid ${hovered ? v("surface-border-hover") : v("surface-border")}`,
         background: v("surface"),
-        marginBottom: "20px",
+        marginBottom: SPACE.lg,
+        transition: "border-color 0.3s ease, transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s cubic-bezier(0.16,1,0.3,1)",
+        transform: hovered ? "translateY(-3px)" : "translateY(0)",
+        boxShadow: hovered ? SHADOW.lg : SHADOW.sm,
       }}>
         <img
           src={founder.image} alt={`${founder.name}, ${founder.role}`}
           style={{
             width: "100%", height: "100%", objectFit: "cover",
             filter: "saturate(1.05) contrast(1.02)",
+            transition: "transform 0.6s cubic-bezier(0.16,1,0.3,1)",
+            transform: hovered ? "scale(1.04)" : "scale(1)",
           }}
         />
-        {/* Editorial number chip */}
+        {/* Number chip */}
         <div style={{
-          position: "absolute", top: "14px", left: "14px",
-          padding: "6px 12px", borderRadius: "100px",
-          background: "rgba(12,21,36,0.75)", backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
-          border: "1px solid rgba(255,255,255,0.15)",
+          position: "absolute", top: "16px", left: "16px",
+          padding: "5px 12px", borderRadius: RADIUS.full,
+          background: "rgba(7,13,26,0.7)",
+          backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
+          border: "1px solid rgba(255,255,255,0.18)",
           fontSize: "10px", fontWeight: 700, letterSpacing: "2.5px",
           color: "#fff",
+          fontFeatureSettings: '"tnum" 1',
         }}>
           No. {founder.number}
         </div>
         {/* Bottom gradient + name plate */}
         <div style={{
           position: "absolute", left: 0, right: 0, bottom: 0,
-          padding: "48px 20px 18px",
-          background: "linear-gradient(to top, rgba(12,21,36,0.95) 0%, rgba(12,21,36,0.7) 55%, transparent 100%)",
+          padding: "60px 20px 20px",
+          background: "linear-gradient(to top, rgba(7,13,26,0.96) 0%, rgba(7,13,26,0.72) 50%, transparent 100%)",
         }}>
           <div style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-            fontSize: "22px", color: "#fff", letterSpacing: "-0.2px", lineHeight: 1.2,
+            fontSize: "24px", color: "#fff", letterSpacing: "-0.3px", lineHeight: 1.15,
           }}>
             {founder.name}
           </div>
           <div style={{
             fontSize: "11px", fontWeight: 600, letterSpacing: "1.5px", textTransform: "uppercase",
-            color: C.carolinaLight, marginTop: "4px",
+            color: C.carolinaLight, marginTop: "5px",
           }}>
             {founder.role}
           </div>
@@ -709,8 +790,8 @@ function FounderPortrait({ founder, delay }) {
         paddingLeft: "4px",
       }}>
         <span style={{
-          display: "block", fontSize: "11px", color: v("text-dim"),
-          letterSpacing: "2px", textTransform: "uppercase", marginBottom: "6px",
+          display: "block", fontSize: "10px", color: v("text-dim"),
+          letterSpacing: "2px", textTransform: "uppercase", marginBottom: "6px", fontWeight: 700,
         }}>{founder.school}</span>
         {founder.bio}
       </p>
@@ -718,91 +799,71 @@ function FounderPortrait({ founder, delay }) {
   );
 }
 
-/* ── Founding client offer ─────────────────────────────────────── */
+/* ── Founding-client offer ─────────────────────────────────────── */
 function FoundingClientOffer() {
   const [ref, f] = useFadeIn(100);
   return (
-    <section style={{ padding: "0 48px 100px", maxWidth: "1100px", margin: "0 auto" }}>
+    <section style={{
+      padding: `0 clamp(20px, 4vw, 48px) ${SPACE["4xl"]}`,
+      maxWidth: "1100px", margin: "0 auto",
+    }}>
       <div ref={ref} style={{
         ...f,
         background: C.gradientPrism,
-        borderRadius: "24px",
-        padding: "clamp(40px, 6vw, 64px) clamp(32px, 5vw, 56px)",
+        borderRadius: RADIUS["2xl"],
+        padding: "clamp(48px, 7vw, 80px) clamp(32px, 5vw, 64px)",
         textAlign: "center", color: "#fff",
         position: "relative", overflow: "hidden",
-        boxShadow: "0 20px 60px rgba(19,41,75,0.25)",
+        boxShadow: "0 28px 80px rgba(19,41,75,0.32), inset 0 1px 0 rgba(255,255,255,0.12)",
       }}>
+        {/* Decorative diamond pattern in background */}
+        <span aria-hidden="true" style={{
+          position: "absolute", top: "-50px", left: "-50px",
+          fontSize: "300px", color: "#fff", opacity: 0.04,
+          lineHeight: 1, pointerEvents: "none",
+        }}>{"◆"}</span>
+        <span aria-hidden="true" style={{
+          position: "absolute", bottom: "-80px", right: "-50px",
+          fontSize: "260px", color: "#fff", opacity: 0.04,
+          lineHeight: 1, pointerEvents: "none",
+        }}>{"◆"}</span>
+
         <div style={{
-          fontSize: "12px", fontWeight: 700, letterSpacing: "3px", textTransform: "uppercase",
-          color: "rgba(255,255,255,0.85)", marginBottom: "16px",
-          display: "flex", alignItems: "center", gap: "8px", justifyContent: "center",
+          display: "inline-flex", alignItems: "center", gap: "10px",
+          padding: "6px 14px", borderRadius: RADIUS.full,
+          background: "rgba(255,255,255,0.12)",
+          border: "1px solid rgba(255,255,255,0.22)",
+          fontSize: "11px", fontWeight: 700, letterSpacing: "3px",
+          textTransform: "uppercase", color: "rgba(255,255,255,0.9)",
+          marginBottom: SPACE.lg,
         }}>
-          <span style={{ fontSize: "8px" }}>{"\u25C6"}</span> Founding Cohort · Summer 2026
+          <span style={{ fontSize: "8px" }}>{"◆"}</span> Founding Cohort · Summer 2026
         </div>
+
         <h2 style={{
-          fontFamily: "var(--font-body)", fontSize: "clamp(24px, 4vw, 38px)", fontWeight: 800,
-          letterSpacing: "-1px", lineHeight: 1.15, marginBottom: "16px",
+          fontFamily: "var(--font-body)",
+          fontSize: "clamp(28px, 4.5vw, 46px)", fontWeight: 800,
+          letterSpacing: "-1px", lineHeight: 1.1,
+          marginBottom: SPACE.md,
         }}>
-          Ten Charlotte businesses, one summer.
+          Ten Charlotte businesses,
+          <br />
+          <span style={{
+            fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
+          }}>one summer.</span>
         </h2>
         <p style={{
-          fontSize: "16px", lineHeight: 1.7, color: "rgba(255,255,255,0.92)",
-          maxWidth: "620px", margin: "0 auto 32px",
+          fontSize: "16px", lineHeight: 1.6,
+          color: "rgba(255,255,255,0.92)",
+          maxWidth: "680px", margin: "0 auto 36px",
         }}>
           Founding-cohort pricing on every offer — half what we'll charge after Summer 2026. Direct founder access. Source code yours from day one. Two public tiers: the Website + AI Build at $5,000 and the Full Modernization at $10,000 (by application). A $1,500 discovery audit is available on request.
         </p>
-        <Link to="/pricing">
-          <RippleButton variant="secondary" style={{
-            padding: "16px 36px", fontSize: "15px",
-            background: "#fff", color: C.navy, borderColor: "transparent",
-          }}>
-            See both tiers <ArrowRightIcon size={16} />
-          </RippleButton>
+        <Link to="/pricing" style={{ textDecoration: "none" }}>
+          <Button as="span" variant="onAccent" size="lg" iconRight={<ArrowRightIcon size={16} />}>
+            See both tiers
+          </Button>
         </Link>
-      </div>
-    </section>
-  );
-}
-
-/* ── Audience strip — names the trades the homepage commits to (HVAC,
-     electrical, plumbing as the wedge core; garage doors / roofing /
-     home services as adjacent trades that share the after-hours pain).
-     Per the v2 trades-wedge framing, the homepage is the cold-traffic
-     destination for trades operators — non-trades visitors land via
-     founder DM on /salons, /auto-shops, etc. ─────────────────────── */
-function TradesStrip() {
-  const [ref, fade] = useFadeIn(0);
-  return (
-    <section ref={ref} style={{
-      ...fade,
-      padding: "28px 24px",
-      borderTop: `1px solid ${v("divider")}`,
-      borderBottom: `1px solid ${v("divider")}`,
-      background: v("bg-alt"),
-    }}>
-      <div style={{
-        display: "flex", alignItems: "center", justifyContent: "center", gap: "20px",
-        flexWrap: "wrap", maxWidth: "1100px", margin: "0 auto",
-        textAlign: "center",
-      }}>
-        <span style={{
-          fontSize: "11px", fontWeight: 700, letterSpacing: "3px", textTransform: "uppercase",
-          color: v("accent"), display: "inline-flex", alignItems: "center", gap: "8px",
-          whiteSpace: "nowrap",
-        }}>
-          <span style={{ fontSize: "8px" }}>{"◆"}</span> Built for the trades
-        </span>
-        <span style={{
-          fontFamily: "var(--font-display)", fontStyle: "italic",
-          fontSize: "clamp(16px, 2.2vw, 22px)", color: v("text"), lineHeight: 1.4,
-        }}>
-          HVAC <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
-          Electrical <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
-          Plumbing <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
-          Garage Doors <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
-          Roofing <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
-          Home Services
-        </span>
       </div>
     </section>
   );

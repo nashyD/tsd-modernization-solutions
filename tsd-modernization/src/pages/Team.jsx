@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { C, v, useFadeIn, DiamondDivider } from "../shared";
+import {
+  C, v, useFadeIn,
+  DiamondDivider, Button,
+  Eyebrow, ChapterRule, GradientText,
+  SPACE, RADIUS, SHADOW,
+} from "../shared";
 import { TSDLogo, XIcon } from "../icons";
 import PageShell from "./PageShell";
 

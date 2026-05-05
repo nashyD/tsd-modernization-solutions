@@ -1,36 +1,124 @@
 import { Link } from "react-router-dom";
-import { v, SectionHeader, Card, Tag } from "../shared";
+import { useState } from "react";
+import {
+  C, v, useFadeIn,
+  SectionHeader, Tag, Eyebrow,
+  SPACE, RADIUS, SHADOW,
+} from "../shared";
+import { ArrowRightIcon } from "../icons";
 import PageShell from "./PageShell";
 import { SERVICES } from "../services-data";
+
+function ServiceCard({ service, delay }) {
+  const [ref, fade] = useFadeIn(delay);
+  const [hovered, setHovered] = useState(false);
+  return (
+    <Link to={`/services/${service.slug}`} style={{ textDecoration: "none", color: "inherit" }}>
+      <div
+        ref={ref}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          ...fade,
+          display: "grid",
+          gridTemplateColumns: "auto 1fr auto",
+          gap: SPACE.xl,
+          alignItems: "center",
+          padding: SPACE.xl,
+          borderRadius: RADIUS["2xl"],
+          background: v("surface"),
+          border: `1px solid ${hovered ? v("surface-border-hover") : v("surface-border")}`,
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+          transition: "border-color 0.3s ease, transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s cubic-bezier(0.16,1,0.3,1)",
+          transform: hovered ? "translateY(-3px)" : "translateY(0)",
+          boxShadow: hovered ? SHADOW.lg : SHADOW.sm,
+          cursor: "pointer",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        {/* Top-edge highlight */}
+        <span aria-hidden="true" style={{
+          position: "absolute", top: 0, left: "12%", right: "12%", height: "1px",
+          background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)",
+          pointerEvents: "none",
+        }} />
+
+        {/* Icon plate */}
+        <div style={{
+          width: "84px", height: "84px",
+          borderRadius: RADIUS.xl,
+          background: service.gradient,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          color: "#a8d1ed", flexShrink: 0,
+          boxShadow: hovered ? "0 12px 32px rgba(75,156,211,0.32)" : "0 6px 18px rgba(75,156,211,0.18)",
+          transition: "box-shadow 0.4s ease, transform 0.4s ease",
+          transform: hovered ? "scale(1.04) rotate(-2deg)" : "scale(1) rotate(0deg)",
+        }}>
+          <service.Icon size={34} />
+        </div>
+
+        <div style={{ minWidth: 0 }}>
+          <h3 style={{
+            fontSize: "24px", fontWeight: 700,
+            color: v("text"), marginBottom: SPACE.sm,
+            letterSpacing: "-0.4px",
+          }}>{service.title}</h3>
+          <p style={{
+            fontSize: "15px", lineHeight: 1.65,
+            color: v("text-muted"), marginBottom: SPACE.sm,
+          }}>{service.desc}</p>
+          <p style={{
+            fontSize: "13px", lineHeight: 1.65,
+            color: v("text-dim"), marginBottom: SPACE.md,
+          }}>{service.longDesc}</p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+            {service.tags.map((t) => <Tag key={t}>{t}</Tag>)}
+          </div>
+        </div>
+
+        {/* Arrow chevron — slides on hover */}
+        <div style={{
+          width: "44px", height: "44px",
+          borderRadius: RADIUS.full,
+          background: hovered ? C.gradientAccent : v("surface"),
+          border: hovered ? "none" : `1px solid ${v("surface-border")}`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          color: hovered ? "#fff" : v("accent"),
+          flexShrink: 0,
+          boxShadow: hovered ? "0 8px 22px rgba(75,156,211,0.32)" : "none",
+          transition: "all 0.3s ease",
+          transform: hovered ? "translateX(4px)" : "translateX(0)",
+        }}>
+          <ArrowRightIcon size={18} />
+        </div>
+      </div>
+    </Link>
+  );
+}
 
 export default function Services() {
   return (
     <PageShell>
-      <div style={{ padding: "40px 48px 80px", maxWidth: "1100px", margin: "0 auto" }}>
+      <div style={{
+        padding: `${SPACE.xl} clamp(20px, 4vw, 48px) ${SPACE["4xl"]}`,
+        maxWidth: "1140px", margin: "0 auto",
+      }}>
         <SectionHeader center label="What We Do" title="Our" titleAccent="services"
           sub="Every engagement is hands-on, fully documented, and priced for small business budgets." />
-        <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: SPACE.lg }} className="services-list">
           {SERVICES.map((s, i) => (
-            <Link key={s.slug} to={`/services/${s.slug}`} style={{ textDecoration: "none", color: "inherit" }}>
-              <Card delay={i * 120}
-                style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "32px", alignItems: "start", cursor: "pointer" }}>
-                <div style={{
-                  width: "60px", height: "60px", borderRadius: "16px", background: s.gradient,
-                  display: "flex", alignItems: "center", justifyContent: "center", color: "#a8d1ed", flexShrink: 0,
-                }}><s.Icon size={28} /></div>
-                <div>
-                  <h3 style={{ fontSize: "22px", fontWeight: 700, color: v("text"), marginBottom: "10px" }}>{s.title}</h3>
-                  <p style={{ fontSize: "15px", lineHeight: 1.7, color: v("text-muted"), marginBottom: "8px" }}>{s.desc}</p>
-                  <p style={{ fontSize: "14px", lineHeight: 1.7, color: v("text-dim"), marginBottom: "20px" }}>{s.longDesc}</p>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-                    {s.tags.map((t) => <Tag key={t}>{t}</Tag>)}
-                  </div>
-                </div>
-              </Card>
-            </Link>
+            <ServiceCard key={s.slug} service={s} delay={i * 120} />
           ))}
         </div>
       </div>
+      <style>{`
+        @media (max-width: 720px) {
+          .services-list > a > div { grid-template-columns: 1fr !important; gap: 20px !important; }
+          .services-list > a > div > div:last-child { display: none !important; }
+        }
+      `}</style>
     </PageShell>
   );
 }
