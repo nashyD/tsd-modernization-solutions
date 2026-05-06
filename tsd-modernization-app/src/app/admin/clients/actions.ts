@@ -47,7 +47,7 @@ export async function createClient(formData: FormData) {
 
   if (parsed.owner_email) {
     await sb.auth.admin.inviteUserByEmail(parsed.owner_email, {
-      redirectTo: `${env().NEXT_PUBLIC_SITE_URL}/auth/callback?next=/app`,
+      redirectTo: `${env().NEXT_PUBLIC_SITE_URL}/auth/callback`,
     });
     const { data: existing } = await sb
       .from("client_users")

@@ -22,7 +22,9 @@ export async function sendMagicLink(
   const { error } = await sb.auth.signInWithOtp({
     email: parsed.data.email,
     options: {
-      emailRedirectTo: `${env().NEXT_PUBLIC_SITE_URL}/auth/callback?next=/app`,
+      // No query string — Supabase strict-matches against Redirect URLs allowlist.
+      // /auth/callback defaults its post-exchange redirect to /app already.
+      emailRedirectTo: `${env().NEXT_PUBLIC_SITE_URL}/auth/callback`,
     },
   });
   if (error) return { error: error.message };
