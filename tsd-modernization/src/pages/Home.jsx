@@ -63,6 +63,24 @@ function Hero() {
     el.addEventListener("canplay", tryPlay);
     const onVis = () => { if (document.visibilityState === "visible") tryPlay(); };
     document.addEventListener("visibilitychange", onVis);
+
+    /* iOS Safari autoplay is genuinely a coin-flip — sometimes it works,
+       sometimes it doesn't, depending on Low Power Mode, page load
+       weight, and Safari's per-domain heuristics. The 100%-reliable
+       fallback is the first user gesture: any touch / scroll / key tap
+       runs play() inside a gesture context, which Safari always honors.
+       Listeners self-remove after the first successful kick. */
+    const gestureEvents = ["pointerdown", "touchstart", "keydown", "wheel", "scroll"];
+    const onFirstGesture = () => {
+      gestureEvents.forEach((evt) =>
+        document.removeEventListener(evt, onFirstGesture, { capture: true, passive: true })
+      );
+      tryPlay();
+    };
+    gestureEvents.forEach((evt) =>
+      document.addEventListener(evt, onFirstGesture, { capture: true, passive: true })
+    );
+
     /* Kick once now in case events already fired before mount. */
     tryPlay();
     return () => {
@@ -71,6 +89,9 @@ function Hero() {
       el.removeEventListener("loadeddata", tryPlay);
       el.removeEventListener("canplay", tryPlay);
       document.removeEventListener("visibilitychange", onVis);
+      gestureEvents.forEach((evt) =>
+        document.removeEventListener(evt, onFirstGesture, { capture: true, passive: true })
+      );
     };
   }, [isMobile]);
 
