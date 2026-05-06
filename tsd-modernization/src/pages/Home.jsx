@@ -27,26 +27,47 @@ function Hero() {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  /* Defer video download until idle. The poster paints immediately
-     (LCP candidate); the video streams in afterward. Keeps 15 MB of
-     mp4 out of the critical path. */
+  /* Video autoplay strategy:
+     • Source is set directly (no idle-deferred injection) so iOS Safari
+       evaluates autoplay eligibility on first paint instead of falling
+       back to its tap-to-play overlay.
+     • preload="metadata" keeps the initial byte cost minimal — Safari
+       fetches just enough header to decide it can play.
+     • We then call .play() aggressively on multiple lifecycle events
+       (loadedmetadata, canplay, loadeddata) and on viewport tab/focus
+       changes, retrying if a previous attempt was rejected.
+     • CSS in Layout hides Safari's start-playback button as a belt-and-
+       suspenders measure if a play() call ever does fail. */
   const videoRef = useRef(null);
-  const [videoReady, setVideoReady] = useState(false);
   useEffect(() => {
-    const kick = () => setVideoReady(true);
-    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-      const id = window.requestIdleCallback(kick, { timeout: 1500 });
-      return () => window.cancelIdleCallback && window.cancelIdleCallback(id);
-    }
-    const id = setTimeout(kick, 400);
-    return () => clearTimeout(id);
-  }, []);
-  useEffect(() => {
-    if (videoReady && videoRef.current) {
-      videoRef.current.load();
-      videoRef.current.play().catch(() => {});
-    }
-  }, [videoReady, isMobile]);
+    const el = videoRef.current;
+    if (!el) return undefined;
+    let cancelled = false;
+    const tryPlay = () => {
+      if (cancelled || !el) return;
+      const p = el.play();
+      if (p && typeof p.then === "function") {
+        p.catch(() => {
+          /* iOS Safari sometimes rejects the first call — retry on the
+             next event tick. We also re-arm on visibilitychange below. */
+        });
+      }
+    };
+    el.addEventListener("loadedmetadata", tryPlay);
+    el.addEventListener("loadeddata", tryPlay);
+    el.addEventListener("canplay", tryPlay);
+    const onVis = () => { if (document.visibilityState === "visible") tryPlay(); };
+    document.addEventListener("visibilitychange", onVis);
+    /* Kick once now in case events already fired before mount. */
+    tryPlay();
+    return () => {
+      cancelled = true;
+      el.removeEventListener("loadedmetadata", tryPlay);
+      el.removeEventListener("loadeddata", tryPlay);
+      el.removeEventListener("canplay", tryPlay);
+      document.removeEventListener("visibilitychange", onVis);
+    };
+  }, [isMobile]);
 
   return (
     <section style={{
@@ -69,19 +90,23 @@ function Hero() {
         key={isMobile ? "mobile" : "desktop"}
         className="hero-video"
         autoPlay muted loop playsInline
-        preload="none"
+        disablePictureInPicture
+        disableRemotePlayback
+        preload="metadata"
         poster={isMobile ? "/hero-loop-mobile-poster.webp" : "/hero-loop-poster.webp"}
+        /* pointerEvents: none ensures iOS Safari can never surface its
+           tap-to-play overlay on top of the hero — taps fall through
+           to the buttons underneath. */
         style={{
           position: "absolute", inset: 0, zIndex: 0,
           width: "100%", height: "100%",
           objectFit: "cover",
           objectPosition: "center center",
           background: "#0a1320",
+          pointerEvents: "none",
         }}
       >
-        {videoReady && (
-          <source src={isMobile ? "/hero-loop-mobile.mp4" : "/hero-loop.mp4"} type="video/mp4" />
-        )}
+        <source src={isMobile ? "/hero-loop-mobile.mp4" : "/hero-loop.mp4"} type="video/mp4" />
       </video>
 
       {/* Theme blend — top + bottom fades into the page bg so the section

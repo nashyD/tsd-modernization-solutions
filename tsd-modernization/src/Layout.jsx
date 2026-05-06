@@ -294,6 +294,25 @@ export default function Layout() {
             radial-gradient(ellipse 50% 40% at 100% 100%, rgba(75,156,211,0.06), transparent 60%);
         }
 
+        /* Suppress every flavor of native video chrome on the hero loop.
+           iOS Safari paints a giant tap-to-play button when it can't
+           autoplay; the rules below remove that overlay (and any
+           transport controls) so the video either plays silently or
+           shows just the poster — never an interactive play button. */
+        .hero-video::-webkit-media-controls,
+        .hero-video::-webkit-media-controls-enclosure,
+        .hero-video::-webkit-media-controls-panel,
+        .hero-video::-webkit-media-controls-overlay-play-button,
+        .hero-video::-webkit-media-controls-start-playback-button {
+          display: none !important;
+          -webkit-appearance: none !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
+        }
+        .hero-video {
+          -webkit-tap-highlight-color: transparent;
+        }
+
         @media (max-width: 768px) {
           .hide-mobile { display: none !important; }
           .hero-bg { background-size: 180% auto !important; background-position: center 35% !important; }
