@@ -1,4 +1,5 @@
 import type { AuditScores } from "@/lib/audit/types";
+import PrintButton from "./PrintButton";
 
 const SEVERITY_STYLES = {
   critical: "border-red-300 bg-red-50 text-red-900",
@@ -54,13 +55,7 @@ export default function AuditReport({
           {scores.one_line_summary}
         </p>
         <div className="mt-6 flex flex-wrap gap-2 print:hidden">
-          <button
-            type="button"
-            onClick={() => window.print()}
-            className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-800 hover:bg-zinc-50"
-          >
-            Download as PDF
-          </button>
+          <PrintButton />
         </div>
       </header>
 

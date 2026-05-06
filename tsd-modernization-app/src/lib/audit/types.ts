@@ -76,12 +76,12 @@ export const AuditScoresSchema = z.object({
       z.object({
         title: z.string(),
         severity: z.enum(["critical", "high", "medium", "low"]),
-        evidence: z.string(),
-        impact: z.string(),
-      })
+        evidence: z.string().optional().default(""),
+        impact: z.string().optional().default(""),
+      }).passthrough()
     )
     .min(1)
-    .max(15),
+    .max(20),
   tsd_services: z
     .array(
       z.object({
@@ -94,16 +94,16 @@ export const AuditScoresSchema = z.object({
           "review_management",
           "audit_only",
         ]),
-        rationale: z.string(),
-      })
+        rationale: z.string().optional().default(""),
+      }).passthrough()
     )
-    .max(5),
+    .max(8),
   recommended_package: z.enum([
     "discovery_audit",
     "website_ai_bundle",
     "founding_partnership",
   ]),
-  one_line_summary: z.string().min(20).max(280),
+  one_line_summary: z.string().min(10).max(400),
 });
 export type AuditScores = z.infer<typeof AuditScoresSchema>;
 
