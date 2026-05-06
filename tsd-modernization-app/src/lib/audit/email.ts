@@ -34,12 +34,24 @@ export async function sendAuditReadyEmail(opts: {
       </p>
     </div>
   `;
-  return resend().emails.send({
+  const result = await resend().emails.send({
     from: e.RESEND_FROM_EMAIL,
     to: opts.to,
     subject: `Your TSD audit for ${opts.businessName} is ready`,
     html,
   });
+  if (result.error) {
+    console.error("[email] Resend rejected send", {
+      to: opts.to,
+      from: e.RESEND_FROM_EMAIL,
+      error: result.error,
+    });
+    throw new Error(
+      `Resend send failed: ${result.error.name ?? "error"} — ${result.error.message ?? JSON.stringify(result.error)}`
+    );
+  }
+  console.log("[email] sent", { to: opts.to, id: result.data?.id });
+  return result;
 }
 
 function escapeHtml(s: string) {
