@@ -36,9 +36,14 @@ function Hero() {
      • We then call .play() aggressively on multiple lifecycle events
        (loadedmetadata, canplay, loadeddata) and on viewport tab/focus
        changes, retrying if a previous attempt was rejected.
-     • CSS in Layout hides Safari's start-playback button as a belt-and-
-       suspenders measure if a play() call ever does fail. */
+     • A poster <img> sits ABOVE the video at zIndex 1. While the video
+       can't play (Low Power Mode, autoplay block, slow network) the
+       poster covers any tap-to-play UI Safari might paint. Once the
+       video's `playing` event fires we fade the poster out and the
+       video shows through. CSS in Layout also hides Safari's start-
+       playback button as a belt-and-suspenders measure. */
   const videoRef = useRef(null);
+  const [videoPlaying, setVideoPlaying] = useState(false);
   useEffect(() => {
     const el = videoRef.current;
     if (!el) return undefined;
@@ -94,6 +99,9 @@ function Hero() {
         disableRemotePlayback
         preload="metadata"
         poster={isMobile ? "/hero-loop-mobile-poster.webp" : "/hero-loop-poster.webp"}
+        onPlaying={() => setVideoPlaying(true)}
+        onPause={() => setVideoPlaying(false)}
+        onWaiting={() => setVideoPlaying(false)}
         /* pointerEvents: none ensures iOS Safari can never surface its
            tap-to-play overlay on top of the hero — taps fall through
            to the buttons underneath. */
@@ -109,10 +117,30 @@ function Hero() {
         <source src={isMobile ? "/hero-loop-mobile.mp4" : "/hero-loop.mp4"} type="video/mp4" />
       </video>
 
+      {/* Poster overlay — sits ABOVE the video. Hides any tap-to-play
+          UI Safari paints when autoplay is blocked. Fades out the moment
+          the video's `playing` event fires; if autoplay is permanently
+          blocked (Low Power Mode, etc.), the poster simply stays as a
+          tasteful static fallback. */}
+      <img
+        src={isMobile ? "/hero-loop-mobile-poster.webp" : "/hero-loop-poster.webp"}
+        alt=""
+        aria-hidden="true"
+        style={{
+          position: "absolute", inset: 0, zIndex: 1,
+          width: "100%", height: "100%",
+          objectFit: "cover",
+          objectPosition: "center center",
+          opacity: videoPlaying ? 0 : 1,
+          transition: "opacity 0.6s ease",
+          pointerEvents: "none",
+        }}
+      />
+
       {/* Theme blend — top + bottom fades into the page bg so the section
           doesn't present a torn edge against the cream/navy backdrop. */}
       <div aria-hidden="true" style={{
-        position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
+        position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none",
         background: `linear-gradient(to bottom,
           var(--c-bg) 0%,
           var(--c-bg) 4%,
@@ -126,13 +154,13 @@ function Hero() {
           regardless of theme. Pulled tighter and richer than the prior
           implementation so the white type stays anchored. */}
       <div aria-hidden="true" style={{
-        position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
+        position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none",
         background: "radial-gradient(ellipse 70% 65% at 50% 50%, rgba(5,10,20,0.68) 0%, rgba(5,10,20,0.46) 45%, rgba(5,10,20,0.18) 75%, transparent 92%)",
       }} />
 
       {/* Subtle grain — adds a layer of premium texture over the video. */}
       <div aria-hidden="true" style={{
-        position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none",
+        position: "absolute", inset: 0, zIndex: 3, pointerEvents: "none",
         opacity: 0.06,
         backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.7 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")`,
         backgroundSize: "180px 180px",
