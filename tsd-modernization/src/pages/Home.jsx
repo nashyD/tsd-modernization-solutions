@@ -545,7 +545,7 @@ function SupportStat({ forwardRef, value, label, note }) {
         {label}
       </div>
       <div style={{
-        fontSize: "12px", fontStyle: "italic", color: v("text-dim"),
+        fontSize: "13px", fontStyle: "italic", color: v("text-dim"),
         marginTop: "6px", fontFamily: "var(--font-display)",
       }}>
         — {note}

@@ -42,7 +42,7 @@ const labelStyle = {
 };
 
 const hintStyle = {
-  fontSize: "12px", color: v("text-dim"),
+  fontSize: "13px", color: v("text-dim"),
   marginTop: "6px", lineHeight: 1.55,
 };
 
@@ -339,7 +339,7 @@ function Report({ inputs }) {
       </div>
 
       <p style={{
-        fontSize: "12px", color: v("text-dim"), lineHeight: 1.65,
+        fontSize: "13px", color: v("text-dim"), lineHeight: 1.65,
         textAlign: "center", maxWidth: "660px", margin: "0 auto",
       }}>
         <strong style={{ color: v("text-muted"), fontWeight: 700 }}>How we calculated this:</strong>{" "}

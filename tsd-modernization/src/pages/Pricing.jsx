@@ -274,7 +274,7 @@ function TierCard({ tier, delay }) {
               width: "5px", height: "5px", borderRadius: "50%",
               background: C.success,
             }} />
-            <span style={{ fontSize: "12px", color: v("text-dim"), lineHeight: 1.5 }}>{g}</span>
+            <span style={{ fontSize: "13px", color: v("text-dim"), lineHeight: 1.5 }}>{g}</span>
           </div>
         ))}
       </div>

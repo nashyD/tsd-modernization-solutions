@@ -194,17 +194,20 @@ export default function Layout() {
           --c-surface-border: rgba(255,255,255,0.08);
           --c-surface-border-hover: rgba(123,184,224,0.32);
           --c-text: #ece4d6;
-          --c-text-muted: rgba(236,228,214,0.66);
-          --c-text-dim: rgba(236,228,214,0.38);
+          /* Body / secondary copy. WCAG AA passes ~4.5:1 against bg. */
+          --c-text-muted: rgba(236,228,214,0.78);
+          /* Captions, footnotes, italic notes. Bumped from 0.38 so
+             "metadata"-tier copy still reads on cream-on-navy. */
+          --c-text-dim: rgba(236,228,214,0.58);
           --c-accent: ${C.carolina};
           --c-accent-light: ${C.carolinaLight};
-          --c-divider: rgba(75,156,211,0.18);
-          --c-divider-soft: rgba(255,255,255,0.06);
+          --c-divider: rgba(75,156,211,0.22);
+          --c-divider-soft: rgba(255,255,255,0.08);
           --c-glow: rgba(75,156,211,0.18);
           --c-nav-bg: rgba(10,19,32,0.78);
           --c-card-front: #0c1524;
           --c-card-text: #ece4d6;
-          --c-card-text-muted: rgba(236,228,214,0.7);
+          --c-card-text-muted: rgba(236,228,214,0.78);
           --c-card-accent: ${C.carolinaLight};
           --c-card-divider: rgba(123,184,224,0.3);
         }
@@ -215,20 +218,25 @@ export default function Layout() {
           --c-bg-deep: #e3dac6;
           --c-surface: rgba(19,41,75,0.04);
           --c-surface-hover: rgba(19,41,75,0.07);
-          --c-surface-border: rgba(19,41,75,0.10);
+          --c-surface-border: rgba(19,41,75,0.12);
           --c-surface-border-hover: rgba(44,95,138,0.36);
           --c-text: #13294B;
-          --c-text-muted: rgba(19,41,75,0.66);
-          --c-text-dim: rgba(19,41,75,0.40);
+          /* Body / secondary copy. Bumped from 0.66 → 0.78 — navy at
+             0.66 was passing AA but felt washed out on cream. */
+          --c-text-muted: rgba(19,41,75,0.78);
+          /* Captions, footnotes, italic notes. Bumped from 0.40 → 0.66
+             so 12-13px italic on cream sits comfortably above WCAG AA
+             4.5:1 contrast. */
+          --c-text-dim: rgba(19,41,75,0.66);
           --c-accent: ${C.steel};
           --c-accent-light: ${C.carolina};
-          --c-divider: rgba(19,41,75,0.14);
-          --c-divider-soft: rgba(19,41,75,0.06);
+          --c-divider: rgba(19,41,75,0.20);
+          --c-divider-soft: rgba(19,41,75,0.10);
           --c-glow: rgba(75,156,211,0.14);
           --c-nav-bg: rgba(244,240,230,0.82);
           --c-card-front: #f4f0e6;
           --c-card-text: #13294B;
-          --c-card-text-muted: rgba(19,41,75,0.7);
+          --c-card-text-muted: rgba(19,41,75,0.78);
           --c-card-accent: ${C.steel};
           --c-card-divider: rgba(44,95,138,0.25);
         }
