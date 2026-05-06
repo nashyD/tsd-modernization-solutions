@@ -5,7 +5,10 @@ import { runAuditPipeline } from "@/lib/audit/run";
 import { AuditFormSchema } from "@/lib/audit/types";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+// Vercel Fluid Compute supports up to 800s on Hobby. Claude tool-use synthesis can
+// occasionally push 60s on its own; with scrape + Places + Claude + Resend chained we
+// budget 300s to absorb tail latency. Most audits finish in 30-50s.
+export const maxDuration = 300;
 
 const RunPayload = z.object({
   auditId: z.string().uuid(),

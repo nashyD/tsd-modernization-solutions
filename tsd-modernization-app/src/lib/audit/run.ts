@@ -19,6 +19,8 @@ export async function runAuditPipeline({
   input,
 }: RunAuditOptions): Promise<void> {
   const sb = supabaseAdmin();
+  const t0 = Date.now();
+  const elapsed = () => `${((Date.now() - t0) / 1000).toFixed(1)}s`;
 
   try {
     await sb.from("audits").update({ status: "scraping" }).eq("id", auditId);
@@ -27,6 +29,7 @@ export async function runAuditPipeline({
       scrapeWebsite(input.business_url),
       lookupPlace(input.business_name, input.city ?? ""),
     ]);
+    console.log(`[audit ${auditId}] scrape+places ${elapsed()}`);
 
     const raw: RawAuditData = { scrape, places, input };
 
@@ -38,7 +41,11 @@ export async function runAuditPipeline({
       })
       .eq("id", auditId);
 
+    const tSynthStart = Date.now();
     const { scores, report_md } = await synthesizeAudit({ raw });
+    console.log(
+      `[audit ${auditId}] synthesize ${((Date.now() - tSynthStart) / 1000).toFixed(1)}s`
+    );
 
     await sb
       .from("audits")
@@ -55,6 +62,7 @@ export async function runAuditPipeline({
         businessName: input.business_name,
         auditId,
       });
+      console.log(`[audit ${auditId}] total ${elapsed()}`);
     } catch (emailErr) {
       // Don't flip status to failed if email fails — the audit itself is good.
       console.error("[audit] email send failed", { auditId, leadId, error: emailErr });

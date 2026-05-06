@@ -19,6 +19,8 @@ const STATUS_PROGRESS: Record<AuditStatus, number> = {
   failed: 100,
 };
 
+const STALE_THRESHOLD_MS = 90_000;
+
 export default function AuditPolling({
   auditId,
   businessName,
@@ -31,11 +33,16 @@ export default function AuditPolling({
   const router = useRouter();
   const [status, setStatus] = useState<AuditStatus>(initialStatus);
   const [error, setError] = useState<string | null>(null);
+  const [startedAt] = useState<number>(() => Date.now());
+  const [now, setNow] = useState<number>(() => Date.now());
+  const elapsedMs = now - startedAt;
+  const isStale = elapsedMs > STALE_THRESHOLD_MS && status !== "ready" && status !== "failed";
 
   useEffect(() => {
     if (status === "ready" || status === "failed") return;
     let cancelled = false;
     const interval = setInterval(async () => {
+      setNow(Date.now());
       try {
         const res = await fetch(`/api/audit/${auditId}/status`, {
           cache: "no-store",
@@ -101,6 +108,21 @@ export default function AuditPolling({
         <p className="mt-8 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-900">
           {error}
         </p>
+      )}
+
+      {isStale && (
+        <div className="mt-8 rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <p className="font-semibold">This is taking longer than usual.</p>
+          <p className="mt-1">
+            The audit is still running on our side. You can close this tab
+            safely — we&apos;ll email you when it&apos;s ready. If
+            you don&apos;t see anything within 10 minutes, reply to{" "}
+            <a className="underline" href="mailto:hello@tsd-modernization.com">
+              hello@tsd-modernization.com
+            </a>{" "}
+            and we&apos;ll re-run it manually.
+          </p>
+        </div>
       )}
     </main>
   );
