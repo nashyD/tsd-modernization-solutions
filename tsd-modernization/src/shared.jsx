@@ -240,15 +240,66 @@ export function ChapterRule({ label, num, style }) {
    bar used at the top of Hero, Pricing, AI Receptionist, etc.
    Lines flex-grow equally so the content is always anchored at center
    regardless of label widths. Labels are nowrap so they don't break
-   awkwardly between letters. */
+   awkwardly between letters. On narrow viewports the row would wrap
+   awkwardly (leading ◆ diamonds left-aligned on each broken line), so
+   below 600px we switch to a stacked layout: horizontal rule above,
+   each label on its own row with a centered diamond between rows,
+   horizontal rule below. */
 export function EditorialMasthead({ items = [], color, style }) {
+  const [isNarrow, setIsNarrow] = useState(() =>
+    typeof window !== "undefined" && window.matchMedia
+      ? window.matchMedia("(max-width: 600px)").matches
+      : false
+  );
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(max-width: 600px)");
+    const fn = (e) => setIsNarrow(e.matches);
+    mq.addEventListener("change", fn);
+    return () => mq.removeEventListener("change", fn);
+  }, []);
+
+  const labelColor = color || v("text-muted");
+  const baseTextStyle = {
+    fontSize: "10px", fontWeight: 700, letterSpacing: "4px",
+    textTransform: "uppercase", lineHeight: 1.4,
+    color: labelColor,
+  };
+
+  if (isNarrow) {
+    return (
+      <div style={{
+        display: "flex", flexDirection: "column", alignItems: "center",
+        gap: "8px", ...baseTextStyle, ...style,
+      }}>
+        <span style={{
+          width: "120px", height: "1px",
+          background: "currentColor", opacity: 0.35,
+        }} />
+        {items.map((item, i) => (
+          <span key={i} style={{
+            display: "inline-flex", flexDirection: "column",
+            alignItems: "center", gap: "8px",
+          }}>
+            {i > 0 && (
+              <span style={{ color: v("accent"), fontSize: "7px", lineHeight: 1 }}>{"◆"}</span>
+            )}
+            <span style={{ textAlign: "center" }}>{item}</span>
+          </span>
+        ))}
+        <span style={{
+          width: "120px", height: "1px",
+          background: "currentColor", opacity: 0.35,
+        }} />
+      </div>
+    );
+  }
+
   return (
     <div style={{
       display: "flex", alignItems: "center", justifyContent: "center",
       gap: "14px", flexWrap: "wrap",
-      fontSize: "10px", fontWeight: 700, letterSpacing: "4px",
-      textTransform: "uppercase", lineHeight: 1.4,
-      color: color || v("text-muted"),
+      ...baseTextStyle,
       ...style,
     }}>
       <span style={{
