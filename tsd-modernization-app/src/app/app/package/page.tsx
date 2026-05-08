@@ -1,4 +1,4 @@
-import { Check, Package as PackageIcon } from "lucide-react";
+import { Check, Package as PackageIcon, ShieldCheck } from "lucide-react";
 import { requireUser, getMemberships } from "@/lib/auth/require";
 import { packageByTier } from "@/lib/packages";
 import BackLink from "@/components/BackLink";
@@ -42,10 +42,12 @@ export default async function PackagePage() {
         <span className="font-display text-5xl font-semibold tracking-tight text-[var(--text)]">
           {pkg.price}
         </span>
-        <span className="text-sm text-[var(--text-subtle)] line-through">
-          {pkg.anchor}
-        </span>
-        <Badge tone="blue">Founding cohort rate</Badge>
+        {pkg.anchor && (
+          <span className="text-sm text-[var(--text-subtle)] line-through">
+            {pkg.anchor}
+          </span>
+        )}
+        {pkg.cap && <Badge tone="blue">{pkg.cap}</Badge>}
       </div>
 
       <section className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
@@ -64,10 +66,22 @@ export default async function PackagePage() {
             </li>
           ))}
         </ul>
-        {pkg.cap && (
-          <p className="mt-6 border-t border-[var(--border)] pt-4 text-sm text-[var(--text-subtle)]">
-            {pkg.cap}
-          </p>
+
+        {pkg.guarantee && (
+          <div className="mt-6 flex items-start gap-2.5 border-t border-[var(--border)] pt-4 text-sm text-[var(--text-muted)]">
+            <ShieldCheck
+              size={16}
+              strokeWidth={2}
+              className="mt-0.5 flex-none text-[var(--success)]"
+              aria-hidden
+            />
+            <span>
+              <span className="font-semibold text-[var(--text)]">
+                Guarantee.
+              </span>{" "}
+              {pkg.guarantee}
+            </span>
+          </div>
         )}
       </section>
     </div>

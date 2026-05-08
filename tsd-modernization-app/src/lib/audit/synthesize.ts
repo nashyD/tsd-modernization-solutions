@@ -41,17 +41,17 @@ TSD service mapping. Pick at most 5 services that directly address the top gaps:
 - review_management: when user_ratings_total < 25 or rating < 4.3.
 - audit_only: when business is already strong (presence_score > 75).
 
-Recommended package — exactly one of:
-- discovery_audit ($1,500): presence_score 65+, gaps are diagnostic in nature.
-- website_ai_bundle ($2,000): the median case, presence_score 35-70, clear website + AI gaps.
-- founding_partnership ($5,000): presence_score < 40 OR multiple critical gaps OR high-revenue signals.
+Recommended package — exactly one of (these match the public marketing pricing at tsd-modernization.com/pricing):
+- discovery_audit (Discovery Audit, $1,500, stepping-stone): presence_score 65+, gaps are diagnostic in nature, business should buy a paid scope-and-recommend before committing to a full build.
+- website_ai_bundle (Website + AI Build, $5,000, founding rate): the median case. Presence_score 35-75, clear website + AI gaps, 14-day delivery applies. Most prospects fit here.
+- founding_partnership (The Full Modernization, $10,000, by application): presence_score < 40 OR multiple critical gaps OR high-revenue signals (lots of reviews / hours / scale) where they need ongoing support and one operational integration.
 
 report_md: 400-700 word client-facing markdown report with these sections:
 1. Headline summary (1-2 sentences, plain language).
 2. What we found (3-5 bullets, evidence-backed).
 3. What it's costing you (translate gaps into business impact, dollars where defensible).
 4. What TSD would do about it (recommended package and why).
-5. Your next step (one CTA: book the discovery call).
+5. Your next step (one CTA: book a free fit call at tsd-modernization.com/book).
 
 Tone: confident, specific, never hedging. Use "you/your". No "I" or "we'd love to". No emojis.`;
 

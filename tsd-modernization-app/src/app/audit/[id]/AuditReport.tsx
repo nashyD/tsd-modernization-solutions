@@ -8,6 +8,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import type { AuditScores } from "@/lib/audit/types";
+import { PACKAGES } from "@/lib/packages";
 import PrintButton from "./PrintButton";
 import { LinkButton } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -22,48 +23,6 @@ const SEVERITY_META: Record<
   low: { tone: "neutral", icon: Info },
 };
 
-const PACKAGE_COPY: Record<
-  AuditScores["recommended_package"],
-  {
-    name: string;
-    price: string;
-    anchor: string;
-    tagline: string;
-    cap: string;
-    guarantee: string;
-  }
-> = {
-  discovery_audit: {
-    name: "Phase I — Discovery Audit",
-    price: "$1,500",
-    anchor: "$3,000",
-    tagline: "A 2-3 hour structured audit and a written modernization roadmap.",
-    cap: "Founding-cohort rate",
-    guarantee:
-      "Money-back if we can't surface $25K of opportunities for your business.",
-  },
-  website_ai_bundle: {
-    name: "Website + AI Build",
-    price: "$5,000",
-    anchor: "$10,000",
-    tagline:
-      "Custom site, AI chatbot or receptionist, SEO, source-code ownership, founder on-call through Aug 31.",
-    cap: "Founding cohort · 10 spots total",
-    guarantee:
-      "14-day delivery (25% refund if missed) + 3 qualified AI-captured leads in 30 days post-launch.",
-  },
-  founding_partnership: {
-    name: "The Full Modernization",
-    price: "$10,000",
-    anchor: "$20,000",
-    tagline:
-      "Phase I + the Build + AI receptionist + 4 months of ops support + named TSD partner.",
-    cap: "Founding cohort · 3 spots total",
-    guarantee:
-      "15 qualified AI-captured leads by Aug 31 or we keep working at no cost.",
-  },
-};
-
 export default function AuditReport({
   businessName,
   scores,
@@ -73,7 +32,7 @@ export default function AuditReport({
   scores: AuditScores;
   reportMd: string;
 }) {
-  const pkg = PACKAGE_COPY[scores.recommended_package];
+  const pkg = PACKAGES[scores.recommended_package];
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12 sm:py-16 animate-fade-up print:max-w-none print:py-0">
@@ -179,7 +138,7 @@ export default function AuditReport({
               <Sparkle size={12} strokeWidth={2.25} aria-hidden />
               Recommended package
             </span>
-            <Badge tone="navy">{pkg.cap}</Badge>
+            {pkg.cap && <Badge tone="navy">{pkg.cap}</Badge>}
           </div>
           <h2 className="mt-4 font-display text-3xl font-semibold tracking-tight text-[var(--text)]">
             {pkg.name}
@@ -189,9 +148,11 @@ export default function AuditReport({
             <span className="font-display text-5xl font-bold tracking-tight text-[var(--text)]">
               {pkg.price}
             </span>
-            <span className="text-base text-[var(--text-subtle)] line-through">
-              {pkg.anchor}
-            </span>
+            {pkg.anchor && (
+              <span className="text-base text-[var(--text-subtle)] line-through">
+                {pkg.anchor}
+              </span>
+            )}
           </div>
 
           <p className="mt-3 text-pretty leading-relaxed text-[var(--text-muted)]">
@@ -212,44 +173,50 @@ export default function AuditReport({
             ))}
           </ul>
 
-          <div className="mt-7 grid gap-2.5 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)]/60 p-4 text-sm text-[var(--text-muted)] sm:grid-cols-2">
-            <div className="flex items-start gap-2.5">
-              <ShieldCheck
-                size={16}
-                strokeWidth={2}
-                className="mt-0.5 flex-none text-[var(--success)]"
-                aria-hidden
-              />
-              <span>
-                <span className="font-semibold text-[var(--text)]">
-                  Guarantee.
-                </span>{" "}
-                {pkg.guarantee}
-              </span>
+          {(pkg.guarantee || true) && (
+            <div className="mt-7 grid gap-2.5 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)]/60 p-4 text-sm text-[var(--text-muted)] sm:grid-cols-2">
+              {pkg.guarantee && (
+                <div className="flex items-start gap-2.5">
+                  <ShieldCheck
+                    size={16}
+                    strokeWidth={2}
+                    className="mt-0.5 flex-none text-[var(--success)]"
+                    aria-hidden
+                  />
+                  <span>
+                    <span className="font-semibold text-[var(--text)]">
+                      Guarantee.
+                    </span>{" "}
+                    {pkg.guarantee}
+                  </span>
+                </div>
+              )}
+              <div className="flex items-start gap-2.5">
+                <Clock
+                  size={16}
+                  strokeWidth={2}
+                  className="mt-0.5 flex-none text-[var(--accent)]"
+                  aria-hidden
+                />
+                <span>
+                  <span className="font-semibold text-[var(--text)]">
+                    Cohort closes Aug 10, 2026.
+                  </span>{" "}
+                  Last project start is July 13.
+                </span>
+              </div>
             </div>
-            <div className="flex items-start gap-2.5">
-              <Clock
-                size={16}
-                strokeWidth={2}
-                className="mt-0.5 flex-none text-[var(--accent)]"
-                aria-hidden
-              />
-              <span>
-                <span className="font-semibold text-[var(--text)]">
-                  Founding cohort closes Aug 10, 2026.
-                </span>{" "}
-                Last project start is July 13.
-              </span>
-            </div>
-          </div>
+          )}
 
           <div className="mt-7 flex flex-wrap items-center gap-3 print:hidden">
             <LinkButton
-              href="mailto:hello@tsd-modernization.com?subject=Booking%20discovery%20call"
+              href="https://tsd-modernization.com/book"
               size="lg"
+              target="_blank"
+              rel="noopener noreferrer"
               rightIcon={<ArrowRight size={16} strokeWidth={2.25} />}
             >
-              Book a 20-minute discovery call
+              Book a free fit call
             </LinkButton>
             <LinkButton
               variant="ghost"
@@ -296,6 +263,6 @@ function prettyService(s: AuditScores["tsd_services"][number]["service"]) {
     case "review_management":
       return "Review management";
     case "audit_only":
-      return "Phase I audit";
+      return "Discovery audit";
   }
 }
