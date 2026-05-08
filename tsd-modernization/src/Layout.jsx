@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { Outlet, Link, NavLink, useLocation } from "react-router-dom";
+import { Outlet, Link, useLocation } from "react-router-dom";
 import { Head } from "vite-react-ssg";
 import { Analytics } from "@vercel/analytics/react";
 import { C, v, useTheme, DiamondDivider, Button, RADIUS, SHADOW, SPACE } from "./shared";
 import { TSDLogo, SunIcon, MoonIcon, MenuIcon, XIcon, ArrowRightIcon } from "./icons";
 import { trackPageView } from "./analytics.js";
+import { ROUTE_JSONLD } from "./route-jsonld.js";
 import TSDAgent from "./components/TSDAgent.jsx";
 import CallButton from "./components/CallButton.jsx";
 
@@ -16,15 +17,6 @@ const NAV_ITEMS = [
   { label: "Testimonials", to: "/testimonials" },
   { label: "Team", to: "/team" },
   { label: "Contact", to: "/contact" },
-];
-
-/* On wide viewports the dropdown gets a horizontal preview row of the
-   four most-trafficked links so the chrome doesn't feel one-button-thin. */
-const PRIMARY_NAV = [
-  { label: "Services", to: "/services" },
-  { label: "Pricing", to: "/pricing" },
-  { label: "Process", to: "/process" },
-  { label: "Why us", to: "/why-us" },
 ];
 
 /* ── Per-route SEO metadata ────────────────────────────────────────
@@ -120,6 +112,11 @@ function RouteMeta() {
   const { pathname } = useLocation();
   const meta = ROUTE_META[pathname] || ROUTE_META["/"];
   const url = SITE_URL + pathname;
+  /* Page-specific JSON-LD nodes (Service, Offer, FAQPage, HowTo, etc.).
+     The global ProfessionalService schema lives in index.html and renders
+     on every route; these add page-scoped entities that reference the
+     business via @id without duplicating org-level fields. */
+  const jsonLd = ROUTE_JSONLD[pathname];
   return (
     <Head>
       <title>{meta.title}</title>
@@ -130,6 +127,11 @@ function RouteMeta() {
       <meta property="og:url" content={url} />
       <meta name="twitter:title" content={meta.title} />
       <meta name="twitter:description" content={meta.description} />
+      {jsonLd && jsonLd.map((node, i) => (
+        <script key={i} type="application/ld+json">
+          {JSON.stringify(node)}
+        </script>
+      ))}
     </Head>
   );
 }
@@ -210,6 +212,29 @@ export default function Layout() {
           --c-card-text-muted: rgba(236,228,214,0.78);
           --c-card-accent: ${C.carolinaLight};
           --c-card-divider: rgba(123,184,224,0.3);
+
+          /* Hero — theme-scoped tokens. The hero composition swaps
+             wholesale between dark and light: bg gradient, text colors,
+             blueprint grid, aurora glow, frame chrome, and skyline
+             photo all retune so the hero reads as "the same scene under
+             different lighting" rather than a dark island in a light
+             page. */
+          --c-hero-bg: radial-gradient(ellipse 100% 80% at 50% 25%, ${C.inkRise} 0%, ${C.inkSoft} 55%, ${C.ink} 100%);
+          --c-hero-text: #fff;
+          --c-hero-text-soft: rgba(236,228,214,0.92);
+          --c-hero-text-strong: #f4f9fd;
+          --c-hero-text-muted: rgba(236,228,214,0.78);
+          --c-hero-rule: rgba(236,228,214,0.32);
+          --c-hero-grid: rgba(123,184,224,0.07);
+          --c-hero-aurora: rgba(75,156,211,0.20);
+          --c-hero-grain-blend: overlay;
+          --c-hero-grain-opacity: 0.05;
+          --c-hero-frame-border: rgba(75,156,211,0.32);
+          --c-hero-frame-bg: #0a1320;
+          --c-hero-frame-shadow: 0 30px 80px rgba(7,13,26,0.55), 0 12px 32px rgba(7,13,26,0.4), 0 0 0 1px rgba(255,255,255,0.04), 0 0 60px rgba(75,156,211,0.14);
+          --c-hero-frame-rim-highlight: rgba(255,255,255,0.22);
+          --c-hero-skyline: url(/charlotte-skyline-dark.webp);
+          --c-hero-skyline-opacity: 0.50;
         }
 
         [data-theme="light"] {
@@ -239,6 +264,28 @@ export default function Layout() {
           --c-card-text-muted: rgba(19,41,75,0.78);
           --c-card-accent: ${C.steel};
           --c-card-divider: rgba(44,95,138,0.25);
+
+          /* Hero — light-mode counterparts. The hero is the same scene
+             but in soft daylight: cream paper background, navy ink text,
+             steel-blue frame chrome, and watercolor Charlotte at the
+             edges. Frame interior stays dark so the timelapse content
+             reads consistently in both themes. */
+          --c-hero-bg: radial-gradient(ellipse 100% 80% at 50% 25%, #fbf7ed 0%, #f4f0e6 55%, #ece5d6 100%);
+          --c-hero-text: #13294B;
+          --c-hero-text-soft: rgba(19,41,75,0.85);
+          --c-hero-text-strong: #1d3a66;
+          --c-hero-text-muted: rgba(19,41,75,0.72);
+          --c-hero-rule: rgba(19,41,75,0.28);
+          --c-hero-grid: rgba(19,41,75,0.05);
+          --c-hero-aurora: rgba(75,156,211,0.12);
+          --c-hero-grain-blend: multiply;
+          --c-hero-grain-opacity: 0.04;
+          --c-hero-frame-border: rgba(44,95,138,0.32);
+          --c-hero-frame-bg: #0a1320;
+          --c-hero-frame-shadow: 0 30px 80px rgba(19,41,75,0.18), 0 12px 32px rgba(19,41,75,0.12), 0 0 0 1px rgba(19,41,75,0.06), 0 0 60px rgba(75,156,211,0.20);
+          --c-hero-frame-rim-highlight: rgba(255,255,255,0.22);
+          --c-hero-skyline: url(/charlotte-skyline-light.webp);
+          --c-hero-skyline-opacity: 0.32;
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -278,18 +325,6 @@ export default function Layout() {
         }
         main:focus { outline: none; }
         main { scroll-margin-top: 100px; }
-
-        /* Inline horizontal nav links — desktop nav row inside dropdown panel */
-        .tsd-nav-link {
-          font-size: 13px; font-weight: 600;
-          color: var(--c-text-muted);
-          padding: 6px 0;
-          letter-spacing: 0.1px;
-          transition: color 0.2s ease;
-          position: relative;
-        }
-        .tsd-nav-link:hover { color: var(--c-text); }
-        .tsd-nav-link.active { color: var(--c-accent); }
 
         /* Subtle ambient gradient that brightens on light mode for warmth */
         body::before {
@@ -356,22 +391,6 @@ export default function Layout() {
             }}>Solutions</div>
           </div>
         </Link>
-
-        {/* Desktop inline nav row — shows on wide screens, replaces some of
-            the dropdown's burden. The full dropdown menu still works. */}
-        <div className="hide-mobile" style={{
-          display: "flex", alignItems: "center", gap: "28px",
-        }}>
-          {PRIMARY_NAV.map((item) => (
-            <NavLink key={item.to} to={item.to}
-              className={({ isActive }) => `tsd-nav-link ${isActive ? "active" : ""}`}
-              style={{
-                filter: scrolled ? "none" : "drop-shadow(0 2px 6px rgba(0,0,0,0.5))",
-              }}>
-              {item.label}
-            </NavLink>
-          ))}
-        </div>
 
         {/* Right side controls */}
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -576,13 +595,13 @@ export default function Layout() {
                 fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px",
                 textTransform: "uppercase", color: v("accent"), marginBottom: "16px",
               }}>Reach us</div>
-              <a href="tel:+19802279003" style={{
+              <a href="tel:+19808905815" style={{
                 display: "block", marginBottom: "10px",
                 fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
                 fontSize: "20px", letterSpacing: "-0.3px",
                 color: v("text"),
               }}>
-                (980) 227-9003
+                (980) 890-5815
               </a>
               <p style={{ fontSize: "12px", color: v("text-dim"), marginBottom: "12px", lineHeight: 1.5 }}>
                 Open every day · 8am – 8pm

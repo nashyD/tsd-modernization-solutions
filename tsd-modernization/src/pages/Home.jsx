@@ -10,12 +10,18 @@ import { ArrowRightIcon } from "../icons";
 import BookCallButton from "../components/BookCallButton";
 
 /* ── Hero ──────────────────────────────────────────────────────── */
+/* Layout: text-first headline above a framed Charlotte timelapse.
+   The timelapse is no longer the full-bleed background — it's mood,
+   contained. The background is a navy-on-blueprint composition that
+   ties the page to the "Modernization" identity without competing
+   with the type. */
 function Hero() {
   const [r1, f1] = useFadeIn(150);
   const [r2, f2] = useFadeIn(350);
   const [r3, f3] = useFadeIn(550);
   const [r4, f4] = useFadeIn(750);
   const [r5, f5] = useFadeIn(950);
+  const [r6, f6] = useFadeIn(1150);
 
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches
@@ -27,21 +33,11 @@ function Hero() {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  /* Video autoplay strategy:
-     • Source is set directly (no idle-deferred injection) so iOS Safari
-       evaluates autoplay eligibility on first paint instead of falling
-       back to its tap-to-play overlay.
-     • preload="metadata" keeps the initial byte cost minimal — Safari
-       fetches just enough header to decide it can play.
-     • We then call .play() aggressively on multiple lifecycle events
-       (loadedmetadata, canplay, loadeddata) and on viewport tab/focus
-       changes, retrying if a previous attempt was rejected.
-     • A poster <img> sits ABOVE the video at zIndex 1. While the video
-       can't play (Low Power Mode, autoplay block, slow network) the
-       poster covers any tap-to-play UI Safari might paint. Once the
-       video's `playing` event fires we fade the poster out and the
-       video shows through. CSS in Layout also hides Safari's start-
-       playback button as a belt-and-suspenders measure. */
+  /* Video autoplay strategy preserved from prior implementation:
+     iOS Safari is unreliable on autoplay, so we re-attempt on every
+     lifecycle event AND on the first user gesture (which Safari always
+     honors). A poster overlay above the video covers any tap-to-play
+     chrome until the `playing` event fires. */
   const videoRef = useRef(null);
   const [videoPlaying, setVideoPlaying] = useState(false);
   useEffect(() => {
@@ -52,10 +48,7 @@ function Hero() {
       if (cancelled || !el) return;
       const p = el.play();
       if (p && typeof p.then === "function") {
-        p.catch(() => {
-          /* iOS Safari sometimes rejects the first call — retry on the
-             next event tick. We also re-arm on visibilitychange below. */
-        });
+        p.catch(() => {});
       }
     };
     el.addEventListener("loadedmetadata", tryPlay);
@@ -64,12 +57,6 @@ function Hero() {
     const onVis = () => { if (document.visibilityState === "visible") tryPlay(); };
     document.addEventListener("visibilitychange", onVis);
 
-    /* iOS Safari autoplay is genuinely a coin-flip — sometimes it works,
-       sometimes it doesn't, depending on Low Power Mode, page load
-       weight, and Safari's per-domain heuristics. The 100%-reliable
-       fallback is the first user gesture: any touch / scroll / key tap
-       runs play() inside a gesture context, which Safari always honors.
-       Listeners self-remove after the first successful kick. */
     const gestureEvents = ["pointerdown", "touchstart", "keydown", "wheel", "scroll"];
     const onFirstGesture = () => {
       gestureEvents.forEach((evt) =>
@@ -81,7 +68,6 @@ function Hero() {
       document.addEventListener(evt, onFirstGesture, { capture: true, passive: true })
     );
 
-    /* Kick once now in case events already fired before mount. */
     tryPlay();
     return () => {
       cancelled = true;
@@ -97,122 +83,86 @@ function Hero() {
 
   return (
     <section style={{
-      minHeight: "100vh", position: "relative", overflow: "hidden",
-      display: "flex", flexDirection: "column",
-      alignItems: "center", justifyContent: "center",
-      background: v("bg"),
-      paddingTop: "140px", paddingBottom: "120px",
+      position: "relative", overflow: "hidden",
+      display: "flex", flexDirection: "column", alignItems: "center",
+      paddingTop: "72px", paddingBottom: "96px",
+      background: "var(--c-hero-bg)",
     }}>
-      {/* Storefront poster — base layer + LCP image */}
-      <div className="hero-bg" style={{
-        position: "absolute", inset: 0, zIndex: 0,
-        backgroundImage: "url(/hero-storefront.webp)",
-        backgroundSize: "cover", backgroundPosition: "center 40%",
+      {/* Blueprint grid — architectural lines that say "Modernization"
+          without overpowering the type. Theme-aware: subtle Carolina on
+          navy in dark, subtle navy on cream in light. Radial mask fades
+          the grid toward the edges so it never reads as a hard boundary. */}
+      <div aria-hidden="true" style={{
+        position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
+        backgroundImage: `
+          linear-gradient(var(--c-hero-grid) 1px, transparent 1px),
+          linear-gradient(90deg, var(--c-hero-grid) 1px, transparent 1px)
+        `,
+        backgroundSize: "64px 64px",
+        WebkitMaskImage: "radial-gradient(ellipse 75% 60% at 50% 35%, #000 0%, transparent 100%)",
+        maskImage: "radial-gradient(ellipse 75% 60% at 50% 35%, #000 0%, transparent 100%)",
+      }} />
+
+      {/* Carolina aurora behind the headline — a large soft glow that
+          gives the type a guaranteed contrast pocket. Lower opacity in
+          light mode so it doesn't wash out against cream. */}
+      <div aria-hidden="true" style={{
+        position: "absolute", top: "4%", left: "50%", transform: "translateX(-50%)",
+        width: "1100px", maxWidth: "120%", height: "560px", zIndex: 0, pointerEvents: "none",
+        background: "radial-gradient(ellipse 50% 50% at 50% 50%, var(--c-hero-aurora) 0%, transparent 70%)",
+        filter: "blur(60px)",
+      }} />
+
+      {/* Charlotte skyline photograph — theme-aware. Dark mode uses a
+          twilight cinematic shot of uptown; light mode uses a daytime
+          shot. Positioned to peek out at the sides of and below the
+          frame so the editorial frame reads as set against the actual
+          city. Top + bottom mask gradients fade the photo into the
+          section background so the photo never has hard edges. */}
+      <div aria-hidden="true" style={{
+        position: "absolute", left: 0, right: 0, bottom: "120px",
+        height: "560px", zIndex: 0, pointerEvents: "none",
+        backgroundImage: "var(--c-hero-skyline)",
         backgroundRepeat: "no-repeat",
+        backgroundPosition: "center 45%",
+        backgroundSize: "cover",
+        opacity: "var(--c-hero-skyline-opacity)",
+        WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, #000 18%, #000 82%, transparent 100%)",
+        maskImage: "linear-gradient(to bottom, transparent 0%, #000 18%, #000 82%, transparent 100%)",
       }} />
 
-      <video
-        ref={videoRef}
-        key={isMobile ? "mobile" : "desktop"}
-        className="hero-video"
-        autoPlay muted loop playsInline
-        disablePictureInPicture
-        disableRemotePlayback
-        preload="metadata"
-        poster={isMobile ? "/hero-loop-mobile-poster.webp" : "/hero-loop-poster.webp"}
-        onPlaying={() => setVideoPlaying(true)}
-        onPause={() => setVideoPlaying(false)}
-        onWaiting={() => setVideoPlaying(false)}
-        /* pointerEvents: none ensures iOS Safari can never surface its
-           tap-to-play overlay on top of the hero — taps fall through
-           to the buttons underneath. */
-        style={{
-          position: "absolute", inset: 0, zIndex: 0,
-          width: "100%", height: "100%",
-          objectFit: "cover",
-          objectPosition: "center center",
-          background: "#0a1320",
-          pointerEvents: "none",
-        }}
-      >
-        <source src={isMobile ? "/hero-loop-mobile.mp4" : "/hero-loop.mp4"} type="video/mp4" />
-      </video>
-
-      {/* Poster overlay — sits ABOVE the video. Hides any tap-to-play
-          UI Safari paints when autoplay is blocked. Fades out the moment
-          the video's `playing` event fires; if autoplay is permanently
-          blocked (Low Power Mode, etc.), the poster simply stays as a
-          tasteful static fallback. */}
-      <img
-        src={isMobile ? "/hero-loop-mobile-poster.webp" : "/hero-loop-poster.webp"}
-        alt=""
-        aria-hidden="true"
-        style={{
-          position: "absolute", inset: 0, zIndex: 1,
-          width: "100%", height: "100%",
-          objectFit: "cover",
-          objectPosition: "center center",
-          opacity: videoPlaying ? 0 : 1,
-          transition: "opacity 0.6s ease",
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Theme blend — top + bottom fades into the page bg so the section
-          doesn't present a torn edge against the cream/navy backdrop. */}
+      {/* Subtle grain — kept from prior implementation for tactile depth.
+          Blend mode and opacity swap by theme so the grain reads on
+          both navy and cream. */}
       <div aria-hidden="true" style={{
-        position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none",
-        background: `linear-gradient(to bottom,
-          var(--c-bg) 0%,
-          var(--c-bg) 4%,
-          transparent 12%,
-          transparent 78%,
-          var(--c-bg) 96%,
-          var(--c-bg) 100%)`,
-      }} />
-
-      {/* Center vignette — gives the headline a guaranteed dark backdrop
-          regardless of theme. Pulled tighter and richer than the prior
-          implementation so the white type stays anchored. */}
-      <div aria-hidden="true" style={{
-        position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none",
-        background: "radial-gradient(ellipse 70% 65% at 50% 50%, rgba(5,10,20,0.68) 0%, rgba(5,10,20,0.46) 45%, rgba(5,10,20,0.18) 75%, transparent 92%)",
-      }} />
-
-      {/* Subtle grain — adds a layer of premium texture over the video. */}
-      <div aria-hidden="true" style={{
-        position: "absolute", inset: 0, zIndex: 3, pointerEvents: "none",
-        opacity: 0.06,
+        position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
+        opacity: "var(--c-hero-grain-opacity)",
         backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.7 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")`,
         backgroundSize: "180px 180px",
-        mixBlendMode: "overlay",
+        mixBlendMode: "var(--c-hero-grain-blend)",
       }} />
 
       {/* Content */}
       <div style={{
-        maxWidth: "880px", textAlign: "center", position: "relative", zIndex: 4,
+        maxWidth: "880px", textAlign: "center", position: "relative", zIndex: 2,
         padding: "0 24px",
       }}>
-
-        {/* Editorial masthead */}
         <div ref={r1} style={{
-          ...f1, marginBottom: "28px",
-          color: "rgba(236,228,214,0.92)",
-          textShadow: "0 1px 4px rgba(0,0,0,0.85)",
+          ...f1, marginBottom: "14px",
+          color: "var(--c-hero-text-soft)",
         }}>
           <EditorialMasthead
             items={["Founding Cohort", "Charlotte Edition", "Summer 2026"]}
-            color="rgba(236,228,214,0.92)"
+            color="var(--c-hero-text-soft)"
           />
         </div>
 
         <h1 ref={r2} style={{
           ...f2,
           fontFamily: "var(--font-body)", fontWeight: 800,
-          fontSize: "clamp(36px, 5.8vw, 72px)",
-          letterSpacing: "-2.5px", lineHeight: 1.04,
-          color: "#fff", marginBottom: SPACE.lg,
-          textShadow: "0 2px 24px rgba(0,0,0,0.7), 0 1px 4px rgba(0,0,0,0.85)",
+          fontSize: "clamp(32px, 4.6vw, 56px)",
+          letterSpacing: "-2px", lineHeight: 1.04,
+          color: "var(--c-hero-text)", marginBottom: SPACE.sm,
         }}>
           Ten Charlotte builds
           <br />
@@ -220,21 +170,19 @@ function Hero() {
           <br />
           <span style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-            color: "#f4f9fd",
-            textShadow: "0 2px 28px rgba(0,0,0,0.78), 0 1px 6px rgba(0,0,0,0.9)",
+            color: "var(--c-hero-text-strong)",
           }}>Then we close.</span>
         </h1>
 
-        <DiamondDivider width={180} style={{ marginBottom: SPACE.lg }} />
+        <DiamondDivider width={150} style={{ marginBottom: SPACE.md }} />
 
         <p ref={r3} style={{
           ...f3,
-          fontSize: "18px", lineHeight: 1.6, fontWeight: 500,
-          color: "rgba(255,255,255,0.96)",
-          maxWidth: "620px", margin: "0 auto 40px",
-          textShadow: "0 2px 14px rgba(0,0,0,0.78), 0 1px 4px rgba(0,0,0,0.9)",
+          fontSize: "16px", lineHeight: 1.55, fontWeight: 500,
+          color: "var(--c-hero-text-soft)",
+          maxWidth: "580px", margin: "0 auto 20px",
         }}>
-          Custom website, working AI, source code yours from day one. <span style={{ fontWeight: 700, color: "#fff" }}>$5,000 fixed.</span>
+          Custom website, working AI, source code yours from day one. <span style={{ fontWeight: 700, color: "var(--c-hero-text)" }}>$5,000 fixed.</span>
           {" "}We don't take retainers and we will not be your long-term agency.
         </p>
 
@@ -250,58 +198,114 @@ function Hero() {
             </Button>
           </Link>
         </div>
-
-        {/* Cohort scarcity strip — surfaces hard cap + last-start date so
-            the time-bounded nature reads above the fold. */}
-        <div ref={r5} style={{
-          ...f5, marginTop: "44px",
-          display: "flex", alignItems: "center", gap: "14px",
-          justifyContent: "center", flexWrap: "wrap",
-          fontSize: "11px", fontWeight: 600, letterSpacing: "2.5px",
-          textTransform: "uppercase",
-          color: "rgba(236,228,214,0.78)",
-          textShadow: "0 1px 4px rgba(0,0,0,0.85)",
-        }}>
-          <span style={{ flex: "0 0 32px", height: "1px", background: "rgba(236,228,214,0.32)" }} />
-          <span>Ten spots</span>
-          <span style={{ color: C.carolinaLight, fontSize: "7px" }}>{"◆"}</span>
-          <span>Last start</span>
-          <span style={{
-            fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 600,
-            fontSize: "15px", letterSpacing: "0", textTransform: "none",
-            color: "#f4f9fd",
-          }}>July 13</span>
-          <span style={{ flex: "0 0 32px", height: "1px", background: "rgba(236,228,214,0.32)" }} />
-        </div>
       </div>
 
-      {/* Subtle scroll indicator */}
-      <div aria-hidden="true" style={{
-        position: "absolute", bottom: "32px", left: "50%", transform: "translateX(-50%)",
-        zIndex: 4,
-        display: "flex", flexDirection: "column", alignItems: "center", gap: "10px",
-        opacity: 0.6,
-        animation: "scrollBounce 2.4s ease-in-out infinite",
+      {/* Framed timelapse — Charlotte motion as setting, not full-bleed
+          atmosphere. Editorial chrome (hairline rim, layered shadow +
+          Carolina glow) keeps it premium without aping macOS window UI.
+          Border + shadow swap by theme; frame interior bg stays dark in
+          both modes since the video itself is dark content. */}
+      <div ref={r6} style={{
+        ...f6,
+        position: "relative", zIndex: 2,
+        marginTop: "32px",
+        width: "min(1080px, calc(100% - 48px))",
+        aspectRatio: "16 / 9",
+        borderRadius: RADIUS["2xl"],
+        overflow: "hidden",
+        border: "1px solid var(--c-hero-frame-border)",
+        background: "var(--c-hero-frame-bg)",
+        boxShadow: "var(--c-hero-frame-shadow)",
       }}>
-        <span style={{
-          fontSize: "9px", fontWeight: 700, letterSpacing: "3px",
-          textTransform: "uppercase",
-          color: "rgba(236,228,214,0.7)",
-          textShadow: "0 1px 3px rgba(0,0,0,0.8)",
-        }}>Scroll</span>
-        <div style={{
-          position: "relative", width: "20px", height: "32px",
-          borderRadius: "10px",
-          border: "1.5px solid rgba(236,228,214,0.5)",
-        }}>
-          <div style={{
-            position: "absolute", top: "8px", left: "50%", marginLeft: "-2px",
-            width: "4px", height: "6px", borderRadius: "2px",
-            background: "rgba(236,228,214,0.85)",
-            animation: "scrollDot 1.6s ease-out infinite",
-          }} />
-        </div>
+        <video
+          ref={videoRef}
+          key={isMobile ? "mobile" : "desktop"}
+          className="hero-video"
+          autoPlay muted loop playsInline
+          disablePictureInPicture
+          disableRemotePlayback
+          preload="metadata"
+          poster={isMobile ? "/hero-loop-mobile-poster.webp" : "/hero-loop-poster.webp"}
+          onPlaying={() => setVideoPlaying(true)}
+          onPause={() => setVideoPlaying(false)}
+          onWaiting={() => setVideoPlaying(false)}
+          style={{
+            position: "absolute", inset: 0,
+            width: "100%", height: "100%",
+            objectFit: "cover",
+            objectPosition: "center center",
+            background: "var(--c-hero-frame-bg)",
+            pointerEvents: "none",
+          }}
+        >
+          <source src={isMobile ? "/hero-loop-mobile.mp4" : "/hero-loop.mp4"} type="video/mp4" />
+        </video>
+
+        <img
+          src={isMobile ? "/hero-loop-mobile-poster.webp" : "/hero-loop-poster.webp"}
+          alt=""
+          aria-hidden="true"
+          style={{
+            position: "absolute", inset: 0,
+            width: "100%", height: "100%",
+            objectFit: "cover",
+            objectPosition: "center center",
+            opacity: videoPlaying ? 0 : 1,
+            transition: "opacity 0.6s ease",
+            pointerEvents: "none",
+          }}
+        />
+
+        {/* Inner top-edge highlight — a single hairline of light gives
+            the surface dimensional lift without tipping into UI chrome. */}
+        <div aria-hidden="true" style={{
+          position: "absolute", top: 0, left: 0, right: 0, height: "1px",
+          background: "linear-gradient(90deg, transparent 0%, var(--c-hero-frame-rim-highlight) 50%, transparent 100%)",
+          pointerEvents: "none",
+        }} />
+
+        {/* Bottom-right corner softener — washes the area where the
+            source mp4's "Veo" watermark used to sit. Reads as part of
+            the editorial frame chrome rather than a cover-up. */}
+        <div aria-hidden="true" style={{
+          position: "absolute", bottom: 0, right: 0,
+          width: "200px", height: "90px",
+          background: "radial-gradient(ellipse at bottom right, rgba(7,13,26,0.55) 0%, rgba(7,13,26,0.25) 45%, transparent 80%)",
+          pointerEvents: "none",
+        }} />
       </div>
+
+      {/* Cohort scarcity strip — moved below the frame so it doesn't
+          push the visual below the fold. Reads as an editorial caption
+          to the timelapse. */}
+      <div ref={r5} style={{
+        ...f5, marginTop: "32px",
+        position: "relative", zIndex: 2,
+        display: "flex", alignItems: "center", gap: "14px",
+        justifyContent: "center", flexWrap: "wrap",
+        fontSize: "11px", fontWeight: 600, letterSpacing: "2.5px",
+        textTransform: "uppercase",
+        color: "var(--c-hero-text-muted)",
+      }}>
+        <span style={{ flex: "0 0 32px", height: "1px", background: "var(--c-hero-rule)" }} />
+        <span>Ten spots</span>
+        <span style={{ color: "var(--c-accent)", fontSize: "7px" }}>{"◆"}</span>
+        <span>Last start</span>
+        <span style={{
+          fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 600,
+          fontSize: "15px", letterSpacing: "0", textTransform: "none",
+          color: "var(--c-hero-text-strong)",
+        }}>July 13</span>
+        <span style={{ flex: "0 0 32px", height: "1px", background: "var(--c-hero-rule)" }} />
+      </div>
+
+      {/* Section bottom blend — softens the transition into the next
+          section without a hard rule. */}
+      <div aria-hidden="true" style={{
+        position: "absolute", bottom: 0, left: 0, right: 0, height: "120px",
+        background: "linear-gradient(to bottom, transparent 0%, var(--c-bg) 100%)",
+        pointerEvents: "none", zIndex: 1,
+      }} />
     </section>
   );
 }

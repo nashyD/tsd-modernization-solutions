@@ -12,7 +12,7 @@ import PageShell from "./PageShell";
 function ContactInfo() {
   const [ref, fadeStyle] = useFadeIn(0);
   const blocks = [
-    { label: "Call", value: "(980) 227-9003", href: "tel:+19802279003", Icon: PhoneIcon },
+    { label: "Call", value: "(980) 890-5815", href: "tel:+19808905815", Icon: PhoneIcon },
     { label: "Hours", value: "Every day · 8am – 8pm", Icon: ClockIcon },
     { label: "Service area", value: "Charlotte · Gastonia · Belmont", Icon: MapPinIcon },
   ];
