@@ -267,26 +267,36 @@ function Hero() {
 
       {/* Cohort scarcity strip — moved below the frame so it doesn't
           push the visual below the fold. Reads as an editorial caption
-          to the timelapse. */}
+          to the timelapse. Flanking rules hide on mobile so the inline
+          group fits cleanly on narrow viewports. */}
       <div ref={r5} style={{
         ...f5, marginTop: "32px",
         position: "relative", zIndex: 2,
-        display: "flex", alignItems: "center", gap: "14px",
+        display: "flex", alignItems: "center",
+        gap: isMobile ? "10px" : "14px",
         justifyContent: "center", flexWrap: "wrap",
-        fontSize: "11px", fontWeight: 600, letterSpacing: "2.5px",
+        fontSize: isMobile ? "10px" : "11px",
+        fontWeight: 600,
+        letterSpacing: isMobile ? "1.6px" : "2.5px",
         textTransform: "uppercase",
         color: "var(--c-hero-text-muted)",
+        padding: "0 12px",
       }}>
-        <span style={{ flex: "0 0 32px", height: "1px", background: "var(--c-hero-rule)" }} />
-        <span>Ten spots</span>
+        {!isMobile && (
+          <span style={{ flex: "0 0 32px", height: "1px", background: "var(--c-hero-rule)" }} />
+        )}
+        <span style={{ whiteSpace: "nowrap" }}>Ten spots</span>
         <span style={{ color: "var(--c-accent)", fontSize: "7px" }}>{"◆"}</span>
-        <span>Last start</span>
+        <span style={{ whiteSpace: "nowrap" }}>Last start</span>
         <span style={{
           fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 600,
-          fontSize: "15px", letterSpacing: "0", textTransform: "none",
+          fontSize: isMobile ? "14px" : "15px", letterSpacing: "0", textTransform: "none",
           color: "var(--c-hero-text-strong)",
+          whiteSpace: "nowrap",
         }}>July 13</span>
-        <span style={{ flex: "0 0 32px", height: "1px", background: "var(--c-hero-rule)" }} />
+        {!isMobile && (
+          <span style={{ flex: "0 0 32px", height: "1px", background: "var(--c-hero-rule)" }} />
+        )}
       </div>
 
       {/* Section bottom blend — softens the transition into the next
@@ -301,34 +311,55 @@ function Hero() {
 }
 
 /* ── Trades strip ─────────────────────────────────────────────── */
+const TRADES = [
+  "HVAC",
+  "Electrical",
+  "Plumbing",
+  "Garage Doors",
+  "Roofing",
+  "Home Services",
+];
+
 function TradesStrip() {
   const [ref, fade] = useFadeIn(0);
   return (
     <section ref={ref} style={{
       ...fade,
-      padding: "32px 24px",
+      padding: "clamp(24px, 5vw, 36px) 20px",
       borderTop: `1px solid ${v("divider")}`,
       borderBottom: `1px solid ${v("divider")}`,
       background: v("bg-alt"),
       position: "relative",
     }}>
       <div style={{
-        display: "flex", alignItems: "center", justifyContent: "center", gap: "24px",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        gap: "clamp(12px, 3vw, 24px)",
         flexWrap: "wrap", maxWidth: "1100px", margin: "0 auto",
         textAlign: "center",
       }}>
         <Eyebrow style={{ whiteSpace: "nowrap" }}>Built for the trades</Eyebrow>
+        {/* Each trade is its own nowrap inline-block so multi-word names like
+            "Garage Doors" never split across a line break. The line CAN break
+            between trades, which keeps the strip honest on narrow viewports. */}
         <span style={{
           fontFamily: "var(--font-display)", fontStyle: "italic",
-          fontSize: "clamp(17px, 2.2vw, 22px)", color: v("text"),
-          lineHeight: 1.4, letterSpacing: "0.1px",
+          fontSize: "clamp(15px, 2vw, 22px)", color: v("text"),
+          lineHeight: 1.5, letterSpacing: "0.1px",
         }}>
-          HVAC <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
-          Electrical <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
-          Plumbing <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
-          Garage Doors <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
-          Roofing <span style={{ color: v("accent"), fontStyle: "normal", margin: "0 8px" }}>·</span>
-          Home Services
+          {TRADES.map((trade, i) => (
+            <span key={trade} style={{ whiteSpace: "nowrap" }}>
+              {trade}
+              {i < TRADES.length - 1 && (
+                <span style={{
+                  color: v("accent"), fontStyle: "normal",
+                  margin: "0 clamp(6px, 1.2vw, 10px)",
+                  display: "inline-block",
+                }}>
+                  {"·"}
+                </span>
+              )}
+            </span>
+          ))}
         </span>
       </div>
     </section>

@@ -121,6 +121,19 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-05-08 — Mobile typography fix on the hero text below the timelapse
+
+**What.** Two small mobile fixes on [`Home.jsx`](src/pages/Home.jsx). On the **trades strip** ("HVAC · Electrical · Plumbing · Garage Doors · Roofing · Home Services"), refactored the inline string into a `TRADES` array and rendered each item inside a `whiteSpace: "nowrap"` span. Multi-word names like "Garage Doors" no longer split mid-name when the line wraps on narrow viewports. Also dropped the floor of the responsive font-size from 17px → 15px and tightened bullet margins via `clamp()` so the strip reads cleaner on phones. On the **cohort scarcity strip** below the timelapse ("Ten spots ◆ Last start July 13"), gated the flanking 32px rules behind `!isMobile` so they don't dangle on a wrap-around row, tightened letter-spacing 2.5 → 1.6 and font-size 11 → 10 for mobile, and added `whiteSpace: "nowrap"` to each label so the labels themselves don't break.
+
+**Why.** On a 375-width viewport the trades strip was wrapping mid-name ("Garage" / "Doors") because each name was a flat text node with normal break behavior. The cohort strip was wrapping the trailing horizontal rule onto a second line by itself, leaving "July 13 ——" stranded under "TEN SPOTS ◆ LAST START". Both reads as broken layout to a phone user. The fix is structural — `whiteSpace: nowrap` on each item — not a series of `@media` overrides, so the layout stays self-correcting at any breakpoint.
+
+**Files touched.**
+- [`src/pages/Home.jsx`](src/pages/Home.jsx) — `TradesStrip`: extracted `TRADES` array constant, mapped to nowrap spans with conditional bullet separators (no bullet after last item); responsive font-size and bullet margin via `clamp()`. Hero `Cohort scarcity strip`: `isMobile`-gated flanking rules, mobile-tuned letter-spacing/font-size, `whiteSpace: nowrap` on each label.
+
+**Principle reinforced.** *Wrap-safe layout for inline lists means each item is its own nowrap unit, with separators outside.* The natural English reading is "an item, a separator, an item" — the layout primitive should match that, not treat the whole string as one breakable line. Same fix pattern works for any future inline-list strip (verticals, technologies, founder names) where multi-word entries shouldn't split.
+
+---
+
 ### 2026-05-08 — Client portal link in the dropdown menu
 
 **What.** Added a "Client portal" entry to the dropdown menu in [`Layout.jsx`](src/Layout.jsx), placed below the primary `NAV_ITEMS` divider and above the "Apply for a slot" / "Book a fit call" CTAs. Uses a plain `<a href="/app">` rather than react-router's `<Link to="/app">` because `/app` is a Vercel rewrite to the sibling Next.js app (`tsd-modernization-app`), not a marketing-site route — react-router would client-side navigate and 404. Styled subtly (`text-dim` color, smaller font weight, ArrowRight chevron) so it reads as a tertiary affordance rather than a primary CTA. The dropdown is the same element on desktop and mobile, so this lights up both surfaces in one change.
