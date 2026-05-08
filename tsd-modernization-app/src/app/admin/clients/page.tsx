@@ -2,6 +2,7 @@ import Link from "next/link";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { PACKAGE_TIERS } from "@/lib/packages";
 import { createClient } from "./actions";
+import DeleteClientButton from "./DeleteClientButton";
 
 export const dynamic = "force-dynamic";
 
@@ -18,21 +19,24 @@ export default async function AdminClientsPage() {
         <h1 className="text-2xl font-semibold text-[#13294B]">Clients</h1>
         <ul className="mt-4 divide-y divide-zinc-200 rounded-lg border border-zinc-200 bg-white">
           {(clients ?? []).map((c) => (
-            <li key={c.id} className="flex items-center justify-between px-4 py-3">
-              <div>
+            <li key={c.id} className="flex items-center justify-between gap-4 px-4 py-3">
+              <div className="min-w-0">
                 <Link
                   href={`/admin/clients/${c.id}`}
                   className="font-semibold text-[#13294B] hover:underline"
                 >
                   {c.name}
                 </Link>
-                <p className="text-sm text-zinc-500">
+                <p className="truncate text-sm text-zinc-500">
                   {c.website_url} · {c.package_tier}
                 </p>
               </div>
-              <span className="text-xs text-zinc-400">
-                {new Date(c.created_at).toLocaleDateString()}
-              </span>
+              <div className="flex flex-none items-center gap-4">
+                <span className="text-xs text-zinc-400">
+                  {new Date(c.created_at).toLocaleDateString()}
+                </span>
+                <DeleteClientButton id={c.id} name={c.name} />
+              </div>
             </li>
           ))}
           {clients?.length === 0 && (

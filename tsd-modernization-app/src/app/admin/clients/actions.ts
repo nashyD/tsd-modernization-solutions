@@ -120,3 +120,18 @@ export async function deleteWorkItem(formData: FormData) {
   revalidatePath(`/admin/clients/${clientId}`);
   revalidatePath("/app/progress");
 }
+
+const DeleteClientSchema = z.object({ id: z.string().uuid() });
+
+export async function deleteClient(formData: FormData) {
+  await requireRole("admin");
+  const parsed = DeleteClientSchema.parse({ id: formData.get("id") });
+  const sb = supabaseAdmin();
+  // ON DELETE CASCADE on client_users and work_items takes care of those.
+  // Audits with owner_type='client' & owner_id=this id will orphan but not break.
+  // leads.converted_client_id will be set to null per the migration.
+  const { error } = await sb.from("clients").delete().eq("id", parsed.id);
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin/clients");
+  revalidatePath("/app");
+}
