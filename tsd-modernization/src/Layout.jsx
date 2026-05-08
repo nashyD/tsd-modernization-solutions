@@ -469,10 +469,29 @@ export default function Layout() {
                   );
                 })}
                 <div style={{ height: "1px", background: v("divider"), margin: "8px 14px" }} />
-                {/* Client portal — cross-app rewrite to the Next.js app at
-                    `tsd-modernization.com/app`. Plain <a> so the browser does
-                    a full nav (react-router would client-side route and 404
-                    since /app isn't a marketing-site route). */}
+                {/* Free audit + Client portal — both cross-app rewrites to the
+                    Next.js app. Plain <a> so the browser does a full nav
+                    (react-router would client-side route and 404 since
+                    /audit and /app aren't marketing-site routes). */}
+                <a
+                  href="/audit"
+                  onClick={() => setMenuOpen(false)}
+                  style={{
+                    display: "flex", alignItems: "center", justifyContent: "space-between",
+                    padding: "11px 14px", borderRadius: RADIUS.md,
+                    fontSize: "13px", fontWeight: 600, textDecoration: "none",
+                    color: v("text"),
+                    transition: "background 0.15s ease",
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = v("surface"); }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+                >
+                  <span>
+                    <span style={{ color: v("accent"), marginRight: "6px", fontSize: "9px" }}>{"◆"}</span>
+                    Free presence audit
+                  </span>
+                  <ArrowRightIcon size={13} />
+                </a>
                 <a
                   href="/app"
                   onClick={() => setMenuOpen(false)}
@@ -638,6 +657,26 @@ export default function Layout() {
                   Book a fit call
                 </Button>
               </Link>
+              {/* Tertiary audit affordance in the footer — same Vercel rewrite
+                  gotcha as the dropdown link, hence plain <a>. */}
+              <a href="/audit" style={{
+                display: "block", marginTop: "12px",
+                fontSize: "12px", color: v("text-muted"),
+                textDecoration: "underline", textUnderlineOffset: "3px",
+                textDecorationColor: v("divider"),
+                transition: "color 0.2s, text-decoration-color 0.2s",
+              }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = v("text");
+                  e.currentTarget.style.textDecorationColor = v("accent");
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = v("text-muted");
+                  e.currentTarget.style.textDecorationColor = v("divider");
+                }}
+              >
+                Or run a free presence audit →
+              </a>
             </div>
           </div>
 

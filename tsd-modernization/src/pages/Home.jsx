@@ -198,6 +198,31 @@ function Hero() {
             </Button>
           </Link>
         </div>
+
+        {/* Tertiary audit affordance — lowest-commitment first action. Plain
+            <a> because /audit is a Vercel rewrite to the Next.js app, not a
+            react-router route. */}
+        <div style={{
+          ...f4, marginTop: "14px", textAlign: "center", fontSize: "13px",
+        }}>
+          <a href="/audit" style={{
+            color: "var(--c-hero-text-muted)", textDecoration: "none",
+            borderBottom: "1px solid var(--c-hero-rule)",
+            paddingBottom: "1px",
+            transition: "color 0.15s ease, border-color 0.15s ease",
+          }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = "var(--c-hero-text)";
+              e.currentTarget.style.borderBottomColor = "var(--c-accent)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = "var(--c-hero-text-muted)";
+              e.currentTarget.style.borderBottomColor = "var(--c-hero-rule)";
+            }}
+          >
+            Or run a free presence audit →
+          </a>
+        </div>
       </div>
 
       {/* Framed timelapse — Charlotte motion as setting, not full-bleed
