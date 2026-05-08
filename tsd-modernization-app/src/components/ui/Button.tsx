@@ -7,11 +7,13 @@ type Size = "sm" | "md" | "lg";
 
 const VARIANT: Record<Variant, string> = {
   primary:
-    "bg-[#13294B] text-white shadow-sm hover:bg-[#1f3666] active:scale-[0.98]",
+    "bg-[var(--primary-bg)] text-[var(--primary-fg)] shadow-sm hover:bg-[var(--primary-bg-hover)] active:scale-[0.98]",
   secondary:
-    "border border-zinc-300 bg-white text-zinc-900 hover:border-[#4B9CD3] hover:text-[#13294B] active:scale-[0.98]",
-  ghost: "text-zinc-700 hover:bg-zinc-100 hover:text-[#13294B] active:scale-[0.98]",
-  danger: "bg-[#b91c1c] text-white hover:bg-[#991b1b] active:scale-[0.98]",
+    "border border-[var(--border-strong)] bg-[var(--surface)] text-[var(--text)] hover:border-[var(--accent)] hover:text-[var(--accent)] active:scale-[0.98]",
+  ghost:
+    "text-[var(--text-muted)] hover:bg-[var(--surface-2)] hover:text-[var(--text)] active:scale-[0.98]",
+  danger:
+    "bg-[var(--danger)] text-white hover:opacity-90 active:scale-[0.98]",
 };
 
 const SIZE: Record<Size, string> = {
@@ -21,7 +23,7 @@ const SIZE: Record<Size, string> = {
 };
 
 const BASE =
-  "inline-flex items-center justify-center gap-2 rounded-md font-semibold whitespace-nowrap transition-all duration-150 ease-out disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4B9CD3]/40 focus-visible:ring-offset-2";
+  "inline-flex items-center justify-center gap-2 rounded-md font-semibold whitespace-nowrap transition-all duration-150 ease-out disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)]";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;

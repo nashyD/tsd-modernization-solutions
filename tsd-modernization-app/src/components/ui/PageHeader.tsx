@@ -17,15 +17,15 @@ export function PageHeader({
     <header className={`flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between ${className}`}>
       <div className="min-w-0 flex-1">
         {eyebrow && (
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#4B9CD3]">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
             {eyebrow}
           </p>
         )}
-        <h1 className="mt-1 text-balance text-3xl font-semibold leading-[1.1] tracking-tight text-[#13294B] sm:text-[34px]">
+        <h1 className="mt-1 text-balance font-display text-3xl font-semibold leading-[1.05] tracking-tight text-[var(--text)] sm:text-[34px]">
           {title}
         </h1>
         {description && (
-          <p className="mt-2 text-pretty text-base leading-relaxed text-zinc-600 sm:max-w-2xl">
+          <p className="mt-2 text-pretty text-base leading-relaxed text-[var(--text-muted)] sm:max-w-2xl">
             {description}
           </p>
         )}

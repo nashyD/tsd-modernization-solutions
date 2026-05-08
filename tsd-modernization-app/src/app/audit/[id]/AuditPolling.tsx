@@ -72,37 +72,33 @@ export default function AuditPolling({
 
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-6 py-12 sm:py-16 animate-fade-up">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#4B9CD3]">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
         Audit in progress
       </p>
-      <h1 className="mt-2 text-balance font-display text-[34px] font-semibold leading-[1.05] tracking-tight text-[#13294B] sm:text-[40px]">
+      <h1 className="mt-2 text-balance font-display text-[34px] font-semibold leading-[1.05] tracking-tight text-[var(--text)] sm:text-[40px]">
         Auditing {businessName}
       </h1>
-      <p className="mt-3 text-zinc-600">
+      <p className="mt-3 text-[var(--text-muted)]">
         Hang tight — this usually takes 20–40 seconds. You can leave this page;
         we&apos;ll email you when it&apos;s ready.
       </p>
 
       <div className="mt-10">
-        <div className="h-1.5 w-full overflow-hidden rounded-full bg-zinc-100">
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--surface-2)]">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-[#4B9CD3] to-[#13294B] transition-all duration-700 ease-out"
+            className="h-full rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--navy)] transition-all duration-700 ease-out"
             style={{ width: `${STATUS_PROGRESS[status]}%` }}
           />
         </div>
-        <p className="mt-3 inline-flex items-center gap-2 text-sm text-zinc-600">
+        <p className="mt-3 inline-flex items-center gap-2 text-sm text-[var(--text-muted)]">
           {status !== "ready" && status !== "failed" && (
-            <Loader2
-              size={14}
-              className="animate-spin text-[#4B9CD3]"
-              aria-hidden
-            />
+            <Loader2 size={14} className="animate-spin text-[var(--accent)]" aria-hidden />
           )}
           {STATUS_LABEL[status]}…
         </p>
       </div>
 
-      <ol className="mt-10 space-y-2.5 text-sm text-zinc-700">
+      <ol className="mt-10 space-y-2.5 text-sm text-[var(--text-muted)]">
         <Step done={["scraping", "synthesizing", "ready"].includes(status)}>
           Fetching your website and locating your Google Business Profile
         </Step>
@@ -115,13 +111,13 @@ export default function AuditPolling({
       </ol>
 
       {error && (
-        <p className="mt-8 rounded-[10px] border border-red-200 bg-red-50/70 px-3 py-2 text-sm text-red-900">
+        <p className="mt-8 rounded-[10px] border border-[var(--danger)]/30 bg-[var(--danger-soft)] px-3 py-2 text-sm text-[var(--danger)]">
           {error}
         </p>
       )}
 
       {isStale && (
-        <div className="mt-8 rounded-[10px] border border-amber-200 bg-amber-50/70 px-4 py-3 text-sm text-amber-900">
+        <div className="mt-8 rounded-[10px] border border-[var(--warning)]/30 bg-[var(--warning-soft)] px-4 py-3 text-sm text-[var(--warning)]">
           <p className="font-semibold">This is taking longer than usual.</p>
           <p className="mt-1">
             The audit is still running on our side. You can close this tab
@@ -144,14 +140,14 @@ function Step({ done, children }: { done: boolean; children: React.ReactNode }) 
       <span
         className={`mt-0.5 inline-flex h-5 w-5 flex-none items-center justify-center rounded-full transition-colors ${
           done
-            ? "bg-[#4B9CD3] text-white"
-            : "border border-zinc-200 bg-white text-zinc-300"
+            ? "bg-[var(--accent)] text-[var(--primary-fg)]"
+            : "border border-[var(--border-strong)] bg-[var(--surface-2)] text-[var(--text-subtle)]"
         }`}
         aria-hidden
       >
         {done ? <Check size={12} strokeWidth={3} /> : null}
       </span>
-      <span className={done ? "text-zinc-900" : "text-zinc-500"}>
+      <span className={done ? "text-[var(--text)]" : "text-[var(--text-subtle)]"}>
         {children}
       </span>
     </li>

@@ -65,16 +65,16 @@ export default async function PortalHome() {
 
   if (ownerships.length === 0) {
     return (
-      <div className="rounded-[14px] border border-zinc-200 bg-white p-10">
-        <h1 className="text-2xl font-semibold tracking-tight text-[#13294B]">
+      <div className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-10 shadow-[var(--shadow-card)]">
+        <h1 className="font-display text-2xl font-semibold tracking-tight text-[var(--text)]">
           You&apos;re signed in
         </h1>
-        <p className="mt-2 max-w-prose text-zinc-700">
+        <p className="mt-2 max-w-prose text-[var(--text-muted)]">
           You don&apos;t have a TSD client account linked to{" "}
-          <span className="font-medium text-zinc-900">{user.email}</span> yet.
-          Email{" "}
+          <span className="font-medium text-[var(--text)]">{user.email}</span>{" "}
+          yet. Email{" "}
           <a
-            className="font-medium text-[#13294B] underline underline-offset-2 hover:text-[#1f3666]"
+            className="font-medium text-[var(--accent)] underline underline-offset-2 hover:text-[var(--accent-hover)]"
             href="mailto:hello@tsd-modernization.com"
           >
             hello@tsd-modernization.com
@@ -92,16 +92,16 @@ export default async function PortalHome() {
   return (
     <div className="space-y-10">
       <header className="animate-fade-up">
-        <div className="flex items-center gap-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#4B9CD3]">
+        <div className="flex flex-wrap items-center gap-3">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
             Welcome back
           </p>
           {pkg && <Badge tone="blue">{pkg.name}</Badge>}
         </div>
-        <h1 className="mt-2 text-balance text-[34px] font-semibold leading-[1.05] tracking-tight text-[#13294B] sm:text-[40px]">
+        <h1 className="mt-2 text-balance font-display text-[34px] font-semibold leading-[1.05] tracking-tight text-[var(--text)] sm:text-[40px]">
           {client?.name ?? "Your TSD Portal"}
         </h1>
-        <p className="mt-3 max-w-2xl text-pretty text-base leading-relaxed text-zinc-600">
+        <p className="mt-3 max-w-2xl text-pretty text-base leading-relaxed text-[var(--text-muted)]">
           A single place to see what we&apos;re building for you, what&apos;s
           shipping, and what your AI receptionist sounds like in production.
         </p>
@@ -112,21 +112,21 @@ export default async function PortalHome() {
           <li key={href} className={delay}>
             <Link
               href={href}
-              className="group flex h-full flex-col rounded-[14px] border border-zinc-200/80 bg-white p-5 shadow-[0_1px_2px_rgb(15_23_42_/_0.04)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[#4B9CD3]/60 hover:shadow-[0_8px_24px_rgb(19_41_75_/_0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4B9CD3]/40 focus-visible:ring-offset-2"
+              className="group flex h-full flex-col rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-card-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)]"
             >
-              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-[#eef7fc] text-[#13294B] transition-colors group-hover:bg-[#13294B] group-hover:text-white">
+              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--accent-soft)] text-[var(--accent)] transition-colors group-hover:bg-[var(--accent)] group-hover:text-[var(--primary-fg)]">
                 <Icon size={20} strokeWidth={1.75} />
               </div>
               <div className="flex items-start justify-between gap-3">
-                <h3 className="font-semibold text-[#13294B]">{title}</h3>
+                <h3 className="font-semibold text-[var(--text)]">{title}</h3>
                 <ArrowUpRight
                   size={18}
                   strokeWidth={1.75}
-                  className="flex-none translate-x-0 text-zinc-400 transition-all duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#13294B]"
+                  className="flex-none translate-x-0 text-[var(--text-subtle)] transition-all duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[var(--accent)]"
                   aria-hidden
                 />
               </div>
-              <p className="mt-1.5 text-sm leading-relaxed text-zinc-600">
+              <p className="mt-1.5 text-sm leading-relaxed text-[var(--text-muted)]">
                 {desc}
               </p>
             </Link>

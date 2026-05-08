@@ -58,23 +58,23 @@ export default function VoiceWidget({ assistantId }: { assistantId: string }) {
   const isLive = status === "live";
 
   return (
-    <div className="rounded-[14px] border border-zinc-200/80 bg-white p-6 shadow-[0_1px_2px_rgb(15_23_42_/_0.04)]">
+    <div className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
       <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <div className="relative flex h-12 w-12 items-center justify-center rounded-full bg-[#eef7fc] text-[#13294B]">
+          <div className="relative flex h-12 w-12 items-center justify-center rounded-full bg-[var(--accent-soft)] text-[var(--accent)]">
             <Mic size={20} strokeWidth={1.75} />
             {isLive && (
               <span className="absolute right-0 top-0 flex h-3 w-3">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-500" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--success)] opacity-75" />
+                <span className="relative inline-flex h-3 w-3 rounded-full bg-[var(--success)]" />
               </span>
             )}
           </div>
           <div>
-            <p className="text-sm font-semibold text-[#13294B]">
+            <p className="text-sm font-semibold text-[var(--text)]">
               {STATUS_TEXT[status]}
             </p>
-            <p className="font-mono text-xs text-zinc-500">
+            <p className="font-mono text-xs text-[var(--text-subtle)]">
               Assistant {assistantId.slice(0, 8)}…
             </p>
           </div>
@@ -104,12 +104,12 @@ export default function VoiceWidget({ assistantId }: { assistantId: string }) {
       </div>
 
       {error && (
-        <p className="mt-4 rounded-md border border-red-200 bg-red-50/70 px-3 py-2 text-sm text-red-900">
+        <p className="mt-4 rounded-md border border-[var(--danger)]/30 bg-[var(--danger-soft)] px-3 py-2 text-sm text-[var(--danger)]">
           {error}
         </p>
       )}
 
-      <p className="mt-5 border-t border-zinc-100 pt-4 text-xs leading-relaxed text-zinc-500">
+      <p className="mt-5 border-t border-[var(--border)] pt-4 text-xs leading-relaxed text-[var(--text-subtle)]">
         Browser will ask for microphone permission the first time. Use a real
         scenario — &ldquo;I need a quote for a 3-ton condenser&rdquo; — and see
         how the agent handles it.

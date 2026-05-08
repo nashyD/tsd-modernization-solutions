@@ -34,26 +34,26 @@ export default async function AdminClientsPage() {
             description="Use the form below to add the first one."
           />
         ) : (
-          <ul className="divide-y divide-zinc-100 rounded-[14px] border border-zinc-200/80 bg-white shadow-[0_1px_2px_rgb(15_23_42_/_0.04)]">
+          <ul className="divide-y divide-[var(--border)] rounded-[14px] border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-card)]">
             {(clients ?? []).map((c) => (
               <li
                 key={c.id}
-                className="flex items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-zinc-50/60"
+                className="flex items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-[var(--surface-2)]"
               >
                 <div className="min-w-0">
                   <Link
                     href={`/admin/clients/${c.id}`}
-                    className="font-semibold text-[#13294B] transition-colors hover:text-[#1f3666]"
+                    className="font-semibold text-[var(--text)] transition-colors hover:text-[var(--accent)]"
                   >
                     {c.name}
                   </Link>
-                  <p className="truncate text-sm text-zinc-500">
+                  <p className="truncate text-sm text-[var(--text-muted)]">
                     {c.website_url} ·{" "}
                     <span className="font-mono text-xs">{c.package_tier}</span>
                   </p>
                 </div>
                 <div className="flex flex-none items-center gap-5">
-                  <span className="hidden text-xs text-zinc-400 sm:inline">
+                  <span className="hidden text-xs text-[var(--text-subtle)] sm:inline">
                     {new Date(c.created_at).toLocaleDateString()}
                   </span>
                   <DeleteClientButton id={c.id} name={c.name} />
@@ -64,11 +64,11 @@ export default async function AdminClientsPage() {
         )}
       </section>
 
-      <section className="rounded-[14px] border border-zinc-200/80 bg-white p-6 shadow-[0_1px_2px_rgb(15_23_42_/_0.04)]">
-        <h2 className="font-display text-xl font-semibold tracking-tight text-[#13294B]">
+      <section className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
+        <h2 className="font-display text-xl font-semibold tracking-tight text-[var(--text)]">
           Add a client
         </h2>
-        <p className="mt-1 text-sm text-zinc-500">
+        <p className="mt-1 text-sm text-[var(--text-muted)]">
           Optional: paste an owner email to send a portal invite.
         </p>
         <form action={createClient} className="mt-5 grid gap-4 sm:grid-cols-2">

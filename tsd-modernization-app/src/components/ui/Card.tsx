@@ -11,7 +11,7 @@ export function Card({
 }) {
   return (
     <As
-      className={`rounded-[14px] border border-zinc-200/80 bg-white shadow-[0_1px_2px_rgb(15_23_42_/_0.04)] ${className}`}
+      className={`rounded-[14px] border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-card)] ${className}`}
     >
       {children}
     </As>
@@ -28,7 +28,7 @@ export function CardBody({ children, className = "" }: { children: ReactNode; cl
 
 export function CardTitle({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <h2 className={`text-lg font-semibold tracking-tight text-[#13294B] ${className}`}>
+    <h2 className={`text-lg font-semibold tracking-tight text-[var(--text)] ${className}`}>
       {children}
     </h2>
   );

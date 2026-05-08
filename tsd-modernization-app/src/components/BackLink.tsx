@@ -11,7 +11,7 @@ export default function BackLink({
   return (
     <Link
       href={href}
-      className="group inline-flex items-center gap-1.5 text-sm font-medium text-zinc-500 transition-colors duration-150 hover:text-[#13294B]"
+      className="group inline-flex items-center gap-1.5 text-sm font-medium text-[var(--text-subtle)] transition-colors duration-150 hover:text-[var(--accent)]"
     >
       <ArrowLeft
         size={16}

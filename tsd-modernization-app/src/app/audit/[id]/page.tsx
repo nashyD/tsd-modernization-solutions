@@ -73,15 +73,15 @@ export default async function AuditViewPage({
   if (audit.status === "failed") {
     return (
       <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center px-6 py-24 text-center">
-        <h1 className="text-2xl font-semibold text-[#13294B]">
+        <h1 className="font-display text-2xl font-semibold tracking-tight text-[var(--text)]">
           Something went sideways
         </h1>
-        <p className="mt-3 text-zinc-700">
+        <p className="mt-3 text-[var(--text-muted)]">
           We hit an error running your audit. The TSD team has been notified —
           we&apos;ll re-run it and email you when it&apos;s done.
         </p>
         {audit.error_message && (
-          <p className="mt-6 max-w-md rounded border border-zinc-200 bg-zinc-50 px-3 py-2 text-left text-xs font-mono text-zinc-600">
+          <p className="mt-6 max-w-md rounded border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 text-left text-xs font-mono text-[var(--text-subtle)]">
             {audit.error_message}
           </p>
         )}
@@ -89,5 +89,11 @@ export default async function AuditViewPage({
     );
   }
 
-  return <AuditPolling auditId={id} businessName={businessName} initialStatus={audit.status} />;
+  return (
+    <AuditPolling
+      auditId={id}
+      businessName={businessName}
+      initialStatus={audit.status}
+    />
+  );
 }

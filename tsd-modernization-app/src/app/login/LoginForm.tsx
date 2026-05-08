@@ -13,7 +13,7 @@ export default function LoginForm() {
 
   if (state?.ok) {
     return (
-      <div className="rounded-[12px] border border-emerald-200 bg-emerald-50/70 px-5 py-4 text-emerald-900">
+      <div className="rounded-[12px] border border-[var(--success)]/30 bg-[var(--success-soft)] px-5 py-4 text-[var(--success)]">
         <div className="flex items-start gap-3">
           <MailCheck size={20} strokeWidth={1.75} className="mt-0.5 flex-none" aria-hidden />
           <div>
@@ -41,7 +41,7 @@ export default function LoginForm() {
           className="mt-1.5"
         />
         {state?.error && (
-          <p className="mt-1.5 text-sm text-[#b91c1c]">{state.error}</p>
+          <p className="mt-1.5 text-sm text-[var(--danger)]">{state.error}</p>
         )}
       </div>
       <Button

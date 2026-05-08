@@ -14,19 +14,9 @@ const COLUMNS: {
   icon: typeof Circle;
   iconClass: string;
 }[] = [
-  { key: "todo", label: "Up next", icon: Circle, iconClass: "text-zinc-400" },
-  {
-    key: "doing",
-    label: "In progress",
-    icon: Clock,
-    iconClass: "text-[#4B9CD3]",
-  },
-  {
-    key: "done",
-    label: "Done",
-    icon: CheckCircle2,
-    iconClass: "text-emerald-600",
-  },
+  { key: "todo", label: "Up next", icon: Circle, iconClass: "text-[var(--text-subtle)]" },
+  { key: "doing", label: "In progress", icon: Clock, iconClass: "text-[var(--accent)]" },
+  { key: "done", label: "Done", icon: CheckCircle2, iconClass: "text-[var(--success)]" },
 ];
 
 export default async function ProgressPage() {
@@ -54,11 +44,7 @@ export default async function ProgressPage() {
     .order("created_at", { ascending: false });
 
   type Item = NonNullable<typeof items>[number];
-  const grouped: Record<WorkItemStatus, Item[]> = {
-    todo: [],
-    doing: [],
-    done: [],
-  };
+  const grouped: Record<WorkItemStatus, Item[]> = { todo: [], doing: [], done: [] };
   (items ?? []).forEach((it) => grouped[it.status].push(it));
 
   return (
@@ -74,40 +60,39 @@ export default async function ProgressPage() {
         {COLUMNS.map(({ key, label, icon: Icon, iconClass }) => (
           <section
             key={key}
-            className="flex flex-col rounded-[14px] border border-zinc-200/80 bg-white p-4"
+            className="flex flex-col rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-4"
           >
             <header className="mb-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Icon size={16} strokeWidth={2} className={iconClass} aria-hidden />
-                <h2 className="text-sm font-semibold tracking-tight text-[#13294B]">
+                <h2 className="text-sm font-semibold tracking-tight text-[var(--text)]">
                   {label}
                 </h2>
               </div>
-              <span className="text-xs font-medium text-zinc-400">
+              <span className="text-xs font-medium text-[var(--text-subtle)]">
                 {grouped[key].length}
               </span>
             </header>
             <ul className="flex flex-col gap-2.5">
               {grouped[key].length === 0 && (
-                <li className="rounded-lg border border-dashed border-zinc-200 px-3 py-6 text-center text-xs text-zinc-400">
+                <li className="rounded-lg border border-dashed border-[var(--border)] px-3 py-6 text-center text-xs text-[var(--text-subtle)]">
                   Nothing here yet.
                 </li>
               )}
               {grouped[key].map((it) => (
                 <li
                   key={it.id}
-                  className="rounded-lg border border-zinc-100 bg-zinc-50/60 p-3 transition-colors hover:border-zinc-200"
+                  className="rounded-lg border border-[var(--border)] bg-[var(--surface-2)] p-3 transition-colors hover:border-[var(--border-strong)]"
                 >
-                  <p className="text-sm font-medium text-zinc-900">{it.title}</p>
+                  <p className="text-sm font-medium text-[var(--text)]">{it.title}</p>
                   {it.description && (
-                    <p className="mt-1 text-xs leading-relaxed text-zinc-600">
+                    <p className="mt-1 text-xs leading-relaxed text-[var(--text-muted)]">
                       {it.description}
                     </p>
                   )}
                   {it.completed_at && (
-                    <p className="mt-1.5 text-[11px] uppercase tracking-wide text-zinc-400">
-                      Completed{" "}
-                      {new Date(it.completed_at).toLocaleDateString()}
+                    <p className="mt-1.5 text-[11px] uppercase tracking-wide text-[var(--text-subtle)]">
+                      Completed {new Date(it.completed_at).toLocaleDateString()}
                     </p>
                   )}
                 </li>

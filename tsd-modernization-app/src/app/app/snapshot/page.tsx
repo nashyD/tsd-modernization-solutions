@@ -53,15 +53,13 @@ export default async function SnapshotPage() {
   }
 
   const latestScores = AuditScoresSchema.safeParse(latest.scores);
-  const prevScores = previous
-    ? AuditScoresSchema.safeParse(previous.scores)
-    : null;
+  const prevScores = previous ? AuditScoresSchema.safeParse(previous.scores) : null;
 
   if (!latestScores.success) {
     return (
       <div className="space-y-6">
         <BackLink href="/app" label="Dashboard" />
-        <div className="rounded-[14px] border border-amber-200 bg-amber-50/70 p-5 text-amber-900">
+        <div className="rounded-[14px] border border-[var(--warning)]/30 bg-[var(--warning-soft)] p-5 text-[var(--warning)]">
           Snapshot data is malformed. The TSD team has been notified.
         </div>
       </div>
@@ -71,16 +69,11 @@ export default async function SnapshotPage() {
   return (
     <div className="space-y-8 animate-fade-up">
       <BackLink href="/app" label="Dashboard" />
-
       <PageHeader
         eyebrow="Monthly snapshot"
-        title={`Latest audit · ${new Date(latest.created_at).toLocaleDateString(
-          undefined,
-          { month: "long", day: "numeric", year: "numeric" }
-        )}`}
+        title={`Latest audit · ${new Date(latest.created_at).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}`}
         description="How your online presence is trending. We re-run the audit every 30 days."
       />
-
       <ScoreSummary
         latest={latestScores.data}
         previous={prevScores?.success ? prevScores.data : null}
@@ -92,18 +85,18 @@ export default async function SnapshotPage() {
 function Delta({ d }: { d: number }) {
   if (d === 0)
     return (
-      <span className="inline-flex items-center gap-0.5 text-xs font-medium text-zinc-400">
+      <span className="inline-flex items-center gap-0.5 text-xs font-medium text-[var(--text-subtle)]">
         <Minus size={12} aria-hidden /> 0
       </span>
     );
   if (d > 0)
     return (
-      <span className="inline-flex items-center gap-0.5 text-xs font-medium text-emerald-700">
+      <span className="inline-flex items-center gap-0.5 text-xs font-medium text-[var(--success)]">
         <ArrowUp size={12} strokeWidth={2.5} aria-hidden /> {d}
       </span>
     );
   return (
-    <span className="inline-flex items-center gap-0.5 text-xs font-medium text-red-700">
+    <span className="inline-flex items-center gap-0.5 text-xs font-medium text-[var(--danger)]">
       <ArrowDown size={12} strokeWidth={2.5} aria-hidden /> {Math.abs(d)}
     </span>
   );
@@ -118,20 +111,20 @@ function ScoreSummary({
 }) {
   const delta = previous ? latest.presence_score - previous.presence_score : 0;
   return (
-    <div className="rounded-[14px] border border-zinc-200/80 bg-white p-6 shadow-[0_1px_2px_rgb(15_23_42_/_0.04)]">
+    <div className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
       <div className="flex items-end gap-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-subtle)]">
             Presence score
           </p>
-          <p className="font-display text-6xl font-semibold tracking-tight text-[#13294B]">
+          <p className="font-display text-6xl font-semibold tracking-tight text-[var(--text)]">
             {latest.presence_score}
           </p>
         </div>
         {previous && (
           <div className="pb-3">
             <Delta d={delta} />
-            <p className="mt-0.5 text-[11px] uppercase tracking-wide text-zinc-400">
+            <p className="mt-0.5 text-[11px] uppercase tracking-wide text-[var(--text-subtle)]">
               vs last month
             </p>
           </div>
@@ -143,15 +136,12 @@ function ScoreSummary({
           const prev = previous?.pillar_scores[k as keyof typeof previous.pillar_scores];
           const d = prev !== undefined ? v - prev : 0;
           return (
-            <div
-              key={k}
-              className="rounded-[10px] border border-zinc-200/80 bg-zinc-50/40 px-3.5 py-3"
-            >
-              <dt className="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">
+            <div key={k} className="rounded-[10px] border border-[var(--border)] bg-[var(--surface-2)] px-3.5 py-3">
+              <dt className="text-[11px] font-semibold uppercase tracking-wide text-[var(--text-subtle)]">
                 {k}
               </dt>
               <dd className="mt-0.5 flex items-baseline gap-2">
-                <span className="font-display text-2xl font-semibold tracking-tight text-[#13294B]">
+                <span className="font-display text-2xl font-semibold tracking-tight text-[var(--text)]">
                   {v}
                 </span>
                 {previous && d !== 0 && <Delta d={d} />}

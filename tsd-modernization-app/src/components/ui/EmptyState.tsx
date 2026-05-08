@@ -15,20 +15,26 @@ export function EmptyState({
 }) {
   return (
     <div
-      className={`flex flex-col items-center rounded-[14px] border border-dashed border-zinc-300 bg-white px-6 py-12 text-center ${className}`}
+      className={`relative overflow-hidden rounded-[16px] border border-dashed border-[var(--border-strong)] bg-[var(--surface)] px-6 py-14 text-center ${className}`}
     >
-      {icon && (
-        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#eef7fc] text-[#13294B]">
-          {icon}
-        </div>
-      )}
-      <h3 className="text-base font-semibold text-[#13294B]">{title}</h3>
-      {description && (
-        <p className="mt-1.5 max-w-md text-sm leading-relaxed text-zinc-600">
-          {description}
-        </p>
-      )}
-      {action && <div className="mt-5">{action}</div>}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,var(--accent-soft),transparent_60%)]" />
+      <div className="relative flex flex-col items-center">
+        {icon && (
+          <div className="relative mb-5">
+            <div className="absolute inset-0 -m-2 rounded-full bg-[var(--accent-soft)] blur-md" aria-hidden />
+            <div className="relative flex h-14 w-14 items-center justify-center rounded-full border border-[var(--border-strong)] bg-[var(--surface-2)] text-[var(--accent)] shadow-[var(--shadow-card)]">
+              {icon}
+            </div>
+          </div>
+        )}
+        <h3 className="text-base font-semibold text-[var(--text)]">{title}</h3>
+        {description && (
+          <p className="mt-2 max-w-md text-sm leading-relaxed text-[var(--text-muted)]">
+            {description}
+          </p>
+        )}
+        {action && <div className="mt-6">{action}</div>}
+      </div>
     </div>
   );
 }

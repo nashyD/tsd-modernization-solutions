@@ -18,9 +18,7 @@ interface VercelDeployment {
   meta?: { githubCommitMessage?: string };
 }
 
-async function fetchLatestDeployment(
-  projectId: string
-): Promise<VercelDeployment | null> {
+async function fetchLatestDeployment(projectId: string): Promise<VercelDeployment | null> {
   const e = env();
   if (!e.VERCEL_API_TOKEN) return null;
   const res = await fetch(
@@ -89,19 +87,19 @@ export default async function DeploymentPage() {
       )}
 
       {client?.vercel_project_id && !deployment && (
-        <div className="rounded-[14px] border border-amber-200 bg-amber-50/70 p-5 text-amber-900">
+        <div className="rounded-[14px] border border-[var(--warning)]/30 bg-[var(--warning-soft)] p-5 text-[var(--warning)]">
           We couldn&apos;t reach Vercel for this project. Try again in a moment.
         </div>
       )}
 
       {deployment && (
-        <section className="rounded-[14px] border border-zinc-200/80 bg-white p-6 shadow-[0_1px_2px_rgb(15_23_42_/_0.04)]">
+        <section className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <h2 className="text-base font-semibold tracking-tight text-[#13294B]">
+              <h2 className="text-base font-semibold tracking-tight text-[var(--text)]">
                 Latest deployment
               </h2>
-              <p className="mt-1 text-sm text-zinc-500">
+              <p className="mt-1 text-sm text-[var(--text-subtle)]">
                 {new Date(deployment.created).toLocaleString()}
               </p>
             </div>
@@ -110,7 +108,7 @@ export default async function DeploymentPage() {
 
           <dl className="mt-6 grid gap-4 text-sm sm:grid-cols-2">
             <div>
-              <dt className="text-xs uppercase tracking-wide text-zinc-500">
+              <dt className="text-xs uppercase tracking-wide text-[var(--text-subtle)]">
                 Live URL
               </dt>
               <dd className="mt-1">
@@ -118,7 +116,7 @@ export default async function DeploymentPage() {
                   href={`https://${deployment.url}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 font-medium text-[#13294B] underline underline-offset-2 hover:text-[#1f3666]"
+                  className="inline-flex items-center gap-1.5 font-medium text-[var(--accent)] underline underline-offset-2 hover:text-[var(--accent-hover)]"
                 >
                   {deployment.url}
                   <ExternalLink size={13} strokeWidth={2} aria-hidden />
@@ -127,10 +125,10 @@ export default async function DeploymentPage() {
             </div>
             {deployment.meta?.githubCommitMessage && (
               <div>
-                <dt className="text-xs uppercase tracking-wide text-zinc-500">
+                <dt className="text-xs uppercase tracking-wide text-[var(--text-subtle)]">
                   Last change
                 </dt>
-                <dd className="mt-1 text-zinc-800">
+                <dd className="mt-1 text-[var(--text)]">
                   {deployment.meta.githubCommitMessage}
                 </dd>
               </div>

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, ClipboardList } from "lucide-react";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { upsertWorkItem, deleteWorkItem } from "../actions";
 import BackLink from "@/components/BackLink";
@@ -7,7 +7,6 @@ import { Input, Label, Textarea, Select } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { ClipboardList } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -35,15 +34,15 @@ export default async function AdminClientDetail({
     <div className="space-y-10 animate-fade-up">
       <div>
         <BackLink href="/admin/clients" label="All clients" />
-        <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-[#13294B]">
+        <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-[var(--text)]">
           {client.name}
         </h1>
-        <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-zinc-500">
+        <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-[var(--text-subtle)]">
           <a
             href={client.website_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline underline-offset-2 hover:text-[#13294B]"
+            className="underline underline-offset-2 hover:text-[var(--accent)]"
           >
             {client.website_url}
           </a>
@@ -61,7 +60,7 @@ export default async function AdminClientDetail({
       </div>
 
       <section>
-        <h2 className="font-display text-xl font-semibold tracking-tight text-[#13294B]">
+        <h2 className="font-display text-xl font-semibold tracking-tight text-[var(--text)]">
           Work items
         </h2>
         {workItems?.length === 0 ? (
@@ -77,7 +76,7 @@ export default async function AdminClientDetail({
             {(workItems ?? []).map((w) => (
               <li
                 key={w.id}
-                className="rounded-[12px] border border-zinc-200/80 bg-white p-4 shadow-[0_1px_2px_rgb(15_23_42_/_0.04)]"
+                className="rounded-[12px] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[var(--shadow-card)]"
               >
                 <form action={upsertWorkItem} className="space-y-3">
                   <input type="hidden" name="id" value={w.id} />
@@ -105,19 +104,17 @@ export default async function AdminClientDetail({
                       <option value="doing">doing</option>
                       <option value="done">done</option>
                     </Select>
-                    <div className="flex items-center gap-2">
-                      <Button type="submit" size="sm">
-                        Save
-                      </Button>
-                    </div>
+                    <Button type="submit" size="sm">
+                      Save
+                    </Button>
                   </div>
                 </form>
-                <form action={deleteWorkItem} className="mt-2 border-t border-zinc-100 pt-2">
+                <form action={deleteWorkItem} className="mt-2 border-t border-[var(--border)] pt-2">
                   <input type="hidden" name="id" value={w.id} />
                   <input type="hidden" name="client_id" value={id} />
                   <button
                     type="submit"
-                    className="inline-flex items-center gap-1.5 text-xs font-medium text-red-700 hover:underline"
+                    className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--danger)] hover:underline"
                   >
                     <Trash2 size={12} strokeWidth={2} aria-hidden />
                     Delete work item
@@ -130,10 +127,10 @@ export default async function AdminClientDetail({
 
         <form
           action={upsertWorkItem}
-          className="mt-6 space-y-4 rounded-[14px] border border-zinc-200/80 bg-white p-5 shadow-[0_1px_2px_rgb(15_23_42_/_0.04)]"
+          className="mt-6 space-y-4 rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)]"
         >
           <input type="hidden" name="client_id" value={id} />
-          <h3 className="font-semibold text-[#13294B]">Add work item</h3>
+          <h3 className="font-semibold text-[var(--text)]">Add work item</h3>
           <div>
             <Label htmlFor={`title-new`}>Title</Label>
             <Input id={`title-new`} name="title" required placeholder="Build the homepage" className="mt-1.5" />

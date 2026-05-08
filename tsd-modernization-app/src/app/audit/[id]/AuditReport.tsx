@@ -1,4 +1,12 @@
-import { AlertOctagon, AlertTriangle, Info, Sparkle } from "lucide-react";
+import {
+  AlertOctagon,
+  AlertTriangle,
+  Info,
+  Sparkle,
+  ShieldCheck,
+  Clock,
+  ArrowRight,
+} from "lucide-react";
 import type { AuditScores } from "@/lib/audit/types";
 import PrintButton from "./PrintButton";
 import { LinkButton } from "@/components/ui/Button";
@@ -16,24 +24,43 @@ const SEVERITY_META: Record<
 
 const PACKAGE_COPY: Record<
   AuditScores["recommended_package"],
-  { name: string; price: string; tagline: string }
+  {
+    name: string;
+    price: string;
+    anchor: string;
+    tagline: string;
+    cap: string;
+    guarantee: string;
+  }
 > = {
   discovery_audit: {
     name: "Phase I — Discovery Audit",
     price: "$1,500",
-    tagline: "A 2-3 hour structured audit and modernization roadmap.",
+    anchor: "$3,000",
+    tagline: "A 2-3 hour structured audit and a written modernization roadmap.",
+    cap: "Founding-cohort rate",
+    guarantee:
+      "Money-back if we can't surface $25K of opportunities for your business.",
   },
   website_ai_bundle: {
     name: "Website + AI Build",
     price: "$5,000",
+    anchor: "$10,000",
     tagline:
-      "Custom site, AI chatbot or receptionist, SEO, and source-code ownership.",
+      "Custom site, AI chatbot or receptionist, SEO, source-code ownership, founder on-call through Aug 31.",
+    cap: "Founding cohort · 10 spots total",
+    guarantee:
+      "14-day delivery (25% refund if missed) + 3 qualified AI-captured leads in 30 days post-launch.",
   },
   founding_partnership: {
     name: "The Full Modernization",
     price: "$10,000",
+    anchor: "$20,000",
     tagline:
-      "Phase I + Build + receptionist + 4 months of ops support through Aug 31.",
+      "Phase I + the Build + AI receptionist + 4 months of ops support + named TSD partner.",
+    cap: "Founding cohort · 3 spots total",
+    guarantee:
+      "15 qualified AI-captured leads by Aug 31 or we keep working at no cost.",
   },
 };
 
@@ -50,48 +77,41 @@ export default function AuditReport({
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12 sm:py-16 animate-fade-up print:max-w-none print:py-0">
-      <header className="border-b border-zinc-200 pb-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#4B9CD3]">
+      <header className="border-b border-[var(--border)] pb-8">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
           Modernization audit
         </p>
-        <h1 className="mt-2 font-display text-[40px] font-semibold leading-[1.05] tracking-tight text-[#13294B] sm:text-[44px]">
+        <h1 className="mt-2 font-display text-[40px] font-semibold leading-[1.05] tracking-tight text-[var(--text)] sm:text-[44px]">
           {businessName}
         </h1>
-        <p className="mt-4 text-pretty text-lg leading-relaxed text-zinc-700">
+        <p className="mt-4 text-pretty text-lg leading-relaxed text-[var(--text-muted)]">
           {scores.one_line_summary}
         </p>
         <div className="mt-6 flex flex-wrap items-center gap-2 print:hidden">
           <PrintButton />
-          <LinkButton
-            variant="ghost"
-            size="sm"
-            href="/audit"
-          >
+          <LinkButton variant="ghost" size="sm" href="/audit">
             Run another
           </LinkButton>
         </div>
       </header>
 
       <section className="mt-12">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-subtle)]">
           Presence score
         </p>
         <div className="mt-3 flex items-end gap-3">
-          <span className="font-display text-7xl font-semibold leading-none tracking-tight text-[#13294B]">
+          <span className="font-display text-7xl font-semibold leading-none tracking-tight text-[var(--text)]">
             {scores.presence_score}
           </span>
-          <span className="pb-3 text-zinc-400">/ 100</span>
+          <span className="pb-3 text-[var(--text-subtle)]">/ 100</span>
         </div>
         <dl className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-5">
           {Object.entries(scores.pillar_scores).map(([k, v]) => (
-            <div
-              key={k}
-              className="rounded-[10px] border border-zinc-200/80 bg-white px-3.5 py-3"
-            >
-              <dt className="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">
+            <div key={k} className="rounded-[10px] border border-[var(--border)] bg-[var(--surface)] px-3.5 py-3">
+              <dt className="text-[11px] font-semibold uppercase tracking-wide text-[var(--text-subtle)]">
                 {k}
               </dt>
-              <dd className="mt-0.5 font-display text-2xl font-semibold tracking-tight text-[#13294B]">
+              <dd className="mt-0.5 font-display text-2xl font-semibold tracking-tight text-[var(--text)]">
                 {v}
               </dd>
             </div>
@@ -100,7 +120,7 @@ export default function AuditReport({
       </section>
 
       <section className="mt-12">
-        <h2 className="font-display text-2xl font-semibold tracking-tight text-[#13294B]">
+        <h2 className="font-display text-2xl font-semibold tracking-tight text-[var(--text)]">
           What we found
         </h2>
         <ul className="mt-5 space-y-3">
@@ -110,32 +130,34 @@ export default function AuditReport({
             return (
               <li
                 key={i}
-                className="rounded-[12px] border border-zinc-200/80 bg-white p-5 shadow-[0_1px_2px_rgb(15_23_42_/_0.04)]"
+                className="rounded-[12px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)]"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-start gap-3">
                     <span
                       className={`mt-0.5 flex h-7 w-7 flex-none items-center justify-center rounded-full ${
                         g.severity === "critical"
-                          ? "bg-red-50 text-red-700"
+                          ? "bg-[var(--danger-soft)] text-[var(--danger)]"
                           : g.severity === "high"
-                            ? "bg-amber-50 text-amber-700"
-                            : "bg-zinc-100 text-zinc-500"
+                            ? "bg-[var(--warning-soft)] text-[var(--warning)]"
+                            : "bg-[var(--surface-2)] text-[var(--text-subtle)]"
                       }`}
                     >
                       <Icon size={15} strokeWidth={2} aria-hidden />
                     </span>
-                    <h3 className="font-semibold text-[#13294B]">{g.title}</h3>
+                    <h3 className="font-semibold text-[var(--text)]">
+                      {g.title}
+                    </h3>
                   </div>
                   <Badge tone={meta.tone}>{g.severity}</Badge>
                 </div>
                 {g.evidence && (
-                  <p className="mt-3 pl-10 text-sm leading-relaxed text-zinc-700">
+                  <p className="mt-3 pl-10 text-sm leading-relaxed text-[var(--text-muted)]">
                     {g.evidence}
                   </p>
                 )}
                 {g.impact && (
-                  <p className="mt-2 pl-10 text-sm leading-relaxed text-zinc-900">
+                  <p className="mt-2 pl-10 text-sm leading-relaxed text-[var(--text)]">
                     <span className="font-medium">Impact: </span>
                     {g.impact}
                   </p>
@@ -146,53 +168,112 @@ export default function AuditReport({
         </ul>
       </section>
 
-      <section className="mt-14 overflow-hidden rounded-[16px] border-2 border-[#13294B] bg-gradient-to-br from-white via-[#fbfcfe] to-[#eef7fc] p-7 shadow-[0_8px_32px_rgb(19_41_75_/_0.08)]">
-        <p className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#4B9CD3]">
-          <Sparkle size={13} strokeWidth={2.25} aria-hidden />
-          Recommended package
-        </p>
-        <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-[#13294B]">
-          {pkg.name}
-        </h2>
-        <p className="mt-1 font-display text-4xl font-bold text-[#13294B]">
-          {pkg.price}
-        </p>
-        <p className="mt-3 text-pretty leading-relaxed text-zinc-700">
-          {pkg.tagline}
-        </p>
-        <ul className="mt-5 space-y-2 text-sm leading-relaxed text-zinc-700">
-          {scores.tsd_services.map((s, i) => (
-            <li key={i} className="flex items-start gap-2.5">
-              <span className="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-[#4B9CD3]" />
+      {/* Premium-offer recommended-package card */}
+      <section className="relative mt-14 overflow-hidden rounded-[18px] border-2 border-[var(--accent)] bg-gradient-to-br from-[var(--surface-elevated)] via-[var(--surface)] to-[var(--surface-2)] p-8 shadow-[var(--shadow-glow)]">
+        <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[var(--accent-soft)] blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-[var(--navy-soft)] blur-3xl" />
+
+        <div className="relative">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--accent)]/40 bg-[var(--accent-soft)] px-2.5 py-0.5 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
+              <Sparkle size={12} strokeWidth={2.25} aria-hidden />
+              Recommended package
+            </span>
+            <Badge tone="navy">{pkg.cap}</Badge>
+          </div>
+          <h2 className="mt-4 font-display text-3xl font-semibold tracking-tight text-[var(--text)]">
+            {pkg.name}
+          </h2>
+
+          <div className="mt-3 flex flex-wrap items-baseline gap-3">
+            <span className="font-display text-5xl font-bold tracking-tight text-[var(--text)]">
+              {pkg.price}
+            </span>
+            <span className="text-base text-[var(--text-subtle)] line-through">
+              {pkg.anchor}
+            </span>
+          </div>
+
+          <p className="mt-3 text-pretty leading-relaxed text-[var(--text-muted)]">
+            {pkg.tagline}
+          </p>
+
+          <ul className="mt-6 space-y-2.5 text-sm leading-relaxed text-[var(--text-muted)]">
+            {scores.tsd_services.map((s, i) => (
+              <li key={i} className="flex items-start gap-2.5">
+                <span className="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-[var(--accent)]" />
+                <span>
+                  <span className="font-semibold text-[var(--text)]">
+                    {prettyService(s.service)}.
+                  </span>{" "}
+                  {s.rationale}
+                </span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-7 grid gap-2.5 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)]/60 p-4 text-sm text-[var(--text-muted)] sm:grid-cols-2">
+            <div className="flex items-start gap-2.5">
+              <ShieldCheck
+                size={16}
+                strokeWidth={2}
+                className="mt-0.5 flex-none text-[var(--success)]"
+                aria-hidden
+              />
               <span>
-                <span className="font-semibold text-[#13294B]">
-                  {prettyService(s.service)}.
+                <span className="font-semibold text-[var(--text)]">
+                  Guarantee.
                 </span>{" "}
-                {s.rationale}
+                {pkg.guarantee}
               </span>
-            </li>
-          ))}
-        </ul>
-        <div className="mt-7 flex flex-wrap gap-3 print:hidden">
-          <LinkButton
-            href="mailto:hello@tsd-modernization.com?subject=Booking%20discovery%20call"
-            size="lg"
-          >
-            Book a 20-minute discovery call
-          </LinkButton>
+            </div>
+            <div className="flex items-start gap-2.5">
+              <Clock
+                size={16}
+                strokeWidth={2}
+                className="mt-0.5 flex-none text-[var(--accent)]"
+                aria-hidden
+              />
+              <span>
+                <span className="font-semibold text-[var(--text)]">
+                  Founding cohort closes Aug 10, 2026.
+                </span>{" "}
+                Last project start is July 13.
+              </span>
+            </div>
+          </div>
+
+          <div className="mt-7 flex flex-wrap items-center gap-3 print:hidden">
+            <LinkButton
+              href="mailto:hello@tsd-modernization.com?subject=Booking%20discovery%20call"
+              size="lg"
+              rightIcon={<ArrowRight size={16} strokeWidth={2.25} />}
+            >
+              Book a 20-minute discovery call
+            </LinkButton>
+            <LinkButton
+              variant="ghost"
+              size="lg"
+              href="https://tsd-modernization.com/pricing"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              See all packages
+            </LinkButton>
+          </div>
         </div>
       </section>
 
       <section className="mt-14">
-        <h2 className="font-display text-2xl font-semibold tracking-tight text-[#13294B]">
+        <h2 className="font-display text-2xl font-semibold tracking-tight text-[var(--text)]">
           The full read
         </h2>
-        <div className="mt-4 whitespace-pre-wrap text-pretty text-base leading-relaxed text-zinc-800">
+        <div className="mt-4 whitespace-pre-wrap text-pretty text-base leading-relaxed text-[var(--text-muted)]">
           {reportMd}
         </div>
       </section>
 
-      <footer className="mt-16 border-t border-zinc-200 pt-6 text-sm text-zinc-500">
+      <footer className="mt-16 border-t border-[var(--border)] pt-6 text-sm text-[var(--text-subtle)]">
         Generated by TSD Modernization Solutions — a Charlotte-area AI &amp;
         web modernization team running a Founding Cohort through Aug 10, 2026.
       </footer>

@@ -2,7 +2,7 @@ import { forwardRef } from "react";
 import type { InputHTMLAttributes, TextareaHTMLAttributes, SelectHTMLAttributes, ReactNode } from "react";
 
 const FIELD_BASE =
-  "w-full rounded-[10px] border border-zinc-300 bg-white px-3.5 py-2.5 text-base text-zinc-900 shadow-sm outline-none placeholder:text-zinc-400 transition-colors duration-150 focus:border-[#4B9CD3] focus:ring-2 focus:ring-[#4B9CD3]/30 disabled:cursor-not-allowed disabled:opacity-60";
+  "w-full rounded-[10px] border border-[var(--border-strong)] bg-[var(--surface-2)] px-3.5 py-2.5 text-base text-[var(--text)] outline-none placeholder:text-[var(--text-subtle)] transition-colors duration-150 focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/30 disabled:cursor-not-allowed disabled:opacity-60";
 
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(
   ({ className = "", ...rest }, ref) => (
@@ -39,14 +39,14 @@ export function Label({
   className?: string;
 }) {
   return (
-    <label htmlFor={htmlFor} className={`block text-sm font-medium text-zinc-800 ${className}`}>
+    <label htmlFor={htmlFor} className={`block text-sm font-medium text-[var(--text)] ${className}`}>
       {children}
-      {hint && <span className="ml-1.5 font-normal text-zinc-400">{hint}</span>}
+      {hint && <span className="ml-1.5 font-normal text-[var(--text-subtle)]">{hint}</span>}
     </label>
   );
 }
 
 export function FieldError({ children }: { children: ReactNode }) {
   if (!children) return null;
-  return <p className="mt-1.5 text-sm text-[#b91c1c]">{children}</p>;
+  return <p className="mt-1.5 text-sm text-[var(--danger)]">{children}</p>;
 }

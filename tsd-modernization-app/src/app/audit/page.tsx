@@ -17,21 +17,21 @@ const TRUST_BULLETS = [
 
 export default function AuditPage() {
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-6 py-12 sm:py-16">
+    <div className="mx-auto flex w-full max-w-xl flex-1 flex-col px-6 py-12 sm:py-16">
       <header className="mb-10 animate-fade-up">
         <div className="mb-7 flex items-center gap-2.5">
           <Logo size={26} />
-          <span className="text-sm font-semibold tracking-tight text-[#13294B]">
+          <span className="text-sm font-semibold tracking-tight text-[var(--text)]">
             TSD Modernization Solutions
           </span>
         </div>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#4B9CD3]">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
           Free presence audit
         </p>
-        <h1 className="mt-2 text-balance font-display text-[40px] font-semibold leading-[1.05] tracking-tight text-[#13294B] sm:text-[44px]">
+        <h1 className="mt-2 text-balance font-display text-[40px] font-semibold leading-[1.05] tracking-tight text-[var(--text)] sm:text-[44px]">
           See exactly what your online presence is costing you.
         </h1>
-        <p className="mt-4 text-pretty text-base leading-relaxed text-zinc-600 sm:text-lg">
+        <p className="mt-4 text-pretty text-base leading-relaxed text-[var(--text-muted)] sm:text-lg">
           Tell us your business and we&apos;ll grade the five things that
           decide whether a customer hires you or your competitor: website,
           Google profile, reviews, trust signals, and conversion paths.
@@ -42,13 +42,13 @@ export default function AuditPage() {
         <AuditForm />
       </div>
 
-      <ul className="mt-10 grid grid-cols-1 gap-3 text-sm text-zinc-600 sm:grid-cols-3 animate-fade-up-d200">
+      <ul className="mt-10 grid grid-cols-1 gap-3 text-sm text-[var(--text-muted)] sm:grid-cols-3 animate-fade-up-d200">
         {TRUST_BULLETS.map(({ icon: Icon, text }) => (
           <li key={text} className="flex items-center gap-2">
             <Icon
               size={16}
               strokeWidth={1.75}
-              className="flex-none text-[#4B9CD3]"
+              className="flex-none text-[var(--accent)]"
               aria-hidden
             />
             <span>{text}</span>
@@ -56,7 +56,7 @@ export default function AuditPage() {
         ))}
       </ul>
 
-      <p className="mt-8 text-xs leading-relaxed text-zinc-500 animate-fade-up-d300">
+      <p className="mt-8 text-xs leading-relaxed text-[var(--text-subtle)] animate-fade-up-d300">
         We&apos;ll only use the phone number to follow up if you ask us to.
       </p>
     </div>
