@@ -1,12 +1,18 @@
+import { AlertOctagon, AlertTriangle, Info, Sparkle } from "lucide-react";
 import type { AuditScores } from "@/lib/audit/types";
 import PrintButton from "./PrintButton";
+import { LinkButton } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
 
-const SEVERITY_STYLES = {
-  critical: "border-red-300 bg-red-50 text-red-900",
-  high: "border-amber-300 bg-amber-50 text-amber-900",
-  medium: "border-zinc-300 bg-zinc-50 text-zinc-800",
-  low: "border-zinc-200 bg-white text-zinc-700",
-} as const;
+const SEVERITY_META: Record<
+  AuditScores["gaps"][number]["severity"],
+  { tone: "red" | "amber" | "neutral"; icon: typeof Info }
+> = {
+  critical: { tone: "red", icon: AlertOctagon },
+  high: { tone: "amber", icon: AlertTriangle },
+  medium: { tone: "neutral", icon: Info },
+  low: { tone: "neutral", icon: Info },
+};
 
 const PACKAGE_COPY: Record<
   AuditScores["recommended_package"],
@@ -18,16 +24,16 @@ const PACKAGE_COPY: Record<
     tagline: "A 2-3 hour structured audit and modernization roadmap.",
   },
   website_ai_bundle: {
-    name: "Phase II — Website + AI Bundle",
-    price: "$2,000",
+    name: "Website + AI Build",
+    price: "$5,000",
     tagline:
       "Custom site, AI chatbot or receptionist, SEO, and source-code ownership.",
   },
   founding_partnership: {
-    name: "Founding Partnership",
-    price: "$5,000",
+    name: "The Full Modernization",
+    price: "$10,000",
     tagline:
-      "Phase I + Phase II + receptionist + 4 months of ops support through Aug 31.",
+      "Phase I + Build + receptionist + 4 months of ops support through Aug 31.",
   },
 };
 
@@ -43,40 +49,49 @@ export default function AuditReport({
   const pkg = PACKAGE_COPY[scores.recommended_package];
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12 sm:py-16 print:max-w-none print:py-0">
+    <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12 sm:py-16 animate-fade-up print:max-w-none print:py-0">
       <header className="border-b border-zinc-200 pb-8">
-        <p className="text-sm font-medium uppercase tracking-[0.18em] text-[#4B9CD3]">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#4B9CD3]">
           Modernization audit
         </p>
-        <h1 className="mt-2 text-balance text-3xl font-semibold tracking-tight text-[#13294B] sm:text-4xl">
+        <h1 className="mt-2 font-display text-[40px] font-semibold leading-[1.05] tracking-tight text-[#13294B] sm:text-[44px]">
           {businessName}
         </h1>
-        <p className="mt-3 text-pretty text-base leading-relaxed text-zinc-700">
+        <p className="mt-4 text-pretty text-lg leading-relaxed text-zinc-700">
           {scores.one_line_summary}
         </p>
-        <div className="mt-6 flex flex-wrap gap-2 print:hidden">
+        <div className="mt-6 flex flex-wrap items-center gap-2 print:hidden">
           <PrintButton />
+          <LinkButton
+            variant="ghost"
+            size="sm"
+            href="/audit"
+          >
+            Run another
+          </LinkButton>
         </div>
       </header>
 
-      <section className="mt-10">
-        <h2 className="text-xl font-semibold text-[#13294B]">Presence score</h2>
+      <section className="mt-12">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">
+          Presence score
+        </p>
         <div className="mt-3 flex items-end gap-3">
-          <span className="text-6xl font-bold tracking-tight text-[#13294B]">
+          <span className="font-display text-7xl font-semibold leading-none tracking-tight text-[#13294B]">
             {scores.presence_score}
           </span>
-          <span className="pb-3 text-zinc-500">/ 100</span>
+          <span className="pb-3 text-zinc-400">/ 100</span>
         </div>
-        <dl className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
+        <dl className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-5">
           {Object.entries(scores.pillar_scores).map(([k, v]) => (
             <div
               key={k}
-              className="rounded-md border border-zinc-200 bg-white px-3 py-2.5"
+              className="rounded-[10px] border border-zinc-200/80 bg-white px-3.5 py-3"
             >
-              <dt className="text-xs uppercase tracking-wide text-zinc-500">
+              <dt className="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">
                 {k}
               </dt>
-              <dd className="mt-0.5 text-2xl font-semibold text-[#13294B]">
+              <dd className="mt-0.5 font-display text-2xl font-semibold tracking-tight text-[#13294B]">
                 {v}
               </dd>
             </div>
@@ -85,56 +100,94 @@ export default function AuditReport({
       </section>
 
       <section className="mt-12">
-        <h2 className="text-xl font-semibold text-[#13294B]">What we found</h2>
-        <ul className="mt-4 space-y-3">
-          {scores.gaps.map((g, i) => (
-            <li
-              key={i}
-              className={`rounded-md border px-4 py-3 ${SEVERITY_STYLES[g.severity]}`}
-            >
-              <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <h3 className="font-semibold">{g.title}</h3>
-                <span className="text-xs uppercase tracking-wide opacity-75">
-                  {g.severity}
-                </span>
-              </div>
-              <p className="mt-1 text-sm">{g.evidence}</p>
-              <p className="mt-1 text-sm font-medium">Impact: {g.impact}</p>
-            </li>
-          ))}
+        <h2 className="font-display text-2xl font-semibold tracking-tight text-[#13294B]">
+          What we found
+        </h2>
+        <ul className="mt-5 space-y-3">
+          {scores.gaps.map((g, i) => {
+            const meta = SEVERITY_META[g.severity];
+            const Icon = meta.icon;
+            return (
+              <li
+                key={i}
+                className="rounded-[12px] border border-zinc-200/80 bg-white p-5 shadow-[0_1px_2px_rgb(15_23_42_/_0.04)]"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-start gap-3">
+                    <span
+                      className={`mt-0.5 flex h-7 w-7 flex-none items-center justify-center rounded-full ${
+                        g.severity === "critical"
+                          ? "bg-red-50 text-red-700"
+                          : g.severity === "high"
+                            ? "bg-amber-50 text-amber-700"
+                            : "bg-zinc-100 text-zinc-500"
+                      }`}
+                    >
+                      <Icon size={15} strokeWidth={2} aria-hidden />
+                    </span>
+                    <h3 className="font-semibold text-[#13294B]">{g.title}</h3>
+                  </div>
+                  <Badge tone={meta.tone}>{g.severity}</Badge>
+                </div>
+                {g.evidence && (
+                  <p className="mt-3 pl-10 text-sm leading-relaxed text-zinc-700">
+                    {g.evidence}
+                  </p>
+                )}
+                {g.impact && (
+                  <p className="mt-2 pl-10 text-sm leading-relaxed text-zinc-900">
+                    <span className="font-medium">Impact: </span>
+                    {g.impact}
+                  </p>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </section>
 
-      <section className="mt-12 rounded-lg border-2 border-[#13294B] bg-white p-6 shadow-sm">
-        <p className="text-sm font-medium uppercase tracking-[0.18em] text-[#4B9CD3]">
+      <section className="mt-14 overflow-hidden rounded-[16px] border-2 border-[#13294B] bg-gradient-to-br from-white via-[#fbfcfe] to-[#eef7fc] p-7 shadow-[0_8px_32px_rgb(19_41_75_/_0.08)]">
+        <p className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#4B9CD3]">
+          <Sparkle size={13} strokeWidth={2.25} aria-hidden />
           Recommended package
         </p>
-        <h2 className="mt-1 text-2xl font-semibold text-[#13294B]">
+        <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-[#13294B]">
           {pkg.name}
         </h2>
-        <p className="mt-1 text-3xl font-bold text-[#13294B]">{pkg.price}</p>
-        <p className="mt-3 text-pretty text-zinc-700">{pkg.tagline}</p>
-        <ul className="mt-4 space-y-1 text-sm text-zinc-700">
+        <p className="mt-1 font-display text-4xl font-bold text-[#13294B]">
+          {pkg.price}
+        </p>
+        <p className="mt-3 text-pretty leading-relaxed text-zinc-700">
+          {pkg.tagline}
+        </p>
+        <ul className="mt-5 space-y-2 text-sm leading-relaxed text-zinc-700">
           {scores.tsd_services.map((s, i) => (
-            <li key={i}>
-              <span className="font-medium text-[#13294B]">
-                {prettyService(s.service)}.
-              </span>{" "}
-              {s.rationale}
+            <li key={i} className="flex items-start gap-2.5">
+              <span className="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-[#4B9CD3]" />
+              <span>
+                <span className="font-semibold text-[#13294B]">
+                  {prettyService(s.service)}.
+                </span>{" "}
+                {s.rationale}
+              </span>
             </li>
           ))}
         </ul>
-        <a
-          href="mailto:hello@tsd-modernization.com?subject=Booking%20discovery%20call"
-          className="mt-6 inline-flex items-center justify-center rounded-md bg-[#13294B] px-5 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-[#0f1f3a] print:hidden"
-        >
-          Book a 20-minute discovery call
-        </a>
+        <div className="mt-7 flex flex-wrap gap-3 print:hidden">
+          <LinkButton
+            href="mailto:hello@tsd-modernization.com?subject=Booking%20discovery%20call"
+            size="lg"
+          >
+            Book a 20-minute discovery call
+          </LinkButton>
+        </div>
       </section>
 
-      <section className="mt-12">
-        <h2 className="text-xl font-semibold text-[#13294B]">The full read</h2>
-        <div className="prose prose-zinc mt-4 max-w-none whitespace-pre-wrap text-zinc-800">
+      <section className="mt-14">
+        <h2 className="font-display text-2xl font-semibold tracking-tight text-[#13294B]">
+          The full read
+        </h2>
+        <div className="mt-4 whitespace-pre-wrap text-pretty text-base leading-relaxed text-zinc-800">
           {reportMd}
         </div>
       </section>

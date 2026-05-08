@@ -1,12 +1,21 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Vapi from "@vapi-ai/web";
+import { Phone, PhoneOff, Mic } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+
+type Status = "idle" | "connecting" | "live" | "error";
+
+const STATUS_TEXT: Record<Status, string> = {
+  idle: "Ready",
+  connecting: "Connecting…",
+  live: "Live — speak now",
+  error: "Error",
+};
 
 export default function VoiceWidget({ assistantId }: { assistantId: string }) {
   const vapiRef = useRef<Vapi | null>(null);
-  const [status, setStatus] = useState<"idle" | "connecting" | "live" | "error">(
-    "idle"
-  );
+  const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -46,39 +55,65 @@ export default function VoiceWidget({ assistantId }: { assistantId: string }) {
     setStatus("idle");
   }
 
+  const isLive = status === "live";
+
   return (
-    <div className="rounded-lg border border-zinc-200 bg-white p-6">
-      <p className="text-sm text-zinc-500">Assistant id: {assistantId}</p>
-      <div className="mt-4 flex items-center gap-3">
-        {status !== "live" ? (
-          <button
-            type="button"
-            onClick={start}
-            disabled={status === "connecting"}
-            className="rounded-md bg-[#13294B] px-5 py-2.5 font-semibold text-white disabled:opacity-60"
-          >
-            {status === "connecting" ? "Connecting…" : "Start test call"}
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={stop}
-            className="rounded-md bg-red-600 px-5 py-2.5 font-semibold text-white"
-          >
-            End call
-          </button>
-        )}
-        <span className="text-sm text-zinc-600">
-          {status === "live"
-            ? "Live — speak now"
-            : status === "connecting"
-              ? "Dialing"
-              : status === "error"
-                ? "Error"
-                : "Ready"}
-        </span>
+    <div className="rounded-[14px] border border-zinc-200/80 bg-white p-6 shadow-[0_1px_2px_rgb(15_23_42_/_0.04)]">
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <div className="relative flex h-12 w-12 items-center justify-center rounded-full bg-[#eef7fc] text-[#13294B]">
+            <Mic size={20} strokeWidth={1.75} />
+            {isLive && (
+              <span className="absolute right-0 top-0 flex h-3 w-3">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-500" />
+              </span>
+            )}
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-[#13294B]">
+              {STATUS_TEXT[status]}
+            </p>
+            <p className="font-mono text-xs text-zinc-500">
+              Assistant {assistantId.slice(0, 8)}…
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          {!isLive ? (
+            <Button
+              size="lg"
+              onClick={start}
+              disabled={status === "connecting"}
+              leftIcon={<Phone size={16} strokeWidth={2.25} />}
+            >
+              {status === "connecting" ? "Connecting…" : "Start test call"}
+            </Button>
+          ) : (
+            <Button
+              size="lg"
+              variant="danger"
+              onClick={stop}
+              leftIcon={<PhoneOff size={16} strokeWidth={2.25} />}
+            >
+              End call
+            </Button>
+          )}
+        </div>
       </div>
-      {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
+
+      {error && (
+        <p className="mt-4 rounded-md border border-red-200 bg-red-50/70 px-3 py-2 text-sm text-red-900">
+          {error}
+        </p>
+      )}
+
+      <p className="mt-5 border-t border-zinc-100 pt-4 text-xs leading-relaxed text-zinc-500">
+        Browser will ask for microphone permission the first time. Use a real
+        scenario — &ldquo;I need a quote for a 3-ton condenser&rdquo; — and see
+        how the agent handles it.
+      </p>
     </div>
   );
 }

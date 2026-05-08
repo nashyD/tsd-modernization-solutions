@@ -1,12 +1,16 @@
 "use client";
+import { Download } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+
 export default function PrintButton() {
   return (
-    <button
-      type="button"
+    <Button
+      variant="secondary"
+      size="sm"
       onClick={() => window.print()}
-      className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-800 hover:bg-zinc-50"
+      leftIcon={<Download size={14} strokeWidth={2} />}
     >
       Download as PDF
-    </button>
+    </Button>
   );
 }

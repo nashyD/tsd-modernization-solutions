@@ -1,7 +1,11 @@
+import { CloudUpload, ExternalLink } from "lucide-react";
 import { requireUser, getMemberships } from "@/lib/auth/require";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { env } from "@/lib/env";
 import BackLink from "@/components/BackLink";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { Badge } from "@/components/ui/Badge";
 
 export const dynamic = "force-dynamic";
 
@@ -31,17 +35,26 @@ async function fetchLatestDeployment(
   return json.deployments?.[0] ?? null;
 }
 
+function stateTone(state: string): "emerald" | "amber" | "red" | "neutral" {
+  if (state === "READY") return "emerald";
+  if (state === "BUILDING" || state === "QUEUED") return "amber";
+  if (state === "ERROR" || state === "CANCELED") return "red";
+  return "neutral";
+}
+
 export default async function DeploymentPage() {
   const { user } = await requireUser();
   const memberships = await getMemberships(user.id);
   const ownership = memberships.find((m) => m.role !== "admin");
   if (!ownership) {
     return (
-      <div className="rounded-lg border border-zinc-200 bg-white p-8">
-        <h1 className="text-xl font-semibold text-[#13294B]">Deployment</h1>
-        <p className="mt-2 text-zinc-700">
-          You don&apos;t have a TSD client account linked yet.
-        </p>
+      <div className="space-y-6">
+        <BackLink href="/app" label="Dashboard" />
+        <EmptyState
+          icon={<CloudUpload size={20} />}
+          title="No client linked yet"
+          description="Once your project is linked, the latest deployment shows up here."
+        />
       </div>
     );
   }
@@ -58,55 +71,72 @@ export default async function DeploymentPage() {
     : null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-fade-up">
       <BackLink href="/app" label="Dashboard" />
-      <h1 className="text-2xl font-semibold text-[#13294B]">Deployment</h1>
+
+      <PageHeader
+        eyebrow="Deployment"
+        title="Production build"
+        description="The latest version of your site, live on Vercel."
+      />
+
       {!client?.vercel_project_id && (
-        <div className="rounded-lg border border-zinc-200 bg-white p-6 text-zinc-700">
-          Your project isn&apos;t linked to a Vercel deployment yet. The TSD
-          team will configure it once your site is live.
-        </div>
+        <EmptyState
+          icon={<CloudUpload size={20} />}
+          title="Not linked to Vercel yet"
+          description="The TSD team will wire this up once your site is live. You'll see the deploy status, last commit message, and a direct link here."
+        />
       )}
+
       {client?.vercel_project_id && !deployment && (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 p-6 text-amber-900">
+        <div className="rounded-[14px] border border-amber-200 bg-amber-50/70 p-5 text-amber-900">
           We couldn&apos;t reach Vercel for this project. Try again in a moment.
         </div>
       )}
+
       {deployment && (
-        <div className="rounded-lg border border-zinc-200 bg-white p-6">
-          <h2 className="font-semibold text-[#13294B]">Latest deployment</h2>
-          <dl className="mt-4 grid gap-3 text-sm">
-            <div className="flex justify-between gap-4">
-              <dt className="text-zinc-500">URL</dt>
-              <dd>
+        <section className="rounded-[14px] border border-zinc-200/80 bg-white p-6 shadow-[0_1px_2px_rgb(15_23_42_/_0.04)]">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h2 className="text-base font-semibold tracking-tight text-[#13294B]">
+                Latest deployment
+              </h2>
+              <p className="mt-1 text-sm text-zinc-500">
+                {new Date(deployment.created).toLocaleString()}
+              </p>
+            </div>
+            <Badge tone={stateTone(deployment.state)}>{deployment.state}</Badge>
+          </div>
+
+          <dl className="mt-6 grid gap-4 text-sm sm:grid-cols-2">
+            <div>
+              <dt className="text-xs uppercase tracking-wide text-zinc-500">
+                Live URL
+              </dt>
+              <dd className="mt-1">
                 <a
                   href={`https://${deployment.url}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-[#13294B] underline"
+                  className="inline-flex items-center gap-1.5 font-medium text-[#13294B] underline underline-offset-2 hover:text-[#1f3666]"
                 >
                   {deployment.url}
+                  <ExternalLink size={13} strokeWidth={2} aria-hidden />
                 </a>
               </dd>
             </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-zinc-500">State</dt>
-              <dd className="font-medium">{deployment.state}</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-zinc-500">Created</dt>
-              <dd>{new Date(deployment.created).toLocaleString()}</dd>
-            </div>
             {deployment.meta?.githubCommitMessage && (
-              <div className="flex justify-between gap-4">
-                <dt className="text-zinc-500">Last change</dt>
-                <dd className="max-w-md truncate">
+              <div>
+                <dt className="text-xs uppercase tracking-wide text-zinc-500">
+                  Last change
+                </dt>
+                <dd className="mt-1 text-zinc-800">
                   {deployment.meta.githubCommitMessage}
                 </dd>
               </div>
             )}
           </dl>
-        </div>
+        </section>
       )}
     </div>
   );

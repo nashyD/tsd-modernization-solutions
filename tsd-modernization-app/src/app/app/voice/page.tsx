@@ -1,7 +1,10 @@
+import { PhoneCall } from "lucide-react";
 import { requireUser, getMemberships } from "@/lib/auth/require";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import VoiceWidget from "./VoiceWidget";
 import BackLink from "@/components/BackLink";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 export const dynamic = "force-dynamic";
 
@@ -11,14 +14,17 @@ export default async function VoicePage() {
   const ownership = memberships.find((m) => m.role !== "admin");
   if (!ownership) {
     return (
-      <div className="rounded-lg border border-zinc-200 bg-white p-8">
-        <h1 className="text-xl font-semibold text-[#13294B]">Voice</h1>
-        <p className="mt-2 text-zinc-700">
-          You don&apos;t have a TSD client account linked yet.
-        </p>
+      <div className="space-y-6">
+        <BackLink href="/app" label="Dashboard" />
+        <EmptyState
+          icon={<PhoneCall size={20} />}
+          title="No client linked yet"
+          description="Once your AI receptionist is configured, you can place a live test call here."
+        />
       </div>
     );
   }
+
   const sb = supabaseAdmin();
   const { data: client } = await sb
     .from("clients")
@@ -27,23 +33,23 @@ export default async function VoicePage() {
     .single();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-fade-up">
       <BackLink href="/app" label="Dashboard" />
-      <h1 className="text-2xl font-semibold text-[#13294B]">
-        Test your AI receptionist
-      </h1>
-      <p className="text-zinc-700">
-        Click the button below to start a live call with your assistant. This
-        is the same agent that answers your phone — try a real customer
-        scenario and see how it responds.
-      </p>
+
+      <PageHeader
+        eyebrow="Voice"
+        title="Test your AI receptionist"
+        description="Click the button to start a live call with your assistant. This is the same agent that picks up your phone."
+      />
+
       {client?.vapi_assistant_id ? (
         <VoiceWidget assistantId={client.vapi_assistant_id} />
       ) : (
-        <div className="rounded-lg border border-zinc-200 bg-white p-6 text-zinc-700">
-          Your assistant isn&apos;t configured yet. We&apos;ll wire it up once
-          your AI receptionist is live.
-        </div>
+        <EmptyState
+          icon={<PhoneCall size={20} />}
+          title="Assistant not configured yet"
+          description="The TSD team will wire up your AI receptionist once it's built. You'll be able to dial it from this page."
+        />
       )}
     </div>
   );

@@ -1,8 +1,11 @@
+import { LineChart, ArrowUp, ArrowDown, Minus } from "lucide-react";
 import { requireUser, getMemberships } from "@/lib/auth/require";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { AuditScoresSchema } from "@/lib/audit/types";
 import type { AuditScores } from "@/lib/audit/types";
 import BackLink from "@/components/BackLink";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 export const dynamic = "force-dynamic";
 
@@ -12,11 +15,13 @@ export default async function SnapshotPage() {
   const ownership = memberships.find((m) => m.role !== "admin");
   if (!ownership) {
     return (
-      <div className="rounded-lg border border-zinc-200 bg-white p-8">
-        <h1 className="text-xl font-semibold text-[#13294B]">Monthly snapshot</h1>
-        <p className="mt-2 text-zinc-700">
-          You don&apos;t have a TSD client account linked yet.
-        </p>
+      <div className="space-y-6">
+        <BackLink href="/app" label="Dashboard" />
+        <EmptyState
+          icon={<LineChart size={20} />}
+          title="No client linked yet"
+          description="Your monthly snapshot diff appears here once you have a TSD client account."
+        />
       </div>
     );
   }
@@ -36,14 +41,13 @@ export default async function SnapshotPage() {
 
   if (!latest) {
     return (
-      <div className="rounded-lg border border-zinc-200 bg-white p-8">
-        <h1 className="text-xl font-semibold text-[#13294B]">
-          Monthly snapshot
-        </h1>
-        <p className="mt-2 text-zinc-700">
-          We&apos;ll re-run your audit on a monthly cadence and show the diff
-          here. The first one will land within 30 days of launch.
-        </p>
+      <div className="space-y-8 animate-fade-up">
+        <BackLink href="/app" label="Dashboard" />
+        <PageHeader
+          eyebrow="Monthly snapshot"
+          title="No snapshot yet"
+          description="We'll re-run your audit on a monthly cadence and show the diff here. The first one lands within 30 days of your build going live."
+        />
       </div>
     );
   }
@@ -55,29 +59,53 @@ export default async function SnapshotPage() {
 
   if (!latestScores.success) {
     return (
-      <div className="rounded-lg border border-amber-200 bg-amber-50 p-6 text-amber-900">
-        Snapshot data is malformed. The TSD team has been notified.
+      <div className="space-y-6">
+        <BackLink href="/app" label="Dashboard" />
+        <div className="rounded-[14px] border border-amber-200 bg-amber-50/70 p-5 text-amber-900">
+          Snapshot data is malformed. The TSD team has been notified.
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-fade-up">
       <BackLink href="/app" label="Dashboard" />
-      <header>
-        <p className="text-sm uppercase tracking-[0.18em] text-[#4B9CD3]">
-          Monthly snapshot
-        </p>
-        <h1 className="mt-1 text-2xl font-semibold text-[#13294B]">
-          Latest audit · {new Date(latest.created_at).toLocaleDateString()}
-        </h1>
-      </header>
+
+      <PageHeader
+        eyebrow="Monthly snapshot"
+        title={`Latest audit · ${new Date(latest.created_at).toLocaleDateString(
+          undefined,
+          { month: "long", day: "numeric", year: "numeric" }
+        )}`}
+        description="How your online presence is trending. We re-run the audit every 30 days."
+      />
 
       <ScoreSummary
         latest={latestScores.data}
         previous={prevScores?.success ? prevScores.data : null}
       />
     </div>
+  );
+}
+
+function Delta({ d }: { d: number }) {
+  if (d === 0)
+    return (
+      <span className="inline-flex items-center gap-0.5 text-xs font-medium text-zinc-400">
+        <Minus size={12} aria-hidden /> 0
+      </span>
+    );
+  if (d > 0)
+    return (
+      <span className="inline-flex items-center gap-0.5 text-xs font-medium text-emerald-700">
+        <ArrowUp size={12} strokeWidth={2.5} aria-hidden /> {d}
+      </span>
+    );
+  return (
+    <span className="inline-flex items-center gap-0.5 text-xs font-medium text-red-700">
+      <ArrowDown size={12} strokeWidth={2.5} aria-hidden /> {Math.abs(d)}
+    </span>
   );
 }
 
@@ -90,60 +118,44 @@ function ScoreSummary({
 }) {
   const delta = previous ? latest.presence_score - previous.presence_score : 0;
   return (
-    <div className="rounded-lg border border-zinc-200 bg-white p-6">
+    <div className="rounded-[14px] border border-zinc-200/80 bg-white p-6 shadow-[0_1px_2px_rgb(15_23_42_/_0.04)]">
       <div className="flex items-end gap-4">
         <div>
-          <p className="text-xs uppercase tracking-wide text-zinc-500">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">
             Presence score
           </p>
-          <p className="text-5xl font-bold text-[#13294B]">
+          <p className="font-display text-6xl font-semibold tracking-tight text-[#13294B]">
             {latest.presence_score}
           </p>
         </div>
         {previous && (
-          <p
-            className={`pb-2 text-sm font-medium ${
-              delta > 0
-                ? "text-emerald-700"
-                : delta < 0
-                  ? "text-red-700"
-                  : "text-zinc-500"
-            }`}
-          >
-            {delta > 0 ? "+" : ""}
-            {delta} vs last month
-          </p>
+          <div className="pb-3">
+            <Delta d={delta} />
+            <p className="mt-0.5 text-[11px] uppercase tracking-wide text-zinc-400">
+              vs last month
+            </p>
+          </div>
         )}
       </div>
-      <dl className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
+
+      <dl className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-5">
         {Object.entries(latest.pillar_scores).map(([k, v]) => {
           const prev = previous?.pillar_scores[k as keyof typeof previous.pillar_scores];
           const d = prev !== undefined ? v - prev : 0;
           return (
             <div
               key={k}
-              className="rounded-md border border-zinc-200 bg-white px-3 py-2.5"
+              className="rounded-[10px] border border-zinc-200/80 bg-zinc-50/40 px-3.5 py-3"
             >
-              <dt className="text-xs uppercase tracking-wide text-zinc-500">
+              <dt className="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">
                 {k}
               </dt>
-              <dd className="mt-0.5 text-2xl font-semibold text-[#13294B]">
-                {v}
+              <dd className="mt-0.5 flex items-baseline gap-2">
+                <span className="font-display text-2xl font-semibold tracking-tight text-[#13294B]">
+                  {v}
+                </span>
+                {previous && d !== 0 && <Delta d={d} />}
               </dd>
-              {previous && (
-                <p
-                  className={`text-xs ${
-                    d > 0
-                      ? "text-emerald-700"
-                      : d < 0
-                        ? "text-red-700"
-                        : "text-zinc-400"
-                  }`}
-                >
-                  {d > 0 ? "+" : ""}
-                  {d}
-                </p>
-              )}
             </div>
           );
         })}

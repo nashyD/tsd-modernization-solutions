@@ -1,5 +1,6 @@
 "use client";
 import { useTransition } from "react";
+import { Trash2 } from "lucide-react";
 import { deleteClient } from "./actions";
 
 export default function DeleteClientButton({
@@ -27,8 +28,9 @@ export default function DeleteClientButton({
           await deleteClient(fd);
         });
       }}
-      className="text-sm font-medium text-red-700 hover:underline disabled:cursor-not-allowed disabled:opacity-50"
+      className="inline-flex items-center gap-1.5 text-sm font-medium text-red-700 transition-colors hover:text-red-900 disabled:cursor-not-allowed disabled:opacity-50"
     >
+      <Trash2 size={14} strokeWidth={2} aria-hidden />
       {pending ? "Deleting…" : "Delete"}
     </button>
   );

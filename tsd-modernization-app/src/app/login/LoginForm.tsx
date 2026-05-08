@@ -1,6 +1,9 @@
 "use client";
 import { useActionState } from "react";
+import { Mail, ArrowRight, MailCheck } from "lucide-react";
 import { sendMagicLink, type LoginState } from "./actions";
+import { Input, Label } from "@/components/ui/Input";
+import { Button } from "@/components/ui/Button";
 
 export default function LoginForm() {
   const [state, action, pending] = useActionState<LoginState | undefined, FormData>(
@@ -10,36 +13,47 @@ export default function LoginForm() {
 
   if (state?.ok) {
     return (
-      <div className="rounded-md border border-emerald-300 bg-emerald-50 px-4 py-3 text-emerald-900">
-        Check your email for a sign-in link. It&apos;s good for 15 minutes.
+      <div className="rounded-[12px] border border-emerald-200 bg-emerald-50/70 px-5 py-4 text-emerald-900">
+        <div className="flex items-start gap-3">
+          <MailCheck size={20} strokeWidth={1.75} className="mt-0.5 flex-none" aria-hidden />
+          <div>
+            <p className="font-semibold">Check your email</p>
+            <p className="mt-0.5 text-sm">
+              We sent a sign-in link. It&apos;s good for 15 minutes.
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
     <form action={action} className="space-y-4">
-      <label htmlFor="email" className="block text-sm font-medium text-zinc-800">
-        Email
-      </label>
-      <input
-        id="email"
-        name="email"
-        type="email"
-        required
-        autoComplete="email"
-        placeholder="you@business.com"
-        className="w-full rounded-md border border-zinc-300 bg-white px-3.5 py-2.5 text-base text-zinc-900 shadow-sm outline-none placeholder:text-zinc-400 focus:border-[#4B9CD3] focus:ring-2 focus:ring-[#4B9CD3]/30"
-      />
-      {state?.error && (
-        <p className="text-sm text-red-600">{state.error}</p>
-      )}
-      <button
+      <div>
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          required
+          autoComplete="email"
+          placeholder="you@business.com"
+          className="mt-1.5"
+        />
+        {state?.error && (
+          <p className="mt-1.5 text-sm text-[#b91c1c]">{state.error}</p>
+        )}
+      </div>
+      <Button
         type="submit"
+        size="lg"
         disabled={pending}
-        className="inline-flex w-full items-center justify-center rounded-md bg-[#13294B] px-5 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-[#0f1f3a] disabled:cursor-not-allowed disabled:opacity-60"
+        leftIcon={!pending ? <Mail size={16} strokeWidth={2} /> : undefined}
+        rightIcon={!pending ? <ArrowRight size={16} strokeWidth={2.25} /> : undefined}
+        className="w-full"
       >
         {pending ? "Sending…" : "Send sign-in link"}
-      </button>
+      </Button>
     </form>
   );
 }
