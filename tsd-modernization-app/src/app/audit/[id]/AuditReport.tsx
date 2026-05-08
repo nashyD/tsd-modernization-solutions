@@ -12,6 +12,7 @@ import { PACKAGES } from "@/lib/packages";
 import PrintButton from "./PrintButton";
 import { LinkButton } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { Logo } from "@/components/ui/Logo";
 
 const SEVERITY_META: Record<
   AuditScores["gaps"][number]["severity"],
@@ -36,6 +37,17 @@ export default function AuditReport({
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12 sm:py-16 animate-fade-up print:max-w-none print:py-0">
+      {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+      <a
+        href="/"
+        className="mb-8 inline-flex items-center gap-2.5 transition-opacity hover:opacity-80 print:hidden"
+        aria-label="Back to TSD Modernization Solutions"
+      >
+        <Logo height={22} />
+        <span className="text-sm font-semibold tracking-tight text-[var(--text)]">
+          TSD Modernization Solutions
+        </span>
+      </a>
       <header className="border-b border-[var(--border)] pb-8">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
           Modernization audit

@@ -4,6 +4,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { AuditScoresSchema } from "@/lib/audit/types";
 import AuditPolling from "./AuditPolling";
 import AuditReport from "./AuditReport";
+import { Logo } from "@/components/ui/Logo";
 
 export const dynamic = "force-dynamic";
 
@@ -73,6 +74,17 @@ export default async function AuditViewPage({
   if (audit.status === "failed") {
     return (
       <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center px-6 py-24 text-center">
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a
+          href="/"
+          className="mb-10 inline-flex items-center gap-2.5 transition-opacity hover:opacity-80"
+          aria-label="Back to TSD Modernization Solutions"
+        >
+          <Logo height={22} />
+          <span className="text-sm font-semibold tracking-tight text-[var(--text)]">
+            TSD Modernization Solutions
+          </span>
+        </a>
         <h1 className="font-display text-2xl font-semibold tracking-tight text-[var(--text)]">
           Something went sideways
         </h1>

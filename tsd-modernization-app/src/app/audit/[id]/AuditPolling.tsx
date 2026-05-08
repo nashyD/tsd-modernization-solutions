@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check, Loader2 } from "lucide-react";
+import { Logo } from "@/components/ui/Logo";
 import type { AuditStatus } from "@/lib/supabase/types";
 
 const STATUS_LABEL: Record<AuditStatus, string> = {
@@ -72,6 +73,17 @@ export default function AuditPolling({
 
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-6 py-12 sm:py-16 animate-fade-up">
+      {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+      <a
+        href="/"
+        className="mb-8 inline-flex items-center gap-2.5 transition-opacity hover:opacity-80"
+        aria-label="Back to TSD Modernization Solutions"
+      >
+        <Logo height={22} />
+        <span className="text-sm font-semibold tracking-tight text-[var(--text)]">
+          TSD Modernization Solutions
+        </span>
+      </a>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
         Audit in progress
       </p>

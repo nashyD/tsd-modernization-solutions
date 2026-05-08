@@ -19,12 +19,20 @@ export default function AuditPage() {
   return (
     <div className="mx-auto flex w-full max-w-xl flex-1 flex-col px-6 py-12 sm:py-16">
       <header className="mb-10 animate-fade-up">
-        <div className="mb-7 flex items-center gap-2.5">
+        {/* Plain <a> — `/` is a Vercel rewrite to the marketing Vite app, not a
+            Next route. <Link> would client-side route into this app's / handler
+            (which redirects to /audit) instead of bouncing to the marketing site. */}
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a
+          href="/"
+          className="mb-7 inline-flex items-center gap-2.5 transition-opacity hover:opacity-80"
+          aria-label="Back to TSD Modernization Solutions"
+        >
           <Logo height={26} />
           <span className="text-sm font-semibold tracking-tight text-[var(--text)]">
             TSD Modernization Solutions
           </span>
-        </div>
+        </a>
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
           Free presence audit
         </p>
