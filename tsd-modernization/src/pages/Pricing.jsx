@@ -21,7 +21,7 @@ function CohortMasthead() {
   const [ref, fade] = useFadeIn(0);
   return (
     <div ref={ref} style={{ ...fade, marginBottom: SPACE["2xl"] }}>
-      <EditorialMasthead items={["Founding Cohort", "Ten Spots", "Summer MMXXVI"]} />
+      <EditorialMasthead items={["Founding Cohort", "Ten Spots", "Summer 2026"]} />
     </div>
   );
 }

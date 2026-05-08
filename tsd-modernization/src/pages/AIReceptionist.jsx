@@ -51,7 +51,7 @@ function ReceptionistHero() {
       }} />
 
       <div ref={r1} style={{ ...f1, marginBottom: SPACE.xl, position: "relative", zIndex: 1 }}>
-        <EditorialMasthead items={["AI Receptionist", "Charlotte Trades", "Summer MMXXVI"]} />
+        <EditorialMasthead items={["AI Receptionist", "Charlotte Trades", "Summer 2026"]} />
       </div>
 
       <h1 ref={r2} style={{

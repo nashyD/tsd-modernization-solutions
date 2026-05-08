@@ -10,7 +10,7 @@ import PageShell from "./PageShell";
 
 const LEDGER_COLUMNS = [
   {
-    number: "I",
+    number: "1",
     icon: ClockIcon,
     label: "What we measure",
     headline: "Hours reclaimed and minutes saved.",
@@ -19,7 +19,7 @@ const LEDGER_COLUMNS = [
     sample: "34 hrs/week of manual invoicing → 4 hrs/week after automation",
   },
   {
-    number: "II",
+    number: "2",
     icon: ClipboardIcon,
     label: "How we report",
     headline: "Problem, build, outcome — in that order.",
@@ -28,7 +28,7 @@ const LEDGER_COLUMNS = [
     sample: "Problem ▸ Build ▸ Outcome — documented, linkable, dated.",
   },
   {
-    number: "III",
+    number: "3",
     icon: ChartBarIcon,
     label: "What you'll see",
     headline: "Real names, real numbers, real businesses.",
@@ -48,7 +48,7 @@ export default function Testimonials() {
         padding: `${SPACE.xl} clamp(20px, 4vw, 48px) ${SPACE["4xl"]}`,
         maxWidth: "1140px", margin: "0 auto",
       }}>
-        <ChapterRule label="The Ledger" num="Vol. I — Opening Entries" style={{ marginBottom: SPACE.lg }} />
+        <ChapterRule label="The Ledger" num="Vol. 1 — Opening Entries" style={{ marginBottom: SPACE.lg }} />
 
         <div ref={introRef} style={{ ...introFade, marginBottom: SPACE["3xl"] }}>
           <h1 style={{

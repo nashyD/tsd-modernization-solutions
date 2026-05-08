@@ -201,7 +201,7 @@ function Hero() {
           textShadow: "0 1px 4px rgba(0,0,0,0.85)",
         }}>
           <EditorialMasthead
-            items={["Founding Cohort", "Charlotte Edition", "Summer MMXXVI"]}
+            items={["Founding Cohort", "Charlotte Edition", "Summer 2026"]}
             color="rgba(236,228,214,0.92)"
           />
         </div>
@@ -786,7 +786,6 @@ function FoundersStrip() {
           }}>
             When something breaks at 7pm, you talk to the person who built it. No account managers, no offshoring, no calling a ticketing queue for a password reset.
           </p>
-          <Eyebrow>Three founders, one phone number</Eyebrow>
         </div>
       </div>
 

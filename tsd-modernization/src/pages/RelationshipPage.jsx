@@ -48,7 +48,7 @@ function RelationshipHero({ rel }) {
       }} />
 
       <div ref={r1} style={{ ...f1, marginBottom: SPACE.xl, position: "relative", zIndex: 1 }}>
-        <EditorialMasthead items={["Website + AI Build", rel.vertical, "Summer MMXXVI"]} />
+        <EditorialMasthead items={["Website + AI Build", rel.vertical, "Summer 2026"]} />
       </div>
 
       <h1 ref={r2} style={{

@@ -13,7 +13,7 @@ function CalculatorMasthead() {
   const [ref, fade] = useFadeIn(0);
   return (
     <div ref={ref} style={{ ...fade, marginBottom: SPACE.xl }}>
-      <EditorialMasthead items={["Free Tool", "Charlotte Trades", "Summer MMXXVI"]} />
+      <EditorialMasthead items={["Free Tool", "Charlotte Trades", "Summer 2026"]} />
     </div>
   );
 }

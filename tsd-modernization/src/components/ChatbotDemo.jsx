@@ -375,7 +375,7 @@ function PricingPage({ shift }) {
         display: "flex", gap: 20, alignItems: "flex-start",
       }}>
         <PricingTier
-          phase="PHASE I"
+          phase="PHASE 1"
           title="DISCOVERY"
           oldPrice="$3,000"
           price="$1,500"
