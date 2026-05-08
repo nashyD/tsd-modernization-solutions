@@ -3,6 +3,7 @@ import { Shield } from "lucide-react";
 import { requireUser, getMemberships } from "@/lib/auth/require";
 import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { SignOutButton } from "@/components/SignOutButton";
 
 export default async function PortalLayout({
   children,
@@ -57,6 +58,7 @@ export default async function PortalLayout({
             <span className="hidden truncate text-xs text-[var(--text-subtle)] sm:inline">
               {user.email}
             </span>
+            <SignOutButton />
           </div>
         </div>
       </header>

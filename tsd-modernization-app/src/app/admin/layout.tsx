@@ -3,6 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { requireRole } from "@/lib/auth/require";
 import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { SignOutButton } from "@/components/SignOutButton";
 
 export default async function AdminLayout({
   children,
@@ -41,6 +42,7 @@ export default async function AdminLayout({
               {user.email}
             </span>
             <ThemeToggle />
+            <SignOutButton />
           </nav>
         </div>
       </header>
