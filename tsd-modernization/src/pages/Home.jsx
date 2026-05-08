@@ -263,16 +263,6 @@ function Hero() {
           background: "linear-gradient(90deg, transparent 0%, var(--c-hero-frame-rim-highlight) 50%, transparent 100%)",
           pointerEvents: "none",
         }} />
-
-        {/* Bottom-right corner softener — washes the area where the
-            source mp4's "Veo" watermark used to sit. Reads as part of
-            the editorial frame chrome rather than a cover-up. */}
-        <div aria-hidden="true" style={{
-          position: "absolute", bottom: 0, right: 0,
-          width: "200px", height: "90px",
-          background: "radial-gradient(ellipse at bottom right, rgba(7,13,26,0.55) 0%, rgba(7,13,26,0.25) 45%, transparent 80%)",
-          pointerEvents: "none",
-        }} />
       </div>
 
       {/* Cohort scarcity strip — moved below the frame so it doesn't
