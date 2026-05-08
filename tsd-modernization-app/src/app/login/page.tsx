@@ -11,7 +11,7 @@ export default function LoginPage() {
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-6 py-20 animate-fade-up">
       <div className="mb-8 flex items-center gap-2.5">
-        <Logo size={26} />
+        <Logo height={26} />
         <span className="text-sm font-semibold tracking-tight text-[var(--text)]">
           TSD Client Portal
         </span>

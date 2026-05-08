@@ -20,7 +20,7 @@ export default function AuditPage() {
     <div className="mx-auto flex w-full max-w-xl flex-1 flex-col px-6 py-12 sm:py-16">
       <header className="mb-10 animate-fade-up">
         <div className="mb-7 flex items-center gap-2.5">
-          <Logo size={26} />
+          <Logo height={26} />
           <span className="text-sm font-semibold tracking-tight text-[var(--text)]">
             TSD Modernization Solutions
           </span>

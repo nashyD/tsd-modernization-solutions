@@ -21,7 +21,7 @@ export default async function PortalLayout({
             href="/app"
             className="flex items-center gap-2.5 transition-opacity hover:opacity-80"
           >
-            <Logo size={22} />
+            <Logo height={20} />
             <span className="text-sm font-semibold tracking-tight text-[var(--text)]">
               Client Portal
             </span>
