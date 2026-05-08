@@ -1,5 +1,6 @@
 import { requireUser, getMemberships } from "@/lib/auth/require";
 import { packageByTier } from "@/lib/packages";
+import BackLink from "@/components/BackLink";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +27,7 @@ export default async function PackagePage() {
 
   return (
     <div className="space-y-6">
+      <BackLink href="/app" label="Dashboard" />
       <header>
         <p className="text-sm uppercase tracking-[0.18em] text-[#4B9CD3]">
           Your package

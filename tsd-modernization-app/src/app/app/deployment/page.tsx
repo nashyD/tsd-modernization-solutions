@@ -1,6 +1,7 @@
 import { requireUser, getMemberships } from "@/lib/auth/require";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { env } from "@/lib/env";
+import BackLink from "@/components/BackLink";
 
 export const dynamic = "force-dynamic";
 
@@ -58,6 +59,7 @@ export default async function DeploymentPage() {
 
   return (
     <div className="space-y-6">
+      <BackLink href="/app" label="Dashboard" />
       <h1 className="text-2xl font-semibold text-[#13294B]">Deployment</h1>
       {!client?.vercel_project_id && (
         <div className="rounded-lg border border-zinc-200 bg-white p-6 text-zinc-700">

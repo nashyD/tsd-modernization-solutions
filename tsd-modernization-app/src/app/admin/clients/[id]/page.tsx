@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { upsertWorkItem, deleteWorkItem } from "../actions";
+import BackLink from "@/components/BackLink";
 
 export const dynamic = "force-dynamic";
 
@@ -28,12 +28,7 @@ export default async function AdminClientDetail({
   return (
     <div className="space-y-10">
       <div>
-        <Link
-          href="/admin/clients"
-          className="text-sm text-zinc-500 hover:underline"
-        >
-          ← All clients
-        </Link>
+        <BackLink href="/admin/clients" label="All clients" />
         <h1 className="mt-1 text-2xl font-semibold text-[#13294B]">
           {client.name}
         </h1>

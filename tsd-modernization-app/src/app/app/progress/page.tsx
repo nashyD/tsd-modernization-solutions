@@ -1,6 +1,7 @@
 import { requireUser, getMemberships } from "@/lib/auth/require";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import type { WorkItemStatus } from "@/lib/supabase/types";
+import BackLink from "@/components/BackLink";
 
 export const dynamic = "force-dynamic";
 
@@ -42,6 +43,7 @@ export default async function ProgressPage() {
 
   return (
     <div className="space-y-6">
+      <BackLink href="/app" label="Dashboard" />
       <h1 className="text-2xl font-semibold text-[#13294B]">Progress</h1>
       <div className="grid gap-4 md:grid-cols-3">
         {COLUMNS.map(({ key, label }) => (

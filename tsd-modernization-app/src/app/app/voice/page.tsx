@@ -1,6 +1,7 @@
 import { requireUser, getMemberships } from "@/lib/auth/require";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import VoiceWidget from "./VoiceWidget";
+import BackLink from "@/components/BackLink";
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +28,7 @@ export default async function VoicePage() {
 
   return (
     <div className="space-y-6">
+      <BackLink href="/app" label="Dashboard" />
       <h1 className="text-2xl font-semibold text-[#13294B]">
         Test your AI receptionist
       </h1>
