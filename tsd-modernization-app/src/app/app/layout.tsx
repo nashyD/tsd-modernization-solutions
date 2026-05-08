@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Shield } from "lucide-react";
+import { Shield, ArrowUpRight } from "lucide-react";
 import { requireUser, getMemberships } from "@/lib/auth/require";
 import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -43,6 +43,17 @@ export default async function PortalLayout({
             <Link href="/app/snapshot" className="hover:text-[var(--accent)]">
               Snapshot
             </Link>
+            {/* Plain <a> — `/` is a Vercel rewrite to the marketing Vite app,
+                not a Next route. Next's <Link> would client-side route into the
+                audit-app's / handler instead of bouncing to the marketing site. */}
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+            <a
+              href="/"
+              className="inline-flex items-center gap-1 text-[var(--text-subtle)] hover:text-[var(--text)]"
+            >
+              Main site
+              <ArrowUpRight size={13} strokeWidth={2} aria-hidden />
+            </a>
           </nav>
           <div className="flex items-center gap-2">
             <ThemeToggle />

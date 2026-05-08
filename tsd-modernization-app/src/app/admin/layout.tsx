@@ -38,6 +38,17 @@ export default async function AdminLayout({
               Portal view
               <ArrowUpRight size={13} strokeWidth={2} aria-hidden />
             </Link>
+            {/* Plain <a> — `/` is a Vercel rewrite to the marketing Vite app,
+                not a Next route. Next's <Link> would client-side route into
+                the audit-app's / handler instead of the marketing site. */}
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+            <a
+              href="/"
+              className="inline-flex items-center gap-1 text-[var(--text-subtle)] transition-colors hover:text-[var(--text)]"
+            >
+              Main site
+              <ArrowUpRight size={13} strokeWidth={2} aria-hidden />
+            </a>
             <span className="hidden truncate text-xs text-[var(--text-subtle)] sm:inline">
               {user.email}
             </span>
