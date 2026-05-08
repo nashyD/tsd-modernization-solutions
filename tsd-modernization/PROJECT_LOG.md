@@ -121,6 +121,23 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-05-08 — Client portal link in the dropdown menu
+
+**What.** Added a "Client portal" entry to the dropdown menu in [`Layout.jsx`](src/Layout.jsx), placed below the primary `NAV_ITEMS` divider and above the "Apply for a slot" / "Book a fit call" CTAs. Uses a plain `<a href="/app">` rather than react-router's `<Link to="/app">` because `/app` is a Vercel rewrite to the sibling Next.js app (`tsd-modernization-app`), not a marketing-site route — react-router would client-side navigate and 404. Styled subtly (`text-dim` color, smaller font weight, ArrowRight chevron) so it reads as a tertiary affordance rather than a primary CTA. The dropdown is the same element on desktop and mobile, so this lights up both surfaces in one change.
+
+**Why.** Until now the portal had no entry-point from the marketing site — clients would have to know to type `/app` directly. With Phase 2-3 of the audit-tool/portal app verified end-to-end (auth gate, RLS, magic-link sign-in, Supabase backend), the portal is safe to link publicly: the worst-case visitor without a `client_users` row sees a friendly "you're signed in but no TSD account is linked" empty state — no data exposure. Surfaced as `text-dim` rather than as a primary CTA because most marketing-site visitors are prospects, not existing clients; the portal entry is for the small subset who already have an account. Primary CTAs ("Book a fit call" + "Apply for a slot") stay visually dominant.
+
+**Files touched.**
+- [`src/Layout.jsx`](src/Layout.jsx) — 27-line addition inside the dropdown panel: a styled `<a>` link to `/app`, preceded and followed by dividers so it visually separates from both the marketing nav items above and the CTAs below.
+
+**Open follow-ups.**
+- The owner-invite flow (admin creates a client with `owner_email`, Supabase sends the invite email, owner clicks → lands on `/app`) hasn't been smoke-tested end-to-end yet. First time we sign a real client and invite them, watch the email-link redirect carefully.
+- Supabase signups are still open — anyone can self-sign-up at `/login` and end up on the empty "no account linked" state. Doesn't leak data thanks to RLS, but does accumulate `auth.users` rows. Acceptable on the free tier; revisit if abuse appears.
+
+**Principle reinforced.** *Cross-app navigation needs a real anchor, not a router link.* This is the smallest "obvious in hindsight" gotcha when stitching a Vite SPA to a Next.js sibling via Vercel rewrites: react-router doesn't know the rewrite exists and treats `/app` as a missing internal route. A plain `<a href>` lets the browser request the URL fresh, the rewrite kicks in, and the Next.js app handles it. Same gotcha will apply to any future cross-app link the marketing site needs (e.g. linking back into the audit-app's `/admin` from a TSD-internal panel).
+
+---
+
 ### 2026-05-08 — Per-page JSON-LD on 15 routes + `llms.txt` for AI crawlers
 
 **What.** Added a new module [`src/route-jsonld.js`](src/route-jsonld.js) that exports a `ROUTE_JSONLD` map keyed by pathname, holding fully-formed Schema.org nodes per route. Wired it through [`Layout.jsx`](src/Layout.jsx)'s `RouteMeta` component so each route emits its page-specific `<script type="application/ld+json">` blocks via `vite-react-ssg`'s `<Head>` (react-helmet-async), in addition to the global `ProfessionalService` schema that lives in the [`index.html`](index.html) shell. Per-page schemas added: `FAQPage` + `OfferCatalog` on `/pricing`; `Service` + `Offer` on `/ai-receptionist`, all three `/services/*` slugs, the three trade pages (`/hvac`, `/electricians`, `/plumbers`), and the three relationship pages (`/salons`, `/auto-shops`, `/restaurants`); `HowTo` on `/process`; `WebApplication` on `/missed-call-calculator`; `ItemList` of `Person` on `/team`; `ContactPage` on `/contact`. Every `Service` node references the business via `provider: { "@id": "https://tsd-modernization.com/#business" }` so we don't duplicate org-level fields (address, telephone, founders, areaServed) — those live once on the global schema. Offers carry `priceCurrency: "USD"`, `availability: LimitedAvailability`, and `validThrough: "2026-08-10"` so the cohort framing is machine-readable. Validated against the `dist/` output: 15 routes, 0 parse failures, every expected `@type` lands on its expected page (script confirmation: `pricing` has `[FAQPage, OfferCatalog, ProfessionalService]`, `team` has `[ItemList, ProfessionalService]`, etc.).

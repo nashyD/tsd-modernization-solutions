@@ -469,6 +469,33 @@ export default function Layout() {
                   );
                 })}
                 <div style={{ height: "1px", background: v("divider"), margin: "8px 14px" }} />
+                {/* Client portal — cross-app rewrite to the Next.js app at
+                    `tsd-modernization.com/app`. Plain <a> so the browser does
+                    a full nav (react-router would client-side route and 404
+                    since /app isn't a marketing-site route). */}
+                <a
+                  href="/app"
+                  onClick={() => setMenuOpen(false)}
+                  style={{
+                    display: "flex", alignItems: "center", justifyContent: "space-between",
+                    padding: "11px 14px", borderRadius: RADIUS.md,
+                    fontSize: "13px", fontWeight: 600, textDecoration: "none",
+                    color: v("text-dim"),
+                    transition: "background 0.15s ease, color 0.15s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = v("surface");
+                    e.currentTarget.style.color = v("text");
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "transparent";
+                    e.currentTarget.style.color = v("text-dim");
+                  }}
+                >
+                  <span>Client portal</span>
+                  <ArrowRightIcon size={13} />
+                </a>
+                <div style={{ height: "1px", background: v("divider"), margin: "8px 14px" }} />
                 <div style={{ padding: "4px 4px 0", display: "flex", flexDirection: "column", gap: "8px" }}>
                   <Link to="/contact" onClick={() => setMenuOpen(false)} style={{ textDecoration: "none" }}>
                     <Button as="span" variant="primary" size="sm" fullWidth iconRight={<ArrowRightIcon size={14} />}>
