@@ -1,19 +1,20 @@
-import { renderToBuffer } from "@react-pdf/renderer";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { AuditScoresSchema } from "@/lib/audit/types";
-import { AuditPdf } from "@/lib/audit/pdf";
+import { renderAuditPdf } from "@/lib/audit/pdf";
 
 /**
  * GET /api/audit/[id]/pdf
  *
- * Streams a 2-page TSD-branded PDF of a ready audit. Public (mirrors
- * /audit/[id]'s shareable-link semantics — anyone with the UUID can view).
+ * Streams a TSD-branded 2-page PDF of a ready audit. Public — same shareable
+ * by-UUID semantics as /audit/[id].
  *
- * Server-rendered via @react-pdf/renderer (Node runtime; not edge — uses
- * Buffer + the `fontkit`/`pdfkit` deps that aren't edge-safe).
+ * Powered by puppeteer-core + @sparticuz/chromium (HTML/CSS rendered to PDF
+ * by headless Chromium). Allow up to 60s for cold starts; chromium binary
+ * unpacks lazily on first invoke.
  */
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 const UUID_RE = /^[0-9a-f-]{36}$/i;
 
@@ -45,7 +46,7 @@ export async function GET(
     return new Response("Invalid audit data", { status: 500 });
   }
 
-  // Resolve display name (mirrors the logic in app/audit/[id]/page.tsx).
+  // Resolve display name (mirrors app/audit/[id]/page.tsx).
   let businessName = "your business";
   if (audit.owner_type === "lead") {
     const { data: lead } = await sb
@@ -63,13 +64,17 @@ export async function GET(
     if (client?.name) businessName = client.name;
   }
 
-  const buffer = await renderToBuffer(
-    <AuditPdf
-      businessName={businessName}
-      scores={parsed.data}
-      generatedAt={new Date(audit.created_at)}
-    />
-  );
+  let buffer: Buffer;
+  try {
+    buffer = await renderAuditPdf({
+      businessName,
+      scores: parsed.data,
+      generatedAt: new Date(audit.created_at),
+    });
+  } catch (e) {
+    console.error("[pdf] render failed", e);
+    return new Response("PDF render failed", { status: 500 });
+  }
 
   const slug =
     businessName

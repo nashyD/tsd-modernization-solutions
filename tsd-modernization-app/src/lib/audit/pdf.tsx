@@ -1,324 +1,35 @@
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-} from "@react-pdf/renderer";
+import "server-only";
+import puppeteer, {
+  type Browser,
+  type LaunchOptions,
+} from "puppeteer-core";
 import type { AuditScores } from "@/lib/audit/types";
 import { PACKAGES } from "@/lib/packages";
 
 /**
- * Branded TSD audit PDF — 2 pages, Letter, server-rendered via @react-pdf/renderer.
- * Page 1: header, presence score, pillar grid, top gaps.
- * Page 2: recommended package + CTA.
+ * Audit-report PDF: a real HTML/CSS document rendered to PDF by headless
+ * Chromium. The HTML is built from tagged template literals — Next 16's
+ * Turbopack puts app-route modules in "react-server" mode where
+ * `react-dom/server` exports are stubbed out, so React-rendered HTML
+ * isn't on the table here. Tagged literals also keep the template
+ * dependency-free and easy to reason about.
  *
- * Uses @react-pdf's built-in Helvetica family (no Font.register, no font files
- * shipped in the bundle). Colors mirror src/app/globals.css.
+ * Why HTML and not @react-pdf/renderer:
+ *  - Real CSS — gradients, radial glows, true font shaping, proper spacing.
+ *  - The TSD prism logo (skewX(-12), 4-slab gradient) drops in as the same
+ *    SVG that ships in the live site.
+ *  - Inter + Space Grotesk via Google Fonts give us the marketing site's
+ *    type system inside the PDF.
+ *
+ * Cost:
+ *  - `@sparticuz/chromium` adds ~57MB to the function bundle. Marked
+ *    serverExternal in next.config.ts so it's not Turbopack-bundled.
+ *  - Cold-start ~3-4s on Vercel. Acceptable for a download endpoint.
  */
 
-const COLORS = {
-  navy: "#13294B",
-  carolinaBlue: "#4B9CD3",
-  carolinaBlueSoft: "#E8F2F9",
-  navySoft: "#E5E9F1",
-  text: "#0A1525",
-  textMuted: "#4A5568",
-  textSubtle: "#717D8C",
-  border: "#E2E8F0",
-  surface: "#FAFBFC",
-  surface2: "#F4F6F8",
-  danger: "#B91C1C",
-  dangerSoft: "#FEE2E2",
-  warning: "#B45309",
-  warningSoft: "#FEF3C7",
-};
-
-const styles = StyleSheet.create({
-  page: {
-    fontFamily: "Helvetica",
-    fontSize: 10,
-    color: COLORS.text,
-    paddingTop: 40,
-    paddingBottom: 50,
-    paddingHorizontal: 44,
-    lineHeight: 1.4,
-  },
-  // Header brand
-  brand: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 7,
-    marginBottom: 22,
-  },
-  brandSquares: {
-    flexDirection: "row",
-    gap: 1.5,
-  },
-  brandSquare: {
-    width: 6,
-    height: 6,
-  },
-  brandText: {
-    fontSize: 9,
-    fontFamily: "Helvetica-Bold",
-    color: COLORS.text,
-    letterSpacing: 0.4,
-  },
-  eyebrow: {
-    fontSize: 8,
-    fontFamily: "Helvetica-Bold",
-    color: COLORS.carolinaBlue,
-    letterSpacing: 1.6,
-    marginBottom: 6,
-  },
-  businessName: {
-    fontSize: 28,
-    fontFamily: "Helvetica-Bold",
-    color: COLORS.text,
-    letterSpacing: -0.4,
-    lineHeight: 1.1,
-    marginBottom: 8,
-  },
-  summary: {
-    fontSize: 11,
-    color: COLORS.textMuted,
-    lineHeight: 1.5,
-    marginBottom: 20,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: COLORS.border,
-    marginVertical: 16,
-  },
-  sectionLabel: {
-    fontSize: 8,
-    fontFamily: "Helvetica-Bold",
-    color: COLORS.textSubtle,
-    letterSpacing: 1.4,
-    marginBottom: 6,
-  },
-  // Score
-  scoreRow: {
-    flexDirection: "row",
-    alignItems: "flex-end",
-    marginBottom: 12,
-  },
-  scoreNum: {
-    fontSize: 56,
-    fontFamily: "Helvetica-Bold",
-    color: COLORS.text,
-    lineHeight: 1,
-    letterSpacing: -1.5,
-  },
-  scoreOf: {
-    fontSize: 14,
-    color: COLORS.textSubtle,
-    marginLeft: 6,
-    paddingBottom: 6,
-  },
-  // Pillars
-  pillarsRow: {
-    flexDirection: "row",
-    gap: 6,
-    marginBottom: 14,
-  },
-  pillarCard: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 4,
-    padding: 8,
-    backgroundColor: COLORS.surface,
-  },
-  pillarLabel: {
-    fontSize: 7,
-    fontFamily: "Helvetica-Bold",
-    color: COLORS.textSubtle,
-    letterSpacing: 0.6,
-    marginBottom: 3,
-  },
-  pillarValue: {
-    fontSize: 18,
-    fontFamily: "Helvetica-Bold",
-    color: COLORS.text,
-  },
-  sectionHeader: {
-    fontSize: 14,
-    fontFamily: "Helvetica-Bold",
-    color: COLORS.text,
-    marginBottom: 8,
-  },
-  // Gaps
-  gap: {
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 6,
-    backgroundColor: COLORS.surface,
-  },
-  gapHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: 2,
-  },
-  gapTitle: {
-    fontSize: 10.5,
-    fontFamily: "Helvetica-Bold",
-    color: COLORS.text,
-    flex: 1,
-    marginRight: 8,
-    lineHeight: 1.3,
-  },
-  badge: {
-    fontSize: 7,
-    fontFamily: "Helvetica-Bold",
-    paddingVertical: 2,
-    paddingHorizontal: 6,
-    borderRadius: 8,
-    letterSpacing: 0.5,
-  },
-  badgeRed: { color: COLORS.danger, backgroundColor: COLORS.dangerSoft },
-  badgeAmber: { color: COLORS.warning, backgroundColor: COLORS.warningSoft },
-  badgeNeutral: { color: COLORS.textSubtle, backgroundColor: COLORS.surface2 },
-  gapImpact: {
-    fontSize: 9,
-    color: COLORS.text,
-    marginTop: 4,
-    lineHeight: 1.4,
-  },
-  // Recommended package
-  pkgEyebrowRow: {
-    flexDirection: "row",
-    gap: 6,
-    marginBottom: 8,
-    alignItems: "center",
-  },
-  pkgEyebrow: {
-    fontSize: 7,
-    fontFamily: "Helvetica-Bold",
-    color: COLORS.carolinaBlue,
-    backgroundColor: COLORS.carolinaBlueSoft,
-    paddingVertical: 2,
-    paddingHorizontal: 6,
-    borderRadius: 8,
-    letterSpacing: 1,
-  },
-  pkgCap: {
-    fontSize: 7,
-    fontFamily: "Helvetica-Bold",
-    color: COLORS.navy,
-    backgroundColor: COLORS.navySoft,
-    paddingVertical: 2,
-    paddingHorizontal: 6,
-    borderRadius: 8,
-    letterSpacing: 0.4,
-  },
-  pkgCard: {
-    borderWidth: 1.5,
-    borderColor: COLORS.carolinaBlue,
-    borderRadius: 8,
-    padding: 18,
-    backgroundColor: COLORS.surface,
-  },
-  pkgName: {
-    fontSize: 22,
-    fontFamily: "Helvetica-Bold",
-    color: COLORS.text,
-    marginBottom: 6,
-    letterSpacing: -0.3,
-  },
-  pkgPrice: {
-    fontSize: 28,
-    fontFamily: "Helvetica-Bold",
-    color: COLORS.text,
-    marginBottom: 8,
-    letterSpacing: -0.5,
-  },
-  pkgTagline: {
-    fontSize: 10.5,
-    color: COLORS.textMuted,
-    marginBottom: 14,
-    lineHeight: 1.5,
-  },
-  pkgService: {
-    flexDirection: "row",
-    marginBottom: 5,
-  },
-  pkgBullet: {
-    fontSize: 10,
-    color: COLORS.carolinaBlue,
-    marginRight: 6,
-    fontFamily: "Helvetica-Bold",
-    lineHeight: 1.4,
-  },
-  pkgServiceText: {
-    fontSize: 9.5,
-    color: COLORS.textMuted,
-    flex: 1,
-    lineHeight: 1.45,
-  },
-  pkgServiceName: {
-    fontFamily: "Helvetica-Bold",
-    color: COLORS.text,
-  },
-  guaranteeBox: {
-    marginTop: 12,
-    paddingTop: 11,
-    borderTopWidth: 1,
-    borderTopColor: COLORS.border,
-  },
-  guaranteeText: {
-    fontSize: 9,
-    color: COLORS.textMuted,
-    lineHeight: 1.45,
-  },
-  ctaBox: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: COLORS.navy,
-    borderRadius: 6,
-    padding: 14,
-    marginTop: 14,
-  },
-  ctaPrimary: {
-    color: "#FFFFFF",
-    fontFamily: "Helvetica-Bold",
-    fontSize: 12,
-  },
-  ctaSecondary: {
-    color: COLORS.carolinaBlue,
-    fontSize: 9,
-    marginTop: 2,
-  },
-  ctaScarcity: {
-    color: "#FFFFFF",
-    fontSize: 9,
-    fontFamily: "Helvetica-Bold",
-  },
-  ctaScarcityHint: {
-    color: COLORS.carolinaBlue,
-    fontSize: 8,
-    marginTop: 2,
-    textAlign: "right",
-  },
-  footer: {
-    position: "absolute",
-    bottom: 24,
-    left: 44,
-    right: 44,
-    fontSize: 7.5,
-    color: COLORS.textSubtle,
-    textAlign: "center",
-    borderTopWidth: 1,
-    borderTopColor: COLORS.border,
-    paddingTop: 8,
-    letterSpacing: 0.2,
-  },
-});
+// =====================================================================
+// Domain helpers
+// =====================================================================
 
 const PILLAR_LABELS: Record<keyof AuditScores["pillar_scores"], string> = {
   website: "Website",
@@ -341,16 +52,6 @@ const SERVICE_LABELS: Record<
   audit_only: "Discovery audit",
 };
 
-const SEVERITY_TONE: Record<
-  AuditScores["gaps"][number]["severity"],
-  "red" | "amber" | "neutral"
-> = {
-  critical: "red",
-  high: "amber",
-  medium: "neutral",
-  low: "neutral",
-};
-
 function severityRank(s: AuditScores["gaps"][number]["severity"]) {
   switch (s) {
     case "critical":
@@ -364,180 +65,760 @@ function severityRank(s: AuditScores["gaps"][number]["severity"]) {
   }
 }
 
-function BrandLockup() {
-  return (
-    <View style={styles.brand}>
-      <View style={styles.brandSquares}>
-        <View
-          style={[
-            styles.brandSquare,
-            { backgroundColor: COLORS.carolinaBlue },
-          ]}
-        />
-        <View style={[styles.brandSquare, { backgroundColor: COLORS.navy }]} />
-        <View
-          style={[
-            styles.brandSquare,
-            { backgroundColor: COLORS.carolinaBlue },
-          ]}
-        />
-        <View style={[styles.brandSquare, { backgroundColor: COLORS.navy }]} />
-      </View>
-      <Text style={styles.brandText}>TSD MODERNIZATION SOLUTIONS</Text>
-    </View>
-  );
+function severityClass(s: AuditScores["gaps"][number]["severity"]): string {
+  switch (s) {
+    case "critical":
+      return "badge-critical";
+    case "high":
+      return "badge-high";
+    case "medium":
+      return "badge-medium";
+    case "low":
+      return "badge-low";
+  }
 }
 
-function Footer({ dateStr }: { dateStr: string }) {
-  return (
-    <Text
-      style={styles.footer}
-      render={({ pageNumber, totalPages }) =>
-        `Prepared by TSD Modernization Solutions  ·  ${dateStr}  ·  tsd-modernization.com  ·  Page ${pageNumber} of ${totalPages}`
-      }
-      fixed
-    />
-  );
+// HTML-safe escape for interpolated content (business name, summaries,
+// gap titles, etc. — anything user-supplied). Apostrophes are escaped
+// to prevent any chance of attribute breakout if the same helper is ever
+// used inside an HTML attribute.
+function esc(input: string | null | undefined): string {
+  if (input === null || input === undefined) return "";
+  return String(input)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
-export interface AuditPdfProps {
+// =====================================================================
+// SVG: TSD prism + letters (matches src/components/ui/Logo.tsx,
+// which itself mirrors tsd-modernization/public/tsd-ms-logo-tarheel.svg).
+// =====================================================================
+
+function tsdPrismSvg(height = 36): string {
+  const width = Math.round(height * (338 / 160));
+  return `
+    <svg viewBox="191 40 338 160" width="${width}" height="${height}" role="img" aria-label="TSD">
+      <g transform="translate(225 40) skewX(-12)">
+        <rect x="0" y="0" width="76" height="160" rx="4" fill="#a8d1ed" />
+        <rect x="76" y="0" width="76" height="160" rx="4" fill="#7BB8E0" />
+        <rect x="152" y="0" width="76" height="160" rx="4" fill="#2c5f8a" />
+        <rect x="228" y="0" width="76" height="160" rx="4" fill="#13294B" />
+      </g>
+      <g font-family="'Inter', sans-serif" font-weight="700" fill="#fff" letter-spacing="3">
+        <text x="255" y="150" font-size="66">T</text>
+        <text x="331" y="150" font-size="66">S</text>
+        <text x="407" y="150" font-size="66">D</text>
+      </g>
+    </svg>`;
+}
+
+// =====================================================================
+// CSS — single string, dropped verbatim into <style>.
+// =====================================================================
+
+const CSS = `
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+@page { size: Letter; margin: 0; }
+
+* { box-sizing: border-box; margin: 0; padding: 0;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+html, body { background: #ffffff; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  color: #0f172a;
+  font-size: 10.5pt;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.display {
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- Page ---------- */
+.page {
+  width: 8.5in;
+  height: 11in;
+  padding: 0.55in 0.6in 0.65in 0.6in;
+  page-break-after: always;
+  position: relative;
+  background: #ffffff;
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(75,156,211,0.04) 0%, transparent 35%),
+    radial-gradient(circle at 100% 0%, rgba(19,41,75,0.03) 0%, transparent 35%);
+  overflow: hidden;
+}
+.page:last-child { page-break-after: auto; }
+
+/* ---------- Topbar ---------- */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 14px;
+  margin-bottom: 26px;
+  border-bottom: 1px solid #e2e8f0;
+}
+.brand { display: flex; align-items: center; gap: 11px; }
+.brand-text {
+  font-size: 10.5pt;
+  font-weight: 600;
+  color: #13294b;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+}
+.topbar-meta {
+  font-size: 8pt;
+  font-weight: 600;
+  color: #64748b;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ---------- Hero ---------- */
+.eyebrow {
+  font-size: 8pt;
+  font-weight: 700;
+  color: #4b9cd3;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.business-name {
+  font-size: 34pt;
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1.04;
+  letter-spacing: -0.024em;
+  margin-bottom: 12px;
+}
+.summary {
+  font-size: 12pt;
+  color: #475569;
+  line-height: 1.5;
+  max-width: 6.6in;
+  margin-bottom: 20px;
+}
+
+/* ---------- Score panel ---------- */
+.score-panel {
+  position: relative;
+  background: linear-gradient(135deg, #0c1f3d 0%, #13294b 50%, #1f3666 100%);
+  color: #ffffff;
+  border-radius: 14px;
+  padding: 24px 28px;
+  display: grid;
+  grid-template-columns: 1.05fr 2fr;
+  gap: 28px;
+  align-items: center;
+  margin-bottom: 24px;
+  box-shadow:
+    0 1px 0 rgba(168,209,237,0.12) inset,
+    0 18px 40px -20px rgba(19,41,75,0.45);
+  overflow: hidden;
+}
+.score-panel::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 260px; height: 260px;
+  background: radial-gradient(circle, rgba(75,156,211,0.42) 0%, transparent 65%);
+  pointer-events: none;
+}
+.score-panel::after {
+  content: '';
+  position: absolute;
+  bottom: -100px; left: -50px;
+  width: 220px; height: 220px;
+  background: radial-gradient(circle, rgba(168,209,237,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.score-block { position: relative; z-index: 1; }
+.score-label {
+  font-size: 7.5pt;
+  font-weight: 700;
+  color: #a8d1ed;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.score-value {
+  font-size: 64pt;
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.score-of {
+  font-size: 18pt;
+  color: rgba(168,209,237,0.7);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.score-tagline {
+  font-size: 9pt;
+  color: rgba(232,244,251,0.7);
+  margin-top: 6px;
+}
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+.pillar {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(168,209,237,0.18);
+  border-radius: 9px;
+  padding: 11px 10px 12px;
+}
+.pillar-label {
+  font-size: 6.5pt;
+  font-weight: 700;
+  color: #a8d1ed;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.pillar-value {
+  font-size: 19pt;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+}
+
+/* ---------- Sections ---------- */
+.section-eyebrow {
+  font-size: 7.5pt;
+  font-weight: 700;
+  color: #4b9cd3;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.section-header {
+  font-size: 17pt;
+  font-weight: 600;
+  color: #0f172a;
+  letter-spacing: -0.018em;
+  margin-bottom: 12px;
+}
+
+/* ---------- Gaps ---------- */
+.gap {
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  padding: 13px 15px;
+  margin-bottom: 7px;
+  background: #ffffff;
+  break-inside: avoid;
+}
+.gap-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.gap-title {
+  font-size: 11pt;
+  font-weight: 600;
+  color: #0f172a;
+  flex: 1;
+  line-height: 1.3;
+}
+.badge {
+  font-size: 7pt;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 999px;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+.badge-critical { background: #fee2e2; color: #b91c1c; }
+.badge-high     { background: #fef3c7; color: #b45309; }
+.badge-medium,
+.badge-low      { background: #f1f5f9; color: #64748b; }
+.gap-impact {
+  font-size: 9.5pt;
+  color: #334155;
+  line-height: 1.45;
+  margin-top: 6px;
+}
+.gap-impact .label { color: #0f172a; font-weight: 600; }
+
+/* ---------- Recommended package ---------- */
+.pkg-card {
+  position: relative;
+  border: 2px solid #4b9cd3;
+  border-radius: 16px;
+  padding: 26px 30px 24px;
+  background: linear-gradient(180deg, #ffffff 0%, #f7fbfd 100%);
+  box-shadow:
+    0 0 0 4px rgba(75,156,211,0.08),
+    0 1px 0 rgba(75,156,211,0.18) inset;
+  margin-bottom: 18px;
+  overflow: hidden;
+  break-inside: avoid;
+}
+.pkg-card::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 260px; height: 260px;
+  background: radial-gradient(circle, rgba(75,156,211,0.18) 0%, transparent 65%);
+  pointer-events: none;
+}
+.pkg-card > * { position: relative; z-index: 1; }
+.pkg-eyebrow-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+.pkg-eyebrow {
+  font-size: 7.5pt;
+  font-weight: 700;
+  color: #4b9cd3;
+  background: #e8f4fb;
+  border: 1px solid rgba(75,156,211,0.25);
+  padding: 4px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.pkg-cap {
+  font-size: 7.5pt;
+  font-weight: 700;
+  color: #13294b;
+  background: #e2e8f0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.pkg-name {
+  font-size: 26pt;
+  font-weight: 600;
+  color: #0f172a;
+  letter-spacing: -0.022em;
+  margin-bottom: 8px;
+}
+.pkg-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.pkg-price {
+  font-size: 30pt;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.035em;
+}
+.pkg-anchor {
+  font-size: 13pt;
+  color: #94a3b8;
+  text-decoration: line-through;
+}
+.pkg-tagline {
+  font-size: 11pt;
+  color: #475569;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  max-width: 6.4in;
+}
+.pkg-services-label {
+  font-size: 7.5pt;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.pkg-services { list-style: none; }
+.pkg-service {
+  display: flex;
+  gap: 11px;
+  padding: 5px 0;
+  font-size: 10.5pt;
+  color: #475569;
+  line-height: 1.5;
+}
+.pkg-service::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  background: #4b9cd3;
+  border-radius: 50%;
+  margin-top: 7px;
+}
+.pkg-service-text { flex: 1; }
+.pkg-service-text strong { color: #0f172a; font-weight: 600; }
+.pkg-guarantee {
+  margin-top: 14px;
+  padding: 12px 14px 13px;
+  background: #f0f9f1;
+  border-left: 3px solid #15803d;
+  border-radius: 6px;
+}
+.pkg-guarantee-label {
+  font-size: 7.5pt;
+  font-weight: 700;
+  color: #15803d;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.pkg-guarantee-text {
+  font-size: 9.5pt;
+  color: #1f3923;
+  line-height: 1.5;
+}
+
+/* ---------- CTA ---------- */
+.cta-bar {
+  position: relative;
+  background: linear-gradient(135deg, #0c1f3d 0%, #13294b 55%, #1f3666 100%);
+  border-radius: 14px;
+  padding: 22px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 12px 28px -16px rgba(19,41,75,0.5);
+}
+.cta-bar::before {
+  content: '';
+  position: absolute;
+  bottom: -60px; right: -40px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(75,156,211,0.32) 0%, transparent 65%);
+  pointer-events: none;
+}
+.cta-bar > * { position: relative; z-index: 1; }
+.cta-primary {
+  font-size: 16pt;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cta-primary .arrow {
+  display: inline-block;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: #4b9cd3;
+  color: #0c1f3d;
+  font-size: 10pt;
+  font-weight: 700;
+  text-align: center;
+  line-height: 20px;
+}
+.cta-url {
+  font-size: 9pt;
+  color: #a8d1ed;
+  margin-top: 4px;
+  letter-spacing: 0.02em;
+}
+.cta-scarcity { text-align: right; }
+.cta-scarcity-line {
+  font-size: 9.5pt;
+  font-weight: 600;
+  color: #a8d1ed;
+  letter-spacing: 0.04em;
+}
+.cta-scarcity-hint {
+  font-size: 8pt;
+  color: rgba(168,209,237,0.55);
+  margin-top: 3px;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  position: absolute;
+  bottom: 0.4in;
+  left: 0.6in;
+  right: 0.6in;
+  padding-top: 11px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 7.5pt;
+  color: #94a3b8;
+  letter-spacing: 0.04em;
+}
+.footer .domain { color: #4b9cd3; font-weight: 600; }
+`;
+
+// =====================================================================
+// Template
+// =====================================================================
+
+interface AuditPdfHtmlProps {
   businessName: string;
   scores: AuditScores;
   generatedAt: Date;
 }
 
-export function AuditPdf({ businessName, scores, generatedAt }: AuditPdfProps) {
+function topbar(dateStr: string): string {
+  return `
+    <div class="topbar">
+      <div class="brand">
+        ${tsdPrismSvg(36)}
+        <span class="brand-text">TSD Modernization Solutions</span>
+      </div>
+      <div class="topbar-meta">${esc(dateStr)}</div>
+    </div>`;
+}
+
+function buildAuditHtml({
+  businessName,
+  scores,
+  generatedAt,
+}: AuditPdfHtmlProps): string {
   const pkg = PACKAGES[scores.recommended_package];
-  // Top 4 gaps fits comfortably on page 1 alongside the score block.
   const topGaps = [...scores.gaps]
     .sort((a, b) => severityRank(a.severity) - severityRank(b.severity))
     .slice(0, 4);
   const dateStr = generatedAt.toLocaleDateString("en-US", {
     year: "numeric",
-    month: "long",
+    month: "short",
     day: "numeric",
   });
 
-  return (
-    <Document
-      title={`${businessName} — TSD Modernization Audit`}
-      author="TSD Modernization Solutions"
-      creator="TSD Modernization Solutions"
-      producer="TSD Modernization Solutions"
-    >
-      {/* Page 1 — score + gaps */}
-      <Page size="LETTER" style={styles.page}>
-        <BrandLockup />
-        <Text style={styles.eyebrow}>MODERNIZATION AUDIT</Text>
-        <Text style={styles.businessName}>{businessName}</Text>
-        <Text style={styles.summary}>{scores.one_line_summary}</Text>
+  const pillarMarkup = (
+    Object.entries(scores.pillar_scores) as [
+      keyof AuditScores["pillar_scores"],
+      number,
+    ][]
+  )
+    .map(
+      ([k, v]) => `
+        <div class="pillar">
+          <div class="pillar-label">${esc(PILLAR_LABELS[k])}</div>
+          <div class="pillar-value display">${v}</div>
+        </div>`
+    )
+    .join("");
 
-        <Text style={styles.sectionLabel}>PRESENCE SCORE</Text>
-        <View style={styles.scoreRow}>
-          <Text style={styles.scoreNum}>{scores.presence_score}</Text>
-          <Text style={styles.scoreOf}>/ 100</Text>
-        </View>
+  const gapsMarkup = topGaps
+    .map(
+      (g) => `
+        <div class="gap">
+          <div class="gap-row">
+            <div class="gap-title">${esc(g.title)}</div>
+            <span class="badge ${severityClass(g.severity)}">${esc(g.severity)}</span>
+          </div>
+          ${
+            g.impact
+              ? `<div class="gap-impact"><span class="label">Impact: </span>${esc(g.impact)}</div>`
+              : ""
+          }
+        </div>`
+    )
+    .join("");
 
-        <View style={styles.pillarsRow}>
-          {(
-            Object.entries(scores.pillar_scores) as [
-              keyof AuditScores["pillar_scores"],
-              number,
-            ][]
-          ).map(([k, v]) => (
-            <View key={k} style={styles.pillarCard}>
-              <Text style={styles.pillarLabel}>
-                {PILLAR_LABELS[k].toUpperCase()}
-              </Text>
-              <Text style={styles.pillarValue}>{v}</Text>
-            </View>
-          ))}
-        </View>
+  const servicesMarkup = scores.tsd_services
+    .map(
+      (s) => `
+        <li class="pkg-service">
+          <span class="pkg-service-text">
+            <strong>${esc(SERVICE_LABELS[s.service])}.</strong> ${esc(s.rationale)}
+          </span>
+        </li>`
+    )
+    .join("");
 
-        <View style={styles.divider} />
+  return `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>${esc(businessName)} — TSD Modernization Audit</title>
+    <style>${CSS}</style>
+  </head>
+  <body>
+    <!-- ============ PAGE 1 — score + gaps ============ -->
+    <div class="page">
+      ${topbar(dateStr)}
 
-        <Text style={styles.sectionHeader}>What we found</Text>
-        {topGaps.map((g, i) => {
-          const tone = SEVERITY_TONE[g.severity];
-          const badgeStyle =
-            tone === "red"
-              ? styles.badgeRed
-              : tone === "amber"
-                ? styles.badgeAmber
-                : styles.badgeNeutral;
-          return (
-            <View key={i} style={styles.gap} wrap={false}>
-              <View style={styles.gapHeader}>
-                <Text style={styles.gapTitle}>{g.title}</Text>
-                <Text style={[styles.badge, badgeStyle]}>
-                  {g.severity.toUpperCase()}
-                </Text>
-              </View>
-              {g.impact ? (
-                <Text style={styles.gapImpact}>
-                  <Text style={{ fontFamily: "Helvetica-Bold" }}>Impact: </Text>
-                  {g.impact}
-                </Text>
-              ) : null}
-            </View>
-          );
-        })}
+      <div class="eyebrow">Modernization audit</div>
+      <h1 class="business-name display">${esc(businessName)}</h1>
+      <p class="summary">${esc(scores.one_line_summary)}</p>
 
-        <Footer dateStr={dateStr} />
-      </Page>
+      <div class="score-panel">
+        <div class="score-block">
+          <div class="score-label">Presence Score</div>
+          <div class="score-value display">
+            ${scores.presence_score}<span class="score-of">/ 100</span>
+          </div>
+          <div class="score-tagline">
+            Composite of website, Google, reviews, trust, conversion.
+          </div>
+        </div>
+        <div class="pillars">${pillarMarkup}</div>
+      </div>
 
-      {/* Page 2 — recommended package + CTA */}
-      <Page size="LETTER" style={styles.page}>
-        <BrandLockup />
-        <Text style={styles.eyebrow}>RECOMMENDED NEXT STEP</Text>
+      <div class="section-eyebrow">Findings</div>
+      <h2 class="section-header display">What we found</h2>
+      ${gapsMarkup}
 
-        <View style={styles.pkgCard}>
-          <View style={styles.pkgEyebrowRow}>
-            <Text style={styles.pkgEyebrow}>RECOMMENDED PACKAGE</Text>
-            {pkg.cap ? <Text style={styles.pkgCap}>{pkg.cap}</Text> : null}
-          </View>
-          <Text style={styles.pkgName}>{pkg.name}</Text>
-          <Text style={styles.pkgPrice}>{pkg.price}</Text>
-          <Text style={styles.pkgTagline}>{pkg.tagline}</Text>
+      <div class="footer">
+        <span>TSD Modernization Solutions · <span class="domain">tsd-modernization.com/audit</span></span>
+        <span>Page 1 of 2</span>
+      </div>
+    </div>
 
-          <Text style={styles.sectionLabel}>WHAT WE&apos;D SHIP</Text>
-          {scores.tsd_services.map((s, i) => (
-            <View key={i} style={styles.pkgService} wrap={false}>
-              <Text style={styles.pkgBullet}>•</Text>
-              <Text style={styles.pkgServiceText}>
-                <Text style={styles.pkgServiceName}>
-                  {SERVICE_LABELS[s.service]}.
-                </Text>{" "}
-                {s.rationale}
-              </Text>
-            </View>
-          ))}
+    <!-- ============ PAGE 2 — recommended package + CTA ============ -->
+    <div class="page">
+      ${topbar(dateStr)}
 
-          {pkg.guarantee ? (
-            <View style={styles.guaranteeBox} wrap={false}>
-              <Text style={styles.sectionLabel}>GUARANTEE</Text>
-              <Text style={styles.guaranteeText}>{pkg.guarantee}</Text>
-            </View>
-          ) : null}
-        </View>
+      <div class="section-eyebrow">Recommended next step</div>
+      <h2 class="section-header display">Here&rsquo;s where we&rsquo;d start</h2>
 
-        <View style={styles.ctaBox} wrap={false}>
-          <View>
-            <Text style={styles.ctaPrimary}>Book a free fit call</Text>
-            <Text style={styles.ctaSecondary}>
-              tsd-modernization.com/book
-            </Text>
-          </View>
-          <View>
-            <Text style={styles.ctaScarcity}>Cohort closes Aug 10, 2026</Text>
-            <Text style={styles.ctaScarcityHint}>
-              Last project start July 13
-            </Text>
-          </View>
-        </View>
+      <div class="pkg-card">
+        <div class="pkg-eyebrow-row">
+          <span class="pkg-eyebrow">Recommended package</span>
+          ${pkg.cap ? `<span class="pkg-cap">${esc(pkg.cap)}</span>` : ""}
+        </div>
+        <h3 class="pkg-name display">${esc(pkg.name)}</h3>
+        <div class="pkg-price-row">
+          <span class="pkg-price display">${esc(pkg.price)}</span>
+          ${pkg.anchor ? `<span class="pkg-anchor">${esc(pkg.anchor)}</span>` : ""}
+        </div>
+        <p class="pkg-tagline">${esc(pkg.tagline)}</p>
 
-        <Footer dateStr={dateStr} />
-      </Page>
-    </Document>
+        <div class="pkg-services-label">What we&rsquo;d ship</div>
+        <ul class="pkg-services">${servicesMarkup}</ul>
+
+        ${
+          pkg.guarantee
+            ? `<div class="pkg-guarantee">
+                 <div class="pkg-guarantee-label">Our guarantee</div>
+                 <div class="pkg-guarantee-text">${esc(pkg.guarantee)}</div>
+               </div>`
+            : ""
+        }
+      </div>
+
+      <div class="cta-bar">
+        <div>
+          <div class="cta-primary">Book a free fit call <span class="arrow">&rsaquo;</span></div>
+          <div class="cta-url">tsd-modernization.com/book</div>
+        </div>
+        <div class="cta-scarcity">
+          <div class="cta-scarcity-line">Cohort closes Aug 10, 2026</div>
+          <div class="cta-scarcity-hint">Last project start July 13</div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <span>Prepared ${esc(dateStr)} · <span class="domain">tsd-modernization.com</span></span>
+        <span>Page 2 of 2</span>
+      </div>
+    </div>
+  </body>
+</html>`;
+}
+
+// =====================================================================
+// Renderer
+// =====================================================================
+
+const LOCAL_CHROME_CANDIDATES = [
+  process.env.PUPPETEER_EXECUTABLE_PATH,
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  "/Applications/Chromium.app/Contents/MacOS/Chromium",
+  "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser",
+  "/usr/bin/google-chrome",
+  "/usr/bin/chromium",
+].filter((p): p is string => typeof p === "string" && p.length > 0);
+
+async function getBrowser(): Promise<Browser> {
+  const isServerless =
+    !!process.env.VERCEL ||
+    !!process.env.AWS_LAMBDA_FUNCTION_NAME ||
+    !!process.env.AWS_REGION;
+
+  if (isServerless) {
+    const chromium = (await import("@sparticuz/chromium")).default;
+    return puppeteer.launch({
+      args: chromium.args,
+      executablePath: await chromium.executablePath(),
+      headless: true,
+    } satisfies LaunchOptions);
+  }
+
+  // Local dev — try common Chrome install paths.
+  let lastErr: unknown = null;
+  for (const executablePath of LOCAL_CHROME_CANDIDATES) {
+    try {
+      return await puppeteer.launch({
+        executablePath,
+        headless: true,
+      });
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+  throw new Error(
+    `No local Chrome/Chromium found. Set PUPPETEER_EXECUTABLE_PATH. Last error: ${
+      lastErr instanceof Error ? lastErr.message : String(lastErr)
+    }`
   );
+}
+
+export interface RenderAuditPdfOptions {
+  businessName: string;
+  scores: AuditScores;
+  generatedAt: Date;
+}
+
+export async function renderAuditPdf(
+  opts: RenderAuditPdfOptions
+): Promise<Buffer> {
+  const html = buildAuditHtml(opts);
+
+  const browser = await getBrowser();
+  try {
+    const page = await browser.newPage();
+    // Letter at 96 CSS px/in. Helps Chromium lay out at the correct scale
+    // before `page.pdf` re-rasters at the @page-declared size.
+    await page.setViewport({ width: 816, height: 1056, deviceScaleFactor: 2 });
+    await page.setContent(html, {
+      waitUntil: "networkidle0",
+      timeout: 25_000,
+    });
+    // Belt-and-suspenders: wait for Google Fonts to actually shape.
+    await page.evaluate(async () => {
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    });
+
+    const pdf = await page.pdf({
+      format: "Letter",
+      printBackground: true,
+      preferCSSPageSize: true,
+      margin: { top: "0", right: "0", bottom: "0", left: "0" },
+    });
+    return Buffer.from(pdf);
+  } finally {
+    await browser.close().catch(() => {});
+  }
 }
