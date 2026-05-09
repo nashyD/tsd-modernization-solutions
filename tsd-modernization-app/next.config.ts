@@ -6,24 +6,12 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "2mb",
     },
   },
-  // Puppeteer + the Sparticuz Chromium binary need to stay outside the
-  // Turbopack/Webpack bundle — they ship native deps (the Chromium
-  // executable, plus pdfkit/fontkit-style binaries) that the bundler
-  // can't statically trace. Without this they break the build.
-  serverExternalPackages: ["puppeteer-core", "@sparticuz/chromium"],
-  // `serverExternalPackages` keeps `@sparticuz/chromium`'s JS out of the
-  // bundle, but Next's output-file tracer doesn't realise the package
-  // also reads `bin/chromium.br`, `bin/swiftshader.tar.br`, etc. at
-  // runtime. Without this, the PDF route on Vercel throws:
-  //   "The input directory '.../node_modules/@sparticuz/chromium/bin'
-  //    does not exist. ... you must externalize @sparticuz/chromium ..."
-  // — even though we *did* externalize it. The fix is to explicitly
-  // include the bin/ folder for the PDF route.
-  outputFileTracingIncludes: {
-    "/api/audit/[id]/pdf": [
-      "./node_modules/@sparticuz/chromium/bin/**",
-    ],
-  },
+  // Puppeteer + the chromium-min loader (which uses tar-fs, brotli
+  // decompress, and direct node:fs reads) need to stay outside the
+  // Turbopack bundle. The 60MB chromium binary itself is downloaded at
+  // runtime from GitHub releases on first invoke (see
+  // src/lib/audit/pdf.tsx) and cached in /tmp for the lambda's lifetime.
+  serverExternalPackages: ["puppeteer-core", "@sparticuz/chromium-min"],
 };
 
 export default nextConfig;

@@ -758,16 +758,24 @@ async function getBrowser(): Promise<Browser> {
     !!process.env.AWS_REGION;
 
   if (isServerless) {
-    const chromium = (await import("@sparticuz/chromium")).default;
-    // @sparticuz/chromium v148 ships *only* the headless-shell binary
-    // (chromium.args already includes `--headless='shell' --no-sandbox
-    // --no-zygote`). Puppeteer's `headless: 'shell'` matches that mode;
-    // passing `true` (classic-headless) makes the shell binary refuse to
-    // launch. v148 also removed the previous `chromium.headless` and
-    // `chromium.defaultViewport` getters, so we wire the value literally.
+    // `@sparticuz/chromium-min` is the bundler-friendly variant: the JS
+    // module is tiny (~50KB) and ships *no* binary blobs. We pass the
+    // GitHub-releases URL of the matching v148 chromium pack to
+    // `executablePath()`, which downloads + extracts the ~50MB tarball
+    // into /tmp on first invoke and reuses it on warm invokes within the
+    // same lambda lifetime. This sidesteps the
+    // `outputFileTracingIncludes` rabbit hole that doesn't reliably
+    // include the bin/ folder under Next 16 + Turbopack.
+    //
+    // Version pin: this URL must match the @sparticuz/chromium-min
+    // version in package.json — they're released together. Bump both
+    // together.
+    const chromium = (await import("@sparticuz/chromium-min")).default;
+    const CHROMIUM_PACK_URL =
+      "https://github.com/Sparticuz/chromium/releases/download/v148.0.0/chromium-v148.0.0-pack.x64.tar";
     return puppeteer.launch({
       args: chromium.args,
-      executablePath: await chromium.executablePath(),
+      executablePath: await chromium.executablePath(CHROMIUM_PACK_URL),
       headless: "shell",
     } satisfies LaunchOptions);
   }
