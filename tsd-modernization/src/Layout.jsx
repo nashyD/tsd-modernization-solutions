@@ -360,11 +360,29 @@ export default function Layout() {
           .hide-mobile { display: none !important; }
           .hero-bg { background-size: 180% auto !important; background-position: center 35% !important; }
         }
+
+        /* Mobile nav scaling — at narrow widths the logo + brand text + theme +
+           menu button sum past viewport width, which leaks past body's
+           overflow-x:hidden because nav is position:fixed. Result on iOS Safari:
+           the layout viewport widens, the page pans, and zooming out shows it
+           off-center. These rules shrink the nav internals so the fixed bar
+           always fits 320px+ viewports. */
+        @media (max-width: 480px) {
+          .site-nav { padding-left: 12px !important; padding-right: 12px !important; }
+          .site-nav-brand { gap: 10px !important; }
+          .site-nav-brand svg { width: 56px !important; height: auto !important; }
+          .site-nav-brand-text-1 { font-size: 10px !important; letter-spacing: 3px !important; }
+          .site-nav-brand-text-2 { font-size: 8px !important; letter-spacing: 3.5px !important; }
+          .site-nav-menu-btn { padding: 9px 14px !important; }
+        }
+        @media (max-width: 360px) {
+          .site-nav-brand-text { display: none !important; }
+        }
       `}</style>
       <RouteMeta />
       <a href="#main" className="skip-link">Skip to main content</a>
       {/* ── Nav ─────────────────────────────── */}
-      <nav style={{
+      <nav className="site-nav" style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
         padding: scrolled ? "10px clamp(16px, 4vw, 48px)" : "18px clamp(16px, 4vw, 48px)",
         background: scrolled ? v("nav-bg") : "transparent",
@@ -374,18 +392,19 @@ export default function Layout() {
         transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
         display: "flex", alignItems: "center", justifyContent: "space-between",
       }}>
-        <Link to="/" style={{
+        <Link to="/" className="site-nav-brand" style={{
           display: "flex", alignItems: "center", gap: "14px", textDecoration: "none",
           filter: scrolled ? "none" : "drop-shadow(0 2px 8px rgba(0,0,0,0.6))",
           transition: "filter 0.4s ease",
+          minWidth: 0,
         }}>
-          <TSDLogo size={64} />
-          <div>
-            <div style={{
+          <TSDLogo size={64} style={{ flexShrink: 0 }} />
+          <div className="site-nav-brand-text">
+            <div className="site-nav-brand-text-1" style={{
               fontSize: "11px", fontWeight: 700, letterSpacing: "3.5px", textTransform: "uppercase",
               color: v("text"), lineHeight: 1.2,
             }}>Modernization</div>
-            <div style={{
+            <div className="site-nav-brand-text-2" style={{
               fontSize: "9px", fontWeight: 600, letterSpacing: "4px", textTransform: "uppercase",
               color: v("text-dim"),
             }}>Solutions</div>
@@ -418,7 +437,7 @@ export default function Layout() {
 
           {/* Menu dropdown trigger */}
           <div ref={menuRef} style={{ position: "relative" }}>
-            <button onClick={() => setMenuOpen(!menuOpen)} style={{
+            <button onClick={() => setMenuOpen(!menuOpen)} className="site-nav-menu-btn" style={{
               background: menuOpen ? v("surface") : C.gradientAccent,
               border: "none",
               cursor: "pointer",
