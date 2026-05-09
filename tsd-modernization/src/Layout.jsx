@@ -289,12 +289,19 @@ export default function Layout() {
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
+        /* overflow-x: clip on <html> is the iOS Safari fix that overflow-x:
+           hidden on <body> alone doesn't accomplish — fixed-position children
+           and absolutely-positioned decorative layers (auroras, oversized
+           glows) that exceed viewport width otherwise widen the layout
+           viewport on iOS, letting the page pinch-zoom-pan off-center. clip
+           is widely supported (Safari 16+, Chrome 90+) and unlike hidden
+           does not establish a new containing block / scroll boundary. */
+        html { scroll-behavior: smooth; overflow-x: clip; }
         body {
           font-family: var(--font-body);
           background: var(--c-bg);
           color: var(--c-text);
-          overflow-x: hidden;
+          overflow-x: clip;
           transition: background 0.4s ease, color 0.4s ease;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;

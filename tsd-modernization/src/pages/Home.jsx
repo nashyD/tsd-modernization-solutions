@@ -108,7 +108,7 @@ function Hero() {
           light mode so it doesn't wash out against cream. */}
       <div aria-hidden="true" style={{
         position: "absolute", top: "4%", left: "50%", transform: "translateX(-50%)",
-        width: "1100px", maxWidth: "120%", height: "560px", zIndex: 0, pointerEvents: "none",
+        width: "min(1100px, 100%)", height: "560px", zIndex: 0, pointerEvents: "none",
         background: "radial-gradient(ellipse 50% 50% at 50% 50%, var(--c-hero-aurora) 0%, transparent 70%)",
         filter: "blur(60px)",
       }} />
@@ -363,29 +363,34 @@ function TradesStrip() {
         textAlign: "center",
       }}>
         <Eyebrow style={{ whiteSpace: "nowrap" }}>Built for the trades</Eyebrow>
-        {/* Each trade is its own nowrap inline-block so multi-word names like
-            "Garage Doors" never split across a line break. The line CAN break
-            between trades, which keeps the strip honest on narrow viewports. */}
-        <span style={{
+        {/* Each trade is its own flex item with whiteSpace:nowrap so multi-word
+            names like "Garage Doors" never split mid-name. The wrapper is
+            display:flex with flex-wrap:wrap so the line breaks BETWEEN trades
+            on narrow viewports — relying on inline whitespace for break
+            opportunities was unreliable on iOS Safari (no whitespace between
+            adjacent JSX <span>s = no break opportunity = single overflowing
+            line on phones). */}
+        <div style={{
+          display: "flex", flexWrap: "wrap", justifyContent: "center",
+          alignItems: "center", rowGap: "4px",
           fontFamily: "var(--font-display)", fontStyle: "italic",
           fontSize: "clamp(15px, 2vw, 22px)", color: v("text"),
           lineHeight: 1.5, letterSpacing: "0.1px",
         }}>
           {TRADES.map((trade, i) => (
-            <span key={trade} style={{ whiteSpace: "nowrap" }}>
+            <span key={trade} style={{ whiteSpace: "nowrap", display: "inline-flex", alignItems: "center" }}>
               {trade}
               {i < TRADES.length - 1 && (
-                <span style={{
+                <span aria-hidden="true" style={{
                   color: v("accent"), fontStyle: "normal",
                   margin: "0 clamp(6px, 1.2vw, 10px)",
-                  display: "inline-block",
                 }}>
                   {"·"}
                 </span>
               )}
             </span>
           ))}
-        </span>
+        </div>
       </div>
     </section>
   );
