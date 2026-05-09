@@ -72,8 +72,22 @@ export async function GET(
       generatedAt: new Date(audit.created_at),
     });
   } catch (e) {
+    const detail = e instanceof Error ? e.message : String(e);
     console.error("[pdf] render failed", e);
-    return new Response("PDF render failed", { status: 500 });
+    // Surface the underlying error in the response body so it shows in
+    // the browser's network panel — saves a Vercel-logs round-trip when
+    // diagnosing chromium / puppeteer issues. Truncated to 600 chars
+    // (typical puppeteer launch errors fit in 200-400).
+    return new Response(
+      JSON.stringify({
+        error: "PDF render failed",
+        detail: detail.slice(0, 600),
+      }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
 
   const slug =

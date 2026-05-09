@@ -759,10 +759,16 @@ async function getBrowser(): Promise<Browser> {
 
   if (isServerless) {
     const chromium = (await import("@sparticuz/chromium")).default;
+    // @sparticuz/chromium v148 ships *only* the headless-shell binary
+    // (chromium.args already includes `--headless='shell' --no-sandbox
+    // --no-zygote`). Puppeteer's `headless: 'shell'` matches that mode;
+    // passing `true` (classic-headless) makes the shell binary refuse to
+    // launch. v148 also removed the previous `chromium.headless` and
+    // `chromium.defaultViewport` getters, so we wire the value literally.
     return puppeteer.launch({
       args: chromium.args,
       executablePath: await chromium.executablePath(),
-      headless: true,
+      headless: "shell",
     } satisfies LaunchOptions);
   }
 
