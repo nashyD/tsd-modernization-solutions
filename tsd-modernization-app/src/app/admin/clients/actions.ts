@@ -135,3 +135,113 @@ export async function deleteClient(formData: FormData) {
   revalidatePath("/admin/clients");
   revalidatePath("/app");
 }
+
+const UpdateClientSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string().min(2),
+  website_url: z
+    .string()
+    .min(1)
+    .transform((v) => (v.startsWith("http") ? v : `https://${v}`))
+    .pipe(z.string().url()),
+  package_tier: z.enum(PACKAGE_TIERS as unknown as [string, ...string[]]),
+  vapi_assistant_id: z.string().optional().or(z.literal("")),
+  vercel_project_id: z.string().optional().or(z.literal("")),
+});
+
+export async function updateClient(formData: FormData) {
+  await requireRole("admin");
+  const parsed = UpdateClientSchema.parse({
+    id: formData.get("id"),
+    name: formData.get("name"),
+    website_url: formData.get("website_url"),
+    package_tier: formData.get("package_tier"),
+    vapi_assistant_id: formData.get("vapi_assistant_id") || "",
+    vercel_project_id: formData.get("vercel_project_id") || "",
+  });
+
+  const sb = supabaseAdmin();
+  const { error } = await sb
+    .from("clients")
+    .update({
+      name: parsed.name,
+      website_url: parsed.website_url,
+      package_tier: parsed.package_tier,
+      vapi_assistant_id: parsed.vapi_assistant_id || null,
+      vercel_project_id: parsed.vercel_project_id || null,
+    })
+    .eq("id", parsed.id);
+  if (error) throw new Error(error.message);
+
+  revalidatePath(`/admin/clients/${parsed.id}`);
+  revalidatePath("/admin/clients");
+  revalidatePath("/app");
+}
+
+const InviteOwnerSchema = z.object({
+  client_id: z.string().uuid(),
+  email: z.string().email(),
+  role: z.enum(["owner", "manager", "admin"] as const).default("owner"),
+});
+
+export async function inviteOwner(formData: FormData) {
+  await requireRole("admin");
+  const parsed = InviteOwnerSchema.parse({
+    client_id: formData.get("client_id"),
+    email: formData.get("email"),
+    role: formData.get("role") || "owner",
+  });
+
+  const sb = supabaseAdmin();
+
+  // 1. Find or invite the auth user.
+  const { data: list } = await sb.auth.admin.listUsers();
+  let user = list.users.find((u) => u.email === parsed.email);
+  if (!user) {
+    await sb.auth.admin.inviteUserByEmail(parsed.email, {
+      redirectTo: `${env().NEXT_PUBLIC_SITE_URL}/auth/callback`,
+    });
+    const { data: refreshed } = await sb.auth.admin.listUsers();
+    user = refreshed.users.find((u) => u.email === parsed.email);
+    if (!user) throw new Error("Invite sent but user lookup failed");
+  }
+
+  // 2. Idempotent link — if already linked, no-op.
+  const { data: existing } = await sb
+    .from("client_users")
+    .select("user_id")
+    .eq("user_id", user.id)
+    .eq("client_id", parsed.client_id)
+    .maybeSingle();
+  if (!existing) {
+    const { error } = await sb.from("client_users").insert({
+      user_id: user.id,
+      client_id: parsed.client_id,
+      role: parsed.role,
+    });
+    if (error) throw new Error(error.message);
+  }
+
+  revalidatePath(`/admin/clients/${parsed.client_id}`);
+}
+
+const RemoveOwnerSchema = z.object({
+  client_id: z.string().uuid(),
+  user_id: z.string().uuid(),
+});
+
+export async function removeOwner(formData: FormData) {
+  await requireRole("admin");
+  const parsed = RemoveOwnerSchema.parse({
+    client_id: formData.get("client_id"),
+    user_id: formData.get("user_id"),
+  });
+  const sb = supabaseAdmin();
+  const { error } = await sb
+    .from("client_users")
+    .delete()
+    .eq("user_id", parsed.user_id)
+    .eq("client_id", parsed.client_id);
+  if (error) throw new Error(error.message);
+  revalidatePath(`/admin/clients/${parsed.client_id}`);
+}

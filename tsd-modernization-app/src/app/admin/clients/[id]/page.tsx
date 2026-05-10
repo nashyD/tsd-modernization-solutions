@@ -1,8 +1,24 @@
 import { notFound } from "next/navigation";
-import { Plus, Trash2, ClipboardList, Eye } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  ClipboardList,
+  Eye,
+  Mail,
+  UserPlus,
+  Save,
+  ExternalLink,
+} from "lucide-react";
 import { supabaseAdmin } from "@/lib/supabase/admin";
-import { upsertWorkItem, deleteWorkItem } from "../actions";
+import {
+  upsertWorkItem,
+  deleteWorkItem,
+  updateClient,
+  inviteOwner,
+  removeOwner,
+} from "../actions";
 import { viewAsClient } from "../../view-as-actions";
+import { PACKAGE_TIERS } from "@/lib/packages";
 import BackLink from "@/components/BackLink";
 import { Input, Label, Textarea, Select } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
@@ -31,6 +47,24 @@ export default async function AdminClientDetail({
     .eq("client_id", id)
     .order("created_at", { ascending: false });
 
+  const { data: ownerLinks } = await sb
+    .from("client_users")
+    .select("user_id,role,created_at")
+    .eq("client_id", id)
+    .order("created_at", { ascending: true });
+
+  const owners = await Promise.all(
+    (ownerLinks ?? []).map(async (link) => {
+      const { data } = await sb.auth.admin.getUserById(link.user_id);
+      return {
+        user_id: link.user_id,
+        role: link.role,
+        email: data.user?.email ?? "(unknown)",
+        last_sign_in_at: data.user?.last_sign_in_at ?? null,
+      };
+    })
+  );
+
   return (
     <div className="space-y-10 animate-fade-up">
       <div>
@@ -56,22 +90,184 @@ export default async function AdminClientDetail({
             href={client.website_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline underline-offset-2 hover:text-[var(--accent)]"
+            className="inline-flex items-center gap-1 underline underline-offset-2 hover:text-[var(--accent)]"
           >
             {client.website_url}
+            <ExternalLink size={12} strokeWidth={2} aria-hidden />
           </a>
           <span aria-hidden>·</span>
           <Badge tone="blue">{client.package_tier}</Badge>
-          {client.vercel_project_id && (
-            <span className="font-mono text-xs">vercel: {client.vercel_project_id}</span>
-          )}
-          {client.vapi_assistant_id && (
-            <span className="font-mono text-xs">
-              vapi: {client.vapi_assistant_id.slice(0, 8)}…
-            </span>
-          )}
         </div>
       </div>
+
+      <section className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
+        <h2 className="font-display text-xl font-semibold tracking-tight text-[var(--text)]">
+          Client info
+        </h2>
+        <p className="mt-1 text-sm text-[var(--text-muted)]">
+          Edit the company details, package tier, and integration IDs.
+        </p>
+        <form action={updateClient} className="mt-5 grid gap-4 sm:grid-cols-2">
+          <input type="hidden" name="id" value={client.id} />
+          <div>
+            <Label htmlFor="edit-name">Business name</Label>
+            <Input
+              id="edit-name"
+              name="name"
+              defaultValue={client.name}
+              required
+              className="mt-1.5"
+            />
+          </div>
+          <div>
+            <Label htmlFor="edit-website_url">Website URL</Label>
+            <Input
+              id="edit-website_url"
+              name="website_url"
+              defaultValue={client.website_url}
+              required
+              className="mt-1.5"
+            />
+          </div>
+          <div>
+            <Label htmlFor="edit-package_tier">Package tier</Label>
+            <Select
+              id="edit-package_tier"
+              name="package_tier"
+              defaultValue={client.package_tier}
+              required
+              className="mt-1.5"
+            >
+              {PACKAGE_TIERS.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </Select>
+          </div>
+          <div>
+            <Label htmlFor="edit-vercel_project_id" hint="(prj_…)">
+              Vercel project ID
+            </Label>
+            <Input
+              id="edit-vercel_project_id"
+              name="vercel_project_id"
+              defaultValue={client.vercel_project_id ?? ""}
+              placeholder="prj_…"
+              className="mt-1.5"
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <Label htmlFor="edit-vapi_assistant_id" hint="(optional)">
+              Vapi assistant ID
+            </Label>
+            <Input
+              id="edit-vapi_assistant_id"
+              name="vapi_assistant_id"
+              defaultValue={client.vapi_assistant_id ?? ""}
+              className="mt-1.5"
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <Button type="submit" leftIcon={<Save size={16} strokeWidth={2.25} />}>
+              Save changes
+            </Button>
+          </div>
+        </form>
+      </section>
+
+      <section>
+        <h2 className="font-display text-xl font-semibold tracking-tight text-[var(--text)]">
+          Owners
+        </h2>
+        <p className="mt-1 text-sm text-[var(--text-muted)]">
+          People who can sign in and see this client&rsquo;s portal. Inviting an
+          email sends a magic-link sign-in.
+        </p>
+
+        {owners.length === 0 ? (
+          <div className="mt-4">
+            <EmptyState
+              icon={<Mail size={20} />}
+              title="No owners linked yet"
+              description="Add an email below — they&rsquo;ll get a sign-in link from Supabase."
+            />
+          </div>
+        ) : (
+          <ul className="mt-4 divide-y divide-[var(--border)] rounded-[12px] border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-card)]">
+            {owners.map((o) => (
+              <li
+                key={o.user_id}
+                className="flex flex-wrap items-center justify-between gap-3 px-5 py-3"
+              >
+                <div className="min-w-0">
+                  <p className="truncate font-medium text-[var(--text)]">
+                    {o.email}
+                  </p>
+                  <p className="text-xs text-[var(--text-subtle)]">
+                    {o.role}
+                    {o.last_sign_in_at
+                      ? ` · last seen ${new Date(o.last_sign_in_at).toLocaleDateString()}`
+                      : " · never signed in"}
+                  </p>
+                </div>
+                <form action={removeOwner}>
+                  <input type="hidden" name="client_id" value={client.id} />
+                  <input type="hidden" name="user_id" value={o.user_id} />
+                  <button
+                    type="submit"
+                    className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--danger)] hover:underline"
+                  >
+                    <Trash2 size={12} strokeWidth={2} aria-hidden />
+                    Remove
+                  </button>
+                </form>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <form
+          action={inviteOwner}
+          className="mt-5 rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)]"
+        >
+          <input type="hidden" name="client_id" value={client.id} />
+          <h3 className="font-semibold text-[var(--text)]">Invite an owner</h3>
+          <p className="mt-1 text-sm text-[var(--text-muted)]">
+            They&rsquo;ll receive a magic-link email and land in this client&rsquo;s portal.
+          </p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto_auto]">
+            <div>
+              <Label htmlFor="invite-email" className="sr-only">
+                Email
+              </Label>
+              <Input
+                id="invite-email"
+                name="email"
+                type="email"
+                required
+                placeholder="owner@business.com"
+              />
+            </div>
+            <Select
+              name="role"
+              defaultValue="owner"
+              aria-label="Role"
+              className="w-auto"
+            >
+              <option value="owner">owner</option>
+              <option value="manager">manager</option>
+              <option value="admin">admin</option>
+            </Select>
+            <Button
+              type="submit"
+              leftIcon={<UserPlus size={16} strokeWidth={2.25} />}
+            >
+              Send invite
+            </Button>
+          </div>
+        </form>
+      </section>
 
       <section>
         <h2 className="font-display text-xl font-semibold tracking-tight text-[var(--text)]">
