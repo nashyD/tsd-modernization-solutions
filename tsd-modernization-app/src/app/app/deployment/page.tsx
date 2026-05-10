@@ -22,19 +22,42 @@ interface VercelDeployment {
   meta?: { githubCommitMessage?: string };
 }
 
-async function fetchLatestDeployment(projectId: string): Promise<VercelDeployment | null> {
+type FetchResult =
+  | { ok: true; deployment: VercelDeployment | null }
+  | { ok: false; reason: string };
+
+async function fetchLatestDeployment(projectId: string): Promise<FetchResult> {
   const e = env();
-  if (!e.VERCEL_API_TOKEN) return null;
-  const res = await fetch(
-    `https://api.vercel.com/v6/deployments?projectId=${projectId}&limit=1`,
-    {
+  if (!e.VERCEL_API_TOKEN) {
+    return { ok: false, reason: "VERCEL_API_TOKEN env var is not set" };
+  }
+  const url = `https://api.vercel.com/v6/deployments?projectId=${encodeURIComponent(projectId)}&limit=1`;
+  let res: Response;
+  try {
+    res = await fetch(url, {
       headers: { Authorization: `Bearer ${e.VERCEL_API_TOKEN}` },
       cache: "no-store",
+    });
+  } catch (err) {
+    return {
+      ok: false,
+      reason: `Network error reaching Vercel: ${err instanceof Error ? err.message : String(err)}`,
+    };
+  }
+  if (!res.ok) {
+    let body = "";
+    try {
+      body = (await res.text()).slice(0, 400);
+    } catch {
+      // ignore
     }
-  );
-  if (!res.ok) return null;
+    return {
+      ok: false,
+      reason: `Vercel API returned ${res.status} ${res.statusText} for projectId=${projectId}. ${body}`,
+    };
+  }
   const json = (await res.json()) as { deployments?: VercelDeployment[] };
-  return json.deployments?.[0] ?? null;
+  return { ok: true, deployment: json.deployments?.[0] ?? null };
 }
 
 function stateTone(state: string): "emerald" | "amber" | "red" | "neutral" {
@@ -68,9 +91,13 @@ export default async function DeploymentPage() {
     .eq("id", active.client_id)
     .single();
 
-  const deployment = client?.vercel_project_id
+  const isAdmin = memberships.some((m) => m.role === "admin");
+  const fetchResult = client?.vercel_project_id
     ? await fetchLatestDeployment(client.vercel_project_id)
     : null;
+  const deployment = fetchResult?.ok ? fetchResult.deployment : null;
+  const fetchError =
+    fetchResult && !fetchResult.ok ? fetchResult.reason : null;
 
   return (
     <div className="space-y-8 animate-fade-up">
@@ -93,6 +120,20 @@ export default async function DeploymentPage() {
       {client?.vercel_project_id && !deployment && (
         <div className="rounded-[14px] border border-[var(--warning)]/30 bg-[var(--warning-soft)] p-5 text-[var(--warning)]">
           We couldn&apos;t reach Vercel for this project. Try again in a moment.
+          {isAdmin && fetchError && (
+            <div className="mt-3 rounded-md bg-[var(--surface-2)] p-3 font-mono text-xs leading-relaxed text-[var(--text-muted)]">
+              <span className="font-semibold uppercase tracking-wide text-[var(--text-subtle)]">
+                Admin diagnostic ·
+              </span>{" "}
+              {fetchError}
+              <div className="mt-1.5 text-[var(--text-subtle)]">
+                Stored projectId:{" "}
+                <span className="text-[var(--text)]">
+                  {client.vercel_project_id}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
