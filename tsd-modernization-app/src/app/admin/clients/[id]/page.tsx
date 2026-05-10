@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
-import { Plus, Trash2, ClipboardList } from "lucide-react";
+import { Plus, Trash2, ClipboardList, Eye } from "lucide-react";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { upsertWorkItem, deleteWorkItem } from "../actions";
+import { viewAsClient } from "../../view-as-actions";
 import BackLink from "@/components/BackLink";
 import { Input, Label, Textarea, Select } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
@@ -34,9 +35,22 @@ export default async function AdminClientDetail({
     <div className="space-y-10 animate-fade-up">
       <div>
         <BackLink href="/admin/clients" label="All clients" />
-        <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-[var(--text)]">
-          {client.name}
-        </h1>
+        <div className="mt-2 flex flex-wrap items-start justify-between gap-4">
+          <h1 className="font-display text-3xl font-semibold tracking-tight text-[var(--text)]">
+            {client.name}
+          </h1>
+          <form action={viewAsClient}>
+            <input type="hidden" name="client_id" value={client.id} />
+            <Button
+              type="submit"
+              variant="secondary"
+              size="sm"
+              leftIcon={<Eye size={14} strokeWidth={2.25} />}
+            >
+              View portal as this client
+            </Button>
+          </form>
+        </div>
         <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-[var(--text-subtle)]">
           <a
             href={client.website_url}

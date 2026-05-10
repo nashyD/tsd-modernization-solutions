@@ -1,5 +1,9 @@
 import { LineChart, ArrowUp, ArrowDown, Minus } from "lucide-react";
-import { requireUser, getMemberships } from "@/lib/auth/require";
+import {
+  requireUser,
+  getMemberships,
+  getActiveClient,
+} from "@/lib/auth/require";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { AuditScoresSchema } from "@/lib/audit/types";
 import type { AuditScores } from "@/lib/audit/types";
@@ -12,8 +16,8 @@ export const dynamic = "force-dynamic";
 export default async function SnapshotPage() {
   const { user } = await requireUser();
   const memberships = await getMemberships(user.id);
-  const ownership = memberships.find((m) => m.role !== "admin");
-  if (!ownership) {
+  const active = await getActiveClient(memberships);
+  if (!active) {
     return (
       <div className="space-y-6">
         <BackLink href="/app" label="Dashboard" />
@@ -31,7 +35,7 @@ export default async function SnapshotPage() {
     .from("audits")
     .select("id,scores,created_at,status")
     .eq("owner_type", "client")
-    .eq("owner_id", ownership.client_id)
+    .eq("owner_id", active.client_id)
     .eq("status", "ready")
     .order("created_at", { ascending: false })
     .limit(2);

@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Plus, Building2 } from "lucide-react";
+import { Plus, Building2, Eye } from "lucide-react";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { PACKAGE_TIERS } from "@/lib/packages";
 import { createClient } from "./actions";
+import { viewAsClient } from "../view-as-actions";
 import DeleteClientButton from "./DeleteClientButton";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -52,10 +53,21 @@ export default async function AdminClientsPage() {
                     <span className="font-mono text-xs">{c.package_tier}</span>
                   </p>
                 </div>
-                <div className="flex flex-none items-center gap-5">
+                <div className="flex flex-none items-center gap-4">
                   <span className="hidden text-xs text-[var(--text-subtle)] sm:inline">
                     {new Date(c.created_at).toLocaleDateString()}
                   </span>
+                  <form action={viewAsClient}>
+                    <input type="hidden" name="client_id" value={c.id} />
+                    <button
+                      type="submit"
+                      className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--text-muted)] transition-colors hover:text-[var(--accent)]"
+                      title={`View portal as ${c.name}`}
+                    >
+                      <Eye size={13} strokeWidth={2.25} aria-hidden />
+                      View as
+                    </button>
+                  </form>
                   <DeleteClientButton id={c.id} name={c.name} />
                 </div>
               </li>

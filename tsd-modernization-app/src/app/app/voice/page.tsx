@@ -1,5 +1,9 @@
 import { PhoneCall } from "lucide-react";
-import { requireUser, getMemberships } from "@/lib/auth/require";
+import {
+  requireUser,
+  getMemberships,
+  getActiveClient,
+} from "@/lib/auth/require";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import VoiceWidget from "./VoiceWidget";
 import BackLink from "@/components/BackLink";
@@ -11,8 +15,8 @@ export const dynamic = "force-dynamic";
 export default async function VoicePage() {
   const { user } = await requireUser();
   const memberships = await getMemberships(user.id);
-  const ownership = memberships.find((m) => m.role !== "admin");
-  if (!ownership) {
+  const active = await getActiveClient(memberships);
+  if (!active) {
     return (
       <div className="space-y-6">
         <BackLink href="/app" label="Dashboard" />
@@ -29,7 +33,7 @@ export default async function VoicePage() {
   const { data: client } = await sb
     .from("clients")
     .select("name,vapi_assistant_id")
-    .eq("id", ownership.client_id)
+    .eq("id", active.client_id)
     .single();
 
   return (

@@ -1,5 +1,9 @@
 import { ListChecks, CheckCircle2, Clock, Circle } from "lucide-react";
-import { requireUser, getMemberships } from "@/lib/auth/require";
+import {
+  requireUser,
+  getMemberships,
+  getActiveClient,
+} from "@/lib/auth/require";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import type { WorkItemStatus } from "@/lib/supabase/types";
 import BackLink from "@/components/BackLink";
@@ -22,8 +26,8 @@ const COLUMNS: {
 export default async function ProgressPage() {
   const { user } = await requireUser();
   const memberships = await getMemberships(user.id);
-  const ownership = memberships.find((m) => m.role !== "admin");
-  if (!ownership) {
+  const active = await getActiveClient(memberships);
+  if (!active) {
     return (
       <div className="space-y-6">
         <BackLink href="/app" label="Dashboard" />
@@ -40,7 +44,7 @@ export default async function ProgressPage() {
   const { data: items } = await sb
     .from("work_items")
     .select("id,title,description,status,completed_at")
-    .eq("client_id", ownership.client_id)
+    .eq("client_id", active.client_id)
     .order("created_at", { ascending: false });
 
   type Item = NonNullable<typeof items>[number];

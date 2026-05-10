@@ -1,5 +1,9 @@
 import { Check, Package as PackageIcon, ShieldCheck } from "lucide-react";
-import { requireUser, getMemberships } from "@/lib/auth/require";
+import {
+  requireUser,
+  getMemberships,
+  getActiveClient,
+} from "@/lib/auth/require";
 import { packageByTier } from "@/lib/packages";
 import BackLink from "@/components/BackLink";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -11,9 +15,8 @@ export const dynamic = "force-dynamic";
 export default async function PackagePage() {
   const { user } = await requireUser();
   const memberships = await getMemberships(user.id);
-  const ownership = memberships.find((m) => m.role !== "admin");
-  const client = ownership?.clients;
-  const pkg = client ? packageByTier(client.package_tier) : null;
+  const active = await getActiveClient(memberships);
+  const pkg = active ? packageByTier(active.client.package_tier) : null;
 
   if (!pkg) {
     return (

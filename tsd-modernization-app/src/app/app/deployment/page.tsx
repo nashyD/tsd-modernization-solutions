@@ -1,5 +1,9 @@
 import { CloudUpload, ExternalLink } from "lucide-react";
-import { requireUser, getMemberships } from "@/lib/auth/require";
+import {
+  requireUser,
+  getMemberships,
+  getActiveClient,
+} from "@/lib/auth/require";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { env } from "@/lib/env";
 import BackLink from "@/components/BackLink";
@@ -43,8 +47,8 @@ function stateTone(state: string): "emerald" | "amber" | "red" | "neutral" {
 export default async function DeploymentPage() {
   const { user } = await requireUser();
   const memberships = await getMemberships(user.id);
-  const ownership = memberships.find((m) => m.role !== "admin");
-  if (!ownership) {
+  const active = await getActiveClient(memberships);
+  if (!active) {
     return (
       <div className="space-y-6">
         <BackLink href="/app" label="Dashboard" />
@@ -61,7 +65,7 @@ export default async function DeploymentPage() {
   const { data: client } = await sb
     .from("clients")
     .select("name,vercel_project_id,website_url")
-    .eq("id", ownership.client_id)
+    .eq("id", active.client_id)
     .single();
 
   const deployment = client?.vercel_project_id

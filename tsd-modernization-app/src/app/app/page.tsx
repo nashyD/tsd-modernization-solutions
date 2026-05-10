@@ -8,7 +8,11 @@ import {
   ArrowUpRight,
   type LucideIcon,
 } from "lucide-react";
-import { requireUser, getMemberships } from "@/lib/auth/require";
+import {
+  requireUser,
+  getMemberships,
+  getActiveClient,
+} from "@/lib/auth/require";
 import { packageByTier } from "@/lib/packages";
 import { Badge } from "@/components/ui/Badge";
 
@@ -61,9 +65,9 @@ const MODULES: ModuleCard[] = [
 export default async function PortalHome() {
   const { user } = await requireUser();
   const memberships = await getMemberships(user.id);
-  const ownerships = memberships.filter((m) => m.role !== "admin");
+  const active = await getActiveClient(memberships);
 
-  if (ownerships.length === 0) {
+  if (!active) {
     return (
       <div className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-10 shadow-[var(--shadow-card)]">
         <h1 className="font-display text-2xl font-semibold tracking-tight text-[var(--text)]">
@@ -85,9 +89,8 @@ export default async function PortalHome() {
     );
   }
 
-  const primary = ownerships[0];
-  const client = primary.clients;
-  const pkg = client ? packageByTier(client.package_tier) : null;
+  const client = active.client;
+  const pkg = packageByTier(client.package_tier);
 
   return (
     <div className="space-y-10">
@@ -99,7 +102,7 @@ export default async function PortalHome() {
           {pkg && <Badge tone="blue">{pkg.name}</Badge>}
         </div>
         <h1 className="mt-2 text-balance font-display text-[34px] font-semibold leading-[1.05] tracking-tight text-[var(--text)] sm:text-[40px]">
-          {client?.name ?? "Your TSD Portal"}
+          {client.name}
         </h1>
         <p className="mt-3 max-w-2xl text-pretty text-base leading-relaxed text-[var(--text-muted)]">
           A single place to see what we&apos;re building for you, what&apos;s
