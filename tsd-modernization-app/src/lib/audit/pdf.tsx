@@ -92,6 +92,35 @@ function esc(input: string | null | undefined): string {
     .replace(/'/g, "&#39;");
 }
 
+// Gap "impact" text is LLM-generated and arrives at variable length — often
+// three or four sentences. The page-1 findings list budgets ~2 lines per
+// gap, so trim each impact down to the most whole sentences that fit.
+// Trimming on sentence boundaries keeps every shown impact a complete
+// thought; the full untrimmed text still renders on the on-screen report.
+const IMPACT_CHAR_BUDGET = 200;
+
+function trimImpact(input: string): string {
+  const text = input.trim();
+  if (text.length <= IMPACT_CHAR_BUDGET) return text;
+
+  const sentences = text.split(/(?<=[.!?])\s+/);
+  let out = "";
+  for (const sentence of sentences) {
+    const next = out ? `${out} ${sentence}` : sentence;
+    if (next.length > IMPACT_CHAR_BUDGET) break;
+    out = next;
+  }
+
+  // A single run-on first sentence can still exceed the budget — hard-trim
+  // it at a word boundary so an impact can never spill past two lines.
+  if (!out) {
+    const clipped = text.slice(0, IMPACT_CHAR_BUDGET);
+    const lastSpace = clipped.lastIndexOf(" ");
+    out = `${(lastSpace > 40 ? clipped.slice(0, lastSpace) : clipped).trimEnd()}…`;
+  }
+  return out;
+}
+
 // =====================================================================
 // SVG: TSD prism + letters (matches src/components/ui/Logo.tsx,
 // which itself mirrors tsd-modernization/public/tsd-ms-logo-tarheel.svg).
@@ -147,9 +176,11 @@ body {
 .page {
   width: 8.5in;
   height: 11in;
-  padding: 0.55in 0.6in 0.65in 0.6in;
+  padding: 0.55in 0.6in 0.42in 0.6in;
   page-break-after: always;
   position: relative;
+  display: flex;
+  flex-direction: column;
   background: #ffffff;
   background-image:
     radial-gradient(circle at 0% 0%, rgba(75,156,211,0.04) 0%, transparent 35%),
@@ -158,13 +189,22 @@ body {
 }
 .page:last-child { page-break-after: auto; }
 
+/* Body holds everything above the footer. flex:1 pushes the footer to the
+   page bottom; overflow:hidden means worst-case overflow clips cleanly
+   above the footer instead of printing on top of it. */
+.page-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
 /* ---------- Topbar ---------- */
 .topbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding-bottom: 14px;
-  margin-bottom: 26px;
+  margin-bottom: 20px;
   border-bottom: 1px solid #e2e8f0;
 }
 .brand { display: flex; align-items: center; gap: 11px; }
@@ -205,7 +245,7 @@ body {
   color: #475569;
   line-height: 1.5;
   max-width: 6.6in;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 
 /* ---------- Score panel ---------- */
@@ -219,7 +259,7 @@ body {
   grid-template-columns: 1.05fr 2fr;
   gap: 28px;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
   box-shadow:
     0 1px 0 rgba(168,209,237,0.12) inset,
     0 18px 40px -20px rgba(19,41,75,0.45);
@@ -313,15 +353,15 @@ body {
   font-weight: 600;
   color: #0f172a;
   letter-spacing: -0.018em;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 /* ---------- Gaps ---------- */
 .gap {
   border: 1px solid #e2e8f0;
   border-radius: 9px;
-  padding: 13px 15px;
-  margin-bottom: 7px;
+  padding: 16px 15px;
+  margin-bottom: 12px;
   background: #ffffff;
   break-inside: avoid;
 }
@@ -365,12 +405,12 @@ body {
   position: relative;
   border: 2px solid #4b9cd3;
   border-radius: 16px;
-  padding: 26px 30px 24px;
+  padding: 22px 30px 20px;
   background: linear-gradient(180deg, #ffffff 0%, #f7fbfd 100%);
   box-shadow:
     0 0 0 4px rgba(75,156,211,0.08),
     0 1px 0 rgba(75,156,211,0.18) inset;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
   overflow: hidden;
   break-inside: avoid;
 }
@@ -438,7 +478,7 @@ body {
   font-size: 11pt;
   color: #475569;
   line-height: 1.5;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   max-width: 6.4in;
 }
 .pkg-services-label {
@@ -453,7 +493,7 @@ body {
 .pkg-service {
   display: flex;
   gap: 11px;
-  padding: 5px 0;
+  padding: 4px 0;
   font-size: 10.5pt;
   color: #475569;
   line-height: 1.5;
@@ -470,7 +510,7 @@ body {
 .pkg-service-text { flex: 1; }
 .pkg-service-text strong { color: #0f172a; font-weight: 600; }
 .pkg-guarantee {
-  margin-top: 14px;
+  margin-top: 12px;
   padding: 12px 14px 13px;
   background: #f0f9f1;
   border-left: 3px solid #15803d;
@@ -495,7 +535,7 @@ body {
   position: relative;
   background: linear-gradient(135deg, #0c1f3d 0%, #13294b 55%, #1f3666 100%);
   border-radius: 14px;
-  padding: 22px 28px;
+  padding: 18px 28px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -552,10 +592,8 @@ body {
 
 /* ---------- Footer ---------- */
 .footer {
-  position: absolute;
-  bottom: 0.4in;
-  left: 0.6in;
-  right: 0.6in;
+  flex: 0 0 auto;
+  margin-top: 16px;
   padding-top: 11px;
   border-top: 1px solid #e2e8f0;
   display: flex;
@@ -629,7 +667,7 @@ function buildAuditHtml({
           </div>
           ${
             g.impact
-              ? `<div class="gap-impact"><span class="label">Impact: </span>${esc(g.impact)}</div>`
+              ? `<div class="gap-impact"><span class="label">Impact: </span>${esc(trimImpact(g.impact))}</div>`
               : ""
           }
         </div>`
@@ -657,28 +695,30 @@ function buildAuditHtml({
   <body>
     <!-- ============ PAGE 1 — score + gaps ============ -->
     <div class="page">
-      ${topbar(dateStr)}
+      <div class="page-body">
+        ${topbar(dateStr)}
 
-      <div class="eyebrow">Modernization audit</div>
-      <h1 class="business-name display">${esc(businessName)}</h1>
-      <p class="summary">${esc(scores.one_line_summary)}</p>
+        <div class="eyebrow">Modernization audit</div>
+        <h1 class="business-name display">${esc(businessName)}</h1>
+        <p class="summary">${esc(scores.one_line_summary)}</p>
 
-      <div class="score-panel">
-        <div class="score-block">
-          <div class="score-label">Presence Score</div>
-          <div class="score-value display">
-            ${scores.presence_score}<span class="score-of">/ 100</span>
+        <div class="score-panel">
+          <div class="score-block">
+            <div class="score-label">Presence Score</div>
+            <div class="score-value display">
+              ${scores.presence_score}<span class="score-of">/ 100</span>
+            </div>
+            <div class="score-tagline">
+              Composite of website, Google, reviews, trust, conversion.
+            </div>
           </div>
-          <div class="score-tagline">
-            Composite of website, Google, reviews, trust, conversion.
-          </div>
+          <div class="pillars">${pillarMarkup}</div>
         </div>
-        <div class="pillars">${pillarMarkup}</div>
-      </div>
 
-      <div class="section-eyebrow">Findings</div>
-      <h2 class="section-header display">What we found</h2>
-      ${gapsMarkup}
+        <div class="section-eyebrow">Findings</div>
+        <h2 class="section-header display">What we found</h2>
+        ${gapsMarkup}
+      </div>
 
       <div class="footer">
         <span>TSD Modernization Solutions · <span class="domain">tsd-modernization.com/audit</span></span>
@@ -688,44 +728,46 @@ function buildAuditHtml({
 
     <!-- ============ PAGE 2 — recommended package + CTA ============ -->
     <div class="page">
-      ${topbar(dateStr)}
+      <div class="page-body">
+        ${topbar(dateStr)}
 
-      <div class="section-eyebrow">Recommended next step</div>
-      <h2 class="section-header display">Here&rsquo;s where we&rsquo;d start</h2>
+        <div class="section-eyebrow">Recommended next step</div>
+        <h2 class="section-header display">Here&rsquo;s where we&rsquo;d start</h2>
 
-      <div class="pkg-card">
-        <div class="pkg-eyebrow-row">
-          <span class="pkg-eyebrow">Recommended package</span>
-          ${pkg.cap ? `<span class="pkg-cap">${esc(pkg.cap)}</span>` : ""}
+        <div class="pkg-card">
+          <div class="pkg-eyebrow-row">
+            <span class="pkg-eyebrow">Recommended package</span>
+            ${pkg.cap ? `<span class="pkg-cap">${esc(pkg.cap)}</span>` : ""}
+          </div>
+          <h3 class="pkg-name display">${esc(pkg.name)}</h3>
+          <div class="pkg-price-row">
+            <span class="pkg-price display">${esc(pkg.price)}</span>
+            ${pkg.anchor ? `<span class="pkg-anchor">${esc(pkg.anchor)}</span>` : ""}
+          </div>
+          <p class="pkg-tagline">${esc(pkg.tagline)}</p>
+
+          <div class="pkg-services-label">What we&rsquo;d ship</div>
+          <ul class="pkg-services">${servicesMarkup}</ul>
+
+          ${
+            pkg.guarantee
+              ? `<div class="pkg-guarantee">
+                   <div class="pkg-guarantee-label">Our guarantee</div>
+                   <div class="pkg-guarantee-text">${esc(pkg.guarantee)}</div>
+                 </div>`
+              : ""
+          }
         </div>
-        <h3 class="pkg-name display">${esc(pkg.name)}</h3>
-        <div class="pkg-price-row">
-          <span class="pkg-price display">${esc(pkg.price)}</span>
-          ${pkg.anchor ? `<span class="pkg-anchor">${esc(pkg.anchor)}</span>` : ""}
-        </div>
-        <p class="pkg-tagline">${esc(pkg.tagline)}</p>
 
-        <div class="pkg-services-label">What we&rsquo;d ship</div>
-        <ul class="pkg-services">${servicesMarkup}</ul>
-
-        ${
-          pkg.guarantee
-            ? `<div class="pkg-guarantee">
-                 <div class="pkg-guarantee-label">Our guarantee</div>
-                 <div class="pkg-guarantee-text">${esc(pkg.guarantee)}</div>
-               </div>`
-            : ""
-        }
-      </div>
-
-      <div class="cta-bar">
-        <div>
-          <div class="cta-primary">Book a free fit call <span class="arrow">&rsaquo;</span></div>
-          <div class="cta-url">tsd-modernization.com/book</div>
-        </div>
-        <div class="cta-scarcity">
-          <div class="cta-scarcity-line">Cohort closes Aug 10, 2026</div>
-          <div class="cta-scarcity-hint">Last project start July 13</div>
+        <div class="cta-bar">
+          <div>
+            <div class="cta-primary">Book a free fit call <span class="arrow">&rsaquo;</span></div>
+            <div class="cta-url">tsd-modernization.com/book</div>
+          </div>
+          <div class="cta-scarcity">
+            <div class="cta-scarcity-line">Cohort closes Aug 10, 2026</div>
+            <div class="cta-scarcity-hint">Last project start July 13</div>
+          </div>
         </div>
       </div>
 
