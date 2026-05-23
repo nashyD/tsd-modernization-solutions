@@ -20,7 +20,7 @@ const SIZES = [
   { id: "solo",        label: "Just me",     detail: "1–2 people",   mult: 0.8, pkg: "Starter Modernization" },
   { id: "small",       label: "Small team",  detail: "3–10 people",  mult: 1.0, pkg: "Core Modernization" },
   { id: "established", label: "Established",  detail: "11–30 people", mult: 1.3, pkg: "Full Modernization" },
-  { id: "larger",      label: "Larger",      detail: "30+ people",   mult: 1.8, pkg: "Custom Engagement" },
+  { id: "larger",      label: "Larger",      detail: "30+ people",   mult: 2.7, pkg: "Custom Engagement" },
 ];
 
 const PRODUCTS = [
@@ -28,10 +28,13 @@ const PRODUCTS = [
   { id: "frontDesk", label: "AI receptionist",      detail: "Answers the phone + chat, books work", low: 1200, high: 2500, ai: true },
   { id: "concierge", label: "Site assistant",       detail: "Answers from your content + catalog",  low: 4000, high: 9000, ai: true },
   { id: "booking",   label: "Booking & automation", detail: "Consolidated booking + workflow glue", low: 1200, high: 3000, ai: true },
+  { id: "reviews",   label: "Reviews & reputation", detail: "Auto-requests reviews, monitors Google + Yelp", low: 800,  high: 2000, ai: true },
+  { id: "outreach",  label: "Lead follow-up",       detail: "Re-engages old leads, no-shows, stale quotes",  low: 1500, high: 3500, ai: true },
+  { id: "seo",       label: "Local SEO",            detail: "Google Profile + local search visibility",       low: 800,  high: 2500, ai: false },
 ];
 
 /* Monthly Managed AI, by how many AI products are running. */
-const MANAGED = { 0: 0, 1: 97, 2: 197, 3: 297 };
+const MANAGED = { 0: 0, 1: 97, 2: 197, 3: 297, 4: 397, 5: 497 };
 
 const round100 = (n) => Math.round(n / 100) * 100;
 const fmt$ = (n) => "$" + Math.round(n).toLocaleString();
@@ -87,7 +90,7 @@ export default function PricingEstimator() {
     const chosen = PRODUCTS.filter((p) => selected.includes(p.id));
     const low = round100(chosen.reduce((a, p) => a + p.low, 0) * sz.mult);
     const high = round100(chosen.reduce((a, p) => a + p.high, 0) * sz.mult);
-    const aiCount = Math.min(chosen.filter((p) => p.ai).length, 3);
+    const aiCount = Math.min(chosen.filter((p) => p.ai).length, 5);
     const managed = MANAGED[aiCount];
     return { sz, chosen, low, high, aiCount, managed };
   }, [size, selected]);
@@ -192,7 +195,7 @@ export default function PricingEstimator() {
                 WebkitTextFillColor: "transparent", backgroundClip: "text",
                 paddingBottom: "0.08em", fontFeatureSettings: '"tnum" 1',
               }}>
-                {isLarger ? fmt$(result.low) : `${fmt$(result.low)}–${fmt$(result.high)}`}
+                {isLarger ? `${fmt$(result.low)}+` : `${fmt$(result.low)}–${fmt$(result.high)}`}
               </div>
 
               <div style={{ height: "1px", background: v("divider"), margin: `${SPACE.lg} 0` }} />
