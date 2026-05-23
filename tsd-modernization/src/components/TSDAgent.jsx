@@ -27,7 +27,7 @@ import { trackEvent } from "../analytics.js";
  */
 
 const INITIAL_GREETING =
-  "Hi — I'm the chat agent for TSD Modernization Solutions. Ask me about pricing, the Summer 2026 cohort, or what we build. If you want to talk to a founder, just say so.";
+  "Hi — I'm the chat agent for TSD Modernization Solutions. Ask me about pricing, what we build, or whether we're a fit for your business. If you want to talk to a founder, just say so.";
 
 const STORAGE_KEY = "tsd-agent-conversation";
 const STORAGE_VERSION = 1;
@@ -801,7 +801,7 @@ export default function TSDAgent() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={onKeyDown}
-              placeholder="Ask about pricing, the cohort, or your project…"
+              placeholder="Ask about pricing, what we build, or your project…"
               rows={1}
               disabled={sending}
               style={{

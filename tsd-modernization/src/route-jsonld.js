@@ -19,21 +19,43 @@ const AREA_SERVED = [
   { "@type": "City", name: "Belmont", containedInPlace: { "@type": "State", name: "North Carolina" } },
 ];
 
-/* Cohort framing: the entire summer is a limited-availability window.
-   Schema.org availability vocabulary recognizes LimitedAvailability for
-   this exact case. validThrough closes the offers on the cohort hard-stop. */
-const COHORT_AVAILABILITY = "https://schema.org/LimitedAvailability";
-const COHORT_VALID_THROUGH = "2026-08-10";
 const PRICE_CURRENCY = "USD";
 
-const offer = ({ name, price, description, url, validThrough = COHORT_VALID_THROUGH }) => ({
+/* TSD is a permanent studio — offers are open-ended, with no cohort
+   hard-stop. Custom builds are quoted per project, so we publish a
+   "starting at" floor via priceSpecification (minPrice) rather than a
+   single fixed price, and let the /pricing estimator + fit call set the
+   exact number. */
+const offer = ({ name, description, url, minPrice }) => ({
   "@type": "Offer",
   name,
   description,
-  price,
-  priceCurrency: PRICE_CURRENCY,
-  availability: COHORT_AVAILABILITY,
-  validThrough,
+  priceSpecification: {
+    "@type": "PriceSpecification",
+    priceCurrency: PRICE_CURRENCY,
+    minPrice,
+  },
+  availability: "https://schema.org/InStock",
+  url,
+  seller: PROVIDER,
+});
+
+/* Recurring Managed AI — published as a subscription offer with a price
+   range. Optional, cancel anytime. */
+const subscriptionOffer = ({ name, description, url, minPrice, maxPrice }) => ({
+  "@type": "Offer",
+  name,
+  description,
+  priceSpecification: {
+    "@type": "UnitPriceSpecification",
+    priceCurrency: PRICE_CURRENCY,
+    minPrice,
+    maxPrice,
+    unitText: "MONTH",
+    billingDuration: 1,
+    billingIncrement: 1,
+  },
+  availability: "https://schema.org/InStock",
   url,
   seller: PROVIDER,
 });
@@ -55,45 +77,31 @@ const service = ({ name, description, serviceType, slug, offers, audience }) => 
   return node;
 };
 
-const tradeAudience = (occupation) => ({
+const segmentAudience = (segment) => ({
   "@type": "BusinessAudience",
-  name: occupation,
-  audienceType: occupation,
-});
-
-const RECEPTIONIST_OFFER = offer({
-  name: "After-Hours Lead Capture — Founding Setup",
-  price: "497",
-  description:
-    "One-time founding setup for a custom AI receptionist that answers after-hours, qualifies the lead, and books the job. The agent transfers to the buyer on August 31, 2026 — no subscription forever.",
-  url: `${SITE}/ai-receptionist`,
+  name: segment,
+  audienceType: segment,
 });
 
 const BUILD_OFFER = offer({
-  name: "Website + AI Build (Founding Cohort)",
-  price: "5000",
+  name: "Custom Website + AI Build",
+  minPrice: "5000",
   description:
-    "Custom website plus AI chatbot or workflow automation, on-page SEO, analytics wiring, and full source-code ownership. Live in 14 days from contract signature or 25% back. Founder on call for fixes through August 31, 2026.",
+    "Custom website plus AI — TSD Front Desk receptionist, TSD Concierge site assistant, or TSD Booking Bridge automation, mixed to fit. On-page SEO, analytics wiring, and full source-code ownership from day one. Custom builds start around $5,000; estimate via the /pricing calculator, fixed price from a free fit call. 100% money-back guarantee, 48-hour written proposal.",
   url: `${SITE}/pricing`,
 });
 
-const FULL_MODERNIZATION_OFFER = offer({
-  name: "The Full Modernization (By Application)",
-  price: "10000",
+const MANAGED_AI_OFFER = subscriptionOffer({
+  name: "Managed AI",
+  minPrice: "97",
+  maxPrice: "297",
   description:
-    "Discovery audit, custom website, AI receptionist, one operational integration (ServiceTitan / QuickBooks / Jobber / similar), custom AI re-training on real call data, and weekly written status reports. Outcome guarantee: 15+ qualified leads in pipeline before August 31, 2026, or $5,000 back and the AI integration rebuilt free.",
+    "Optional monthly upkeep for your AI: re-indexing new content, prompt and model upkeep, monitoring, and a monthly report. Starts after launch, cancel anytime. A website-only build doesn't need it.",
   url: `${SITE}/pricing`,
 });
 
-const AUDIT_OFFER = offer({
-  name: "Phase I Discovery Audit",
-  price: "1500",
-  description:
-    "2-3 hour structured tech audit plus written modernization roadmap with prioritized recommendations, cost estimates, and ROI projections. Money-back if we can't surface $25,000 of opportunities.",
-  url: `${SITE}/services/process-modernization`,
-});
-
-/* /pricing — FAQPage + OfferCatalog with the two cohort tiers. */
+/* /pricing — FAQPage + OfferCatalog. Mirrors the canonical FAQ copy in
+   Pricing.jsx. */
 const PRICING_FAQ = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -101,50 +109,50 @@ const PRICING_FAQ = {
   mainEntity: [
     {
       "@type": "Question",
-      name: "Why are your prices so much lower than agencies?",
+      name: "How does pricing work?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "We're a lean team of three founders with minimal overhead. Our founding-cohort rates are deliberately half what we'll charge after Summer 2026, set so we can build our portfolio and earn client trust. You get the same quality at 3-5x less than agency rates.",
+        text: "Every build is a fixed price, quoted in a written proposal within 48 hours of a free fit call. The estimator gives you a realistic range; the exact number depends on your content, your catalog, and the systems you already run. Custom builds start around $5,000.",
       },
     },
     {
       "@type": "Question",
-      name: "How does the Summer 2026 cohort work?",
+      name: "What's Managed AI, and is it required?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "We operate from May 7 to August 10, 2026 — three founders running together over the summer, capped at ten clients so every project gets the time it needs. Last project start is July 13. After August 10 we hand off; one founder stays on call for fixes through August 31.",
+        text: "AI tools drift if nobody tends them — new content to index, prompts to tune, models that keep improving. Managed AI keeps yours sharp: re-indexing, prompt and model upkeep, monitoring, and a monthly report, for $97-$297/mo. It's optional, starts after launch, and you can cancel anytime. A website-only build doesn't need it.",
       },
     },
     {
       "@type": "Question",
-      name: "How does the free fit call work?",
+      name: "Do I own what you build?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "A 1-2 hour conversation, in-person or remote, where we walk through your business, your operations, and what you'd want modernized. You leave with a clear read on whether we're the right fit. If we're a match, the next step is a written proposal for the Website + AI Build or the Full Modernization within 48 hours. We also offer a standalone $1,500 discovery audit on request.",
+        text: "Yes. Source code, credentials, and a runbook are yours from day one, with written and video documentation and a live training session at handoff. Managed AI is a service on top — never a lock-in.",
       },
     },
     {
       "@type": "Question",
-      name: "What happens after my project is done?",
+      name: "How long does a build take?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Every project ends with handoff documentation, video tutorials, and a live training session. You'll run everything independently from there. One founder stays on call for fixes through August 31, 2026; past that, the season closes.",
+        text: "Most websites and AI builds run 2-4 weeks from approved scope to launch. Larger, multi-system engagements — big catalogs, multiple integrations — are scoped individually.",
       },
     },
     {
       "@type": "Question",
-      name: "Do I need to know anything about AI?",
+      name: "What kinds of businesses do you work with?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Not at all. We'll explain everything in plain English, recommend only tools that genuinely fit your needs, and handle all the technical setup. You just tell us what's slowing your business down.",
+        text: "Established local businesses whose digital presence has fallen behind their reputation — salons and spas, specialty automotive, wholesale and supply, studios and makers, professional services, specialty retail. If the business runs on the owner's hours, that's exactly what we fix.",
       },
     },
     {
       "@type": "Question",
-      name: "How long does a typical project take?",
+      name: "What's the first step?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Tech audits are done in a single session. Website builds and AI integrations typically take 2-4 weeks from proposal to handoff.",
+        text: "A free fit call — 30 minutes, in person or remote. We'll tell you honestly whether we can help, and if so, send a fixed-price proposal within 48 hours.",
       },
     },
     {
@@ -152,7 +160,7 @@ const PRICING_FAQ = {
       name: "What's your service area?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "We serve the Charlotte metro area including Gastonia, Belmont, and surrounding communities. Discovery meetings can be done in-person or remote.",
+        text: "We serve the Charlotte metro area including Gastonia, Belmont, and surrounding communities. Fit calls can be done in person or remote.",
       },
     },
   ],
@@ -162,9 +170,9 @@ const PRICING_CATALOG = {
   "@context": "https://schema.org",
   "@type": "OfferCatalog",
   "@id": `${SITE}/pricing#catalog`,
-  name: "Summer 2026 Founding-Cohort Pricing",
+  name: "Websites + AI for Established Charlotte Businesses",
   url: `${SITE}/pricing`,
-  itemListElement: [BUILD_OFFER, FULL_MODERNIZATION_OFFER],
+  itemListElement: [BUILD_OFFER, MANAGED_AI_OFFER],
 };
 
 /* /process — HowTo with 4 steps from STEPS in Process.jsx. */
@@ -181,7 +189,7 @@ const PROCESS_HOWTO = {
       "@type": "HowToStep",
       position: 1,
       name: "Fit call",
-      text: "A 1-2 hour conversation, in-person or remote, where we walk through your business, your operations, and what you'd want modernized. Free, no commitment. You leave with a clear read on whether we're the right fit.",
+      text: "A free 30-minute conversation, in-person or remote, where we walk through your business, your operations, and what you'd want modernized. No commitment. We'll tell you honestly whether we can help.",
     },
     {
       "@type": "HowToStep",
@@ -199,7 +207,7 @@ const PROCESS_HOWTO = {
       "@type": "HowToStep",
       position: 4,
       name: "Handoff",
-      text: "Every project ends with written documentation, video tutorials, and a live training session. You own the source code, the credentials, and the deployment when we're done. One founder stays on call for fixes through August 31, 2026.",
+      text: "Every project ends with written documentation, video tutorials, and a live training session. You own the source code, the credentials, and the deployment from day one. Optional Managed AI keeps your AI sharp afterward — cancel anytime.",
     },
   ],
 };
@@ -249,26 +257,6 @@ const TEAM_LIST = {
   ],
 };
 
-/* /missed-call-calculator — WebApplication for the free tool. */
-const CALCULATOR_APP = {
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "@id": `${SITE}/missed-call-calculator#app`,
-  name: "Missed Call Revenue Calculator for Charlotte Trades",
-  description:
-    "Free four-question calculator that estimates the annual revenue your phone is losing to voicemail. Built for Charlotte HVAC, electricians, and plumbers. No signup, no email gate.",
-  url: `${SITE}/missed-call-calculator`,
-  applicationCategory: "BusinessApplication",
-  operatingSystem: "All",
-  isAccessibleForFree: true,
-  publisher: PROVIDER,
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: PRICE_CURRENCY,
-  },
-};
-
 /* /contact — ContactPage tied to the business. */
 const CONTACT_PAGE = {
   "@context": "https://schema.org",
@@ -281,102 +269,71 @@ const CONTACT_PAGE = {
 
 /* Service nodes for the three /services/{slug} pages. */
 const SERVICE_AI = service({
-  name: "AI Integration & Automation for Small Businesses",
+  name: "AI Receptionist, Site Assistant & Booking Automation",
   description:
-    "Custom AI chatbots trained on your business, Make and Zapier workflow automations, AI-powered reporting dashboards, and calendar/appointment automation. Staff training on every tool deployed. Included in the $5,000 Website + AI Build, launched in 1-2 weeks.",
+    "AI built on your real intake: TSD Front Desk answers phone and chat, qualifies, and books; TSD Concierge answers visitor questions from your content and catalog with semantic and image search; TSD Booking Bridge consolidates booking and routes leads. Source code yours from day one; optional Managed AI keeps it sharp, cancel anytime.",
   serviceType: "AI Integration and Workflow Automation",
   slug: "/services/ai-integration",
-  offers: BUILD_OFFER,
+  offers: [BUILD_OFFER, MANAGED_AI_OFFER],
 });
 
 const SERVICE_WEB = service({
   name: "Custom Website Design & Redesign",
   description:
-    "Mobile-first 5-8 page custom websites with on-page SEO, Google Analytics + Search Console wiring, contact form and chatbot integration, and full written + video handoff documentation. Founder on call for fixes through August 31, 2026.",
+    "Fast, mobile-first custom websites with on-page SEO, analytics and Search Console wiring, and full written and video handoff documentation. Custom builds start around $5,000, launched in 2-4 weeks, source code yours from day one.",
   serviceType: "Web Design and Development",
   slug: "/services/websites",
   offers: BUILD_OFFER,
 });
 
 const SERVICE_PROCESS = service({
-  name: "Tech Audits & Process Modernization",
+  name: "Process Modernization & Workflow Automation",
   description:
-    "Structured 2-3 hour tech audit (in-person or remote), written modernization roadmap, tool and platform recommendations with cost estimates, priority sequence, and estimated ROI per item. Money-back if we can't surface $25,000 of opportunities.",
+    "We take the repetitive work off the owner's plate — consolidated booking, calendar and lead-routing automation, and the workflow glue behind it, built on the tools you already pay for so the business keeps moving when you step away.",
   serviceType: "Business Process Consulting",
   slug: "/services/process-modernization",
-  offers: AUDIT_OFFER,
+  offers: BUILD_OFFER,
 });
 
-/* /ai-receptionist — Service for the After-Hours Lead Capture wedge product. */
+/* /ai-receptionist — Service for the TSD Front Desk AI receptionist. */
 const SERVICE_RECEPTIONIST = service({
-  name: "AI Receptionist (After-Hours Lead Capture)",
+  name: "TSD Front Desk — AI Receptionist",
   description:
-    "Custom AI answers the after-hours call, qualifies the lead, and books the job for Charlotte HVAC, electricians, and plumbers. $497 founding setup, paid once. The agent transfers to the buyer on August 31, 2026 — no subscription forever.",
+    "TSD Front Desk answers your phone and chat day or night, qualifies the lead, and books the job, then texts you a one-paragraph summary. Built on your real intake flow. Source code yours from day one; recurring Managed AI keeps it sharp, cancel anytime. 100% money-back guarantee.",
   serviceType: "AI Phone Answering Service",
   slug: "/ai-receptionist",
-  offers: RECEPTIONIST_OFFER,
+  offers: [BUILD_OFFER, MANAGED_AI_OFFER],
 });
 
-/* Trade-page Service nodes — same offer ($497 receptionist), different audience. */
-const SERVICE_HVAC = service({
-  name: "AI Receptionist for Charlotte HVAC Contractors",
-  description:
-    "AI receptionist that books the after-hours emergency call for Charlotte HVAC contractors — AC failures, weekend furnace breakdowns, storm-damaged units — so it doesn't go to a competitor by morning.",
-  serviceType: "AI Phone Answering Service for HVAC Contractors",
-  slug: "/hvac",
-  offers: RECEPTIONIST_OFFER,
-  audience: tradeAudience("HVAC Contractors"),
-});
-
-const SERVICE_ELECTRICIANS = service({
-  name: "AI Receptionist for Charlotte Electrical Contractors",
-  description:
-    "AI receptionist for Charlotte electricians that captures emergency rewires, panel failures, and after-hours service calls so the on-call rotation doesn't break.",
-  serviceType: "AI Phone Answering Service for Electricians",
-  slug: "/electricians",
-  offers: RECEPTIONIST_OFFER,
-  audience: tradeAudience("Electrical Contractors"),
-});
-
-const SERVICE_PLUMBERS = service({
-  name: "AI Receptionist for Charlotte Plumbers",
-  description:
-    "AI receptionist for Charlotte plumbers that captures weekend water-heater failures, burst pipes, and no-hot-water Sunday-morning emergencies, then books the truck.",
-  serviceType: "AI Phone Answering Service for Plumbers",
-  slug: "/plumbers",
-  offers: RECEPTIONIST_OFFER,
-  audience: tradeAudience("Plumbing Contractors"),
-});
-
-/* Relationship-page Service nodes — bundle product ($5,000 build). */
+/* Segment-page Service nodes — custom website + AI build, different audience. */
 const SERVICE_SALONS = service({
-  name: "Custom Website + AI for Charlotte Salons",
+  name: "Custom Website + AI for Charlotte Salons & Spas",
   description:
-    "Mobile-first website plus booking automation, after-hours AI chat, missed-call recovery, and Instagram-feed integration for Charlotte hair salons, nail studios, and spas. Built in 2-4 weeks. Source code yours from day one.",
-  serviceType: "Web Design and AI Tooling for Salons",
+    "Custom website plus consolidated booking, after-hours AI chat that answers from your services, and a TSD Front Desk receptionist that books while you're with a client, for established Charlotte salons and spas. Source code yours from day one.",
+  serviceType: "Web Design and AI Tooling for Salons and Spas",
   slug: "/salons",
   offers: BUILD_OFFER,
-  audience: tradeAudience("Hair Salons, Nail Studios, and Spas"),
+  audience: segmentAudience("Hair Salons, Nail Studios, and Spas"),
 });
 
 const SERVICE_AUTO = service({
-  name: "Custom Website + AI for Charlotte Auto Shops",
+  name: "Custom Website + AI for Charlotte Specialty Auto Shops",
   description:
-    "Mobile-first website plus online quote requests, service catalogs, after-hours intake, and AI chat for Charlotte auto repair, body shops, and tire stores. Built in 2-4 weeks. Source code yours from day one.",
-  serviceType: "Web Design and AI Tooling for Auto Shops",
+    "Custom website plus online quote requests, service and parts catalog lookup, and a TSD Front Desk receptionist that captures the call you'd have missed, for established Charlotte specialty automotive shops. Source code yours from day one.",
+  serviceType: "Web Design and AI Tooling for Specialty Automotive",
   slug: "/auto-shops",
   offers: BUILD_OFFER,
-  audience: tradeAudience("Auto Repair Shops, Body Shops, and Tire Stores"),
+  audience: segmentAudience("Specialty Automotive Shops"),
 });
 
 const SERVICE_RESTAURANTS = service({
   name: "Custom Website + AI for Charlotte Restaurants",
   description:
-    "Mobile-first website plus reservations, online ordering, and AI chat for menu and hours for Charlotte restaurants, bakeries, and food trucks. Built in 2-4 weeks. Source code yours from day one.",
+    "Custom website plus reservations, online ordering, and a TSD Concierge assistant that answers menu and hours questions from your own content, for established Charlotte restaurants. Source code yours from day one.",
   serviceType: "Web Design and AI Tooling for Restaurants",
   slug: "/restaurants",
   offers: BUILD_OFFER,
-  audience: tradeAudience("Restaurants, Bakeries, and Food Trucks"),
+  audience: segmentAudience("Restaurants and Food Service"),
 });
 
 /* Routes mapped to the JSON-LD nodes that render on each one.
@@ -386,17 +343,12 @@ export const ROUTE_JSONLD = {
   "/process": [PROCESS_HOWTO],
   "/team": [TEAM_LIST],
   "/contact": [CONTACT_PAGE],
-  "/missed-call-calculator": [CALCULATOR_APP],
 
   "/services/ai-integration": [SERVICE_AI],
   "/services/websites": [SERVICE_WEB],
   "/services/process-modernization": [SERVICE_PROCESS],
 
   "/ai-receptionist": [SERVICE_RECEPTIONIST],
-
-  "/hvac": [SERVICE_HVAC],
-  "/electricians": [SERVICE_ELECTRICIANS],
-  "/plumbers": [SERVICE_PLUMBERS],
 
   "/salons": [SERVICE_SALONS],
   "/auto-shops": [SERVICE_AUTO],

@@ -50,7 +50,7 @@ export default function WhyUs() {
         maxWidth: "1080px", margin: "0 auto",
       }}>
         <SectionHeader center label="Why Choose Us" title="How we" titleAccent="compare"
-          sub="We're not the only option, but we think we're the right one for small businesses." />
+          sub="You earned the reputation; your tech should carry it. We build for established local businesses where the owner has become the bottleneck — and we stay accountable for what we ship." />
 
         <div ref={ref} style={{
           ...fade,

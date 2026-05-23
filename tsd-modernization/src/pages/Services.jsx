@@ -106,7 +106,7 @@ export default function Services() {
         maxWidth: "1140px", margin: "0 auto",
       }}>
         <SectionHeader center label="What We Do" title="Our" titleAccent="services"
-          sub="Every engagement is hands-on, fully documented, and priced for small business budgets." />
+          sub="Every engagement is hands-on and fully documented. You own the source code, and you get a fixed-price proposal within 48 hours." />
         <div style={{ display: "flex", flexDirection: "column", gap: SPACE.lg }} className="services-list">
           {SERVICES.map((s, i) => (
             <ServiceCard key={s.slug} service={s} delay={i * 120} />

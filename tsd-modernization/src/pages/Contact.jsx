@@ -142,8 +142,8 @@ function ContactForm() {
       padding: `${SPACE["2xl"]} clamp(20px, 4vw, 48px) ${SPACE["3xl"]}`,
       maxWidth: "780px", margin: "0 auto",
     }}>
-      <SectionHeader center label="Apply" title="Start your" titleAccent="project"
-        sub="Tell us about your business. We respond within 24 hours and decline most projects." />
+      <SectionHeader center label="Get Started" title="Start your" titleAccent="project"
+        sub="Tell us about your business and what you'd want modernized. We respond within 24 hours and follow up with a free fit call." />
       <div ref={ref} style={{
         ...fadeStyle,
         padding: "clamp(28px, 4vw, 48px)",
@@ -228,7 +228,7 @@ function ContactForm() {
               }}>{error}</div>
             )}
             <Button type="submit" variant="primary" size="lg" fullWidth disabled={sending}>
-              {sending ? "Sending..." : "Apply"}
+              {sending ? "Sending..." : "Send"}
             </Button>
             <p style={{
               fontSize: "12px", color: v("text-dim"), textAlign: "center",

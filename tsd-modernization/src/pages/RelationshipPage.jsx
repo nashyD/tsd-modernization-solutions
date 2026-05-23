@@ -48,7 +48,7 @@ function RelationshipHero({ rel }) {
       }} />
 
       <div ref={r1} style={{ ...f1, marginBottom: SPACE.xl, position: "relative", zIndex: 1 }}>
-        <EditorialMasthead items={["Website + AI Build", rel.vertical, "Summer 2026"]} />
+        <EditorialMasthead items={["Custom Website + AI", rel.vertical, "Built to Own"]} />
       </div>
 
       <h1 ref={r2} style={{
@@ -79,7 +79,7 @@ function RelationshipHero({ rel }) {
       }}>
         <Link to={contactHref} style={{ textDecoration: "none" }}>
           <Button as="span" variant="primary" size="lg" iconRight={<ArrowRightIcon size={16} />}>
-            Apply for a founding slot
+            Start a project
           </Button>
         </Link>
         <BookCallButton variant="ghost" refSource={rel.slug}>
@@ -152,21 +152,18 @@ function ClosingCTA({ rel }) {
         fontSize: "22px", lineHeight: 1.45, color: v("text"),
         marginBottom: SPACE.sm,
       }}>
-        $5,000 founding rate <span style={{ color: v("text-dim") }}>(anchor $10,000).</span>
+        A custom build scoped to your business.
       </p>
       <p style={{
         fontSize: "15px", lineHeight: 1.65, color: v("text-muted"),
         marginBottom: SPACE.xl,
       }}>
-        Ten spots. Last start: <span style={{
-          fontFamily: "var(--font-display)", fontStyle: "italic",
-          color: v("accent"), fontWeight: 600,
-        }}>July 13</span>. 100% money-back guarantee.
+        Get an estimate in two clicks, then a fixed price from a free fit call. 100% money-back guarantee.
       </p>
       <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
         <Link to={contactHref} style={{ textDecoration: "none" }}>
           <Button as="span" variant="primary" size="lg" iconRight={<ArrowRightIcon size={16} />}>
-            Apply for a founding slot
+            Start a project
           </Button>
         </Link>
         <BookCallButton variant="ghost" refSource={rel.slug}>
@@ -174,7 +171,7 @@ function ClosingCTA({ rel }) {
         </BookCallButton>
         <Link to="/pricing" style={{ textDecoration: "none" }}>
           <Button as="span" variant="secondary" size="lg">
-            See both tiers
+            See pricing
           </Button>
         </Link>
       </div>

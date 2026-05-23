@@ -43,7 +43,7 @@ const TEAM = [
     number: "03",
     initials: "GT", name: "Grant Tadlock", role: "CFO & Sales Lead",
     school: "UNC Charlotte", schoolId: "charlotte",
-    pullQuote: "Main-street pricing is a promise, not a pitch.",
+    pullQuote: "You get a fixed price and a guarantee before you commit a dollar.",
     bio: "Financial planning and client acquisition. Drives sales pipeline, pricing strategy, and relationship development.",
     ships: ["Financial planning & pricing", "Sales pipeline & intake", "Client relationships"],
     image: "/grant-tadlock.jpg",

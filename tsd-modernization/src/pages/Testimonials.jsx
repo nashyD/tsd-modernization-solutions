@@ -34,7 +34,7 @@ const LEDGER_COLUMNS = [
     headline: "Real names, real numbers, real businesses.",
     body: "When our first engagements wrap, this page becomes the ledger. Named clients. Photos of the storefronts and teams. Specific dollar figures where disclosed, methodology citations where not. No stock photos, no anonymous quotes.",
     sampleLabel: "Coming first",
-    sample: "Three Charlotte-area founding clients shipping spring – summer 2026.",
+    sample: "Charlotte-area clients shipping their first builds.",
   },
 ];
 
@@ -58,8 +58,8 @@ export default function Testimonials() {
             color: v("text"), marginBottom: SPACE.lg,
             maxWidth: "920px",
           }}>
-            We're booking founding clients now.{" "}
-            <GradientText>The ledger opens this spring.</GradientText>
+            Case studies are coming soon.{" "}
+            <GradientText>Here's how we'll document them.</GradientText>
           </h1>
           <p style={{
             fontSize: "18px", lineHeight: 1.6, color: v("text-muted"),
@@ -114,7 +114,7 @@ export default function Testimonials() {
                 fontSize: "14px", color: v("text-dim"), fontStyle: "italic",
                 fontFamily: "var(--font-display)",
               }}>
-                Awaiting first ship — client name, outcome, and case study land here.
+                Client name, outcome, and case study land here once the first builds wrap.
               </div>
               <div style={{
                 fontSize: "10px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase",
@@ -122,7 +122,7 @@ export default function Testimonials() {
                 padding: "5px 12px", borderRadius: RADIUS.full,
                 border: `1px solid ${v("divider")}`,
               }}>
-                Open slot
+                Coming soon
               </div>
             </div>
           ))}
@@ -152,24 +152,24 @@ export default function Testimonials() {
             textTransform: "uppercase", color: "rgba(255,255,255,0.9)",
             marginBottom: SPACE.md,
           }}>
-            <span style={{ fontSize: "8px" }}>{"◆"}</span> An opportunity
+            <span style={{ fontSize: "8px" }}>{"◆"}</span> Be an early entry
           </div>
           <h2 style={{
             fontFamily: "var(--font-body)", fontSize: "clamp(26px, 4vw, 40px)", fontWeight: 800,
             letterSpacing: "-0.8px", lineHeight: 1.1, marginBottom: SPACE.md,
           }}>
-            Take one of the open entries.
+            Be one of the first entries in the ledger.
           </h2>
           <p style={{
             fontSize: "16px", lineHeight: 1.6,
             color: "rgba(255,255,255,0.92)",
             maxWidth: "560px", margin: `0 auto ${SPACE.xl}`,
           }}>
-            Founding-client pricing and a named case study on this page the week we wrap. Three slots available.
+            Start a project now and your build becomes a named case study on this page the week we wrap. Free fit call, 48-hour proposal, money-back guarantee.
           </p>
           <Link to="/contact" style={{ textDecoration: "none" }}>
             <Button as="span" variant="onAccent" size="lg" iconRight={<ArrowRightIcon size={16} />}>
-              Claim a founding slot
+              Start a project
             </Button>
           </Link>
         </div>

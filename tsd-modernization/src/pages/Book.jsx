@@ -69,9 +69,9 @@ export default function Book() {
           textAlign: "center",
         }}>
           One of us hops on a thirty-minute call to walk through what you're
-          trying to fix and which of our three founding-cohort offers fits
-          the shape of the problem. No commitment, no slide deck, written
-          proposal within 48 hours if there's a fit.
+          trying to fix and how a custom build scoped to your business would
+          take it on. No commitment, no slide deck, written proposal within
+          48 hours if there's a fit.
         </p>
 
         <div

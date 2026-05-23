@@ -27,68 +27,52 @@ const NAV_ITEMS = [
 const SITE_URL = "https://tsd-modernization.com";
 const ROUTE_META = {
   "/": {
-    title: "Charlotte Website + AI · Summer 2026 Cohort | TSD Modernization Solutions",
-    description: "Ten Charlotte main-street builds between May 7 and August 10, 2026. Custom website, working AI, source code yours from day one — $5,000 fixed. Three founders, ten projects, hard close August 10. No retainers, no subscriptions.",
+    title: "Charlotte Websites + AI for Established Businesses | TSD Modernization Solutions",
+    description: "Websites and AI for Charlotte-metro businesses people already trust — built so the work doesn't wait on you. Custom sites plus AI that answers the phone, knows your catalog, and runs the busywork. Builds from $5,000, source code yours from day one.",
   },
   "/services": {
-    title: "Services — AI, Websites & Automation | TSD Modernization Solutions",
-    description: "Our core services: AI integration & automation, custom website design & redesign, and process modernization for Charlotte-area small businesses.",
+    title: "Services — Websites, AI Front Desk, Concierge & Booking | TSD Modernization Solutions",
+    description: "What we build: custom websites, the TSD Front Desk AI receptionist, the TSD Concierge site assistant, and TSD Booking Bridge automation — for established Charlotte-metro businesses. Source code yours; Managed AI optional.",
   },
   "/services/ai-integration": {
-    title: "AI Integration & Business Automation for Small Businesses | TSD Modernization Solutions",
-    description: "Custom AI chatbots, workflow automation with Make and Zapier, and AI-powered reporting for Charlotte-area small businesses. Included in the $5,000 Website + AI Build, launched in 1-2 weeks.",
+    title: "AI Receptionist, Site Assistant & Booking Automation | TSD Modernization Solutions",
+    description: "AI that carries your reputation: TSD Front Desk answers phone and chat and books, TSD Concierge answers from your content and catalog, TSD Booking Bridge ties it together. Built on your real intake. Managed AI optional, cancel anytime.",
   },
   "/services/websites": {
-    title: "Custom Website Design & Redesign | Charlotte Small Business Web Developer",
-    description: "Fast, mobile-first websites with on-page SEO, analytics wiring, and full handoff docs so your team can manage content. 5-8 page sites at $5,000 founding rate, launched in 2-4 weeks.",
+    title: "Custom Website Design & Redesign | Charlotte Business Web Developer",
+    description: "Fast, mobile-first custom websites with on-page SEO, analytics wiring, and full handoff docs so your team owns the content. Builds from $5,000, source code yours from day one, launched in 2-4 weeks.",
   },
   "/services/process-modernization": {
-    title: "Tech Audits & Process Modernization for Small Businesses | TSD Modernization Solutions",
-    description: "Structured tech audits and written modernization roadmaps for Charlotte-area small businesses. Identify bottlenecks, get cost estimates and ROI projections. $1,500 founding rate (anchor $3,000).",
+    title: "Process Modernization & Workflow Automation | TSD Modernization Solutions",
+    description: "We take the repetitive work off the owner's plate — consolidated booking, lead routing, and automation built on the tools you already pay for, so the business keeps moving when you step away. Charlotte metro.",
   },
   "/why-us": {
-    title: "Why Us — Local, Accountable, Main-Street Priced | TSD Modernization Solutions",
-    description: "Why Charlotte small businesses choose TSD: local team, main-street pricing, no vendor lock-in. See how we compare to agencies and freelancers.",
+    title: "Why Us — Local, Accountable, You Own the Build | TSD Modernization Solutions",
+    description: "Why established Charlotte businesses choose TSD: a local team you can reach directly, source code yours from day one, and Managed AI that's a service, never a lock-in. See how we compare to agencies and freelancers.",
   },
   "/process": {
-    title: "Our Process — From Audit to Launch | TSD Modernization Solutions",
-    description: "How we work: free fit call, written proposal within 48 hours, hands-on implementation, and training so your team owns what we build.",
+    title: "Our Process — From Fit Call to Launch | TSD Modernization Solutions",
+    description: "How we work: free fit call, written proposal within 48 hours, hands-on build, and a live training handoff so you own what we build. Source code, credentials, and runbook are yours.",
   },
   "/pricing": {
-    title: "Pricing — Founding Cohort, Summer 2026 | TSD Modernization Solutions",
-    description: "Founding-cohort pricing for ten Charlotte-area small businesses. Website + AI Build at $5,000 plus the Full Modernization at $10,000 (by application). A $1,500 discovery audit is also available on request. Last project start July 13, 2026.",
+    title: "Pricing & Estimate — Custom Websites + AI | TSD Modernization Solutions",
+    description: "Build a real estimate in two clicks: tell us your size and what you want running. Custom builds start around $5,000; the exact fixed price comes from a free fit call. Source code yours; Managed AI $97-$297/mo, optional, cancel anytime.",
   },
   "/ai-receptionist": {
-    title: "AI Receptionist for Charlotte Trades — $497, Yours to Keep | TSD Modernization Solutions",
-    description: "Custom AI answers the after-hours call, qualifies the lead, and books the job. Built for Charlotte HVAC, electricians, and plumbers. $497 founding setup, paid once. The agent transfers to you on August 31. No subscription forever.",
-  },
-  "/hvac": {
-    title: "AI Receptionist for Charlotte HVAC Contractors | TSD Modernization Solutions",
-    description: "Custom AI receptionist for Charlotte HVAC contractors — books the after-hours emergency call so it doesn't go to a competitor by morning. $497 founding setup, then the agent transfers to you on August 31. No subscription forever.",
-  },
-  "/electricians": {
-    title: "AI Receptionist for Charlotte Electrical Contractors | TSD Modernization Solutions",
-    description: "Custom AI receptionist for Charlotte electricians — captures emergency rewires, panel failures, and after-hours service calls so the on-call rotation doesn't break. $497 founding setup, then the agent transfers to you on August 31. No subscription forever.",
-  },
-  "/plumbers": {
-    title: "AI Receptionist for Charlotte Plumbers | TSD Modernization Solutions",
-    description: "Custom AI receptionist for Charlotte plumbers — captures weekend water-heater failures, burst pipes, and no-hot-water Sunday mornings, then books the truck. $497 founding setup, then the agent transfers to you on August 31. No subscription forever.",
+    title: "TSD Front Desk — AI Receptionist for Charlotte Businesses | TSD Modernization Solutions",
+    description: "TSD Front Desk answers your phone and chat day or night, qualifies the lead, and books the job — then texts you a summary. Built on your real intake flow. Recurring Managed AI keeps it sharp; cancel anytime. Money-back guarantee.",
   },
   "/salons": {
-    title: "Custom Website + AI for Charlotte Salons | TSD Modernization Solutions",
-    description: "Custom website and AI tools for Charlotte hair salons, nail studios, and spas — booking automation, after-hours chat, missed-call recovery. Built in 2-4 weeks. $5,000 founding-cohort rate (anchor $10,000), source code yours from day one.",
+    title: "Custom Website + AI for Charlotte Salons & Spas | TSD Modernization Solutions",
+    description: "Websites and AI for established Charlotte salons and spas — consolidated booking, after-hours chat that answers from your services, and an AI front desk that books while you're with a client. Source code yours from day one.",
   },
   "/auto-shops": {
-    title: "Custom Website + AI for Charlotte Auto Shops | TSD Modernization Solutions",
-    description: "Custom website and AI tools for Charlotte auto repair, body shops, and tire stores — online quote requests, service catalogs, after-hours intake. Built in 2-4 weeks. $5,000 founding-cohort rate (anchor $10,000), source code yours from day one.",
+    title: "Custom Website + AI for Charlotte Specialty Auto Shops | TSD Modernization Solutions",
+    description: "Websites and AI for established Charlotte specialty automotive shops — online quote requests, service and parts catalog lookup, and an AI front desk that captures the call you'd have missed. Source code yours from day one.",
   },
   "/restaurants": {
     title: "Custom Website + AI for Charlotte Restaurants | TSD Modernization Solutions",
-    description: "Custom website and AI tools for Charlotte restaurants, bakeries, and food trucks — reservations, online ordering, AI chat for menu and hours. Built in 2-4 weeks. $5,000 founding-cohort rate (anchor $10,000), source code yours from day one.",
-  },
-  "/missed-call-calculator": {
-    title: "Missed Call Calculator for Charlotte HVAC, Electricians & Plumbers | TSD Modernization Solutions",
-    description: "Free four-question calculator for Charlotte trades. Estimate the annual revenue your phone is losing to voicemail, with no signup or email gate. Built for HVAC, electricians, and plumbers.",
+    description: "Websites and AI for established Charlotte restaurants — reservations, online ordering, and an AI assistant that answers menu and hours questions from your own content. Source code yours from day one.",
   },
   "/testimonials": {
     title: "Case Studies Coming Soon | TSD Modernization Solutions",
@@ -96,15 +80,15 @@ const ROUTE_META = {
   },
   "/team": {
     title: "Our Team — Nash Davis, Bishop Switzer, Grant Tadlock | TSD Modernization Solutions",
-    description: "Meet the founders of TSD Modernization Solutions — a local Charlotte team of small-business modernization specialists.",
+    description: "Meet the founders of TSD Modernization Solutions — a Charlotte-metro web and AI studio. When something breaks at 7pm, you talk to the person who built it.",
   },
   "/book": {
     title: "Book a Fit Call — 30 Minutes with TSD | TSD Modernization Solutions",
-    description: "Pick a 30-minute slot with one of the three founders — Nash, Bishop, or Grant. Walk through what you're trying to fix and see whether our $5,000 Website + AI Build or $10,000 Full Modernization fits the shape of the problem. No slide deck, no commitment.",
+    description: "Pick a 30-minute slot with one of the three founders — Nash, Bishop, or Grant. Walk through what you're trying to fix and we'll tell you honestly whether we can help. No slide deck, no commitment.",
   },
   "/contact": {
-    title: "Contact Us — Apply for a Founding Slot | TSD Modernization Solutions",
-    description: "Apply for a Summer 2026 founding-cohort slot. Free 1-2 hour fit call, then a written proposal within 48 hours. Three founders, ten projects, hard close August 10.",
+    title: "Contact Us — Start a Project | TSD Modernization Solutions",
+    description: "Tell us what you're trying to fix. Free fit call, then a written proposal within 48 hours. Custom websites and AI for established Charlotte-metro businesses — source code yours from day one.",
   },
 };
 
@@ -544,7 +528,7 @@ export default function Layout() {
                 <div style={{ padding: "4px 4px 0", display: "flex", flexDirection: "column", gap: "8px" }}>
                   <Link to="/contact" onClick={() => setMenuOpen(false)} style={{ textDecoration: "none" }}>
                     <Button as="span" variant="primary" size="sm" fullWidth iconRight={<ArrowRightIcon size={14} />}>
-                      Apply for a slot
+                      Start a project
                     </Button>
                   </Link>
                   <Link to="/book" onClick={() => setMenuOpen(false)} style={{ textDecoration: "none" }}>
@@ -613,7 +597,7 @@ export default function Layout() {
                 fontSize: "14px", lineHeight: 1.6, color: v("text-muted"),
                 maxWidth: "320px", marginBottom: "16px",
               }}>
-                Three founders. Ten Charlotte main-street builds. May 7 through August 10, 2026 — then we close.
+                Modern websites and AI for established businesses across the Charlotte metro. Built to own — source code yours from day one.
               </p>
               <p style={{ fontSize: "12px", color: v("text-dim"), lineHeight: 1.5 }}>
                 A brand of TSD Ventures, LLC<br />

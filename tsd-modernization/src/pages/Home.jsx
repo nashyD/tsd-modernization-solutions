@@ -152,7 +152,7 @@ function Hero() {
           color: "var(--c-hero-text-soft)",
         }}>
           <EditorialMasthead
-            items={["Founding Cohort", "Charlotte Edition", "Summer 2026"]}
+            items={["Charlotte Metro", "Web + AI Studio", "Built to Own"]}
             color="var(--c-hero-text-soft)"
           />
         </div>
@@ -164,14 +164,14 @@ function Hero() {
           letterSpacing: "-2px", lineHeight: 1.04,
           color: "var(--c-hero-text)", marginBottom: SPACE.sm,
         }}>
-          Ten Charlotte builds
+          Websites and AI for the businesses
           <br />
-          between May and August.
+          people already trust —
           <br />
           <span style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
             color: "var(--c-hero-text-strong)",
-          }}>Then we close.</span>
+          }}>built so the work doesn't wait on you.</span>
         </h1>
 
         <DiamondDivider width={150} style={{ marginBottom: SPACE.md }} />
@@ -182,8 +182,7 @@ function Hero() {
           color: "var(--c-hero-text-soft)",
           maxWidth: "580px", margin: "0 auto 20px",
         }}>
-          Custom website, working AI, source code yours from day one. <span style={{ fontWeight: 700, color: "var(--c-hero-text)" }}>$5,000 fixed.</span>
-          {" "}We don't take retainers and we will not be your long-term agency.
+          We modernize the digital side of established Charlotte businesses: a custom site that finally matches your reputation, plus AI that answers the phone, knows your catalog, and handles the busywork. <span style={{ fontWeight: 700, color: "var(--c-hero-text)" }}>Custom builds from $5,000, source code yours from day one.</span>
         </p>
 
         <div ref={r4} style={{
@@ -310,15 +309,11 @@ function Hero() {
         {!isMobile && (
           <span style={{ flex: "0 0 32px", height: "1px", background: "var(--c-hero-rule)" }} />
         )}
-        <span style={{ whiteSpace: "nowrap" }}>Ten spots</span>
+        <span style={{ whiteSpace: "nowrap" }}>Source code yours</span>
         <span style={{ color: "var(--c-accent)", fontSize: "7px" }}>{"◆"}</span>
-        <span style={{ whiteSpace: "nowrap" }}>Last start</span>
-        <span style={{
-          fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 600,
-          fontSize: isMobile ? "14px" : "15px", letterSpacing: "0", textTransform: "none",
-          color: "var(--c-hero-text-strong)",
-          whiteSpace: "nowrap",
-        }}>July 13</span>
+        <span style={{ whiteSpace: "nowrap" }}>Charlotte-built</span>
+        <span style={{ color: "var(--c-accent)", fontSize: "7px" }}>{"◆"}</span>
+        <span style={{ whiteSpace: "nowrap" }}>Money-back guarantee</span>
         {!isMobile && (
           <span style={{ flex: "0 0 32px", height: "1px", background: "var(--c-hero-rule)" }} />
         )}
@@ -335,17 +330,17 @@ function Hero() {
   );
 }
 
-/* ── Trades strip ─────────────────────────────────────────────── */
-const TRADES = [
-  "HVAC",
-  "Electrical",
-  "Plumbing",
-  "Garage Doors",
-  "Roofing",
-  "Home Services",
+/* ── Segment strip ────────────────────────────────────────────── */
+const SEGMENTS = [
+  "Salons & spas",
+  "Specialty automotive",
+  "Wholesale & supply",
+  "Studios & makers",
+  "Professional services",
+  "Specialty retail",
 ];
 
-function TradesStrip() {
+function SegmentStrip() {
   const [ref, fade] = useFadeIn(0);
   return (
     <section ref={ref} style={{
@@ -362,7 +357,7 @@ function TradesStrip() {
         flexWrap: "wrap", maxWidth: "1100px", margin: "0 auto",
         textAlign: "center",
       }}>
-        <Eyebrow style={{ whiteSpace: "nowrap" }}>Built for the trades</Eyebrow>
+        <Eyebrow style={{ whiteSpace: "nowrap" }}>Who we build for</Eyebrow>
         {/* Each trade is its own flex item with whiteSpace:nowrap so multi-word
             names like "Garage Doors" never split mid-name. The wrapper is
             display:flex with flex-wrap:wrap so the line breaks BETWEEN trades
@@ -377,10 +372,10 @@ function TradesStrip() {
           fontSize: "clamp(15px, 2vw, 22px)", color: v("text"),
           lineHeight: 1.5, letterSpacing: "0.1px",
         }}>
-          {TRADES.map((trade, i) => (
-            <span key={trade} style={{ whiteSpace: "nowrap", display: "inline-flex", alignItems: "center" }}>
-              {trade}
-              {i < TRADES.length - 1 && (
+          {SEGMENTS.map((seg, i) => (
+            <span key={seg} style={{ whiteSpace: "nowrap", display: "inline-flex", alignItems: "center" }}>
+              {seg}
+              {i < SEGMENTS.length - 1 && (
                 <span aria-hidden="true" style={{
                   color: v("accent"), fontStyle: "normal",
                   margin: "0 clamp(6px, 1.2vw, 10px)",
@@ -398,14 +393,14 @@ function TradesStrip() {
 
 /* ── Service ticker ────────────────────────────────────────────── */
 const TICKER_ITEMS = [
-  "AI receptionists",
   "Custom websites",
-  "Workflow automation",
-  "Tech audits",
+  "AI receptionists",
+  "Site assistants",
+  "Booking automation",
+  "Managed AI",
   "48-hour proposals",
-  "100% money-back guarantee",
+  "Source code yours",
   "Charlotte-built",
-  "Main-street pricing",
 ];
 
 function ServiceTicker() {
@@ -552,13 +547,13 @@ function Stats() {
           <SupportStat
             forwardRef={ref2k}
             value={`$${count2k.toLocaleString()}`}
-            label="Founding-cohort rate (standard $10,000)"
-            note="Half-price for our first ten."
+            label="Where a custom website + AI build starts"
+            note="Source code yours from day one."
           />
           <SupportStat
-            value="Aug 31"
-            label="One founder on call through this date"
-            note="Past that, your codebase has a co-pilot."
+            value="24/7"
+            label="AI that answers when you can't"
+            note="The phone, the chat, the busywork."
           />
           <SupportStat
             forwardRef={ref100}
@@ -612,19 +607,19 @@ function SupportStat({ forwardRef, value, label, note }) {
 /* ── Why we do this ────────────────────────────────────────────── */
 const WHY_BEATS = [
   {
-    label: "For the 70%",
-    title: "Priced out, not left behind",
-    body: "Fewer than 30% of Charlotte small businesses have modern tools. That isn't reluctance — it's access. Agencies price for enterprise retainers and freelancers disappear after delivery. We bring the same capability at a price main street can actually spend.",
+    label: "The gap",
+    title: "Your reputation outgrew your website",
+    body: "You're the name people recommend — but a dated site, scattered booking, and an after-hours phone that rings out make you look smaller than you are. We make the digital side match the reputation you already earned.",
   },
   {
-    label: "Ship it, teach it",
+    label: "Off the critical path",
+    title: "The business shouldn't wait on you",
+    body: "When every quote, every booking, every after-hours call routes through one person, growth caps at that person's hours. We put AI on the repetitive work — answering, qualifying, scheduling — so the business keeps moving when you step away.",
+  },
+  {
+    label: "Yours to keep",
     title: "You own what we build",
-    body: "Every project ends with written + video documentation and a live training session. You own the source code, the credentials, and the runbook when we're done. That's the deliverable — your team running what we built, on its own.",
-  },
-  {
-    label: "From here, for here",
-    title: "Local means accountable",
-    body: "We live in the Charlotte metro. When something breaks at 7pm, you talk to the person who built it — not an offshore call center, not a ticket in a queue. Local means someone picks up. Accountable means it actually gets fixed.",
+    body: "Every project ends with documentation and a live training session. You own the source code, the credentials, and the runbook. Managed AI keeps it sharp if you want us to — but it's a service, never a lock-in.",
   },
 ];
 
@@ -646,14 +641,14 @@ function WhyWeDo() {
           letterSpacing: "-1px", lineHeight: 1.08,
           color: v("text"), marginBottom: SPACE.lg,
         }}>
-          Main street built Charlotte.{" "}
-          <GradientText>Let's keep it that way.</GradientText>
+          You earned the reputation.{" "}
+          <GradientText>Your tech should carry it.</GradientText>
         </h2>
         <p style={{
           fontSize: "18px", lineHeight: 1.6, color: v("text-muted"),
           maxWidth: "720px",
         }}>
-          Fifty thousand small businesses in this metro, and fewer than a third have modern tools. It isn't because they don't want them — it's because nobody builds for them. That gap is why we exist.
+          Established local businesses spend years building trust — then a dated website and an owner who's become the bottleneck quietly cap how far that trust travels. We close the gap with modern websites and AI that does the work you're tired of doing.
         </p>
       </div>
 
@@ -969,7 +964,7 @@ function FoundingClientOffer() {
           textTransform: "uppercase", color: "rgba(255,255,255,0.9)",
           marginBottom: SPACE.lg,
         }}>
-          <span style={{ fontSize: "8px" }}>{"◆"}</span> Founding Cohort · Summer 2026
+          <span style={{ fontSize: "8px" }}>{"◆"}</span> Charlotte Metro · Web + AI Studio
         </div>
 
         <h2 style={{
@@ -978,22 +973,22 @@ function FoundingClientOffer() {
           letterSpacing: "-1px", lineHeight: 1.1,
           marginBottom: SPACE.md,
         }}>
-          Ten Charlotte businesses,
+          Make your digital side
           <br />
           <span style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-          }}>one summer.</span>
+          }}>match your reputation.</span>
         </h2>
         <p style={{
           fontSize: "16px", lineHeight: 1.6,
           color: "rgba(255,255,255,0.92)",
           maxWidth: "680px", margin: "0 auto 36px",
         }}>
-          Founding-cohort pricing on every offer — half what we'll charge after Summer 2026. Direct founder access. Source code yours from day one. Two public tiers: the Website + AI Build at $5,000 and the Full Modernization at $10,000 (by application). A $1,500 discovery audit is available on request.
+          Custom websites, AI that runs the busywork, and Managed AI to keep it sharp. Direct founder access, source code yours from day one. Tell us your size and you'll have a real estimate in two clicks — then a fixed price from a free fit call.
         </p>
         <Link to="/pricing" style={{ textDecoration: "none" }}>
           <Button as="span" variant="onAccent" size="lg" iconRight={<ArrowRightIcon size={16} />}>
-            See both tiers
+            See pricing
           </Button>
         </Link>
       </div>
@@ -1006,7 +1001,7 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <TradesStrip />
+      <SegmentStrip />
       <ServiceTicker />
       <Stats />
       <FoundersStrip />

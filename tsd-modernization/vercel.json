@@ -1,4 +1,10 @@
 {
+  "redirects": [
+    { "source": "/hvac", "destination": "/ai-receptionist", "permanent": true },
+    { "source": "/electricians", "destination": "/ai-receptionist", "permanent": true },
+    { "source": "/plumbers", "destination": "/ai-receptionist", "permanent": true },
+    { "source": "/missed-call-calculator", "destination": "/pricing", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/audit", "destination": "https://tsd-modernization-solutions-uc71.vercel.app/audit" },
     { "source": "/audit/:path*", "destination": "https://tsd-modernization-solutions-uc71.vercel.app/audit/:path*" },

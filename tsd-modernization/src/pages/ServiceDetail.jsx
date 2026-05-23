@@ -316,7 +316,7 @@ export default function ServiceDetail() {
           </p>
           <Link to="/contact" style={{ textDecoration: "none" }}>
             <Button as="span" variant="onAccent" size="lg" iconRight={<ArrowRightIcon size={14} />}>
-              Apply for a founding slot
+              Start a project
             </Button>
           </Link>
         </section>

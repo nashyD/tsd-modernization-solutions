@@ -368,60 +368,58 @@ function PricingPage({ shift }) {
         textAlign: "center", fontFamily: SERIF, fontStyle: "italic",
         fontSize: 13, color: "rgba(220,232,245,0.4)",
       }}>
-        term agency.
+        match your reputation.
       </div>
       <div style={{
         position: "absolute", top: 130, left: 130, right: 130,
         display: "flex", gap: 20, alignItems: "flex-start",
       }}>
         <PricingTier
-          phase="PHASE 1"
-          title="DISCOVERY"
-          oldPrice="$3,000"
-          price="$1,500"
-          rateLabel="FOUNDING RATE · ONE-TIME"
+          phase="WEBSITE"
+          title="CUSTOM WEBSITE"
+          price="from $5K"
+          rateLabel="CUSTOM BUILD"
           features={{
-            spotsLabel: "AVAILABLE NOW",
+            spotsLabel: "ESTIMATE IN 2 CLICKS",
             list: [
-              "2-3 hour structured tech audit",
-              "Written modernization roadmap",
-              "Tool & platform recommendations",
-              "Priority areas identified",
-              "No obligation to continue",
+              "Fast, mobile-first, built to convert",
+              "On-page SEO + analytics wired in",
+              "Written + video documentation",
+              "Live training session at handoff",
+              "Source code yours from day one",
             ],
           }}
-          cta="Book Tech Audit"
+          cta="Build an Estimate"
           footer={{
-            italic: "Money-back if we can't find $25K of opportunities.",
+            italic: "Custom price, fixed after a free fit call.",
             list: [
               "100% money-back guarantee",
               "48-hour written proposal",
-              "No retainers, no subscriptions",
             ],
           }}
           fade={1}
         />
         <PricingTier
-          phase="BUILD"
+          phase="WEBSITE + AI"
           title="WEBSITE + AI BUILD"
-          price="$5,000"
-          rateLabel="FOUNDING RATE"
+          price="custom"
+          rateLabel="MIX TO FIT"
           badge="MOST POPULAR"
           popular
           features={{
             list: [
-              "Custom responsive website",
-              "AI chatbot or workflow automation",
-              "On-page SEO + analytics wiring",
-              "Written + video documentation",
-              "Founder on call for fixes through August 31, 2026",
+              "Custom website that matches your reputation",
+              "AI receptionist — answers, qualifies, books",
+              "Site assistant trained on your content + catalog",
+              "Booking + workflow automation",
+              "Direct founder access, no ticket queue",
               "Full source code ownership",
             ],
-            bonus: "Already bought After-Hours Lead Capture? Save $1,000 on this build within 30 days.",
+            bonus: "Managed AI keeps it sharp after launch — $97–$297/mo, optional, cancel anytime.",
           }}
-          cta="Claim a Build Slot"
+          cta="Get a Fixed Price"
           footer={{
-            italic: "Final fee. Delivered by handoff. Source code is yours from day one.",
+            italic: "Fixed price after a free fit call. Source code is yours from day one.",
             list: [
               "100% money-back guarantee",
               "48-hour written proposal",
@@ -430,27 +428,26 @@ function PricingPage({ shift }) {
           fade={1}
         />
         <PricingTier
-          phase="MODERNIZATION"
-          title="THE FULL MODERNIZATION"
-          price="$10,000"
-          rateLabel="FOUNDING RATE · BY APPLICATION"
+          phase="MANAGED AI"
+          title="MANAGED AI"
+          price="$97+"
+          rateLabel="PER MONTH · OPTIONAL"
           features={{
             list: [
-              "Discovery audit + written modernization roadmap",
-              "Custom website + AI receptionist (call + chat capture)",
-              "One operational integration (ServiceTitan, QuickBooks, Jobber, or another)",
-              "Custom AI re-training on your real call data through August 31",
-              "Weekly written status report + monthly business review with your TSD partner",
-              "Full source code ownership",
+              "Re-indexing as you add new content",
+              "Prompt tuning + model upkeep",
+              "Monitoring with a monthly report",
+              "Keeps the AI sharp after launch",
+              "Starts after launch, never a lock-in",
+              "Cancel anytime",
             ],
           }}
-          cta="Apply for the Full Modernization"
+          cta="Add After Launch"
           footer={{
-            italic: "Cancel any time after handoff. No retainer trap.",
+            italic: "Optional add-on. A website-only build doesn't need it.",
             list: [
               "100% money-back guarantee",
               "48-hour written proposal",
-              "No retainers, no subscriptions",
             ],
           }}
           fade={1}
@@ -591,7 +588,7 @@ function ChatWidget({ openProgress, messages, typing, inputText, sendingFlash })
             minHeight: 14,
             whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
           }}>
-            {inputText || "Ask about pricing, the cohort, or your..."}
+            {inputText || "Ask about pricing, what we build, or your..."}
             {inputText && <span style={{
               display: "inline-block", width: 1, height: 11, marginLeft: 1,
               background: "#7fc6e6", verticalAlign: "middle",
@@ -767,20 +764,20 @@ function Scene() {
 function buildConversation(t) {
   const greetStart = 2.0;
   const greetEnd = 3.0;
-  const greeting = "Hi — I'm the chat agent for TSD Modernization Solutions. Ask me about pricing, the cohort, or what we build. If you want to talk to a founder, just say so.";
+  const greeting = "Hi — I'm the chat agent for TSD Modernization Solutions. Ask me about pricing, what we build, or whether we're a fit. If you want to talk to a founder, just say so.";
 
-  const u1 = "What's in the Website + AI Build?";
+  const u1 = "What's in a Website + AI build?";
   const u1TypeStart = 4.0, u1TypeEnd = 5.6;
   const u1Send = 5.8;
   const u1BotTypingStart = 6.0, u1BotTypingEnd = 6.8;
-  const u1BotReply = "The $5,000 Website + AI Build: custom responsive site, AI chatbot or workflow automation, on-page SEO + analytics, written + video docs, founder on call through Aug 31, 2026, and full source code. Wedge customers (the $497 After-Hours Lead Capture) save $1,000 on this build within 30 days of setup.";
+  const u1BotReply = "A custom site that matches your reputation, plus AI that answers the phone and chat, knows your catalog, and handles booking. On-page SEO, analytics, and full source code yours from day one. Builds are custom and start around $5,000.";
   const u1BotEnd = 8.2;
 
-  const u2 = "How many spots are left?";
+  const u2 = "How does pricing work?";
   const u2TypeStart = 9.0, u2TypeEnd = 10.2;
   const u2Send = 10.4;
   const u2BotTypingStart = 10.6, u2BotTypingEnd = 11.3;
-  const u2BotReply = "We're capping the founding cohort at ten total Charlotte builds for Summer 2026 — last project start is July 13. Want me to put you on a quick fit call with one of the founders?";
+  const u2BotReply = "The estimator here gives you a realistic range in two clicks. The fixed price comes from a free fit call, with a written proposal in 48 hours. Want me to set up a call with one of the founders?";
   const u2BotEnd = 12.6;
 
   const u3 = "Yes, book a call.";

@@ -23,7 +23,7 @@ export const SERVICES = [
       "Staff training on every tool we deploy",
     ],
     timeline: "1-2 weeks from kickoff to launch.",
-    price: "Included in the Summer 2026 Website + AI Build at $5,000 founding rate. Also included in the $10,000 Full Modernization (by application), which adds an integration into whatever system you currently use plus custom AI re-training on your real call data.",
+    price: "Scoped to your business and quoted as a fixed price after a free fit call. Get a realistic estimate from the /pricing calculator. Keeping the AI sharp after launch — re-indexing, prompt and model upkeep, monitoring — is optional Managed AI from $97/mo, and you can cancel anytime.",
     videos: [
       { title: "Chatbot Setup Walkthrough", desc: "See how we build and train a custom AI chatbot for your business in under a week." },
       { title: "Workflow Automation Demo", desc: "Watch a Make/Zapier automation route leads, schedule calls, and update your CRM automatically." },
@@ -41,7 +41,7 @@ export const SERVICES = [
     Icon: WebsiteIcon,
     title: "Website Creation & Redesign",
     desc: "We build sites that load fast, look good on phones, and show up in search results. Every site comes with written and video documentation so you can update content without calling us.",
-    longDesc: "One founder stays on call for fixes through August 31, 2026 on every Summer 2026 cohort build. We use modern frameworks like React and Vite to build sites that are fast, accessible, and easy to maintain.",
+    longDesc: "We use modern frameworks like React and Vite to build sites that are fast, accessible, and easy to maintain. The source code is yours from day one, with written and video documentation so your team can keep it current.",
     tags: ["React", "SEO", "Mobile-First", "CMS", "Performance", "Analytics"],
     gradient: C.gradientAccent,
     included: [
@@ -51,10 +51,10 @@ export const SERVICES = [
       "Google Analytics + Search Console wiring",
       "Contact form & chatbot integration",
       "Written + video handoff documentation",
-      "Founder on call for fixes through Aug 31, 2026",
+      "Source code, credentials, and runbook yours at handoff",
     ],
     timeline: "2-4 weeks from approved mockup to launch.",
-    price: "Bundled with the Summer 2026 Website + AI Build at $5,000 founding rate.",
+    price: "Custom builds start around $5,000, scoped to your pages, content, and the systems you already run. Build an estimate on the /pricing calculator; the exact, fixed price comes from a free fit call. Source code yours from day one.",
     videos: [
       { title: "Design to Launch Process", desc: "Follow a website build from initial mockup through to live deployment." },
       { title: "SEO & Analytics Setup", desc: "How we wire up Google Analytics, Search Console, and on-page SEO from day one." },
@@ -83,7 +83,7 @@ export const SERVICES = [
       "No obligation to continue with us",
     ],
     timeline: "Audit completed in a single session. Written roadmap delivered within 48 hours.",
-    price: "$1,500 founding rate (standard $3,000). Available as a stepping-stone offer in qualifying conversations — ask about it on your fit call if you'd rather start with a paid scope-and-recommend before committing to a full build. Money-back if we can't find $25K of opportunities. Also included in the $10,000 Full Modernization.",
+    price: "Scoped to the size of the workflow and quoted as a fixed price after a free fit call. Build an estimate on the /pricing calculator. A paid scope-and-recommend is available as a stepping stone if you'd rather start small before a full build — ask about it on your fit call. 100% money-back guarantee.",
     videos: [
       { title: "Tech Audit Session Preview", desc: "A preview of what a structured tech audit looks like and the questions we walk through." },
       { title: "Roadmap Walkthrough", desc: "See an example modernization roadmap with priorities, costs, and ROI estimates." },

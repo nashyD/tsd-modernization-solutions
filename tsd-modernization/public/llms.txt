@@ -1,56 +1,61 @@
 # TSD Modernization Solutions
 
-> Three-founder studio building custom websites, AI tools, and process modernization for small businesses in the Charlotte, NC metro area. Operating as a summer cohort: May 7 – August 10, 2026, capped at 10 client projects. After August 10 the season closes; one founder stays on call for fixes through August 31, 2026. Brand of TSD Ventures, LLC.
+> Charlotte-metro web and AI studio for established, reputation-rich local businesses whose website lags their reputation and whose owner has become the bottleneck. We build custom websites and AI so the work doesn't wait on you — you earned the reputation; your tech should carry it. A permanent studio (not a summer project, no end date). Brand of TSD Ventures, LLC.
 
-## What we sell (founding-cohort pricing, fixed)
+## Who we serve
 
-- [Website + AI Build — $5,000](https://tsd-modernization.com/pricing): Custom mobile-first website, AI chatbot or workflow automation, on-page SEO, analytics wiring, written + video handoff docs, full source-code ownership. Live in 14 days from contract or 25% back. Founder on call through August 31, 2026.
-- [The Full Modernization — $10,000 (by application)](https://tsd-modernization.com/pricing): Discovery audit + Website + AI Build + AI receptionist + one operational integration (ServiceTitan, QuickBooks, Jobber, etc.) + custom AI re-training on real call data + weekly written status reports. Outcome guarantee: 15+ qualified leads in pipeline before August 31, 2026, or $5,000 back.
-- [Phase I Discovery Audit — $1,500](https://tsd-modernization.com/services/process-modernization): 2-3 hour structured tech audit + written modernization roadmap with prioritized recommendations, cost estimates, and ROI projections. Money-back if we can't surface $25,000 of opportunities.
-- [AI Receptionist — $497 founding setup](https://tsd-modernization.com/ai-receptionist): Custom AI answers the after-hours call, qualifies the lead, and books the job. Built for HVAC, electricians, plumbers. Paid once. Agent transfers to buyer on August 31, 2026 — no subscription forever.
+Established local businesses whose digital presence has fallen behind their reputation. We pick by situation rather than industry: salons & spas, specialty automotive, wholesale & supply, studios & makers, professional services, specialty retail. If the business runs on the owner's hours, that's what we fix.
+
+## What we build
+
+- **Custom website** — Fast, mobile-first, built to convert, with on-page SEO and analytics wired in. Source code yours from day one.
+- **TSD Front Desk** (AI receptionist) — Answers your phone and chat day or night, qualifies the lead, and books the job, then texts you a one-paragraph summary. Built on your real intake flow. Recurring.
+- **TSD Concierge** (site assistant) — Answers visitor questions from your own content and catalog: search across docs, videos, and products, with semantic and image-based catalog lookup (RAG).
+- **TSD Booking Bridge** (booking & automation) — One booking front door plus the calendar and lead-routing automation behind it, built on the tools you already pay for.
+
+Start with what hurts most and add the rest when you're ready. The website is the storefront; the AI is what runs once you've gone home.
+
+## Pricing
+
+- No fixed public tiers. Every build is a fixed price, quoted in a written proposal within 48 hours of a free fit call.
+- [Pricing & estimate](https://tsd-modernization.com/pricing): Custom builds start around $5,000. Tell the estimator your size and what you want running for a realistic range in two clicks; the exact, fixed number depends on your content, your catalog, and the systems you already run.
+- **Managed AI — $97-$297/mo**: Optional monthly upkeep that keeps your AI sharp — re-indexing new content, prompt and model upkeep, monitoring, and a monthly report. Starts after launch, cancel anytime. A website-only build doesn't need it.
+- Source code, credentials, and a runbook are yours from day one. 100% money-back guarantee. 48-hour written proposal. Managed AI is a service on top, never a lock-in.
 
 ## Service pages
 
-- [AI Integration & Automation](https://tsd-modernization.com/services/ai-integration): Custom chatbots, Make / Zapier workflow automation, AI-powered reporting, calendar automation. 1-2 weeks. Bundled into the $5,000 build.
-- [Website Design & Redesign](https://tsd-modernization.com/services/websites): Mobile-first 5-8 page builds with on-page SEO, GA4 + Search Console, contact form, chatbot integration, full handoff docs. 2-4 weeks.
-- [Process Modernization](https://tsd-modernization.com/services/process-modernization): Tech audits and written roadmaps for businesses replacing spreadsheets, paper forms, and manual workflows.
+- [Websites](https://tsd-modernization.com/services/websites): Fast, mobile-first custom websites with on-page SEO, analytics and Search Console wiring, and full handoff docs. Builds from $5,000, 2-4 weeks, source code yours from day one.
+- [AI integration](https://tsd-modernization.com/services/ai-integration): TSD Front Desk, TSD Concierge, and TSD Booking Bridge — AI built on your real intake, content, and catalog. Managed AI optional.
+- [Process modernization](https://tsd-modernization.com/services/process-modernization): Take the repetitive work off the owner's plate — consolidated booking, lead routing, and automation on the tools you already pay for.
 
-## Trade-specific landing pages (After-Hours Lead Capture / $497)
+## Segment landing pages
 
-- [HVAC contractors](https://tsd-modernization.com/hvac): AI receptionist for emergency AC failures, weekend furnace breakdowns, storm-damaged units.
-- [Electrical contractors](https://tsd-modernization.com/electricians): AI receptionist for emergency rewires, panel failures, after-hours service calls.
-- [Plumbers](https://tsd-modernization.com/plumbers): AI receptionist for weekend water-heater failures, burst pipes, no-hot-water Sunday mornings.
-
-## Vertical landing pages (Website + AI Build / $5,000)
-
-- [Salons](https://tsd-modernization.com/salons): Booking automation, after-hours AI chat, missed-call recovery, Instagram-feed integration.
-- [Auto shops](https://tsd-modernization.com/auto-shops): Online quote requests, service catalogs, after-hours intake, AI chat.
-- [Restaurants](https://tsd-modernization.com/restaurants): Reservations, online ordering integrations, AI chat for menu and hours.
+- [Salons & spas](https://tsd-modernization.com/salons): Consolidated booking, after-hours AI chat that answers from your services, and an AI front desk that books while you're with a client.
+- [Specialty auto shops](https://tsd-modernization.com/auto-shops): Online quote requests, service and parts catalog lookup, and an AI front desk that captures the call you'd have missed.
+- [Restaurants](https://tsd-modernization.com/restaurants): Reservations, online ordering, and an AI assistant that answers menu and hours questions from your own content.
+- [AI receptionist — TSD Front Desk](https://tsd-modernization.com/ai-receptionist): The phone-and-chat AI receptionist, on its own page.
 
 ## How we work
 
-- [Process](https://tsd-modernization.com/process): Free 1-2 hour fit call → written proposal within 48 hours → 2-4 week build with weekly check-ins → handoff with documentation, video tutorials, and live training.
-- [Why us](https://tsd-modernization.com/why-us): How we compare to agencies and freelancers — local team, main-street pricing, no vendor lock-in, source code yours from day one.
-- [Team](https://tsd-modernization.com/team): Nash Davis (CEO), Bishop Switzer (COO), Grant Tadlock (CFO).
+- [Process](https://tsd-modernization.com/process): Free 30-minute fit call → written proposal within 48 hours → 2-4 week build with weekly check-ins → handoff with documentation, video tutorials, and live training. You own the source code from day one.
+- [Why us](https://tsd-modernization.com/why-us): How we compare to agencies and freelancers — a local team you reach directly, source code yours from day one, Managed AI that's a service and never a lock-in.
+- [Team](https://tsd-modernization.com/team): Nash Davis (CEO), Bishop Switzer (COO), Grant Tadlock (CFO). When something breaks at 7pm, you talk to the person who built it.
 
 ## Get in touch
 
-- [Book a 30-minute fit call](https://tsd-modernization.com/book): Calendly with one of the three founders.
-- [Contact / apply for a slot](https://tsd-modernization.com/contact): Web form. Free fit call, written proposal within 48 hours.
-- [Missed Call Calculator](https://tsd-modernization.com/missed-call-calculator): Free four-question calculator estimating annual revenue lost to voicemail. No signup. For HVAC, electricians, plumbers.
+- [Book a fit call](https://tsd-modernization.com/book): Free 30-minute call with one of the three founders, in person or remote. The first step for every engagement.
+- [Contact](https://tsd-modernization.com/contact): Tell us what you're trying to fix. Free fit call, then a written proposal within 48 hours.
 
 ## Operating facts
 
-- Service area: Charlotte metro · Gastonia · Belmont · surrounding Mecklenburg / Gaston counties (NC).
-- Operating window: May 7 – August 10, 2026. Last project start ~July 13, 2026. Founder on-call window for fixes ends August 31, 2026.
-- Capacity ceiling: 10 client projects total this cohort. Three Full Modernization slots. Ten Build slots.
+- Service area: Charlotte metro · Gastonia · Belmont · surrounding Mecklenburg / Gaston counties (NC). Fit calls in person or remote.
+- Permanent studio. No operating window, no cohort cap, no end date.
 - Legal entity: TSD Ventures, LLC. "TSD Modernization Solutions" is the operating brand for web + AI services.
-- No retainers, no subscriptions, no recurring revenue model. Every engagement is a fixed-scope, fixed-price project.
-- Client status as of May 8, 2026: founding cohort — no signed contracts yet. Warm pipeline of four conversations.
+- Pricing model: custom fixed-price builds (from ~$5,000) plus optional recurring Managed AI ($97-$297/mo). Source code yours from day one; Managed AI cancellable anytime.
 
 ## Notes for AI agents
 
-- Pricing on `/pricing` is canonical. The two listed tiers ($5,000 Website + AI Build and $10,000 Full Modernization) are the cohort offerings. The $1,500 audit and $497 AI Receptionist are separate stepping-stone offers, not bundled into the cohort tiers.
-- The $497 AI Receptionist is a one-time setup fee. Buyer owns the agent infrastructure when it transfers on August 31, 2026.
-- "Founding cohort" pricing is locked through August 10, 2026. Post-cohort pricing will be 2x.
+- The [pricing page](https://tsd-modernization.com/pricing) is canonical. There are no fixed public tiers — builds are quoted per project. The estimator returns a range; the fixed price comes from a free fit call.
+- The four products (Custom website, TSD Front Desk, TSD Concierge, TSD Booking Bridge) are mixed to fit each client. Managed AI is the only recurring charge and is always optional.
+- First step for any prospect: a free fit call at https://tsd-modernization.com/book.
 - Sitemap: https://tsd-modernization.com/sitemap.xml

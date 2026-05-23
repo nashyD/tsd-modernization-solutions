@@ -9,26 +9,14 @@ import Testimonials from "./pages/Testimonials";
 import Team from "./pages/Team";
 import Contact from "./pages/Contact";
 import AIReceptionist from "./pages/AIReceptionist";
-import TradePage from "./pages/TradePage";
-import { TRADES } from "./trades-data";
 import RelationshipPage from "./pages/RelationshipPage";
 import { RELATIONSHIPS } from "./relationships-data";
-import MissedCallCalculator from "./pages/MissedCallCalculator";
 import Book from "./pages/Book";
 
-/* Trade-specific landing pages — flat URLs (/hvac, /electricians, /plumbers)
-   so ad copy and word-of-mouth stay short. Each is the destination URL for
-   its own ad set + cold-outreach template per the v2 trades-wedge checklist.
-   Wrapper components let routes.jsx pass the per-trade data into the shared
-   TradePage template without inline lambdas (which can confuse vite-react-ssg
-   prerender). */
-function HvacPage() { return <TradePage trade={TRADES.hvac} />; }
-function ElectriciansPage() { return <TradePage trade={TRADES.electricians} />; }
-function PlumbersPage() { return <TradePage trade={TRADES.plumbers} />; }
-
-/* Relationship-channel landing pages — vertical-specific bundle pages for
-   warm leads who arrived via founder DM (per the v2 two-motion model).
-   Same wrapper-function pattern as the trade pages above. */
+/* Relationship-channel landing pages — vertical-specific pages for warm
+   leads who arrived via founder DM or word-of-mouth. Wrapper functions let
+   routes.jsx pass per-vertical data into the shared RelationshipPage template
+   without inline lambdas (which can confuse vite-react-ssg prerender). */
 function SalonsPage() { return <RelationshipPage rel={RELATIONSHIPS.salons} />; }
 function AutoShopsPage() { return <RelationshipPage rel={RELATIONSHIPS["auto-shops"]} />; }
 function RestaurantsPage() { return <RelationshipPage rel={RELATIONSHIPS.restaurants} />; }
@@ -54,13 +42,9 @@ export const routes = [
       { path: "process", Component: Process },
       { path: "pricing", Component: Pricing },
       { path: "ai-receptionist", Component: AIReceptionist },
-      { path: "hvac", Component: HvacPage },
-      { path: "electricians", Component: ElectriciansPage },
-      { path: "plumbers", Component: PlumbersPage },
       { path: "salons", Component: SalonsPage },
       { path: "auto-shops", Component: AutoShopsPage },
       { path: "restaurants", Component: RestaurantsPage },
-      { path: "missed-call-calculator", Component: MissedCallCalculator },
       { path: "testimonials", Component: Testimonials },
       { path: "team", Component: Team },
       { path: "book", Component: Book },

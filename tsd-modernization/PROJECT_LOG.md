@@ -121,6 +121,53 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-05-22 — Repositioning: permanent company, drop the trades wedge, pricing → estimator + recurring Managed AI
+
+**What.** Repositioned the whole marketing site off the "Founding Cohort · Summer 2026 · ten builds then we close" + HVAC/trades framing and onto a permanent-company wedge: *websites and AI for established, reputation-rich local businesses whose owner has become the bottleneck.* Pricing moved from fixed tiers ($1,500 audit / $5,000 Website+AI / $10,000 Full Modernization / $497 one-time receptionist) to a **company-size estimator** ([`PricingEstimator.jsx`](src/components/PricingEstimator.jsx), new) on [`/pricing`](src/pages/Pricing.jsx) that returns a one-time build range plus a recurring **Managed AI** plan ($97–$297/mo, optional, cancel-anytime). The receptionist page ([`AIReceptionist.jsx`](src/pages/AIReceptionist.jsx)) was reframed from "$497 once, no subscription, you own it / national SaaS rents you one" to recurring **"TSD Front Desk"** (custom setup + $97/mo Managed AI; the comparison table now argues custom-built + source-code-ownership + local, not one-time-vs-subscription). New product vocabulary throughout: Custom website, TSD Front Desk, TSD Concierge (RAG/site assistant), TSD Booking Bridge.
+
+**Why.** Two calls Nash made in a 2026-05-22 strategy session. (1) The trades wedge no longer matched what's actually closing — Bisque Imports (wholesale ceramics), Studio C (salon), Sonderwerks (Porsche) are all non-trades — so the situational "reputation outgrew your website / owner is the bottleneck" wedge describes the real pipeline. (2) Nash chose to run TSD as a **permanent company**, not a summer-only venture, which makes recurring revenue (Managed AI) the structural unlock and retires the scarcity engine the site was built around. The old promises ("no retainers, no subscriptions," "then we close") contradicted both calls and had to go everywhere they appeared — copy, SEO, structured data, and the chatbot's brain.
+
+**Files touched.**
+- New: [`src/components/PricingEstimator.jsx`](src/components/PricingEstimator.jsx) — size + product picker → estimated one-time range + monthly Managed AI. **The PRICING/SIZES/MANAGED numbers at the top are placeholders pending Nash's sign-off.**
+- Rewritten: [`Pricing.jsx`](src/pages/Pricing.jsx) (tiers → estimator + product legend + reconciled guarantees), [`AIReceptionist.jsx`](src/pages/AIReceptionist.jsx) (→ recurring TSD Front Desk).
+- Re-wedged copy: [`Home.jsx`](src/pages/Home.jsx), [`WhyUs.jsx`](src/pages/WhyUs.jsx), [`Process.jsx`](src/pages/Process.jsx), [`Services.jsx`](src/pages/Services.jsx), [`ServiceDetail.jsx`](src/pages/ServiceDetail.jsx), [`Book.jsx`](src/pages/Book.jsx), [`Contact.jsx`](src/pages/Contact.jsx), [`Team.jsx`](src/pages/Team.jsx), [`Testimonials.jsx`](src/pages/Testimonials.jsx), [`RelationshipPage.jsx`](src/pages/RelationshipPage.jsx) + [`relationships-data.js`](src/relationships-data.js), [`services-data.js`](src/services-data.js), [`Layout.jsx`](src/Layout.jsx) (footer, nav CTA, ROUTE_META).
+- SEO / machine-readable: [`route-jsonld.js`](src/route-jsonld.js), [`index.html`](index.html) (JSON-LD description, `priceRange` → `$5000 - $25000`, offer catalog), [`public/llms.txt`](public/llms.txt), `public/sitemap.xml` (auto-regenerated at build).
+- Chatbot brain: [`content/tsd-knowledge.md`](content/tsd-knowledge.md), [`TSDAgent.jsx`](src/components/TSDAgent.jsx), [`ChatbotDemo.jsx`](src/components/ChatbotDemo.jsx).
+- Retired routes `/hvac`, `/electricians`, `/plumbers`, `/missed-call-calculator`: deleted `TradePage.jsx`, `trades-data.js`, `MissedCallCalculator.jsx`, `MissedCallCalculatorWidget.jsx`; removed from [`routes.jsx`](src/routes.jsx); 301 redirects added in [`vercel.json`](vercel.json) (trade pages → `/ai-receptionist`, calculator → `/pricing`).
+- Verified: `npm run build` clean — 16 routes prerendered, sitemap regenerated; dev console clean on `/`, `/pricing`, `/ai-receptionist`.
+
+**Open follow-ups.**
+- **PricingEstimator numbers are placeholders** — confirm setup ranges, size multipliers, and the $97/$197/$297 Managed AI tiers, then they're live.
+- **`BUSINESS_PLAN.md` not yet synced** (Nash had in-progress WIP there on 2026-05-22): §4 (positioning/market), §6 (pricing & packaging), §12 (financial model), §1/§2/§7/§14 (operating-window removal), §5.4 (receptionist → Front Desk recurring).
+- Pre-existing duplicate-`background`-key warning in `AIReceptionist.jsx` HowItWorks step-number styling (predates this change; harmless).
+
+**Principle reinforced.** *Positioning lives in dozens of places, not one headline.* De-seasonalizing meant editing ~24 files — hero copy, every page, all route meta, JSON-LD, `llms.txt`, the chatbot's knowledge base, and the pricing model — because the old wedge had been woven through SEO, structured data, and the AI agent's brain, not just the visible H1s. A repositioning that only touches the homepage leaves the contradictions live everywhere a crawler or chatbot can still read them.
+
+### 2026-05-12 — Carrier migration: Vapi-managed → Quo for SMS + two-way calling
+
+**What.** Migrated TSD Modernization Solutions' published company line and all three founder TSD work lines from Vapi-managed numbers to Quo-issued numbers. Company line: `+19802279003` → `+19808905815`. Founder lines: Nash `+19802274913` → `+19802176884`, Grant `+19802274917` → `+19802464961`, Bishop `+19802274702` → `+19802179777`. The receptionist stack didn't change — Vapi still hosts the `tsd` assistant on the company line; the new Quo number is SIP-trunked into Vapi for inbound. Founders' personal Quo lines are direct cell lines (no AI receptionist) so founders can place outbound calls and send/receive SMS as themselves.
+
+**Why.** Vapi-managed numbers are voice-only — no SMS in either direction, and outbound calls go through Vapi's call-bridge instead of the carrier's PSTN. For the company line that limitation was acceptable (the receptionist *is* the call), but for the three founder personal lines it was a daily friction: a client texts a founder's TSD card, Vapi swallows it; a founder tries to dial out from their phone, Vapi can't proxy the call from a physical device. Moving the personal lines to real Quo cell numbers gives the founders normal phone-line behavior (SMS in/out, calls from any device). Moving the company line to Quo too (SIP'd into Vapi) keeps the receptionist working but means client SMS to the company line now lands somewhere Nash can read.
+
+**Files touched (this repo).**
+- [`index.html`](index.html) — JSON-LD `telephone` field (`+1-980-890-5815`).
+- [`src/Layout.jsx`](src/Layout.jsx) — footer call link + display number (`tel:+19808905815` and `(980) 890-5815`).
+- [`src/components/CallButton.jsx`](src/components/CallButton.jsx) — floating "Call us" pill `tel:` href + aria-label.
+- [`src/pages/Contact.jsx`](src/pages/Contact.jsx) — Contact-page NAP card "Call" entry.
+- [`src/pages/Team.jsx`](src/pages/Team.jsx) — three founder business cards now show their individual Quo cell lines: Nash `+1 980-217-6884`, Bishop `+1 980-217-9777`, Grant `+1 980-246-4961`.
+- [`api/agent.js`](api/agent.js) — three lead-capture fallback messages updated to direct callers at the new company line.
+- [`content/tsd-knowledge.md`](content/tsd-knowledge.md) — chat-agent knowledge base.
+- [`BUSINESS_PLAN.md`](BUSINESS_PLAN.md) — §2 Company Overview phone row rewritten with the new line + prior Vapi/Telnyx/Twilio/GV history preserved as historical context; §11.1 Voice routing row updated to reflect the Quo-fronted, Vapi-receptionist architecture; front-matter refresh date bumped.
+- [`.claude/CLAUDE.md`](.claude/CLAUDE.md) — canonical phone-number reference updated.
+
+**Downstream surfaces.**
+- `tsd-receptionist`: `prompts/tsd.md` system prompt already updated — references `(980) 890-5815` and "the Quo line." Vapi assistants stayed bound to the (now SIP-trunked) company line.
+- `tsd-mobile-detailing`: brand line migrated Vapi `(980) 227-9057` → Quo `(980) 819-2820`. Updated `src/Layout.jsx` footer + `src/CallButton.jsx` floating pill.
+- `tsd-ventures`: legal-entity company line `(980) 227-4914` retired entirely — TSD Ventures is a holding company and doesn't need an operational phone surface. Removed the `tel:` link from `src/components/Footer.tsx`, deleted `src/components/CallButton.tsx` and its render from `src/app/layout.tsx`, and added Nash's Quo cell `+1 980-217-6884` to his founder card in `src/components/Founders.tsx`.
+- `tsd-dialer`: deprecated repo, left as-is per its 2026-05-05 "no longer maintained" declaration. The stale Vapi numbers in its README and code accurately describe the state of the world at the time the repo was put on ice.
+
+**Principle reinforced.** *Use the right phone for the job — AI-managed numbers for AI-handled calls, real PSTN cell lines for human-handled calls.* The 2026-05-05 migration over-applied the Vapi-managed model to surfaces (the founders' direct-contact cards on `/team`) where the user expectation was a normal phone — text-capable, dial-out-able from any device. The fix wasn't to engineer around Vapi's voice-only limitation; it was to recognize that the surfaces had different requirements and route them through different carriers. When a single technology stops being the right answer for every variant of a surface, split the surfaces.
+
 ### 2026-05-09 — Mobile overflow round 2: aurora glow + trades-strip wrap + `overflow-x: clip` on `<html>`
 
 **What.** After the nav-overflow fix shipped earlier today, Nash sent a second iOS Safari screenshot showing the page *still* sitting off-center on zoom-out, with the trades strip ("HVAC · Electrical · Plumbing · Garage Doors · Roofing · Home Services") rendering as a single line wider than the viewport rather than wrapping. Three additional sources of horizontal overflow, fixed in this pass:

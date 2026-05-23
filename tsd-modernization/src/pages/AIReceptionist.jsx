@@ -51,7 +51,7 @@ function ReceptionistHero() {
       }} />
 
       <div ref={r1} style={{ ...f1, marginBottom: SPACE.xl, position: "relative", zIndex: 1 }}>
-        <EditorialMasthead items={["AI Receptionist", "Charlotte Trades", "Summer 2026"]} />
+        <EditorialMasthead items={["TSD Front Desk", "AI Receptionist", "Managed AI"]} />
       </div>
 
       <h1 ref={r2} style={{
@@ -63,7 +63,7 @@ function ReceptionistHero() {
       }}>
         Get every after-hours call into a booked appointment.
         <br />
-        <GradientText>And the agent is yours.</GradientText>
+        <GradientText>Meet your AI front desk.</GradientText>
       </h1>
 
       <DiamondDivider width={180} style={{ marginBottom: SPACE.lg }} />
@@ -73,7 +73,7 @@ function ReceptionistHero() {
         maxWidth: "620px", margin: "0 auto 36px",
         position: "relative", zIndex: 1,
       }}>
-        A custom-trained AI answers your phone 24/7, qualifies the lead, and lands the appointment on your calendar. Built for Charlotte HVAC, electricians, and plumbers. Setup in a week — and on August 31, the agent transfers to you.
+        A custom-trained AI answers your phone and chat 24/7, qualifies the lead, and books the appointment on your calendar. Built on your real intake and voice, managed by us, live in about a week.
       </p>
 
       <div ref={r4} style={{
@@ -83,7 +83,7 @@ function ReceptionistHero() {
       }}>
         <Link to="/contact?ref=ai-receptionist" style={{ textDecoration: "none" }}>
           <Button as="span" variant="primary" size="lg" iconRight={<ArrowRightIcon size={16} />}>
-            Reserve a setup spot
+            Start your front desk
           </Button>
         </Link>
         <BookCallButton variant="ghost" refSource="ai-receptionist">
@@ -99,15 +99,11 @@ function ReceptionistHero() {
         position: "relative", zIndex: 1,
       }}>
         <span style={{ flex: "0 0 32px", height: "1px", background: v("divider") }} />
-        <span>$497 founding setup</span>
+        <span>Custom setup + $97/mo</span>
         <span style={{ color: v("accent"), fontSize: "7px" }}>{"◆"}</span>
-        <span>Ten spots</span>
+        <span>Cancel anytime</span>
         <span style={{ color: v("accent"), fontSize: "7px" }}>{"◆"}</span>
-        <span>Last start <span style={{
-          fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 600,
-          fontSize: "13px", letterSpacing: "0", textTransform: "none",
-          color: v("text"),
-        }}>July 13</span></span>
+        <span>Source code yours</span>
         <span style={{ flex: "0 0 32px", height: "1px", background: v("divider") }} />
       </div>
     </section>
@@ -124,7 +120,7 @@ function TheLeak() {
       <ChapterHead
         label="The Leak"
         num="01"
-        title="The phone rings at 11pm. Most Charlotte trades miss it."
+        title="The phone rings at 11pm. Most local businesses miss it."
         sub="Industry data puts after-hours missed-call rates above 30% for service businesses. Every miss is a job that quoted with someone else by morning. Voicemail loses leads, call centers are overkill at this scale, and the math on a real receptionist rarely carries for a small operator."
       />
     </section>
@@ -208,8 +204,8 @@ const INCLUDED = [
   "Calendar integration (Google or Apple)",
   "SMS confirmations to caller and to you",
   "Weekly summary of what got booked",
-  "Founder on call for fixes through August 31, 2026",
-  "Full transfer of credentials and the agent at handoff",
+  "Ongoing tuning, monitoring, and model updates (Managed AI)",
+  "Source code and credentials yours from day one",
 ];
 
 function TheOffer() {
@@ -270,26 +266,20 @@ function TheOffer() {
 
           <div style={{ marginBottom: SPACE.lg }}>
             <div style={{
-              fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 600,
-              fontSize: "20px", color: v("text-dim"), lineHeight: 1.2,
-              textDecoration: "line-through", textDecorationColor: v("text-dim"),
-              textDecorationThickness: "1px", marginBottom: SPACE.sm,
-            }}>$1,500 standard</div>
-            <div style={{
               fontFamily: "var(--font-body)", fontWeight: 800,
-              fontSize: "clamp(56px, 8vw, 76px)", letterSpacing: "-2.5px",
+              fontSize: "clamp(48px, 7vw, 68px)", letterSpacing: "-2.5px",
               lineHeight: 1.1,
               background: C.gradientAccent, WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent", backgroundClip: "text",
               marginBottom: SPACE.sm,
               paddingBottom: "0.08em",
               fontFeatureSettings: '"tnum" 1',
-            }}>$497</div>
+            }}>From $1,200</div>
             <p style={{ fontSize: "14px", color: v("text-muted"), marginBottom: "4px" }}>
-              <strong style={{ color: v("text"), fontWeight: 700 }}>Founding setup, paid once.</strong>
+              <strong style={{ color: v("text"), fontWeight: 700 }}>Custom setup, scoped to your business.</strong>
             </p>
             <p style={{ fontSize: "13px", color: v("text-muted"), lineHeight: 1.55 }}>
-              Agent transfers to you on August 31, 2026. No subscription, no recurring fee.
+              Then <strong style={{ color: v("text"), fontWeight: 700 }}>$97/mo Managed AI</strong> keeps it tuned and answering. Cancel anytime — source code and credentials are yours from day one.
             </p>
           </div>
 
@@ -311,9 +301,9 @@ function TheOffer() {
             border: `1px dashed ${C.carolina}`,
             marginBottom: SPACE.md,
           }}>
-            <Eyebrow style={{ marginBottom: "6px" }}>Build bonus</Eyebrow>
+            <Eyebrow style={{ marginBottom: "6px" }}>Pairs with a build</Eyebrow>
             <p style={{ fontSize: "13px", color: v("text"), lineHeight: 1.55 }}>
-              Add the Website + AI Build within 30 days of setup and save $1,000 — full Build for $4,000 instead of $5,000.
+              Getting a new website too? We'll scope the front desk into one build — get a combined estimate on the pricing page.
             </p>
           </div>
 
@@ -322,12 +312,12 @@ function TheOffer() {
             fontSize: "13px", color: v("text-dim"), lineHeight: 1.6,
             marginBottom: SPACE.lg,
           }}>
-            After August 31, ownership transfers. You own the agent, the credentials, and the call log, and you continue the underlying service directly.
+            You own the build — source code, credentials, and call log are yours from day one. Managed AI is the optional service that keeps it sharp.
           </p>
 
           <Link to="/contact?ref=ai-receptionist" style={{ textDecoration: "none" }}>
             <Button as="span" variant="primary" fullWidth iconRight={<ArrowRightIcon size={14} />}>
-              Reserve a setup spot
+              Start your front desk
             </Button>
           </Link>
         </div>
@@ -357,7 +347,7 @@ function ClosingCTA() {
         fontSize: "22px", lineHeight: 1.45, color: v("text"),
         marginBottom: SPACE.xl,
       }}>
-        Ten spots. Last start: <span style={{ color: v("accent") }}>July 13</span>.
+        Live in about a week. <span style={{ color: v("accent") }}>Cancel Managed AI anytime.</span>
       </p>
       <Link to="/contact?ref=ai-receptionist" style={{ textDecoration: "none" }}>
         <Button as="span" variant="primary" size="lg" iconRight={<ArrowRightIcon size={16} />}>
@@ -369,10 +359,10 @@ function ClosingCTA() {
 }
 
 const SAAS_COMPARISON = [
-  { axis: "Setup", saas: "Self-serve, remote", tsd: "Three founders, in-person" },
-  { axis: "Pricing", saas: "$95–$199/mo forever", tsd: "$497 once, then yours" },
-  { axis: "Ownership", saas: "Theirs — you rent it", tsd: "Yours — agent + credentials transfer Aug 31" },
-  { axis: "Where they are", saas: "Anywhere in the country", tsd: "Charlotte / Gaston" },
+  { axis: "Build", saas: "Generic, self-serve", tsd: "Custom-built on your real intake + voice" },
+  { axis: "Pricing", saas: "Locked monthly contracts", tsd: "Fair setup + $97/mo, cancel anytime" },
+  { axis: "Ownership", saas: "Theirs — you rent the whole thing", tsd: "Yours — source code + credentials from day one" },
+  { axis: "Support", saas: "Ticket queue, anywhere", tsd: "Charlotte team that picks up the phone" },
 ];
 
 function TheDifference() {
@@ -385,8 +375,8 @@ function TheDifference() {
       <ChapterHead
         label="The Difference"
         num="03"
-        title="The national SaaS rents you an AI. We sell you one."
-        sub="Smith.ai, NextPhone, Marlie, RealVoice AI — they all charge a monthly subscription that never ends. TSD is one-time setup, then the agent and credentials transfer to you on August 31. Three months from now, theirs is a line item; yours is an asset."
+        title="The national SaaS hands you a generic bot. We build you one."
+        sub="Smith.ai, NextPhone, Marlie — generic agents on locked monthly contracts. TSD custom-builds your front desk on your real intake and voice, you own the source code from day one, and Managed AI keeps it sharp for an honest monthly rate you can cancel anytime."
       />
 
       <div style={{
@@ -423,7 +413,7 @@ function TheDifference() {
               <div style={{
                 fontSize: "12px", fontStyle: "italic", color: v("text-muted"),
                 marginTop: "6px", fontFamily: "var(--font-display)",
-              }}>Charlotte trades</div>
+              }}>Charlotte metro</div>
             </div>
           </div>
 
@@ -468,7 +458,7 @@ function TheFit() {
         label="The Fit"
         num="05"
         title="Already running ServiceTitan or Housecall Pro?"
-        sub="You're not our customer — go to Marlie. We're built for the shop owner using Google Calendar and a notepad."
+        sub="If a national platform already runs your scheduling end-to-end, you might not need us. We're built for the owner still running the calendar from a phone and a notepad."
       />
     </section>
   );
