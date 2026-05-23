@@ -25,9 +25,9 @@ const SIZES = [
 
 const PRODUCTS = [
   { id: "website",   label: "A new website",        detail: "Custom, fast, source code yours",     low: 3000, high: 6000, ai: false },
-  { id: "frontDesk", label: "AI receptionist",      detail: "Answers the phone + chat, books work", low: 1200, high: 2500, ai: true },
-  { id: "concierge", label: "Site assistant",       detail: "Answers from your content + catalog",  low: 4000, high: 9000, ai: true },
-  { id: "booking",   label: "Booking & automation", detail: "Consolidated booking + workflow glue", low: 1200, high: 3000, ai: true },
+  { id: "frontDesk", label: "TSD Front Desk",     detail: "AI receptionist — phone + chat, books work", low: 1200, high: 2500, ai: true },
+  { id: "concierge", label: "TSD Concierge",      detail: "Site assistant — answers from your content + catalog", low: 4000, high: 9000, ai: true },
+  { id: "booking",   label: "TSD Booking Bridge", detail: "Booking + workflow automation", low: 1200, high: 3000, ai: true },
   { id: "reviews",   label: "Reviews & reputation", detail: "Auto-requests reviews, monitors Google + Yelp", low: 800,  high: 2000, ai: true },
   { id: "outreach",  label: "Lead follow-up",       detail: "Re-engages old leads, no-shows, stale quotes",  low: 1500, high: 3500, ai: true },
   { id: "seo",       label: "Local SEO",            detail: "Google Profile + local search visibility",       low: 800,  high: 2500, ai: false },

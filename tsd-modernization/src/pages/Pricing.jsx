@@ -69,19 +69,34 @@ const PRODUCT_LEGEND = [
     points: ["Fast, mobile-first, built to convert", "On-page SEO + analytics wired in", "Source code yours from day one"],
   },
   {
-    name: "AI receptionist",
-    tagline: "Answers the phone and chat, qualifies, and books — day or night.",
+    name: "TSD Front Desk",
+    tagline: "Your AI receptionist — answers phone and chat, qualifies, and books, day or night.",
     points: ["Captures the call you'd have missed", "Texts you a one-paragraph summary", "Built on your real intake flow"],
   },
   {
-    name: "Site assistant",
-    tagline: "Answers visitor questions from your own content and catalog.",
+    name: "TSD Concierge",
+    tagline: "Your site assistant — answers visitor questions from your content and catalog.",
     points: ["Search across your docs, videos, products", "Image + semantic catalog lookup", "Your expertise, on every page"],
   },
   {
-    name: "Booking & automation",
-    tagline: "One booking front door and the workflow glue behind it.",
+    name: "TSD Booking Bridge",
+    tagline: "Booking and automation — one front door, plus the workflow glue behind it.",
     points: ["Consolidates scattered booking", "Calendar + lead routing automation", "Built on the tools you already pay for"],
+  },
+  {
+    name: "Reviews & reputation",
+    tagline: "Turns happy jobs into reviews — and watches the ones that land.",
+    points: ["Auto-requests a review after each job", "Monitors Google + Yelp, alerts on new ones", "Compounds the reputation you already have"],
+  },
+  {
+    name: "Lead follow-up",
+    tagline: "Re-engages the leads that slipped through the cracks.",
+    points: ["Follows up old leads, no-shows, and stale quotes", "AI plus outbound calls and texts", "Recovers revenue you already earned"],
+  },
+  {
+    name: "Local SEO",
+    tagline: "Gets you found when people search locally.",
+    points: ["Google Business Profile optimization", "Local citations + landing content", "Show up in the map pack"],
   },
 ];
 
@@ -235,7 +250,7 @@ export default function Pricing() {
           <SectionHeader
             center
             label="What's in a build"
-            title="Four products,"
+            title="The products,"
             titleAccent="mixed to fit."
             sub="Start with what hurts most. Add the rest when you're ready — the website is the storefront, the AI is what runs once you've gone home."
           />
