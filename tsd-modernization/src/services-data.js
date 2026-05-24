@@ -24,7 +24,7 @@ export const SERVICES = [
       "Source code, credentials, and runbook yours at handoff",
     ],
     timeline: "2-4 weeks from approved mockup to launch.",
-    price: "Custom builds start around $5,000, scoped to your pages, content, and the systems you already run. Build an estimate on the /pricing calculator; the exact, fixed price comes from a free fit call. Source code yours from day one.",
+    price: "Custom, fixed-price builds scoped to your pages, content, and the systems you already run. Build an estimate on the /pricing calculator; the exact price comes from a free fit call. Source code yours from day one.",
     videos: [
       { title: "Design to Launch Process", desc: "Follow a website build from initial mockup through to live deployment." },
       { title: "SEO & Analytics Setup", desc: "How we wire up Google Analytics, Search Console, and on-page SEO from day one." },

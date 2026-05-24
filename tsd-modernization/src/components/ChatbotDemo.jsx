@@ -415,7 +415,7 @@ function PricingPage({ shift }) {
               "Direct founder access, no ticket queue",
               "Full source code ownership",
             ],
-            bonus: "Managed AI keeps it sharp after launch — $97–$297/mo, optional, cancel anytime.",
+            bonus: "Managed AI keeps it sharp after launch — from $97/mo, optional, cancel anytime.",
           }}
           cta="Get a Fixed Price"
           footer={{
@@ -770,7 +770,7 @@ function buildConversation(t) {
   const u1TypeStart = 4.0, u1TypeEnd = 5.6;
   const u1Send = 5.8;
   const u1BotTypingStart = 6.0, u1BotTypingEnd = 6.8;
-  const u1BotReply = "A custom site that matches your reputation, plus AI that answers the phone and chat, knows your catalog, and handles booking. On-page SEO, analytics, and full source code yours from day one. Builds are custom and start around $5,000.";
+  const u1BotReply = "A custom site that matches your reputation, plus AI that answers the phone and chat, knows your catalog, and handles booking. On-page SEO, analytics, and full source code yours from day one. Builds are custom and fixed-price — the pricing estimator gives you a real range in two clicks.";
   const u1BotEnd = 8.2;
 
   const u2 = "How does pricing work?";

@@ -182,7 +182,7 @@ function Hero() {
           color: "var(--c-hero-text-soft)",
           maxWidth: "580px", margin: "0 auto 20px",
         }}>
-          We modernize the digital side of established Charlotte businesses: a custom site that finally matches your reputation, plus AI that answers the phone, knows your catalog, and handles the busywork. <span style={{ fontWeight: 700, color: "var(--c-hero-text)" }}>Custom builds from $5,000, source code yours from day one.</span>
+          We modernize the digital side of established Charlotte businesses: a custom site that finally matches your reputation, plus AI that answers the phone, knows your catalog, and handles the busywork. <span style={{ fontWeight: 700, color: "var(--c-hero-text)" }}>Custom-built and priced to your size — source code yours from day one.</span>
         </p>
 
         <div ref={r4} style={{
@@ -450,7 +450,6 @@ function ServiceTicker() {
 function Stats() {
   const [headRef, headFade] = useFadeIn(0);
   const [count48, ref48] = useCountUp(48, 1600);
-  const [count2k, ref2k] = useCountUp(5000, 1800);
   const [count100, ref100] = useCountUp(100, 1400);
 
   return (
@@ -545,10 +544,9 @@ function Stats() {
           border: `1px solid ${v("surface-border")}`,
         }}>
           <SupportStat
-            forwardRef={ref2k}
-            value={`$${count2k.toLocaleString()}`}
-            label="Where a custom website + AI build starts"
-            note="Source code yours from day one."
+            value="2 clicks"
+            label="To a real price estimate"
+            note="Tell us your size on the pricing page."
           />
           <SupportStat
             value="24/7"

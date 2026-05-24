@@ -28,7 +28,7 @@ const SITE_URL = "https://tsd-modernization.com";
 const ROUTE_META = {
   "/": {
     title: "Charlotte Websites + AI for Established Businesses | TSD Modernization Solutions",
-    description: "Websites and AI for Charlotte-metro businesses people already trust — built so the work doesn't wait on you. Custom sites plus AI that answers the phone, knows your catalog, and runs the busywork. Builds from $5,000, source code yours from day one.",
+    description: "Websites and AI for Charlotte-metro businesses people already trust — built so the work doesn't wait on you. Custom sites plus AI that answers the phone, knows your catalog, and runs the busywork. Custom, fixed-price builds — get a real range from the /pricing estimator — source code yours from day one.",
   },
   "/services": {
     title: "Services — Websites, AI Front Desk, Concierge & Booking | TSD Modernization Solutions",
@@ -40,7 +40,7 @@ const ROUTE_META = {
   },
   "/services/websites": {
     title: "Custom Website Design & Redesign | Charlotte Business Web Developer",
-    description: "Fast, mobile-first custom websites with on-page SEO, analytics wiring, and full handoff docs so your team owns the content. Builds from $5,000, source code yours from day one, launched in 2-4 weeks.",
+    description: "Fast, mobile-first custom websites with on-page SEO, analytics wiring, and full handoff docs so your team owns the content. Custom, fixed-price builds — get a real range from the /pricing estimator — source code yours from day one, launched in 2-4 weeks.",
   },
   "/services/process-modernization": {
     title: "Process Modernization & Workflow Automation | TSD Modernization Solutions",
@@ -56,7 +56,7 @@ const ROUTE_META = {
   },
   "/pricing": {
     title: "Pricing & Estimate — Custom Websites + AI | TSD Modernization Solutions",
-    description: "Build a real estimate in two clicks: tell us your size and what you want running. Custom builds start around $5,000; the exact fixed price comes from a free fit call. Source code yours; Managed AI $97-$297/mo, optional, cancel anytime.",
+    description: "Build a real estimate in two clicks: tell us your size and what you want running. Custom, fixed-price builds — get a real range from the /pricing estimator, exact price from a free fit call. Source code yours; Managed AI from $97/mo, optional, cancel anytime.",
   },
   "/ai-receptionist": {
     title: "TSD Front Desk — AI Receptionist for Charlotte Businesses | TSD Modernization Solutions",

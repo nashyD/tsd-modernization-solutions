@@ -85,16 +85,16 @@ const segmentAudience = (segment) => ({
 
 const BUILD_OFFER = offer({
   name: "Custom Website + AI Build",
-  minPrice: "5000",
+  minPrice: "3000",
   description:
-    "Custom website plus AI — TSD Front Desk receptionist, TSD Concierge site assistant, or TSD Booking Bridge automation, mixed to fit. On-page SEO, analytics wiring, and full source-code ownership from day one. Custom builds start around $5,000; estimate via the /pricing calculator, fixed price from a free fit call. 100% money-back guarantee, 48-hour written proposal.",
+    "Custom website plus AI — TSD Front Desk receptionist, TSD Concierge site assistant, or TSD Booking Bridge automation, mixed to fit. On-page SEO, analytics wiring, and full source-code ownership from day one. Custom, fixed-price builds — get a real range from the /pricing estimator, exact price from a free fit call. 100% money-back guarantee, 48-hour written proposal.",
   url: `${SITE}/pricing`,
 });
 
 const MANAGED_AI_OFFER = subscriptionOffer({
   name: "Managed AI",
   minPrice: "97",
-  maxPrice: "297",
+  maxPrice: "497",
   description:
     "Optional monthly upkeep for your AI: re-indexing new content, prompt and model upkeep, monitoring, and a monthly report. Starts after launch, cancel anytime. A website-only build doesn't need it.",
   url: `${SITE}/pricing`,
@@ -112,7 +112,7 @@ const PRICING_FAQ = {
       name: "How does pricing work?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Every build is a fixed price, quoted in a written proposal within 48 hours of a free fit call. The estimator gives you a realistic range; the exact number depends on your content, your catalog, and the systems you already run. Custom builds start around $5,000.",
+        text: "Every build is a fixed price, quoted in a written proposal within 48 hours of a free fit call. The estimator gives you a realistic range; the exact number depends on your content, your catalog, and the systems you already run. Get a real range from the /pricing estimator.",
       },
     },
     {
@@ -120,7 +120,7 @@ const PRICING_FAQ = {
       name: "What's Managed AI, and is it required?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "AI tools drift if nobody tends them — new content to index, prompts to tune, models that keep improving. Managed AI keeps yours sharp: re-indexing, prompt and model upkeep, monitoring, and a monthly report, for $97-$297/mo. It's optional, starts after launch, and you can cancel anytime. A website-only build doesn't need it.",
+        text: "AI tools drift if nobody tends them — new content to index, prompts to tune, models that keep improving. Managed AI keeps yours sharp: re-indexing, prompt and model upkeep, monitoring, and a monthly report, from $97/mo. It's optional, starts after launch, and you can cancel anytime. A website-only build doesn't need it.",
       },
     },
     {
@@ -280,7 +280,7 @@ const SERVICE_AI = service({
 const SERVICE_WEB = service({
   name: "Custom Website Design & Redesign",
   description:
-    "Fast, mobile-first custom websites with on-page SEO, analytics and Search Console wiring, and full written and video handoff documentation. Custom builds start around $5,000, launched in 2-4 weeks, source code yours from day one.",
+    "Fast, mobile-first custom websites with on-page SEO, analytics and Search Console wiring, and full written and video handoff documentation. Custom, fixed-price builds — get a real range from the /pricing estimator, launched in 2-4 weeks, source code yours from day one.",
   serviceType: "Web Design and Development",
   slug: "/services/websites",
   offers: BUILD_OFFER,

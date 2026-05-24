@@ -62,10 +62,10 @@ Four products. Most engagements mix two or three of them — the website is the 
 
 There are no fixed public tiers. Every build is custom and priced individually.
 
-- **Custom builds start around $5,000.** The exact number depends on the content, the catalog, and the systems the business already runs.
+- **Custom, fixed-price builds — get a real range from the /pricing estimator, exact price from a free fit call.** The exact number depends on the content, the catalog, and the systems the business already runs.
 - **Get an estimate in two clicks** with the calculator on the /pricing page — it gives a realistic range.
 - **The fixed price comes from a free fit call.** After that call, a written proposal lands within 48 hours with scope, timeline, and a firm number.
-- **Managed AI is optional and recurring — $97–$297/month.** It keeps the AI sharp after launch: re-indexing new content, tuning prompts, model upkeep, monitoring, and a monthly report. It starts after launch and can be cancelled anytime. A website-only build doesn't need it.
+- **Managed AI is optional and recurring — from $97/month.** It keeps the AI sharp after launch: re-indexing new content, tuning prompts, model upkeep, monitoring, and a monthly report. It starts after launch and can be cancelled anytime. A website-only build doesn't need it.
 - **Source code is the client's from day one.** Credentials and a runbook too, with written and video documentation plus a live training session at handoff.
 - **100% money-back guarantee.** Sign the scope, and if we miss the mark by handoff, every dollar comes back inside a week. What counts as "missing" is nailed down in the contract before anyone pays.
 
