@@ -6,9 +6,9 @@ const DAILY_CAP = 5;
 
 export async function POST(
   _req: NextRequest,
-  ctx: { params: Promise<{ token: string }> },
+  { params }: { params: Promise<{ token: string }> },
 ) {
-  const { token } = await ctx.params;
+  const { token } = await params;
   const sb = supabaseAdmin();
   const { data: prospect } = await sb
     .from("prospects")

@@ -1,0 +1,51 @@
+import { notFound } from "next/navigation";
+import { loadShowcaseByToken } from "@/lib/sales/load-showcase";
+import {
+  SiteCard,
+  EstimatesCard,
+  OutlineCard,
+  AssetsCard,
+} from "@/app/sales/_components/ShowcaseSections";
+import DepositPanel from "@/app/sales/_components/DepositPanel";
+import PublicVoiceCard from "@/app/sales/_components/PublicVoiceCard";
+
+export const dynamic = "force-dynamic";
+
+export default async function ShowcasePage({
+  params,
+}: {
+  params: Promise<{ token: string }>;
+}) {
+  const { token } = await params;
+  const showcase = await loadShowcaseByToken(token);
+  if (!showcase) notFound();
+  const { prospect, estimates, assets } = showcase;
+
+  return (
+    <div className="mx-auto w-full max-w-2xl px-4 py-10 sm:px-6">
+      <header className="mb-6">
+        <h1 className="font-display text-3xl font-semibold tracking-tight text-[var(--text)]">
+          {prospect.business_name}
+        </h1>
+        <p className="mt-1 text-sm text-[var(--text-muted)]">
+          Prepared for you by TSD Modernization Solutions
+        </p>
+      </header>
+      <div className="space-y-6">
+        <SiteCard url={prospect.demo_site_url} />
+        {prospect.vapi_assistant_id && (
+          <PublicVoiceCard token={prospect.share_token} />
+        )}
+        <EstimatesCard estimates={estimates} />
+        <OutlineCard md={prospect.outline_md} />
+        <AssetsCard assets={assets} />
+        {prospect.deposit_target > 0 && (
+          <DepositPanel
+            token={prospect.share_token}
+            targetDollars={Number(prospect.deposit_target)}
+          />
+        )}
+      </div>
+    </div>
+  );
+}

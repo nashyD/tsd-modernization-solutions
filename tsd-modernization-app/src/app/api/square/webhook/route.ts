@@ -1,31 +1,14 @@
 import { NextResponse, type NextRequest } from "next/server";
-import crypto from "node:crypto";
-import { env } from "@/lib/env";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { getOrderState } from "@/lib/square/checkout";
+import { verifySquareWebhook } from "@/lib/square/webhook";
 
 export const runtime = "nodejs";
 
-function verify(req: NextRequest, rawBody: string): boolean {
-  const e = env();
-  const key = e.SQUARE_WEBHOOK_SIGNATURE_KEY;
-  if (!key) return false;
-  const sig = req.headers.get("x-square-hmacsha256-signature") ?? "";
-  const url = `${e.NEXT_PUBLIC_SITE_URL}/api/square/webhook`;
-  const hmac = crypto
-    .createHmac("sha256", key)
-    .update(url + rawBody)
-    .digest("base64");
-  try {
-    return crypto.timingSafeEqual(Buffer.from(hmac), Buffer.from(sig));
-  } catch {
-    return false;
-  }
-}
-
 export async function POST(req: NextRequest) {
   const raw = await req.text();
-  if (!verify(req, raw)) {
+  const sig = req.headers.get("x-square-hmacsha256-signature");
+  if (!verifySquareWebhook(sig, raw)) {
     return NextResponse.json({ error: "bad signature" }, { status: 401 });
   }
 

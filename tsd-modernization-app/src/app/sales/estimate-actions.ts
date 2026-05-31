@@ -5,6 +5,7 @@ import { requireRole } from "@/lib/auth/require";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { SERVICE_KEYS } from "@/lib/sales/services";
 import { draftEstimatesFromAudit } from "@/lib/sales/draft-estimates";
+import type { EstimateServiceKey } from "@/lib/supabase/types";
 
 export async function upsertEstimate(formData: FormData) {
   await requireRole("admin");
@@ -22,12 +23,13 @@ export async function upsertEstimate(formData: FormData) {
     dollar_value: (formData.get("dollar_value") ?? "0").toString(),
     rationale: (formData.get("rationale") ?? "").toString(),
   });
+  const serviceKey = p.service_key as EstimateServiceKey;
   const sb = supabaseAdmin();
   if (p.id) {
     await sb
       .from("prospect_estimates")
       .update({
-        service_key: p.service_key,
+        service_key: serviceKey,
         dollar_value: p.dollar_value,
         rationale: p.rationale || null,
       })
@@ -35,7 +37,7 @@ export async function upsertEstimate(formData: FormData) {
   } else {
     await sb.from("prospect_estimates").insert({
       prospect_id: p.prospect_id,
-      service_key: p.service_key,
+      service_key: serviceKey,
       dollar_value: p.dollar_value,
       rationale: p.rationale || null,
     });
@@ -76,7 +78,7 @@ export async function draftEstimates(formData: FormData) {
   await sb.from("prospect_estimates").insert(
     draft.estimates.map((e, i) => ({
       prospect_id: prospectId,
-      service_key: e.service_key,
+      service_key: e.service_key as EstimateServiceKey,
       dollar_value: e.dollar_value,
       rationale: e.rationale,
       sort_order: i,
