@@ -5,6 +5,10 @@ import { requireRole } from "@/lib/auth/require";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { SERVICE_KEYS } from "@/lib/sales/services";
 import { draftEstimatesFromAudit } from "@/lib/sales/draft-estimates";
+import {
+  ensureProspectAssetsBucket,
+  PROSPECT_ASSETS_BUCKET,
+} from "@/lib/sales/storage";
 import type { EstimateServiceKey } from "@/lib/supabase/types";
 
 export async function upsertEstimate(formData: FormData) {
@@ -101,8 +105,9 @@ export async function uploadAsset(formData: FormData) {
       : "other";
   const path = `${prospectId}/${crypto.randomUUID()}.${ext}`;
   const sb = supabaseAdmin();
+  await ensureProspectAssetsBucket();
   const { error: upErr } = await sb.storage
-    .from("prospect-assets")
+    .from(PROSPECT_ASSETS_BUCKET)
     .upload(path, file, {
       contentType: file.type || undefined,
       upsert: false,
@@ -124,7 +129,8 @@ export async function deleteAsset(formData: FormData) {
     .select("storage_path")
     .eq("id", id)
     .single();
-  if (asset) await sb.storage.from("prospect-assets").remove([asset.storage_path]);
+  if (asset)
+    await sb.storage.from(PROSPECT_ASSETS_BUCKET).remove([asset.storage_path]);
   await sb.from("prospect_assets").delete().eq("id", id);
   revalidatePath(`/sales/${prospectId}`);
 }

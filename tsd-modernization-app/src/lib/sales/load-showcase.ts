@@ -1,5 +1,6 @@
 import "server-only";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { PROSPECT_ASSETS_BUCKET } from "@/lib/sales/storage";
 import type { Database } from "@/lib/supabase/types";
 
 export type ProspectRow = Database["public"]["Tables"]["prospects"]["Row"];
@@ -29,7 +30,7 @@ async function buildAssets(prospectId: string): Promise<ShowcaseAsset[]> {
   const out: ShowcaseAsset[] = [];
   for (const r of rows) {
     const { data: signed } = await sb.storage
-      .from("prospect-assets")
+      .from(PROSPECT_ASSETS_BUCKET)
       .createSignedUrl(r.storage_path, 60 * 60);
     out.push({
       id: r.id,
