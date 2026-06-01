@@ -22,6 +22,10 @@ const serverSchema = z.object({
   SQUARE_LOCATION_ID: z.string().min(1).optional(),
   SQUARE_ENV: z.enum(["sandbox", "production"]).default("sandbox"),
   SQUARE_WEBHOOK_SIGNATURE_KEY: z.string().min(1).optional(),
+  // Optional: exact notification URL registered in Square, if it isn't just
+  // NEXT_PUBLIC_SITE_URL + /api/square/webhook (the verifier also auto-tries the
+  // www<->apex variant, so this is only needed for a fully different host).
+  SQUARE_WEBHOOK_URL: z.string().url().optional(),
 });
 
 export type ServerEnv = z.infer<typeof serverSchema>;
