@@ -17,6 +17,11 @@ const serverSchema = z.object({
   VERCEL_API_TOKEN: z.string().min(1).optional(),
   WORKER_URL: z.string().url().optional(),
   WORKER_SECRET: z.string().min(1).optional(),
+  // Square (sales-dashboard deposits). Sandbox until go-live; flip SQUARE_ENV to "production".
+  SQUARE_ACCESS_TOKEN: z.string().min(1).optional(),
+  SQUARE_LOCATION_ID: z.string().min(1).optional(),
+  SQUARE_ENV: z.enum(["sandbox", "production"]).default("sandbox"),
+  SQUARE_WEBHOOK_SIGNATURE_KEY: z.string().min(1).optional(),
 });
 
 export type ServerEnv = z.infer<typeof serverSchema>;

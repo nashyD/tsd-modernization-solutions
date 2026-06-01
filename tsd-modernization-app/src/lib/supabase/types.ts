@@ -19,6 +19,16 @@ export type WorkItemStatus = "todo" | "doing" | "done";
 
 export type ClientUserRole = "owner" | "manager" | "admin";
 
+export type ProspectStatus = "new" | "pitched" | "won" | "lost";
+export type ProspectAssetKind = "image" | "pdf" | "other";
+export type EstimateServiceKey =
+  | "website"
+  | "front_desk"
+  | "concierge"
+  | "booking_bridge";
+export type EstimateCadence = "monthly" | "one_time";
+export type DepositStatus = "pending" | "paid" | "failed";
+
 export interface Database {
   public: {
     Tables: {
@@ -130,6 +140,156 @@ export interface Database {
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["work_items"]["Insert"]>;
+        Relationships: [];
+      };
+      prospects: {
+        Row: {
+          id: string;
+          business_name: string;
+          business_url: string;
+          contact_name: string | null;
+          email: string | null;
+          phone: string | null;
+          source_lead_id: string | null;
+          demo_site_url: string | null;
+          vapi_assistant_id: string | null;
+          outline_md: string | null;
+          audit_id: string | null;
+          deposit_target: number;
+          max_discount_pct: number;
+          package_tier: string | null;
+          status: ProspectStatus;
+          notes: string | null;
+          share_token: string;
+          share_enabled: boolean;
+          converted_client_id: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          business_name: string;
+          business_url: string;
+          contact_name?: string | null;
+          email?: string | null;
+          phone?: string | null;
+          source_lead_id?: string | null;
+          demo_site_url?: string | null;
+          vapi_assistant_id?: string | null;
+          outline_md?: string | null;
+          audit_id?: string | null;
+          deposit_target?: number;
+          max_discount_pct?: number;
+          package_tier?: string | null;
+          status?: ProspectStatus;
+          notes?: string | null;
+          share_token?: string;
+          share_enabled?: boolean;
+          converted_client_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["prospects"]["Insert"]>;
+        Relationships: [];
+      };
+      prospect_assets: {
+        Row: {
+          id: string;
+          prospect_id: string;
+          kind: ProspectAssetKind;
+          storage_path: string;
+          label: string | null;
+          sort_order: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          prospect_id: string;
+          kind: ProspectAssetKind;
+          storage_path: string;
+          label?: string | null;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["prospect_assets"]["Insert"]>;
+        Relationships: [];
+      };
+      prospect_estimates: {
+        Row: {
+          id: string;
+          prospect_id: string;
+          service_key: EstimateServiceKey;
+          dollar_value: number;
+          cadence: EstimateCadence;
+          rationale: string | null;
+          sort_order: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          prospect_id: string;
+          service_key: EstimateServiceKey;
+          dollar_value?: number;
+          cadence?: EstimateCadence;
+          rationale?: string | null;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["prospect_estimates"]["Insert"]>;
+        Relationships: [];
+      };
+      discount_codes: {
+        Row: {
+          id: string;
+          code: string;
+          pct: number;
+          active: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          code: string;
+          pct: number;
+          active?: boolean;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["discount_codes"]["Insert"]>;
+        Relationships: [];
+      };
+      prospect_deposits: {
+        Row: {
+          id: string;
+          prospect_id: string;
+          amount: number;
+          code: string | null;
+          square_payment_link_id: string | null;
+          square_order_id: string | null;
+          square_payment_id: string | null;
+          status: DepositStatus;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          prospect_id: string;
+          amount: number;
+          code?: string | null;
+          square_payment_link_id?: string | null;
+          square_order_id?: string | null;
+          square_payment_id?: string | null;
+          status?: DepositStatus;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["prospect_deposits"]["Insert"]>;
+        Relationships: [];
+      };
+      showcase_voice_calls: {
+        Row: { id: string; prospect_id: string; created_at: string };
+        Insert: { id?: string; prospect_id: string; created_at?: string };
+        Update: Partial<
+          Database["public"]["Tables"]["showcase_voice_calls"]["Insert"]
+        >;
         Relationships: [];
       };
     };

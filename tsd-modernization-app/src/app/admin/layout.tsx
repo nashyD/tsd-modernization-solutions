@@ -32,6 +32,12 @@ export default async function AdminLayout({
               Clients
             </Link>
             <Link
+              href="/sales"
+              className="text-[var(--text-muted)] transition-colors hover:text-[var(--text)]"
+            >
+              Sales
+            </Link>
+            <Link
               href="/app"
               className="inline-flex items-center gap-1 text-[var(--text-subtle)] transition-colors hover:text-[var(--text)]"
             >
