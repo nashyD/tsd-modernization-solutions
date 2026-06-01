@@ -7,7 +7,12 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const { error } = await searchParams;
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-6 py-20 animate-fade-up">
       <div className="mb-8 flex items-center gap-2.5">
@@ -22,6 +27,12 @@ export default function LoginPage() {
       <p className="mt-2 text-[var(--text-muted)]">
         We&apos;ll email you a link to sign in. No password needed.
       </p>
+      {error && error !== "missing_code" && (
+        <p className="mt-4 rounded-[10px] border border-[var(--danger)]/30 bg-[var(--danger-soft)] px-4 py-3 text-sm text-[var(--danger)]">
+          Sign-in link didn&apos;t go through: {error}. Request a fresh link
+          below.
+        </p>
+      )}
       <div className="mt-8">
         <LoginForm />
       </div>
