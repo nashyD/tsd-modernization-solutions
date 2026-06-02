@@ -3,16 +3,25 @@ import { z } from "zod";
 import { env } from "@/lib/env";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { supabaseServer } from "@/lib/supabase/server";
-import { resolveDepositAmount, centsFromDollars } from "@/lib/sales/pricing";
+import { centsFromDollars } from "@/lib/sales/pricing";
+import { depositFromSelection, estimate } from "@/lib/sales/estimator";
 import { createPaymentLink, squareConfigured } from "@/lib/square/checkout";
+import type { Json } from "@/lib/supabase/types";
 
 export const runtime = "nodejs";
 
 const Body = z.object({
   prospect_id: z.string().uuid().optional(),
   token: z.string().optional(),
-  code: z.string().nullable().optional(),
 });
+
+interface ProspectForCheckout {
+  id: string;
+  business_name: string;
+  team_size: string;
+  selected_services: string[];
+  deposit_pct: number;
+}
 
 export async function POST(req: NextRequest) {
   if (!squareConfigured()) {
@@ -24,71 +33,64 @@ export async function POST(req: NextRequest) {
   const body = Body.parse(await req.json());
   const sb = supabaseAdmin();
 
-  // Resolve the prospect either by admin-supplied id (requires login) or public token.
-  let prospect: {
-    id: string;
-    business_name: string;
-    deposit_target: number;
-    max_discount_pct: number;
-  } | null = null;
+  const cols =
+    "id,business_name,team_size,selected_services,deposit_pct";
+  let prospect: ProspectForCheckout | null = null;
   if (body.prospect_id) {
     const {
       data: { user },
     } = await (await supabaseServer()).auth.getUser();
-    if (!user) {
-      return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-    }
+    if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
     const { data } = await sb
       .from("prospects")
-      .select("id,business_name,deposit_target,max_discount_pct")
+      .select(cols)
       .eq("id", body.prospect_id)
       .single();
-    prospect = data;
+    prospect = data as ProspectForCheckout | null;
   } else if (body.token) {
     const { data } = await sb
       .from("prospects")
-      .select("id,business_name,deposit_target,max_discount_pct")
+      .select(cols)
       .eq("share_token", body.token)
       .eq("share_enabled", true)
       .maybeSingle();
-    prospect = data;
+    prospect = data as ProspectForCheckout | null;
   }
   if (!prospect) {
     return NextResponse.json({ error: "Prospect not found." }, { status: 404 });
   }
 
-  // Look up the code's pct (server-side; never trust the client's number).
-  let codePct: number | null = null;
-  const codeRaw = body.code?.trim().toLowerCase() || null;
-  if (codeRaw) {
-    const { data: c } = await sb
-      .from("discount_codes")
-      .select("pct,active")
-      .eq("code", codeRaw)
-      .maybeSingle();
-    codePct = c && c.active ? c.pct : null;
-  }
-
-  const resolved = resolveDepositAmount({
-    targetDollars: Number(prospect.deposit_target),
-    maxDiscountPct: Number(prospect.max_discount_pct),
-    code: codeRaw,
-    codePct,
-  });
-  if (resolved.amountDollars <= 0) {
+  // Recompute the deposit server-side from the stored selection. The browser
+  // never sends a price.
+  const services = Array.isArray(prospect.selected_services)
+    ? prospect.selected_services
+    : [];
+  const amount = depositFromSelection(
+    prospect.team_size,
+    services,
+    prospect.deposit_pct,
+  );
+  if (amount <= 0) {
     return NextResponse.json(
-      { error: "Deposit amount isn't set." },
+      { error: "Select at least one service before paying a deposit." },
       { status: 400 },
     );
   }
+  const est = estimate(prospect.team_size, services);
 
   const { data: deposit, error: depErr } = await sb
     .from("prospect_deposits")
     .insert({
       prospect_id: prospect.id,
-      amount: resolved.amountDollars,
-      code: resolved.codeAccepted ? codeRaw : null,
+      amount,
       status: "pending",
+      meta: {
+        team_size: prospect.team_size,
+        selected_services: services,
+        estimate_low: est.low,
+        estimate_high: est.high,
+        deposit_pct: prospect.deposit_pct,
+      } as unknown as Json,
     })
     .select("id")
     .single();
@@ -101,7 +103,7 @@ export async function POST(req: NextRequest) {
 
   const link = await createPaymentLink({
     name: `Deposit — ${prospect.business_name}`,
-    amountCents: centsFromDollars(resolved.amountDollars),
+    amountCents: centsFromDollars(amount),
     idempotencyKey: deposit.id,
     redirectUrl: `${env().NEXT_PUBLIC_SITE_URL}/sales/thanks`,
     referenceId: deposit.id,
@@ -115,9 +117,5 @@ export async function POST(req: NextRequest) {
     })
     .eq("id", deposit.id);
 
-  return NextResponse.json({
-    url: link.url,
-    amount_dollars: resolved.amountDollars,
-    applied_pct: resolved.appliedPct,
-  });
+  return NextResponse.json({ url: link.url, amount_dollars: amount });
 }

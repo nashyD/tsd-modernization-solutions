@@ -14,6 +14,7 @@ const RunPayload = z.object({
   auditId: z.string().uuid(),
   leadId: z.string().uuid(),
   input: AuditFormSchema,
+  prospectId: z.string().uuid().optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -35,6 +36,7 @@ export async function POST(req: NextRequest) {
     auditId: body.auditId,
     leadId: body.leadId,
     input: body.input,
+    prospectId: body.prospectId,
   });
   return NextResponse.json({ ok: true });
 }

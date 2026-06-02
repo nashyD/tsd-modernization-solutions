@@ -13,7 +13,7 @@ export type AuditStatus =
   | "ready"
   | "failed";
 
-export type AuditOwnerType = "lead" | "client";
+export type AuditOwnerType = "lead" | "client" | "prospect";
 
 export type WorkItemStatus = "todo" | "doing" | "done";
 
@@ -163,6 +163,9 @@ export interface Database {
           share_token: string;
           share_enabled: boolean;
           converted_client_id: string | null;
+          team_size: string;
+          selected_services: string[];
+          deposit_pct: number;
           created_at: string;
           updated_at: string;
         };
@@ -186,6 +189,9 @@ export interface Database {
           share_token?: string;
           share_enabled?: boolean;
           converted_client_id?: string | null;
+          team_size?: string;
+          selected_services?: string[];
+          deposit_pct?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -266,6 +272,7 @@ export interface Database {
           square_order_id: string | null;
           square_payment_id: string | null;
           status: DepositStatus;
+          meta: Json | null;
           created_at: string;
           updated_at: string;
         };
@@ -278,6 +285,7 @@ export interface Database {
           square_order_id?: string | null;
           square_payment_id?: string | null;
           status?: DepositStatus;
+          meta?: Json | null;
           created_at?: string;
           updated_at?: string;
         };

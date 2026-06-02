@@ -50,13 +50,11 @@ export default function NewProspectPage() {
             ))}
           </Select>
         </div>
-        <div>
-          <Label htmlFor="deposit_target">Deposit target ($)</Label>
-          <Input id="deposit_target" name="deposit_target" type="number" min="0" step="1" defaultValue="0" className="mt-1.5" />
-        </div>
-        <div>
-          <Label htmlFor="max_discount_pct" hint="(Nash-only floor)">Max discount %</Label>
-          <Input id="max_discount_pct" name="max_discount_pct" type="number" min="0" max="100" step="1" defaultValue="0" className="mt-1.5" />
+        <div className="sm:col-span-2">
+          <Label htmlFor="deposit_pct" hint="(% of the low estimate for the optional deposit; default 10)">
+            Deposit %
+          </Label>
+          <Input id="deposit_pct" name="deposit_pct" type="number" min="0" max="100" step="1" defaultValue="10" className="mt-1.5" />
         </div>
         <div className="sm:col-span-2">
           <Label htmlFor="outline_md" hint="(optional)">Project outline</Label>

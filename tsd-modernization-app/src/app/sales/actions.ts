@@ -5,6 +5,7 @@ import { z } from "zod";
 import { requireRole } from "@/lib/auth/require";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { PACKAGE_TIERS } from "@/lib/packages";
+import { env } from "@/lib/env";
 
 const urlField = z
   .string()
@@ -25,8 +26,7 @@ const ProspectSchema = z.object({
     .enum(PACKAGE_TIERS as unknown as [string, ...string[]])
     .optional()
     .or(z.literal("")),
-  deposit_target: z.coerce.number().min(0).default(0),
-  max_discount_pct: z.coerce.number().int().min(0).max(100).default(0),
+  deposit_pct: z.coerce.number().int().min(0).max(100).default(10),
   notes: z.string().optional().or(z.literal("")),
 });
 
@@ -45,8 +45,7 @@ function parseProspect(formData: FormData) {
     vapi_assistant_id: clean(formData.get("vapi_assistant_id")),
     outline_md: clean(formData.get("outline_md")),
     package_tier: clean(formData.get("package_tier")),
-    deposit_target: clean(formData.get("deposit_target")) || 0,
-    max_discount_pct: clean(formData.get("max_discount_pct")) || 0,
+    deposit_pct: clean(formData.get("deposit_pct")) || 10,
     notes: clean(formData.get("notes")),
   });
 }
@@ -67,8 +66,7 @@ export async function createProspect(formData: FormData) {
       vapi_assistant_id: p.vapi_assistant_id || null,
       outline_md: p.outline_md || null,
       package_tier: p.package_tier || null,
-      deposit_target: p.deposit_target,
-      max_discount_pct: p.max_discount_pct,
+      deposit_pct: p.deposit_pct,
       notes: p.notes || null,
     })
     .select("id")
@@ -95,8 +93,7 @@ export async function updateProspect(formData: FormData) {
       vapi_assistant_id: p.vapi_assistant_id || null,
       outline_md: p.outline_md || null,
       package_tier: p.package_tier || null,
-      deposit_target: p.deposit_target,
-      max_discount_pct: p.max_discount_pct,
+      deposit_pct: p.deposit_pct,
       notes: p.notes || null,
     })
     .eq("id", id);
@@ -140,6 +137,60 @@ export async function deleteProspect(formData: FormData) {
   if (error) throw new Error(error.message);
   revalidatePath("/sales");
   redirect("/sales");
+}
+
+/**
+ * Run the presence audit for a prospect straight from the sales dashboard.
+ * Creates a prospect-owned audit row and fires the async pipeline; on
+ * completion the pipeline auto-drafts this prospect's value estimates (see
+ * runAuditPipeline's prospectId branch). Returns immediately — the pitch page
+ * polls audit status and the estimates appear when ready (~1 min).
+ */
+export async function runAudit(formData: FormData) {
+  await requireRole("admin");
+  const prospectId = z.string().uuid().parse(formData.get("prospect_id"));
+  const sb = supabaseAdmin();
+
+  const { data: prospect } = await sb
+    .from("prospects")
+    .select("id,business_name,business_url,email,phone")
+    .eq("id", prospectId)
+    .single();
+  if (!prospect) throw new Error("Prospect not found.");
+
+  const { data: audit, error: auditErr } = await sb
+    .from("audits")
+    .insert({ owner_type: "prospect", owner_id: prospectId, status: "pending" })
+    .select("id")
+    .single();
+  if (auditErr || !audit) throw new Error(auditErr?.message ?? "Could not start audit.");
+
+  // Link immediately so the pitch page can poll this audit's status.
+  await sb.from("prospects").update({ audit_id: audit.id }).eq("id", prospectId);
+
+  const e = env();
+  void fetch(`${e.NEXT_PUBLIC_SITE_URL}/api/audit/run`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-internal-secret": e.INTERNAL_API_SECRET,
+    },
+    body: JSON.stringify({
+      auditId: audit.id,
+      leadId: prospectId, // pipeline uses this for logging only
+      prospectId,
+      input: {
+        business_name: prospect.business_name,
+        business_url: prospect.business_url,
+        email: prospect.email || "internal@tsd-modernization.com",
+        phone: prospect.phone || "0000000000",
+        city: "",
+      },
+    }),
+    cache: "no-store",
+  }).catch((err) => console.error("[sales] audit kick failed", err));
+
+  revalidatePath(`/sales/${prospectId}`);
 }
 
 export async function promoteLead(formData: FormData) {

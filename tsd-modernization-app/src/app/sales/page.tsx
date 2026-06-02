@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LinkButton } from "@/components/ui/Button";
 import { usd } from "@/lib/sales/services";
+import { estimate } from "@/lib/sales/estimator";
 import type { ProspectStatus } from "@/lib/supabase/types";
 import { promoteLead } from "./actions";
 
@@ -30,7 +31,7 @@ export default async function SalesBoard() {
   const { data: prospects } = await sb
     .from("prospects")
     .select(
-      "id,business_name,business_url,status,package_tier,deposit_target,updated_at",
+      "id,business_name,business_url,status,package_tier,team_size,selected_services,updated_at",
     )
     .order("updated_at", { ascending: false });
   const rows = prospects ?? [];
@@ -105,11 +106,17 @@ export default async function SalesBoard() {
                         </p>
                       </div>
                       <div className="flex shrink-0 items-center gap-3">
-                        {p.deposit_target > 0 && (
-                          <span className="font-mono text-sm text-[var(--text)]">
-                            {usd(Number(p.deposit_target))}
-                          </span>
-                        )}
+                        {(() => {
+                          const low = estimate(
+                            p.team_size || "small",
+                            p.selected_services ?? [],
+                          ).low;
+                          return low > 0 ? (
+                            <span className="font-mono text-sm text-[var(--text)]">
+                              {usd(low)}+
+                            </span>
+                          ) : null;
+                        })()}
                         <Badge tone={TONE[p.status]}>{LABEL[p.status]}</Badge>
                       </div>
                     </Link>
