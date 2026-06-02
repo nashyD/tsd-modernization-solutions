@@ -23,18 +23,21 @@ const SIZES = [
   { id: "larger",      label: "Larger",      detail: "30+ people",   mult: 2.7, pkg: "Custom Engagement" },
 ];
 
+/* ⚠️ KEEP IN SYNC with tsd-modernization-app/src/lib/sales/estimator.ts —
+   the sales pitch page and this public estimator must agree to the dollar.
+   Pinned by estimator.test.ts in the app; change both files together. */
 const PRODUCTS = [
-  { id: "website",   label: "A new website",        detail: "Custom, fast, source code yours",     low: 3000, high: 6000, ai: false },
-  { id: "frontDesk", label: "TSD Front Desk",     detail: "AI receptionist — phone + chat, books work", low: 1200, high: 2500, ai: true },
-  { id: "concierge", label: "TSD Concierge",      detail: "Site assistant — answers from your content + catalog", low: 4000, high: 9000, ai: true },
-  { id: "booking",   label: "TSD Booking Bridge", detail: "Booking + workflow automation", low: 1200, high: 3000, ai: true },
-  { id: "reviews",   label: "Reviews & reputation", detail: "Auto-requests reviews, monitors Google + Yelp", low: 800,  high: 2000, ai: true },
-  { id: "outreach",  label: "Lead follow-up",       detail: "Re-engages old leads, no-shows, stale quotes",  low: 1500, high: 3500, ai: true },
-  { id: "seo",       label: "Local SEO",            detail: "Google Profile + local search visibility",       low: 800,  high: 2500, ai: false },
+  { id: "website",   label: "A new website",        detail: "Custom, fast, source code yours",     low: 2900, high: 4000, ai: false },
+  { id: "frontDesk", label: "TSD Front Desk",     detail: "AI receptionist — phone + chat, books work", low: 1200, high: 1600, ai: true },
+  { id: "concierge", label: "TSD Concierge",      detail: "Site assistant — answers from your content + catalog", low: 4100, high: 5800, ai: true },
+  { id: "booking",   label: "TSD Booking Bridge", detail: "Booking + workflow automation", low: 1300, high: 1900, ai: true },
+  { id: "reviews",   label: "Reviews & reputation", detail: "Auto-requests reviews, monitors Google + Yelp", low: 900,  high: 1200, ai: true },
+  { id: "outreach",  label: "Lead follow-up",       detail: "Re-engages old leads, no-shows, stale quotes",  low: 1600, high: 2200, ai: true },
+  { id: "seo",       label: "Local SEO",            detail: "Google Profile + local search visibility",       low: 1000, high: 1500, ai: false },
 ];
 
 /* Monthly Managed AI, by how many AI products are running. */
-const MANAGED = { 0: 0, 1: 97, 2: 197, 3: 297, 4: 397, 5: 497 };
+const MANAGED = { 0: 0, 1: 73, 2: 147, 3: 222, 4: 297, 5: 373 };
 
 const round100 = (n) => Math.round(n / 100) * 100;
 const fmt$ = (n) => "$" + Math.round(n).toLocaleString();
