@@ -38,6 +38,10 @@ export function EstimatesCard({
   estimates: Showcase["estimates"];
 }) {
   if (estimates.length === 0) return null;
+  // Sum the recurring (monthly) value across services for the total row.
+  const monthlyTotal = estimates
+    .filter((e) => e.cadence === "monthly")
+    .reduce((sum, e) => sum + Number(e.dollar_value || 0), 0);
   return (
     <section className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
       <h2 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--text-muted)]">
@@ -61,6 +65,16 @@ export function EstimatesCard({
           </li>
         ))}
       </ul>
+      {monthlyTotal > 0 && (
+        <div className="mt-3 flex items-center justify-between gap-4 border-t-2 border-[var(--border-strong)] pt-4">
+          <p className="text-sm font-semibold uppercase tracking-[0.08em] text-[var(--text)]">
+            Total estimated value added
+          </p>
+          <span className="shrink-0 font-mono text-2xl font-bold text-[var(--success)]">
+            +{usd(monthlyTotal)}/mo
+          </span>
+        </div>
+      )}
     </section>
   );
 }
