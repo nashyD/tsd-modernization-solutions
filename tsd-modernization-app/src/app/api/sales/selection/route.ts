@@ -12,20 +12,31 @@ const VALID_SERVICES = new Set(PRODUCTS.map((p) => p.id));
 const Body = z.object({
   prospect_id: z.string().uuid().optional(),
   token: z.string().optional(),
-  team_size: z.string(),
-  selected_services: z.array(z.string()),
+  team_size: z.string().optional(),
+  selected_services: z.array(z.string()).optional(),
 });
 
 /**
  * Persist a prospect's live service selection. Reachable two ways:
  * - admin pitch view (prospect_id, requires login)
  * - public showcase (token), so a prospect's own picks save before they pay.
- * Values are whitelisted against the estimator's known ids.
+ * Values are whitelisted against the estimator's known ids. Never throws on a
+ * malformed body — returns 400 instead of a 500.
  */
 export async function POST(req: NextRequest) {
-  const body = Body.parse(await req.json());
-  const team_size = VALID_SIZES.has(body.team_size) ? body.team_size : "small";
-  const selected_services = body.selected_services.filter((s) =>
+  let json: unknown;
+  try {
+    json = await req.json();
+  } catch {
+    return NextResponse.json({ error: "invalid json" }, { status: 400 });
+  }
+  const parsed = Body.safeParse(json);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "invalid body" }, { status: 400 });
+  }
+  const body = parsed.data;
+  const team_size = body.team_size && VALID_SIZES.has(body.team_size) ? body.team_size : "small";
+  const selected_services = (body.selected_services ?? []).filter((s) =>
     VALID_SERVICES.has(s),
   );
 
