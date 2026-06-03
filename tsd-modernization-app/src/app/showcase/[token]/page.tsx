@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import { loadShowcaseByToken } from "@/lib/sales/load-showcase";
 import {
   SiteCard,
-  EstimatesCard,
   OutlineCard,
   AssetsCard,
 } from "@/app/sales/_components/ShowcaseSections";
@@ -51,8 +50,8 @@ export default async function ShowcasePage({
           initialSize={prospect.team_size || DEFAULT_SIZE}
           initialServices={prospect.selected_services ?? []}
           depositPct={prospect.deposit_pct ?? 10}
+          estimates={estimates}
         >
-          <EstimatesCard estimates={estimates} />
           <BookCallCard name={prospect.contact_name} email={prospect.email} />
           <OutlineCard md={prospect.outline_md} />
           <AssetsCard assets={assets} />

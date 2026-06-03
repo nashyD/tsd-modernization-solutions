@@ -1,15 +1,31 @@
 "use client";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { estimate, depositFromSelection } from "@/lib/sales/estimator";
+import type { Showcase } from "@/lib/sales/load-showcase";
 import ServicePicker from "./ServicePicker";
+import { EstimatesCard } from "./ShowcaseSections";
 import DepositPanel from "./DepositPanel";
 
 /**
+ * Bridge between the service-picker product ids (estimator `PRODUCTS`) and the
+ * value-estimate `service_key`s (`prospect_estimates`). Only the four core
+ * services carry value rows; the marketing add-ons (reviews/outreach/seo) have
+ * no estimate row, so selecting them simply adds no "what it's worth" line.
+ */
+const PICKER_TO_ESTIMATE_KEY: Record<string, string> = {
+  website: "website",
+  frontDesk: "front_desk",
+  concierge: "concierge",
+  booking: "booking_bridge",
+};
+
+/**
  * Client wrapper that owns the live service selection (team size + services)
- * for the pitch / showcase page. Renders the service picker at the top and the
- * optional deposit panel at the bottom, with `children` (value estimates, book
- * a call, etc.) slotted between. Persists the selection (debounced) so the
- * server can recompute the deposit authoritatively at checkout.
+ * for the pitch / showcase page. Renders the service picker, then the value
+ * card filtered to the SAME selection (so "what each service is worth" tracks
+ * the picker), then `children` (book a call, outline, assets), then the
+ * optional deposit. Persists the selection (debounced) so the server can
+ * recompute the deposit authoritatively at checkout.
  */
 export default function PitchBody({
   prospectId,
@@ -17,6 +33,7 @@ export default function PitchBody({
   initialSize,
   initialServices,
   depositPct,
+  estimates,
   children,
 }: {
   prospectId?: string;
@@ -24,6 +41,7 @@ export default function PitchBody({
   initialSize: string;
   initialServices: string[];
   depositPct: number;
+  estimates: Showcase["estimates"];
   children?: ReactNode;
 }) {
   const [sizeId, setSizeId] = useState(initialSize);
@@ -33,6 +51,10 @@ export default function PitchBody({
 
   const est = estimate(sizeId, serviceIds);
   const depositAmount = depositFromSelection(sizeId, serviceIds, depositPct);
+  // Value lines follow the picker: only show worth for services in the deal.
+  const selectedKeys = serviceIds
+    .map((id) => PICKER_TO_ESTIMATE_KEY[id])
+    .filter((k): k is string => Boolean(k));
 
   useEffect(() => {
     if (firstRender.current) {
@@ -72,6 +94,7 @@ export default function PitchBody({
         onSizeChange={setSizeId}
         onToggleService={toggleService}
       />
+      <EstimatesCard estimates={estimates} selectedServiceKeys={selectedKeys} />
       {children}
       <DepositPanel
         prospectId={prospectId}
