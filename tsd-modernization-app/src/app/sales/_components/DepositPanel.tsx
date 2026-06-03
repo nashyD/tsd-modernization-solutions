@@ -19,6 +19,7 @@ export default function DepositPanel({
   amount: number;
   hasSelection: boolean;
 }) {
+  const [code, setCode] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -29,7 +30,11 @@ export default function DepositPanel({
       const res = await fetch("/api/square/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prospect_id: prospectId, token }),
+        body: JSON.stringify({
+          prospect_id: prospectId,
+          token,
+          code: code.trim() || undefined,
+        }),
       });
       const json = await res.json();
       if (!res.ok) {
@@ -61,10 +66,20 @@ export default function DepositPanel({
             <span className="font-mono text-2xl font-bold text-[var(--text)]">{fmtUsd(amount)}</span>
           </div>
           {msg && <p className="mt-2 text-sm text-[var(--danger)]">{msg}</p>}
+          <input
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            placeholder="Promo code (optional)"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
+            aria-label="Promo code"
+            className="mt-4 w-full rounded-[10px] border border-[var(--border-strong)] bg-[var(--surface-2)] px-3.5 py-2.5 text-base text-[var(--text)] outline-none placeholder:text-[var(--text-subtle)] transition-colors focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/30"
+          />
           <button
             onClick={start}
             disabled={loading}
-            className="mt-4 h-11 w-full rounded-md border border-[var(--success)]/40 bg-[var(--success-soft)] text-sm font-bold text-[var(--success)] transition-opacity hover:opacity-90 disabled:opacity-60"
+            className="mt-3 h-11 w-full rounded-md border border-[var(--success)]/40 bg-[var(--success-soft)] text-sm font-bold text-[var(--success)] transition-opacity hover:opacity-90 disabled:opacity-60"
           >
             {loading ? "Starting…" : `Pay ${fmtUsd(amount)} deposit with Square →`}
           </button>

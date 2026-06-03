@@ -3,7 +3,7 @@ import { z } from "zod";
 import { env } from "@/lib/env";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { supabaseServer } from "@/lib/supabase/server";
-import { centsFromDollars } from "@/lib/sales/pricing";
+import { centsFromDollars, resolveDepositAmount } from "@/lib/sales/pricing";
 import { depositFromSelection, estimate } from "@/lib/sales/estimator";
 import { createPaymentLink, squareConfigured } from "@/lib/square/checkout";
 import type { Json } from "@/lib/supabase/types";
@@ -13,6 +13,7 @@ export const runtime = "nodejs";
 const Body = z.object({
   prospect_id: z.string().uuid().optional(),
   token: z.string().optional(),
+  code: z.string().optional(),
 });
 
 interface ProspectForCheckout {
@@ -78,18 +79,45 @@ export async function POST(req: NextRequest) {
   }
   const est = estimate(prospect.team_size, services);
 
+  // Coupon: the browser sends only the code string; the server looks up its
+  // pct in discount_codes and recomputes the amount. No per-prospect floor in
+  // the current model, so any active code applies (floor = 100).
+  let appliedPct = 0;
+  let codeApplied: string | null = null;
+  let finalAmount = amount;
+  if (body.code && body.code.trim()) {
+    const codeNorm = body.code.trim().toLowerCase();
+    const { data: dc } = await sb
+      .from("discount_codes")
+      .select("pct,active")
+      .eq("code", codeNorm)
+      .maybeSingle();
+    const resolved = resolveDepositAmount({
+      targetDollars: amount,
+      maxDiscountPct: 100,
+      code: codeNorm,
+      codePct: dc?.active ? dc.pct : null,
+    });
+    finalAmount = resolved.amountDollars;
+    appliedPct = resolved.appliedPct;
+    if (resolved.codeAccepted) codeApplied = codeNorm;
+  }
+
   const { data: deposit, error: depErr } = await sb
     .from("prospect_deposits")
     .insert({
       prospect_id: prospect.id,
-      amount,
+      amount: finalAmount,
       status: "pending",
+      code: codeApplied,
       meta: {
         team_size: prospect.team_size,
         selected_services: services,
         estimate_low: est.low,
         estimate_high: est.high,
         deposit_pct: prospect.deposit_pct,
+        applied_pct: appliedPct,
+        amount_before_discount: amount,
       } as unknown as Json,
     })
     .select("id")
@@ -103,7 +131,7 @@ export async function POST(req: NextRequest) {
 
   const link = await createPaymentLink({
     name: `Deposit — ${prospect.business_name}`,
-    amountCents: centsFromDollars(amount),
+    amountCents: centsFromDollars(finalAmount),
     idempotencyKey: deposit.id,
     redirectUrl: `${env().NEXT_PUBLIC_SITE_URL}/sales/thanks`,
     referenceId: deposit.id,
@@ -117,5 +145,9 @@ export async function POST(req: NextRequest) {
     })
     .eq("id", deposit.id);
 
-  return NextResponse.json({ url: link.url, amount_dollars: amount });
+  return NextResponse.json({
+    url: link.url,
+    amount_dollars: finalAmount,
+    applied_pct: appliedPct,
+  });
 }
