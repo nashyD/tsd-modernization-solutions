@@ -9,6 +9,7 @@ import {
 import PitchBody from "@/app/sales/_components/PitchBody";
 import BookCallCard from "@/app/sales/_components/BookCallCard";
 import PublicVoiceCard from "@/app/sales/_components/PublicVoiceCard";
+import { Logo } from "@/components/ui/Logo";
 import { DEFAULT_SIZE } from "@/lib/sales/estimator";
 
 export const dynamic = "force-dynamic";
@@ -25,13 +26,19 @@ export default async function ShowcasePage({
 
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-10 sm:px-6">
-      <header className="mb-6">
-        <h1 className="font-display text-3xl font-semibold tracking-tight text-[var(--text)]">
+      <header className="mb-8">
+        <span className="inline-flex items-center gap-2.5">
+          <Logo height={22} />
+          <span className="text-sm font-semibold tracking-tight text-[var(--text)]">
+            TSD Modernization Solutions
+          </span>
+        </span>
+        <p className="mt-6 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
+          A modernization plan prepared for
+        </p>
+        <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-[var(--text)]">
           {prospect.business_name}
         </h1>
-        <p className="mt-1 text-sm text-[var(--text-muted)]">
-          Prepared for you by TSD Modernization Solutions
-        </p>
       </header>
       <div className="space-y-6">
         {/* 1 — Demo website */}
@@ -51,6 +58,15 @@ export default async function ShowcasePage({
           <AssetsCard assets={assets} />
         </PitchBody>
       </div>
+
+      <footer className="mt-10 border-t border-[var(--border)] pt-6 text-center">
+        <span className="inline-flex items-center gap-2 text-[var(--text-subtle)]">
+          <Logo height={16} />
+          <span className="text-xs">
+            TSD Modernization Solutions · Charlotte, NC
+          </span>
+        </span>
+      </footer>
     </div>
   );
 }

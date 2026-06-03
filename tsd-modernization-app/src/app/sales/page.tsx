@@ -47,7 +47,7 @@ export default async function SalesBoard() {
       <PageHeader
         eyebrow="Sales"
         title="Prospects"
-        description="Tap a prospect to open their pitch. Promote audit leads or add one by hand."
+        description="Tap a prospect to edit it, then hit Pitch to present. Promote audit leads or add one by hand."
         actions={
           <LinkButton href="/sales/new" leftIcon={<Plus size={16} />}>
             New prospect

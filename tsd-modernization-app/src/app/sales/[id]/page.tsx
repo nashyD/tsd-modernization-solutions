@@ -1,22 +1,31 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
-import { Pencil } from "lucide-react";
+import { Trash2, Presentation } from "lucide-react";
 import { loadShowcaseById } from "@/lib/sales/load-showcase";
 import { supabaseAdmin } from "@/lib/supabase/admin";
-import { SiteCard, EstimatesCard, OutlineCard, AssetsCard } from "../_components/ShowcaseSections";
-import PitchBody from "../_components/PitchBody";
-import BookCallCard from "../_components/BookCallCard";
+import { Input, Label, Textarea, Select } from "@/components/ui/Input";
+import { Button, LinkButton } from "@/components/ui/Button";
+import BackLink from "@/components/BackLink";
+import { PACKAGE_TIERS } from "@/lib/packages";
+import { SERVICE_KEYS, SERVICE_LABEL, type ServiceKey } from "@/lib/sales/services";
+import { env } from "@/lib/env";
+import { updateProspect, deleteProspect } from "../actions";
+import {
+  upsertEstimate,
+  deleteEstimate,
+  draftEstimates,
+  uploadAsset,
+  deleteAsset,
+} from "../estimate-actions";
 import PitchActions from "./PitchActions";
 import AuditRunner from "./AuditRunner";
-import VoiceWidget from "@/app/app/voice/VoiceWidget";
-import BackLink from "@/components/BackLink";
-import { env } from "@/lib/env";
-import { DEFAULT_SIZE } from "@/lib/sales/estimator";
 import type { AuditStatus } from "@/lib/supabase/types";
 
 export const dynamic = "force-dynamic";
 
-export default async function PitchView({
+const CARD =
+  "rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]";
+
+export default async function ProspectWorkspace({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -24,75 +33,206 @@ export default async function PitchView({
   const { id } = await params;
   const showcase = await loadShowcaseById(id);
   if (!showcase) notFound();
-  const { prospect, estimates, assets } = showcase;
-  const shareUrl = `${env().NEXT_PUBLIC_SITE_URL}/showcase/${prospect.share_token}`;
+  const { prospect: p, estimates, assets } = showcase;
+  const shareUrl = `${env().NEXT_PUBLIC_SITE_URL}/showcase/${p.share_token}`;
 
-  // Audit status for the runner (only if one is linked).
+  // Audit status drives the "Run audit" control (auto-drafts value estimates).
   let auditStatus: AuditStatus | null = null;
-  if (prospect.audit_id) {
+  if (p.audit_id) {
     const { data: audit } = await supabaseAdmin()
       .from("audits")
       .select("status")
-      .eq("id", prospect.audit_id)
+      .eq("id", p.audit_id)
       .maybeSingle();
     auditStatus = (audit?.status as AuditStatus) ?? null;
   }
 
   return (
-    <div className="space-y-6 animate-fade-up">
+    <div className="space-y-8 animate-fade-up">
       <BackLink href="/sales" label="All prospects" />
+
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="font-display text-3xl font-semibold tracking-tight text-[var(--text)]">
-            {prospect.business_name}
+            {p.business_name}
           </h1>
-          <p className="mt-1 text-sm text-[var(--text-muted)]">{prospect.business_url}</p>
+          <p className="mt-1 text-sm text-[var(--text-muted)]">{p.business_url}</p>
         </div>
-        <Link
-          href={`/sales/${id}/edit`}
-          className="inline-flex items-center gap-1.5 rounded-md border border-[var(--border-strong)] px-3 py-2 text-sm text-[var(--text)] hover:border-[var(--accent)] hover:text-[var(--accent)]"
+        <LinkButton
+          href={`/sales/${id}/pitch`}
+          size="lg"
+          leftIcon={<Presentation size={18} />}
         >
-          <Pencil size={14} /> Edit
-        </Link>
+          Pitch
+        </LinkButton>
       </div>
 
       <PitchActions
-        id={prospect.id}
-        status={prospect.status}
-        shareEnabled={prospect.share_enabled}
+        id={p.id}
+        status={p.status}
+        shareEnabled={p.share_enabled}
         shareUrl={shareUrl}
       />
 
-      {/* 1 — Demo website */}
-      <SiteCard url={prospect.demo_site_url} />
+      {/* Prospect details */}
+      <section className={CARD}>
+        <h2 className="font-display text-lg font-semibold text-[var(--text)]">
+          Prospect details
+        </h2>
+        <form action={updateProspect} className="mt-4 grid gap-4 sm:grid-cols-2">
+          <input type="hidden" name="id" value={p.id} />
+          <div>
+            <Label htmlFor="business_name">Business name</Label>
+            <Input id="business_name" name="business_name" defaultValue={p.business_name} required className="mt-1.5" />
+          </div>
+          <div>
+            <Label htmlFor="business_url">Business URL</Label>
+            <Input id="business_url" name="business_url" defaultValue={p.business_url} required className="mt-1.5" />
+          </div>
+          <div>
+            <Label htmlFor="contact_name" hint="(optional)">Contact name</Label>
+            <Input id="contact_name" name="contact_name" defaultValue={p.contact_name ?? ""} className="mt-1.5" />
+          </div>
+          <div>
+            <Label htmlFor="email" hint="(optional)">Email</Label>
+            <Input id="email" name="email" type="email" defaultValue={p.email ?? ""} className="mt-1.5" />
+          </div>
+          <div>
+            <Label htmlFor="phone" hint="(optional)">Phone</Label>
+            <Input id="phone" name="phone" defaultValue={p.phone ?? ""} className="mt-1.5" />
+          </div>
+          <div>
+            <Label htmlFor="demo_site_url" hint="(optional)">Demo site URL</Label>
+            <Input id="demo_site_url" name="demo_site_url" defaultValue={p.demo_site_url ?? ""} className="mt-1.5" />
+          </div>
+          <div>
+            <Label htmlFor="vapi_assistant_id" hint="(optional)">Vapi assistant ID</Label>
+            <Input id="vapi_assistant_id" name="vapi_assistant_id" defaultValue={p.vapi_assistant_id ?? ""} className="mt-1.5" />
+          </div>
+          <div>
+            <Label htmlFor="package_tier" hint="(optional)">Package tier</Label>
+            <Select id="package_tier" name="package_tier" defaultValue={p.package_tier ?? ""} className="mt-1.5">
+              <option value="">—</option>
+              {PACKAGE_TIERS.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </Select>
+          </div>
+          <div className="sm:col-span-2">
+            <Label htmlFor="deposit_pct" hint="(% of the low estimate — the optional 'lock it in' deposit)">
+              Deposit %
+            </Label>
+            <Input id="deposit_pct" name="deposit_pct" type="number" min="0" max="100" step="1" defaultValue={String(p.deposit_pct ?? 10)} className="mt-1.5" />
+          </div>
+          <div className="sm:col-span-2">
+            <Label htmlFor="outline_md" hint="(shown on pitch)">Project outline</Label>
+            <Textarea id="outline_md" name="outline_md" rows={5} defaultValue={p.outline_md ?? ""} className="mt-1.5" />
+          </div>
+          <div className="sm:col-span-2">
+            <Label htmlFor="notes" hint="(internal)">Notes</Label>
+            <Textarea id="notes" name="notes" rows={2} defaultValue={p.notes ?? ""} className="mt-1.5" />
+          </div>
+          <div className="sm:col-span-2">
+            <Button type="submit">Save changes</Button>
+          </div>
+        </form>
+      </section>
 
-      {/* Live AI receptionist demo, if configured */}
-      {prospect.vapi_assistant_id && (
-        <section className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
-          <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--text-muted)]">
-            Your AI receptionist — live demo
-          </h2>
-          <VoiceWidget assistantId={prospect.vapi_assistant_id} />
-        </section>
-      )}
+      {/* Value estimates — the "what each service is worth" data shown on the pitch */}
+      <section className={CARD}>
+        <h2 className="font-display text-lg font-semibold text-[var(--text)]">
+          Value estimates
+        </h2>
+        <p className="mt-1 text-xs text-[var(--text-muted)]">
+          Shown on the pitch under &ldquo;What each service is worth to you.&rdquo;
+        </p>
+        <div className="mt-4">
+          <AuditRunner
+            prospectId={p.id}
+            auditId={p.audit_id}
+            initialStatus={auditStatus}
+          />
+        </div>
+        <ul className="mt-4 space-y-3">
+          {estimates.map((e) => (
+            <li key={e.id}>
+              <form action={upsertEstimate} className="flex flex-wrap items-end gap-2">
+                <input type="hidden" name="id" value={e.id} />
+                <input type="hidden" name="prospect_id" value={p.id} />
+                <input type="hidden" name="service_key" value={e.service_key} />
+                <span className="min-w-[140px] text-sm font-medium text-[var(--text)]">
+                  {SERVICE_LABEL[e.service_key as ServiceKey]}
+                </span>
+                <Input name="dollar_value" type="number" min="0" defaultValue={String(e.dollar_value)} className="w-28" aria-label="Dollar value" />
+                <Input name="rationale" defaultValue={e.rationale ?? ""} placeholder="Rationale" className="flex-1 min-w-[180px]" aria-label="Rationale" />
+                <Button type="submit" size="sm">Save</Button>
+              </form>
+              <form action={deleteEstimate} className="mt-1">
+                <input type="hidden" name="id" value={e.id} />
+                <input type="hidden" name="prospect_id" value={p.id} />
+                <button className="text-xs text-[var(--danger)] hover:underline">Remove</button>
+              </form>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-[var(--border)] pt-4">
+          <form action={upsertEstimate} className="flex flex-wrap items-end gap-2">
+            <input type="hidden" name="prospect_id" value={p.id} />
+            <Select name="service_key" defaultValue={SERVICE_KEYS[0]} className="w-auto" aria-label="Service">
+              {SERVICE_KEYS.map((k) => (
+                <option key={k} value={k}>
+                  {SERVICE_LABEL[k]}
+                </option>
+              ))}
+            </Select>
+            <Input name="dollar_value" type="number" min="0" defaultValue="0" className="w-28" aria-label="Dollar value" />
+            <Input name="rationale" placeholder="Rationale" className="flex-1 min-w-[180px]" aria-label="Rationale" />
+            <Button type="submit" size="sm">Add</Button>
+          </form>
+          {p.audit_id && (
+            <form action={draftEstimates}>
+              <input type="hidden" name="prospect_id" value={p.id} />
+              <Button type="submit" variant="secondary" size="sm">
+                Draft from audit
+              </Button>
+            </form>
+          )}
+        </div>
+      </section>
 
-      {/* 2 — Service picker → 3 — estimates → 4 — book call → optional deposit (last) */}
-      <PitchBody
-        prospectId={prospect.id}
-        initialSize={prospect.team_size || DEFAULT_SIZE}
-        initialServices={prospect.selected_services ?? []}
-        depositPct={prospect.deposit_pct ?? 10}
-      >
-        <AuditRunner
-          prospectId={prospect.id}
-          auditId={prospect.audit_id}
-          initialStatus={auditStatus}
-        />
-        <EstimatesCard estimates={estimates} />
-        <BookCallCard name={prospect.contact_name} email={prospect.email} />
-        <OutlineCard md={prospect.outline_md} />
-        <AssetsCard assets={assets} />
-      </PitchBody>
+      {/* Demo work files */}
+      <section className={CARD}>
+        <h2 className="font-display text-lg font-semibold text-[var(--text)]">
+          Demo work files
+        </h2>
+        <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+          {assets.map((a) => (
+            <li key={a.id} className="flex items-center justify-between gap-2 rounded-lg border border-[var(--border)] px-3 py-2">
+              <span className="truncate text-sm text-[var(--text)]">{a.label ?? a.kind}</span>
+              <form action={deleteAsset}>
+                <input type="hidden" name="id" value={a.id} />
+                <input type="hidden" name="prospect_id" value={p.id} />
+                <button className="text-[var(--danger)]" aria-label="Delete asset">
+                  <Trash2 size={14} />
+                </button>
+              </form>
+            </li>
+          ))}
+        </ul>
+        <form action={uploadAsset} className="mt-4 flex flex-wrap items-end gap-2 border-t border-[var(--border)] pt-4">
+          <input type="hidden" name="prospect_id" value={p.id} />
+          <input type="file" name="file" required className="text-sm text-[var(--text-muted)]" />
+          <Input name="label" placeholder="Label (optional)" className="flex-1 min-w-[160px]" aria-label="Label" />
+          <Button type="submit" size="sm">Upload</Button>
+        </form>
+      </section>
+
+      <form action={deleteProspect} className="border-t border-[var(--border)] pt-6">
+        <input type="hidden" name="id" value={p.id} />
+        <Button type="submit" variant="danger" size="sm">Delete prospect</Button>
+      </form>
     </div>
   );
 }
