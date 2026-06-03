@@ -34,12 +34,19 @@ export function SiteCard({ url }: { url: string | null }) {
 
 export function EstimatesCard({
   estimates,
+  selectedServiceKeys,
 }: {
   estimates: Showcase["estimates"];
+  /** When provided, only these services are shown — keeps the value section
+   *  in lockstep with the live service picker above it. */
+  selectedServiceKeys?: string[];
 }) {
-  if (estimates.length === 0) return null;
-  // Sum the recurring (monthly) value across services for the total row.
-  const monthlyTotal = estimates
+  const shown = selectedServiceKeys
+    ? estimates.filter((e) => selectedServiceKeys.includes(e.service_key))
+    : estimates;
+  if (shown.length === 0) return null;
+  // Sum the recurring (monthly) value across the shown services for the total.
+  const monthlyTotal = shown
     .filter((e) => e.cadence === "monthly")
     .reduce((sum, e) => sum + Number(e.dollar_value || 0), 0);
   return (
@@ -48,7 +55,7 @@ export function EstimatesCard({
         What each service is worth to you
       </h2>
       <ul className="mt-4 divide-y divide-[var(--border)]">
-        {estimates.map((e) => (
+        {shown.map((e) => (
           <li key={e.id} className="flex items-center justify-between gap-4 py-3">
             <div className="min-w-0">
               <p className="font-semibold text-[var(--text)]">

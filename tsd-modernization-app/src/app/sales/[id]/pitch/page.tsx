@@ -4,7 +4,6 @@ import { X } from "lucide-react";
 import { loadShowcaseById } from "@/lib/sales/load-showcase";
 import {
   SiteCard,
-  EstimatesCard,
   OutlineCard,
   AssetsCard,
 } from "../../_components/ShowcaseSections";
@@ -78,8 +77,8 @@ export default async function PresentPitch({
           initialSize={prospect.team_size || DEFAULT_SIZE}
           initialServices={prospect.selected_services ?? []}
           depositPct={prospect.deposit_pct ?? 10}
+          estimates={estimates}
         >
-          <EstimatesCard estimates={estimates} />
           <BookCallCard name={prospect.contact_name} email={prospect.email} />
           <OutlineCard md={prospect.outline_md} />
           <AssetsCard assets={assets} />
