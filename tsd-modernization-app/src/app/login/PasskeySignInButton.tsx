@@ -32,13 +32,24 @@ export default function PasskeySignInButton() {
       router.replace("/app");
       // Leave the button in its busy state through navigation to avoid a flash.
     } catch (err) {
-      const name = (err as { name?: string }).name;
+      const e = err as {
+        name?: string;
+        code?: string;
+        status?: number;
+        message?: string;
+      };
       // User dismissed the OS prompt — not worth a scary message.
-      if (name === "NotAllowedError" || name === "AbortError") {
+      if (e.name === "NotAllowedError" || e.name === "AbortError") {
         setError(null);
       } else {
+        // Surface the real reason. Passkeys are beta and the exact failure
+        // (server verify vs. ceremony vs. missing session) matters for support.
+        console.error("[passkey sign-in] failed:", err);
+        const detail = e.code ?? e.name ?? (e.status ? `HTTP ${e.status}` : null);
         setError(
-          "Couldn't sign in with a passkey. Use the email link below, or add a passkey after signing in.",
+          `Couldn't sign in with a passkey${detail ? ` (${detail})` : ""}: ${
+            e.message ?? "unknown error"
+          }. Use the email link below.`,
         );
       }
       setBusy(false);
