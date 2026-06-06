@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Shield, ArrowUpRight, Eye, TrendingUp } from "lucide-react";
+import { Shield, ArrowUpRight, Eye, TrendingUp, KeyRound } from "lucide-react";
 import {
   requireUser,
   getMemberships,
@@ -82,6 +82,14 @@ export default async function PortalLayout({
                 Admin
               </Link>
             )}
+            <Link
+              href="/app/account"
+              aria-label="Account & security"
+              title="Account & security"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-[var(--text-subtle)] transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--text)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]/40"
+            >
+              <KeyRound size={16} strokeWidth={1.75} />
+            </Link>
             <span className="hidden truncate text-xs text-[var(--text-subtle)] sm:inline">
               {user.email}
             </span>

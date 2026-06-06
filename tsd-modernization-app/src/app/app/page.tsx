@@ -15,6 +15,7 @@ import {
 } from "@/lib/auth/require";
 import { packageByTier } from "@/lib/packages";
 import { Badge } from "@/components/ui/Badge";
+import PasskeyNudge from "./PasskeyNudge";
 
 interface ModuleCard {
   title: string;
@@ -69,22 +70,25 @@ export default async function PortalHome() {
 
   if (!active) {
     return (
-      <div className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-10 shadow-[var(--shadow-card)]">
-        <h1 className="font-display text-2xl font-semibold tracking-tight text-[var(--text)]">
-          You&apos;re signed in
-        </h1>
-        <p className="mt-2 max-w-prose text-[var(--text-muted)]">
-          You don&apos;t have a TSD client account linked to{" "}
-          <span className="font-medium text-[var(--text)]">{user.email}</span>{" "}
-          yet. Email{" "}
-          <a
-            className="font-medium text-[var(--accent)] underline underline-offset-2 hover:text-[var(--accent-hover)]"
-            href="mailto:hello@tsd-modernization.com"
-          >
-            hello@tsd-modernization.com
-          </a>{" "}
-          and we&apos;ll get you set up.
-        </p>
+      <div className="space-y-6 animate-fade-up">
+        <PasskeyNudge />
+        <div className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-10 shadow-[var(--shadow-card)]">
+          <h1 className="font-display text-2xl font-semibold tracking-tight text-[var(--text)]">
+            You&apos;re signed in
+          </h1>
+          <p className="mt-2 max-w-prose text-[var(--text-muted)]">
+            You don&apos;t have a TSD client account linked to{" "}
+            <span className="font-medium text-[var(--text)]">{user.email}</span>{" "}
+            yet. Email{" "}
+            <a
+              className="font-medium text-[var(--accent)] underline underline-offset-2 hover:text-[var(--accent-hover)]"
+              href="mailto:hello@tsd-modernization.com"
+            >
+              hello@tsd-modernization.com
+            </a>{" "}
+            and we&apos;ll get you set up.
+          </p>
+        </div>
       </div>
     );
   }
@@ -94,6 +98,7 @@ export default async function PortalHome() {
 
   return (
     <div className="space-y-10">
+      <PasskeyNudge />
       <header className="animate-fade-up">
         <div className="flex flex-wrap items-center gap-3">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
