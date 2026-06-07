@@ -222,6 +222,58 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["prospects"]["Insert"]>;
         Relationships: [];
       };
+      prospect_candidates: {
+        Row: {
+          id: string;
+          place_id: string;
+          business_name: string;
+          address: string | null;
+          city: string | null;
+          lat: number | null;
+          lng: number | null;
+          website: string | null;
+          phone: string | null;
+          rating: number | null;
+          review_count: number | null;
+          price_level: string | null;
+          primary_type: string | null;
+          primary_product: EstimateServiceKey | null;
+          gap_summary: string | null;
+          fit_score: number | null;
+          signals: Json | null;
+          status: "pending" | "approved" | "rejected";
+          promoted_prospect_id: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          place_id: string;
+          business_name: string;
+          address?: string | null;
+          city?: string | null;
+          lat?: number | null;
+          lng?: number | null;
+          website?: string | null;
+          phone?: string | null;
+          rating?: number | null;
+          review_count?: number | null;
+          price_level?: string | null;
+          primary_type?: string | null;
+          primary_product?: EstimateServiceKey | null;
+          gap_summary?: string | null;
+          fit_score?: number | null;
+          signals?: Json | null;
+          status?: "pending" | "approved" | "rejected";
+          promoted_prospect_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<
+          Database["public"]["Tables"]["prospect_candidates"]["Insert"]
+        >;
+        Relationships: [];
+      };
       prospect_assets: {
         Row: {
           id: string;
