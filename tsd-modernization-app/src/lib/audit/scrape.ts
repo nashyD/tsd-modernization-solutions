@@ -1,31 +1,21 @@
 import "server-only";
 import * as cheerio from "cheerio";
 import type { ScrapeResult } from "./types";
+import { safeFetch, SsrfBlockedError, type SafeFetchResult } from "./safe-fetch";
 
 const FETCH_TIMEOUT_MS = 8000;
-const USER_AGENT =
-  "Mozilla/5.0 (compatible; TSD-Audit-Bot/1.0; +https://tsd-modernization.com/audit)";
-
-async function fetchWithTimeout(url: string, ms: number): Promise<Response> {
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), ms);
-  try {
-    return await fetch(url, {
-      signal: ctrl.signal,
-      headers: { "User-Agent": USER_AGENT, Accept: "text/html,*/*" },
-      redirect: "follow",
-    });
-  } finally {
-    clearTimeout(timer);
-  }
-}
+// Cap the scraped body so a huge/slow response can't exhaust the 300s lambda.
+const MAX_BODY_BYTES = 3_000_000;
 
 async function countSitemapPages(origin: string): Promise<number | null> {
   try {
-    const res = await fetchWithTimeout(`${origin}/sitemap.xml`, 4000);
+    const res = await safeFetch(`${origin}/sitemap.xml`, {
+      timeoutMs: 4000,
+      maxBytes: MAX_BODY_BYTES,
+      maxRedirects: 3,
+    });
     if (!res.ok) return null;
-    const xml = await res.text();
-    const matches = xml.match(/<loc>/g);
+    const matches = res.body.match(/<loc>/g);
     return matches ? matches.length : null;
   } catch {
     return null;
@@ -44,11 +34,20 @@ export async function scrapeWebsite(rawUrl: string): Promise<ScrapeResult> {
   const origin = new URL(url).origin;
   const isHttps = url.startsWith("https://");
 
-  let res: Response;
+  let res: SafeFetchResult;
   try {
-    res = await fetchWithTimeout(url, FETCH_TIMEOUT_MS);
+    res = await safeFetch(url, {
+      timeoutMs: FETCH_TIMEOUT_MS,
+      maxBytes: MAX_BODY_BYTES,
+      maxRedirects: 5,
+    });
   } catch (e) {
-    const msg = e instanceof Error ? e.message : "fetch failed";
+    // Keep the persisted error generic: it surfaces on the public status
+    // endpoint, so don't turn it into an SSRF / internal-host oracle.
+    const msg =
+      e instanceof SsrfBlockedError
+        ? "Could not fetch the site."
+        : "Could not reach the site.";
     return emptyResult(url, fetchedAt, msg);
   }
 
@@ -60,7 +59,7 @@ export async function scrapeWebsite(rawUrl: string): Promise<ScrapeResult> {
     };
   }
 
-  const html = await res.text();
+  const html = res.body;
   const $ = cheerio.load(html);
 
   const title = $("title").first().text().trim() || null;
