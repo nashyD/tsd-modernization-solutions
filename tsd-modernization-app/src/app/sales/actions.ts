@@ -135,7 +135,6 @@ export async function recordVisit(formData: FormData) {
   const { error } = await sb.from("prospects").update(update).eq("id", id);
   if (error) throw new Error(error.message);
   revalidatePath("/sales");
-  revalidatePath("/sales/next");
   revalidatePath(`/sales/${id}`);
 }
 

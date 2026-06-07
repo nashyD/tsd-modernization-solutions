@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { estimate, depositFromSelection } from "@/lib/sales/estimator";
 import type { Showcase } from "@/lib/sales/load-showcase";
 import ServicePicker from "./ServicePicker";
-import { EstimatesCard } from "./ShowcaseSections";
+import { EstimatesCard, GuaranteeCard } from "./ShowcaseSections";
 import DepositPanel from "./DepositPanel";
 
 /**
@@ -87,6 +87,8 @@ export default function PitchBody({
 
   return (
     <>
+      {/* Value before price: anchor what it's worth, then show the build cost. */}
+      <EstimatesCard estimates={estimates} selectedServiceKeys={selectedKeys} />
       <ServicePicker
         sizeId={sizeId}
         serviceIds={serviceIds}
@@ -94,8 +96,8 @@ export default function PitchBody({
         onSizeChange={setSizeId}
         onToggleService={toggleService}
       />
-      <EstimatesCard estimates={estimates} selectedServiceKeys={selectedKeys} />
       {children}
+      <GuaranteeCard />
       <DepositPanel
         prospectId={prospectId}
         token={token}
