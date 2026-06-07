@@ -6,6 +6,7 @@ import {
   SiteCard,
   OutlineCard,
   AssetsCard,
+  ProofCard,
 } from "../../_components/ShowcaseSections";
 import PitchBody from "../../_components/PitchBody";
 import BookCallCard from "../../_components/BookCallCard";
@@ -58,6 +59,9 @@ export default async function PresentPitch({
       </header>
 
       <div className="space-y-6">
+        {/* Proof — a real, live TSD build (anchors credibility for cold prospects) */}
+        <ProofCard />
+
         {/* 1 — Demo website */}
         <SiteCard url={prospect.demo_site_url} />
 

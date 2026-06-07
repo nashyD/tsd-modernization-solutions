@@ -4,6 +4,7 @@ import {
   SiteCard,
   OutlineCard,
   AssetsCard,
+  ProofCard,
 } from "@/app/sales/_components/ShowcaseSections";
 import PitchBody from "@/app/sales/_components/PitchBody";
 import BookCallCard from "@/app/sales/_components/BookCallCard";
@@ -40,6 +41,9 @@ export default async function ShowcasePage({
         </h1>
       </header>
       <div className="space-y-6">
+        {/* Proof — a real, live TSD build */}
+        <ProofCard />
+
         {/* 1 — Demo website */}
         <SiteCard url={prospect.demo_site_url} />
         {prospect.vapi_assistant_id && <PublicVoiceCard token={prospect.share_token} />}
