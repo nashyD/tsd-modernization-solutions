@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { supabaseAdmin } from "@/lib/supabase/admin";
-import { supabaseServer } from "@/lib/supabase/server";
+import { isApiAdmin } from "@/lib/auth/require";
 import { SIZES, PRODUCTS } from "@/lib/sales/estimator";
 
 export const runtime = "nodejs";
@@ -43,10 +43,13 @@ export async function POST(req: NextRequest) {
   const sb = supabaseAdmin();
 
   if (body.prospect_id) {
-    const {
-      data: { user },
-    } = await (await supabaseServer()).auth.getUser();
-    if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    // Admin-only: writes go through the service-role client (RLS-bypassing), so
+    // this check is the sole authorization gate. Without the role check any
+    // signed-in user (e.g. a client-portal account) could overwrite an
+    // arbitrary prospect's selection by enumerating its id.
+    if (!(await isApiAdmin())) {
+      return NextResponse.json({ error: "forbidden" }, { status: 403 });
+    }
     const { error } = await sb
       .from("prospects")
       .update({ team_size, selected_services })

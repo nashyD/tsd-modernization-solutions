@@ -61,6 +61,23 @@ export async function requireRole(role: ClientUserRole) {
   return { user, sb, memberships };
 }
 
+/**
+ * Admin check for Route Handlers (API routes). Unlike {@link requireRole},
+ * this NEVER calls `redirect()` — it returns a boolean so the caller can
+ * respond with a 401/403 JSON body. Use this to gate any API path that writes
+ * via the service-role client (which bypasses RLS, so the route's own check is
+ * the only authorization gate).
+ */
+export async function isApiAdmin(): Promise<boolean> {
+  const sb = await supabaseServer();
+  const {
+    data: { user },
+  } = await sb.auth.getUser();
+  if (!user) return false;
+  const memberships = await getMemberships(user.id);
+  return memberships.some((m) => m.role === "admin");
+}
+
 export interface ActiveClient {
   client_id: string;
   client: { id: string; name: string; package_tier: string };
