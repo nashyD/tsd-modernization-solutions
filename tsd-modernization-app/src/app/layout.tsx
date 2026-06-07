@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   description:
     "Custom websites, AI integration, and workflow automation for Charlotte-area small businesses.",
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
   ),
   icons: {
     icon: "/icon.svg",
