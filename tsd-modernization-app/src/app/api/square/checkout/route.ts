@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { env } from "@/lib/env";
 import { supabaseAdmin } from "@/lib/supabase/admin";
-import { supabaseServer } from "@/lib/supabase/server";
+import { isApiAdmin } from "@/lib/auth/require";
 import { centsFromDollars, resolveDepositAmount } from "@/lib/sales/pricing";
 import { depositFromSelection, estimate } from "@/lib/sales/estimator";
 import { createPaymentLink, squareConfigured } from "@/lib/square/checkout";
@@ -38,10 +38,13 @@ export async function POST(req: NextRequest) {
     "id,business_name,team_size,selected_services,deposit_pct";
   let prospect: ProspectForCheckout | null = null;
   if (body.prospect_id) {
-    const {
-      data: { user },
-    } = await (await supabaseServer()).auth.getUser();
-    if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    // Admin-only path (internal pitch view). The public showcase uses the
+    // `token` branch below. Service-role reads/writes bypass RLS, so this is
+    // the sole gate — without the role check any signed-in user could spin up
+    // deposit rows + Square payment links against an arbitrary prospect id.
+    if (!(await isApiAdmin())) {
+      return NextResponse.json({ error: "forbidden" }, { status: 403 });
+    }
     const { data } = await sb
       .from("prospects")
       .select(cols)

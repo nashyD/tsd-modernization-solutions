@@ -134,3 +134,49 @@ export function AssetsCard({ assets }: { assets: Showcase["assets"] }) {
     </section>
   );
 }
+
+/**
+ * Static proof / case-study card shown on every pitch — a real TSD build that's
+ * live now. Anchors credibility for cold prospects who have no demo of their own
+ * yet. (Bisque is a Belmont, NC wholesaler — same county as most prospects.)
+ */
+export function ProofCard() {
+  const url = "https://bisque-imports.vercel.app";
+  const qr = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(url)}`;
+  return (
+    <section className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
+      <h2 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--text-muted)]">
+        Proof — a build we shipped, live now
+      </h2>
+      <div className="mt-4 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <p className="font-semibold text-[var(--text)]">
+            Bisque Imports — Belmont, NC
+          </p>
+          <p className="mt-1 text-sm leading-relaxed text-[var(--text-muted)]">
+            An established local wholesale supplier. We built and shipped a live
+            AI assistant that instantly answers customer questions across their
+            full 8,700-product catalog and video library — grounded in their own
+            content, linking straight to the right product.
+          </p>
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex h-11 items-center gap-2 rounded-md bg-[var(--primary-bg)] px-5 text-sm font-semibold text-[var(--primary-fg)] hover:bg-[var(--primary-bg-hover)]"
+          >
+            See it live <ExternalLink size={16} />
+          </a>
+        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={qr}
+          alt="Scan to open the live Bisque Imports assistant"
+          width={120}
+          height={120}
+          className="shrink-0 self-center rounded-lg bg-white p-2"
+        />
+      </div>
+    </section>
+  );
+}
