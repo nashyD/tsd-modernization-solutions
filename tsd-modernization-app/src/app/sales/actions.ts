@@ -254,3 +254,67 @@ export async function promoteLead(formData: FormData) {
   revalidatePath("/sales");
   redirect(`/sales/${data.id}`);
 }
+
+// Map primary_product (prospect vocab) -> estimator service id, so an approved
+// candidate opens the pitch pre-selected on its lead product.
+const CANDIDATE_SVC: Record<string, string> = {
+  website: "website",
+  front_desk: "frontDesk",
+  booking_bridge: "booking",
+  concierge: "concierge",
+};
+
+export async function approveCandidate(formData: FormData) {
+  await requireRole("admin");
+  const id = z.string().uuid().parse(formData.get("id"));
+  const sb = supabaseAdmin();
+  const { data: c, error: cErr } = await sb
+    .from("prospect_candidates")
+    .select("*")
+    .eq("id", id)
+    .single();
+  if (cErr || !c) throw new Error(cErr?.message ?? "candidate not found");
+  const businessUrl =
+    c.website ||
+    `https://www.google.com/search?q=${encodeURIComponent(`${c.business_name}, ${c.city ?? ""} NC`)}`;
+  const svc = c.primary_product ? CANDIDATE_SVC[c.primary_product] : null;
+  const { data: prospect, error: pErr } = await sb
+    .from("prospects")
+    .insert({
+      business_name: c.business_name,
+      business_url: businessUrl,
+      phone: c.phone,
+      city: c.city,
+      lat: c.lat,
+      lng: c.lng,
+      place_id: c.place_id,
+      rating: c.rating,
+      review_count: c.review_count,
+      primary_product: c.primary_product,
+      gap_summary: c.gap_summary,
+      source_url: c.website,
+      discovery_source: "places",
+      selected_services: svc ? [svc] : [],
+    })
+    .select("id")
+    .single();
+  if (pErr || !prospect) throw new Error(pErr?.message ?? "promote failed");
+  await sb
+    .from("prospect_candidates")
+    .update({ status: "approved", promoted_prospect_id: prospect.id })
+    .eq("id", id);
+  revalidatePath("/sales/candidates");
+  revalidatePath("/sales");
+}
+
+export async function rejectCandidate(formData: FormData) {
+  await requireRole("admin");
+  const id = z.string().uuid().parse(formData.get("id"));
+  const sb = supabaseAdmin();
+  const { error } = await sb
+    .from("prospect_candidates")
+    .update({ status: "rejected" })
+    .eq("id", id);
+  if (error) throw new Error(error.message);
+  revalidatePath("/sales/candidates");
+}

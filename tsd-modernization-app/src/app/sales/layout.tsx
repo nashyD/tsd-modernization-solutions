@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Shield, LayoutGrid, MapPin } from "lucide-react";
+import { Shield, LayoutGrid, MapPin, Inbox } from "lucide-react";
 import { requireRole } from "@/lib/auth/require";
 import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -32,6 +32,13 @@ export default async function SalesLayout({
             >
               <MapPin size={14} strokeWidth={2.25} aria-hidden />
               Near me
+            </Link>
+            <Link
+              href="/sales/candidates"
+              className="inline-flex items-center gap-1.5 rounded-md border border-[var(--border-strong)] bg-[var(--surface)] px-3 py-1.5 text-xs font-semibold text-[var(--text)] shadow-sm transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+            >
+              <Inbox size={14} strokeWidth={2.25} aria-hidden />
+              Candidates
             </Link>
             <Link
               href="/app"
