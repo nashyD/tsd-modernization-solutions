@@ -26,8 +26,7 @@ export default async function LoginPage({
         Sign in
       </h1>
       <p className="mt-2 text-[var(--text-muted)]">
-        Use a saved passkey for instant sign-in, or we&apos;ll email you a link.
-        No password needed.
+        Sign in to your client portal. No password required.
       </p>
       {error && error !== "missing_code" && (
         <p className="mt-4 rounded-[10px] border border-[var(--danger)]/30 bg-[var(--danger-soft)] px-4 py-3 text-sm text-[var(--danger)]">

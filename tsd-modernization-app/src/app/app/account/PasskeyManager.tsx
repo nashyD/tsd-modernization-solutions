@@ -1,6 +1,5 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
-import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
 import {
   Fingerprint,
   KeyRound,
@@ -12,33 +11,20 @@ import {
   Loader2,
   ShieldCheck,
 } from "lucide-react";
-import { supabaseBrowser } from "@/lib/supabase/browser";
+import {
+  type Passkey,
+  listPasskeys,
+  enrollPasskey,
+  renamePasskey,
+  deletePasskey,
+  classifyPasskeyError,
+  formatPasskeyDate,
+} from "@/lib/passkey";
 import { useWebAuthnSupported } from "@/lib/useWebAuthnSupported";
 import { Button } from "@/components/ui/Button";
-
-interface Passkey {
-  id: string;
-  friendly_name?: string;
-  created_at: string;
-  last_used_at?: string;
-}
-
-function formatDate(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "";
-  return d.toLocaleDateString(undefined, {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
-
-async function fetchPasskeys(): Promise<Passkey[]> {
-  const sb = supabaseBrowser();
-  const { data, error } = await sb.auth.passkey.list();
-  if (error) throw error;
-  return data ?? [];
-}
+import { Card } from "@/components/ui/Card";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { IconButton } from "@/components/ui/IconButton";
 
 export default function PasskeyManager() {
   const supported = useWebAuthnSupported();
@@ -49,33 +35,21 @@ export default function PasskeyManager() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
 
-  // Manual refresh used by the add / rename / remove handlers. These run from
-  // event handlers (not effects), so setState here is fine.
-  const load = useCallback(async () => {
-    try {
-      setPasskeys(await fetchPasskeys());
-      setError(null);
-    } catch {
-      setError("Couldn't load your passkeys. Refresh to try again.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  // Initial load, once WebAuthn support resolves. Inlined rather than calling
-  // `load` so every setState lands in an async continuation (effects must not
-  // setState synchronously) and so unmount cancels a late response.
+  // Initial load, once WebAuthn support resolves. Inlined (not via a shared
+  // callback) so every setState lands in an async continuation — effects must
+  // not setState synchronously — and so unmount cancels a late response.
   useEffect(() => {
     if (supported !== true) return;
     let cancelled = false;
     (async () => {
       try {
-        const list = await fetchPasskeys();
+        const list = await listPasskeys();
         if (!cancelled) {
           setPasskeys(list);
           setError(null);
         }
-      } catch {
+      } catch (err) {
+        console.error("[passkey list] failed:", err);
         if (!cancelled) {
           setError("Couldn't load your passkeys. Refresh to try again.");
         }
@@ -89,58 +63,23 @@ export default function PasskeyManager() {
   }, [supported]);
 
   async function addPasskey() {
+    if (busy) return;
     setBusy(true);
     setError(null);
     try {
-      const sb = supabaseBrowser();
-      const { data, error } = await sb.auth.registerPasskey();
-      if (error) throw error;
-      // registerPasskey() takes no name; give it a friendly default so multiple
-      // devices are distinguishable. Best-effort — don't fail the add on this.
-      if (data?.id) {
-        try {
-          await sb.auth.passkey.update({
-            passkeyId: data.id,
-            friendlyName: `Passkey · ${formatDate(new Date().toISOString())}`,
-          });
-        } catch {
-          /* naming is non-critical */
-        }
-      }
-      await load();
+      const created = await enrollPasskey();
+      setPasskeys((prev) => [...prev, created]);
     } catch (err) {
-      const e = err as {
-        name?: string;
-        code?: string;
-        status?: number;
-        message?: string;
-      };
-      if (e.name === "NotAllowedError" || e.name === "AbortError") {
-        // user canceled the OS prompt — stay silent
-      } else if (
-        e.code === "too_many_passkeys" ||
-        /too many/i.test(e.message ?? "")
-      ) {
-        setError(
-          "You've reached the maximum number of passkeys. Remove one before adding another.",
-        );
-      } else {
-        // Surface the real reason — verify-stage failures usually name the RP /
-        // origin problem, which is what we need to see.
-        console.error("[passkey register] failed:", err);
-        const detail = e.code ?? e.name ?? (e.status ? `HTTP ${e.status}` : null);
-        setError(
-          `Couldn't add a passkey${detail ? ` (${detail})` : ""}: ${
-            e.message ?? "unknown error"
-          }.`,
-        );
-      }
+      console.error("[passkey register] failed:", err);
+      const { cancelled, message } = classifyPasskeyError(err, "add");
+      if (!cancelled) setError(message);
     } finally {
       setBusy(false);
     }
   }
 
   async function removePasskey(id: string) {
+    if (busy) return;
     if (
       !window.confirm(
         "Remove this passkey? You won't be able to sign in with it anymore.",
@@ -151,11 +90,11 @@ export default function PasskeyManager() {
     setBusy(true);
     setError(null);
     try {
-      const sb = supabaseBrowser();
-      const { error } = await sb.auth.passkey.delete({ passkeyId: id });
-      if (error) throw error;
-      await load();
-    } catch {
+      await deletePasskey(id);
+      setPasskeys((prev) => prev.filter((k) => k.id !== id));
+      if (editingId === id) setEditingId(null);
+    } catch (err) {
+      console.error("[passkey delete] failed:", err);
       setError("Couldn't remove that passkey. Please try again.");
     } finally {
       setBusy(false);
@@ -168,6 +107,7 @@ export default function PasskeyManager() {
   }
 
   async function saveEdit(id: string) {
+    if (busy) return;
     const name = editName.trim();
     if (!name) {
       setEditingId(null);
@@ -176,15 +116,15 @@ export default function PasskeyManager() {
     setBusy(true);
     setError(null);
     try {
-      const sb = supabaseBrowser();
-      const { error } = await sb.auth.passkey.update({
-        passkeyId: id,
-        friendlyName: name.slice(0, 120),
-      });
-      if (error) throw error;
+      await renamePasskey(id, name);
+      setPasskeys((prev) =>
+        prev.map((k) =>
+          k.id === id ? { ...k, friendly_name: name.slice(0, 120) } : k,
+        ),
+      );
       setEditingId(null);
-      await load();
-    } catch {
+    } catch (err) {
+      console.error("[passkey rename] failed:", err);
       setError("Couldn't rename that passkey. Please try again.");
     } finally {
       setBusy(false);
@@ -193,43 +133,35 @@ export default function PasskeyManager() {
 
   if (supported === null) {
     return (
-      <section className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)]">
+      <Card as="section" className="p-5">
         <p className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
           <Loader2 size={15} className="animate-spin" /> Loading…
         </p>
-      </section>
+      </Card>
     );
   }
 
   if (!supported) {
     return (
-      <section className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)]">
+      <Card as="section" className="p-5">
         <h2 className="flex items-center gap-2 font-semibold text-[var(--text)]">
-          <KeyRound
-            size={18}
-            strokeWidth={1.75}
-            className="text-[var(--accent)]"
-          />
+          <KeyRound size={18} strokeWidth={1.75} className="text-[var(--accent)]" />
           Passkeys
         </h2>
         <p className="mt-2 text-sm text-[var(--text-muted)]">
           This browser doesn&apos;t support passkeys. Try a recent version of
           Safari, Chrome, or Edge on a device with biometrics.
         </p>
-      </section>
+      </Card>
     );
   }
 
   return (
-    <section className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)]">
+    <Card as="section" className="p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="flex items-center gap-2 font-semibold text-[var(--text)]">
-            <KeyRound
-              size={18}
-              strokeWidth={1.75}
-              className="text-[var(--accent)]"
-            />
+            <KeyRound size={18} strokeWidth={1.75} className="text-[var(--accent)]" />
             Passkeys
           </h2>
           <p className="mt-1 text-sm text-[var(--text-muted)]">
@@ -257,7 +189,10 @@ export default function PasskeyManager() {
       </div>
 
       {error && (
-        <p className="mt-4 rounded-[10px] border border-[var(--danger)]/30 bg-[var(--danger-soft)] px-3 py-2 text-sm text-[var(--danger)]">
+        <p
+          role="alert"
+          className="mt-4 rounded-[10px] border border-[var(--danger)]/30 bg-[var(--danger-soft)] px-3 py-2 text-sm text-[var(--danger)]"
+        >
           {error}
         </p>
       )}
@@ -268,16 +203,11 @@ export default function PasskeyManager() {
             <Loader2 size={15} className="animate-spin" /> Loading…
           </p>
         ) : passkeys.length === 0 ? (
-          <div className="rounded-[10px] border border-dashed border-[var(--border-strong)] px-4 py-6 text-center">
-            <Fingerprint
-              size={22}
-              strokeWidth={1.5}
-              className="mx-auto text-[var(--text-subtle)]"
-            />
-            <p className="mt-2 text-sm text-[var(--text-muted)]">
-              No passkeys yet. Add one to skip the email link next time.
-            </p>
-          </div>
+          <EmptyState
+            icon={<Fingerprint size={24} strokeWidth={1.5} />}
+            title="No passkeys yet"
+            description="Add one to skip the email link next time."
+          />
         ) : (
           <ul className="divide-y divide-[var(--border)]">
             {passkeys.map((p) => (
@@ -293,14 +223,16 @@ export default function PasskeyManager() {
                     {editingId === p.id ? (
                       <input
                         autoFocus
+                        aria-label={`Rename ${p.friendly_name || "passkey"}`}
                         value={editName}
+                        disabled={busy}
                         onChange={(e) => setEditName(e.target.value)}
                         onKeyDown={(e) => {
                           if (e.key === "Enter") saveEdit(p.id);
                           if (e.key === "Escape") setEditingId(null);
                         }}
                         maxLength={120}
-                        className="w-full rounded-md border border-[var(--border-strong)] bg-[var(--bg)] px-2 py-1 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
+                        className="w-full rounded-md border border-[var(--border-strong)] bg-[var(--bg)] px-2 py-1 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40 disabled:opacity-50"
                       />
                     ) : (
                       <p className="truncate font-medium text-[var(--text)]">
@@ -308,9 +240,9 @@ export default function PasskeyManager() {
                       </p>
                     )}
                     <p className="mt-0.5 text-xs text-[var(--text-subtle)]">
-                      Added {formatDate(p.created_at)}
+                      Added {formatPasskeyDate(p.created_at)}
                       {p.last_used_at
-                        ? ` · Last used ${formatDate(p.last_used_at)}`
+                        ? ` · Last used ${formatPasskeyDate(p.last_used_at)}`
                         : ""}
                     </p>
                   </div>
@@ -318,38 +250,38 @@ export default function PasskeyManager() {
                 <div className="flex flex-none items-center gap-1">
                   {editingId === p.id ? (
                     <>
-                      <IconBtn
+                      <IconButton
                         label="Save name"
                         onClick={() => saveEdit(p.id)}
                         disabled={busy}
                       >
                         <Check size={16} strokeWidth={2} />
-                      </IconBtn>
-                      <IconBtn
+                      </IconButton>
+                      <IconButton
                         label="Cancel"
                         onClick={() => setEditingId(null)}
                         disabled={busy}
                       >
                         <X size={16} strokeWidth={2} />
-                      </IconBtn>
+                      </IconButton>
                     </>
                   ) : (
                     <>
-                      <IconBtn
-                        label="Rename"
+                      <IconButton
+                        label="Rename passkey"
                         onClick={() => startEdit(p)}
                         disabled={busy}
                       >
                         <Pencil size={15} strokeWidth={1.75} />
-                      </IconBtn>
-                      <IconBtn
-                        label="Remove"
+                      </IconButton>
+                      <IconButton
+                        label="Remove passkey"
                         onClick={() => removePasskey(p.id)}
                         disabled={busy}
                         danger
                       >
                         <Trash2 size={15} strokeWidth={1.75} />
-                      </IconBtn>
+                      </IconButton>
                     </>
                   )}
                 </div>
@@ -358,37 +290,6 @@ export default function PasskeyManager() {
           </ul>
         )}
       </div>
-    </section>
-  );
-}
-
-function IconBtn({
-  children,
-  label,
-  onClick,
-  disabled,
-  danger,
-}: {
-  children: ReactNode;
-  label: string;
-  onClick: () => void;
-  disabled?: boolean;
-  danger?: boolean;
-}) {
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      title={label}
-      onClick={onClick}
-      disabled={disabled}
-      className={`inline-flex h-8 w-8 items-center justify-center rounded-md transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]/40 ${
-        danger
-          ? "text-[var(--text-subtle)] hover:bg-[var(--danger-soft)] hover:text-[var(--danger)]"
-          : "text-[var(--text-subtle)] hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
-      }`}
-    >
-      {children}
-    </button>
+    </Card>
   );
 }

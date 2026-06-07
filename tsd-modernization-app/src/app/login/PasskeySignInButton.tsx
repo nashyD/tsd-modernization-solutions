@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { Fingerprint, Loader2 } from "lucide-react";
 import { supabaseBrowser } from "@/lib/supabase/browser";
 import { useWebAuthnSupported } from "@/lib/useWebAuthnSupported";
+import { classifyPasskeyError } from "@/lib/passkey";
 import { Button } from "@/components/ui/Button";
 
 /**
@@ -21,37 +22,24 @@ export default function PasskeySignInButton() {
   if (!supported) return null;
 
   async function onClick() {
+    if (busy) return; // guard against a double-click before `disabled` commits
     setBusy(true);
     setError(null);
     try {
-      const sb = supabaseBrowser();
-      const { data, error } = await sb.auth.signInWithPasskey();
+      const { data, error } = await supabaseBrowser().auth.signInWithPasskey();
       if (error) throw error;
       if (!data?.session) throw new Error("no_session");
       router.refresh();
       router.replace("/app");
-      // Leave the button in its busy state through navigation to avoid a flash.
+      // Keep the button busy through navigation to avoid a flash. Safety net: if
+      // the navigation doesn't unmount us within a few seconds (e.g. the session
+      // cookie wasn't readable server-side yet and /app bounced back to /login),
+      // re-enable the button instead of stranding it on "Waiting…".
+      window.setTimeout(() => setBusy(false), 8000);
     } catch (err) {
-      const e = err as {
-        name?: string;
-        code?: string;
-        status?: number;
-        message?: string;
-      };
-      // User dismissed the OS prompt — not worth a scary message.
-      if (e.name === "NotAllowedError" || e.name === "AbortError") {
-        setError(null);
-      } else {
-        // Surface the real reason. Passkeys are beta and the exact failure
-        // (server verify vs. ceremony vs. missing session) matters for support.
-        console.error("[passkey sign-in] failed:", err);
-        const detail = e.code ?? e.name ?? (e.status ? `HTTP ${e.status}` : null);
-        setError(
-          `Couldn't sign in with a passkey${detail ? ` (${detail})` : ""}: ${
-            e.message ?? "unknown error"
-          }. Use the email link below.`,
-        );
-      }
+      console.error("[passkey sign-in] failed:", err);
+      const { cancelled, message } = classifyPasskeyError(err, "sign in");
+      setError(cancelled ? null : message);
       setBusy(false);
     }
   }
@@ -76,7 +64,11 @@ export default function PasskeySignInButton() {
         >
           {busy ? "Waiting for passkey…" : "Sign in with a passkey"}
         </Button>
-        {error && <p className="mt-1.5 text-sm text-[var(--danger)]">{error}</p>}
+        {error && (
+          <p role="alert" className="mt-1.5 text-sm text-[var(--danger)]">
+            {error}
+          </p>
+        )}
       </div>
       <div className="flex items-center gap-3" aria-hidden>
         <span className="h-px flex-1 bg-[var(--border)]" />
