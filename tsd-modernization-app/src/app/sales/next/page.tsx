@@ -4,6 +4,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { NextNearby } from "./NextNearby";
+import { QuickAdd } from "../_components/QuickAdd";
 
 export const dynamic = "force-dynamic";
 
@@ -35,6 +36,7 @@ export default async function NextNearbyPage() {
         title="Next prospect near you"
         description="Sorted by distance from where you are. Get directions, pitch on the spot, then mark the visit."
       />
+      <QuickAdd />
       {located.length === 0 ? (
         <EmptyState
           title="No located prospects yet"

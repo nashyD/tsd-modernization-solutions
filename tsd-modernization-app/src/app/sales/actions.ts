@@ -317,3 +317,74 @@ export async function rejectCandidate(formData: FormData) {
   if (error) throw new Error(error.message);
   revalidatePath("/sales/candidates");
 }
+
+/** Best-effort geocode via OpenStreetMap Nominatim (free, no key). Returns null
+ *  on failure/timeout or implausible (non-NC) coordinates. */
+async function geocodeNC(
+  query: string,
+): Promise<{ lat: number; lng: number } | null> {
+  try {
+    const url =
+      "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=us&q=" +
+      encodeURIComponent(query);
+    const resp = await fetch(url, {
+      headers: {
+        "User-Agent": "TSD-prospect-add/1.0 (nashdavis@tsd-ventures.com)",
+      },
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!resp.ok) return null;
+    const d = await resp.json();
+    const first = Array.isArray(d) ? d[0] : null;
+    if (!first) return null;
+    const lat = parseFloat(first.lat);
+    const lng = parseFloat(first.lon);
+    if (lat >= 33.5 && lat <= 36.8 && lng >= -84.6 && lng <= -75.0) {
+      return { lat, lng };
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+const QuickAddSchema = z.object({
+  business_name: z.string().min(2),
+  city: z.string().optional().or(z.literal("")),
+  phone: z.string().optional().or(z.literal("")),
+  business_url: z.string().optional().or(z.literal("")),
+});
+
+/** Fast field capture: name + optional city/phone/url. Geocodes so the new
+ *  prospect shows up in "Near me". Revalidates the board only (NOT /sales/next,
+ *  so the field tool doesn't re-acquire location mid-session). */
+export async function quickAddProspect(formData: FormData) {
+  await requireRole("admin");
+  const p = QuickAddSchema.parse({
+    business_name: clean(formData.get("business_name")),
+    city: clean(formData.get("city")),
+    phone: clean(formData.get("phone")),
+    business_url: clean(formData.get("business_url")),
+  });
+  const name = p.business_name.trim();
+  const city = (p.city || "").trim() || null;
+  const rawUrl = (p.business_url || "").trim();
+  const businessUrl = rawUrl
+    ? rawUrl.startsWith("http")
+      ? rawUrl
+      : `https://${rawUrl}`
+    : `https://www.google.com/search?q=${encodeURIComponent(`${name}, ${city ?? ""} NC`)}`;
+  const geo = await geocodeNC(`${name}, ${city ?? "Gaston County"}, NC`);
+  const sb = supabaseAdmin();
+  const { error } = await sb.from("prospects").insert({
+    business_name: name,
+    business_url: businessUrl,
+    city,
+    phone: (p.phone || "").trim() || null,
+    lat: geo?.lat ?? null,
+    lng: geo?.lng ?? null,
+    discovery_source: "manual",
+  });
+  if (error) throw new Error(error.message);
+  revalidatePath("/sales");
+}
