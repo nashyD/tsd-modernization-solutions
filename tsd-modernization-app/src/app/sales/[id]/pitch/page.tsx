@@ -7,6 +7,7 @@ import {
   OutlineCard,
   AssetsCard,
   ProofCard,
+  ProblemCard,
 } from "../../_components/ShowcaseSections";
 import PitchBody from "../../_components/PitchBody";
 import BookCallCard from "../../_components/BookCallCard";
@@ -22,10 +23,15 @@ export const dynamic = "force-dynamic";
 // work page. Mirrors the public /showcase leave-behind, internal voice widget.
 export default async function PresentPitch({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ from?: string }>;
 }) {
   const { id } = await params;
+  const { from } = await searchParams;
+  // When launched from the field tool, Exit returns to the queue, not the work page.
+  const exitHref = from === "next" ? "/sales/next" : `/sales/${id}`;
   const showcase = await loadShowcaseById(id);
   if (!showcase) notFound();
   const { prospect, estimates, assets } = showcase;
@@ -41,7 +47,7 @@ export default async function PresentPitch({
           </span>
         </span>
         <Link
-          href={`/sales/${id}`}
+          href={exitHref}
           className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium text-[var(--text-subtle)] transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
         >
           <X size={14} aria-hidden /> Exit pitch
@@ -61,6 +67,9 @@ export default async function PresentPitch({
       <div className="space-y-6">
         {/* Proof — a real, live TSD build (anchors credibility for cold prospects) */}
         <ProofCard />
+
+        {/* Problem — make the cost of the gap vivid before the price */}
+        <ProblemCard product={prospect.primary_product} />
 
         {/* 1 — Demo website */}
         <SiteCard url={prospect.demo_site_url} />

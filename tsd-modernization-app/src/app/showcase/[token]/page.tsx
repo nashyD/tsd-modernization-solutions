@@ -5,6 +5,7 @@ import {
   OutlineCard,
   AssetsCard,
   ProofCard,
+  ProblemCard,
 } from "@/app/sales/_components/ShowcaseSections";
 import PitchBody from "@/app/sales/_components/PitchBody";
 import BookCallCard from "@/app/sales/_components/BookCallCard";
@@ -43,6 +44,9 @@ export default async function ShowcasePage({
       <div className="space-y-6">
         {/* Proof — a real, live TSD build */}
         <ProofCard />
+
+        {/* Problem — make the cost of the gap vivid before the price */}
+        <ProblemCard product={prospect.primary_product} />
 
         {/* 1 — Demo website */}
         <SiteCard url={prospect.demo_site_url} />

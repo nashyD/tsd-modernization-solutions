@@ -248,7 +248,7 @@ export function NextNearby({
             <Navigation size={15} /> Directions
           </a>
           <Link
-            href={`/sales/${c.id}/pitch`}
+            href={`/sales/${c.id}/pitch?from=next`}
             className="inline-flex items-center gap-1.5 rounded-md border border-[var(--border-strong)] bg-[var(--surface)] px-3.5 py-2 text-sm font-semibold text-[var(--text)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
           >
             <ExternalLink size={15} /> Open pitch

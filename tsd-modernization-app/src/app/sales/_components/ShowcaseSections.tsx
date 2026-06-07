@@ -55,6 +55,10 @@ export function EstimatesCard({
   const monthlyTotal = shown
     .filter((e) => e.cadence === "monthly")
     .reduce((sum, e) => sum + Number(e.dollar_value || 0), 0);
+  const oneTimeTotal = shown
+    .filter((e) => e.cadence === "one_time")
+    .reduce((sum, e) => sum + Number(e.dollar_value || 0), 0);
+  const firstYearValue = monthlyTotal * 12 + oneTimeTotal;
   return (
     <section className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
       <h2 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--text-muted)]">
@@ -78,14 +82,36 @@ export function EstimatesCard({
           </li>
         ))}
       </ul>
-      {monthlyTotal > 0 && (
-        <div className="mt-3 flex items-center justify-between gap-4 border-t-2 border-[var(--border-strong)] pt-4">
-          <p className="text-sm font-semibold uppercase tracking-[0.08em] text-[var(--text)]">
-            Total estimated value added
-          </p>
-          <span className="shrink-0 font-mono text-2xl font-bold text-[var(--success)]">
-            +{usd(monthlyTotal)}/mo
-          </span>
+      {(monthlyTotal > 0 || oneTimeTotal > 0) && (
+        <div className="mt-3 space-y-2 border-t-2 border-[var(--border-strong)] pt-4">
+          {monthlyTotal > 0 && (
+            <div className="flex items-center justify-between gap-4">
+              <p className="text-sm font-semibold uppercase tracking-[0.08em] text-[var(--text)]">
+                Recurring value
+              </p>
+              <span className="shrink-0 font-mono text-lg font-bold text-[var(--success)]">
+                +{usd(monthlyTotal)}/mo
+              </span>
+            </div>
+          )}
+          {oneTimeTotal > 0 && (
+            <div className="flex items-center justify-between gap-4">
+              <p className="text-sm font-semibold uppercase tracking-[0.08em] text-[var(--text)]">
+                One-time value
+              </p>
+              <span className="shrink-0 font-mono text-lg font-bold text-[var(--success)]">
+                +{usd(oneTimeTotal)}
+              </span>
+            </div>
+          )}
+          <div className="flex items-center justify-between gap-4 border-t border-[var(--border)] pt-2">
+            <p className="text-sm font-bold uppercase tracking-[0.08em] text-[var(--text)]">
+              Value in year one
+            </p>
+            <span className="shrink-0 font-mono text-2xl font-extrabold text-[var(--success)]">
+              +{usd(firstYearValue)}
+            </span>
+          </div>
         </div>
       )}
     </section>
@@ -266,6 +292,47 @@ export function GuaranteeCard() {
           </li>
         ))}
       </ul>
+    </section>
+  );
+}
+
+type ProblemProduct = "website" | "front_desk" | "booking_bridge" | "concierge";
+const PROBLEM: Record<ProblemProduct, { title: string; body: string }> = {
+  website: {
+    title: "Right now you're hard to find — and easy to skip.",
+    body: "When a customer Googles you there's nothing solid to land on, so they scroll to a competitor who looks legit. A fast site you own turns that search into a call.",
+  },
+  front_desk: {
+    title: "A missed call is a missed job.",
+    body: "When you're on a job, after hours, or slammed, calls go to voicemail — and most callers just dial the next name on the list. An AI receptionist answers every one, 24/7, and books the work.",
+  },
+  booking_bridge: {
+    title: "“Call us to book” quietly loses customers.",
+    body: "Every caller who has to wait for business hours and remember to call back is a booking you may never get. Self-serve scheduling captures them the moment they're ready.",
+  },
+  concierge: {
+    title: "Your team answers the same questions all day.",
+    body: "Hours, pricing, “do you carry…” — the same questions over and over. An assistant on your site answers them instantly, so your people sell instead of repeat themselves.",
+  },
+};
+
+/** Problem/agitation card — makes the cost of the gap vivid before the price.
+ *  Tailored to the prospect's lead product; falls back to a general framing. */
+export function ProblemCard({ product }: { product: ProblemProduct | null }) {
+  const p = product
+    ? PROBLEM[product]
+    : {
+        title: "Your reputation is ahead of your tech.",
+        body: "Customers find you, then hit friction — a thin site, a missed call, a “call to book.” Closing those gaps turns the interest you already earn into booked work.",
+      };
+  return (
+    <section className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
+      <h2 className="font-display text-lg font-semibold text-[var(--text)]">
+        {p.title}
+      </h2>
+      <p className="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
+        {p.body}
+      </p>
     </section>
   );
 }
