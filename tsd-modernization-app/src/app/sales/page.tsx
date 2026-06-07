@@ -7,7 +7,7 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { LinkButton } from "@/components/ui/Button";
 import { usd } from "@/lib/sales/services";
 import { estimate } from "@/lib/sales/estimator";
-import type { ProspectStatus } from "@/lib/supabase/types";
+import type { ProspectStatus, EstimateServiceKey } from "@/lib/supabase/types";
 import { promoteLead } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -26,15 +26,60 @@ const TONE: Record<ProspectStatus, "amber" | "blue" | "emerald" | "neutral"> = {
   lost: "neutral",
 };
 
-export default async function SalesBoard() {
+// The product we LEAD the pitch with. Same vocabulary as
+// prospect_estimates.service_key (see migration 0007_prospect_discovery).
+type ProductKey = EstimateServiceKey;
+const PRODUCT_LABEL: Record<ProductKey, string> = {
+  website: "Website",
+  front_desk: "AI Receptionist",
+  booking_bridge: "Booking",
+  concierge: "Concierge",
+};
+const PRODUCT_ORDER: ProductKey[] = [
+  "website",
+  "front_desk",
+  "booking_bridge",
+  "concierge",
+];
+function isProductKey(v: string | undefined): v is ProductKey {
+  return (
+    v === "website" ||
+    v === "front_desk" ||
+    v === "booking_bridge" ||
+    v === "concierge"
+  );
+}
+
+export default async function SalesBoard({
+  searchParams,
+}: {
+  searchParams: Promise<{ product?: string }>;
+}) {
+  const { product: productParam } = await searchParams;
+  const product = isProductKey(productParam) ? productParam : null;
+
   const sb = supabaseAdmin();
   const { data: prospects } = await sb
     .from("prospects")
     .select(
-      "id,business_name,business_url,status,package_tier,team_size,selected_services,updated_at",
+      "id,business_name,business_url,status,package_tier,team_size,selected_services,updated_at,primary_product,gap_summary,rating,review_count,city",
     )
     .order("updated_at", { ascending: false });
-  const rows = prospects ?? [];
+  const all = prospects ?? [];
+
+  // Chip counts reflect the whole book; the board below shows the filtered set.
+  const productCounts = PRODUCT_ORDER.reduce(
+    (acc, key) => {
+      acc[key] = all.filter((r) => r.primary_product === key).length;
+      return acc;
+    },
+    {} as Record<ProductKey, number>,
+  );
+
+  const rows = product
+    ? all.filter((r) => r.primary_product === product)
+    : all;
+
   const counts = {
     new: rows.filter((r) => r.status === "new").length,
     pitched: rows.filter((r) => r.status === "pitched").length,
@@ -42,18 +87,62 @@ export default async function SalesBoard() {
     all: rows.length,
   };
 
+  const filters: {
+    key: ProductKey | "all";
+    label: string;
+    href: string;
+    count: number;
+  }[] = [
+    { key: "all", label: "All", href: "/sales", count: all.length },
+    ...PRODUCT_ORDER.map((key) => ({
+      key,
+      label: PRODUCT_LABEL[key],
+      href: `/sales?product=${key}`,
+      count: productCounts[key],
+    })),
+  ];
+
   return (
     <div className="space-y-8 animate-fade-up">
       <PageHeader
         eyebrow="Sales"
         title="Prospects"
-        description="Tap a prospect to edit it, then hit Pitch to present. Promote audit leads or add one by hand."
+        description="Tap a prospect to edit it, then hit Pitch to present. Filter by the product you're leading with."
         actions={
           <LinkButton href="/sales/new" leftIcon={<Plus size={16} />}>
             New prospect
           </LinkButton>
         }
       />
+
+      {/* Filter the board by the product we're pitching */}
+      <div className="flex flex-wrap gap-2">
+        {filters.map((f) => {
+          const active = (f.key === "all" && !product) || f.key === product;
+          return (
+            <Link
+              key={f.key}
+              href={f.href}
+              className={
+                active
+                  ? "inline-flex items-center gap-1.5 rounded-full border border-[var(--accent)] bg-[var(--accent)] px-3 py-1.5 text-sm font-medium text-white"
+                  : "inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-sm text-[var(--text-muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+              }
+            >
+              {f.label}
+              <span
+                className={
+                  active
+                    ? "font-mono text-xs text-white/80"
+                    : "font-mono text-xs text-[var(--text-subtle)]"
+                }
+              >
+                {f.count}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {(
@@ -78,8 +167,14 @@ export default async function SalesBoard() {
 
       {rows.length === 0 ? (
         <EmptyState
-          title="No prospects yet"
-          description="Add your first prospect to start pitching."
+          title={
+            product ? `No ${PRODUCT_LABEL[product]} prospects` : "No prospects yet"
+          }
+          description={
+            product
+              ? "Clear the filter, or tag prospects with this product."
+              : "Add your first prospect to start pitching."
+          }
         />
       ) : (
         ORDER.map((status) => {
@@ -91,37 +186,58 @@ export default async function SalesBoard() {
                 {LABEL[status]} · {items.length}
               </h2>
               <ul className="space-y-3">
-                {items.map((p) => (
-                  <li key={p.id}>
-                    <Link
-                      href={`/sales/${p.id}`}
-                      className="flex items-center justify-between gap-4 rounded-[14px] border border-[var(--border)] bg-[var(--surface)] px-5 py-4 shadow-[var(--shadow-card)] transition-colors hover:border-[var(--accent)]"
-                    >
-                      <div className="min-w-0">
-                        <p className="font-semibold text-[var(--text)]">
-                          {p.business_name}
-                        </p>
-                        <p className="truncate text-sm text-[var(--text-muted)]">
-                          {p.business_url}
-                        </p>
-                      </div>
-                      <div className="flex shrink-0 items-center gap-3">
-                        {(() => {
-                          const low = estimate(
-                            p.team_size || "small",
-                            p.selected_services ?? [],
-                          ).low;
-                          return low > 0 ? (
+                {items.map((p) => {
+                  const low = estimate(
+                    p.team_size || "small",
+                    p.selected_services ?? [],
+                  ).low;
+                  const subtitle = p.gap_summary || p.business_url;
+                  const meta = [
+                    p.city,
+                    p.rating
+                      ? `${p.rating}★${p.review_count ? ` (${p.review_count})` : ""}`
+                      : null,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ");
+                  return (
+                    <li key={p.id}>
+                      <Link
+                        href={`/sales/${p.id}`}
+                        className="flex items-start justify-between gap-4 rounded-[14px] border border-[var(--border)] bg-[var(--surface)] px-5 py-4 shadow-[var(--shadow-card)] transition-colors hover:border-[var(--accent)]"
+                      >
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="font-semibold text-[var(--text)]">
+                              {p.business_name}
+                            </p>
+                            {p.primary_product ? (
+                              <span className="shrink-0 rounded-full border border-[var(--accent)] px-2 py-0.5 text-[11px] font-medium text-[var(--accent)]">
+                                {PRODUCT_LABEL[p.primary_product]}
+                              </span>
+                            ) : null}
+                          </div>
+                          <p className="mt-0.5 truncate text-sm text-[var(--text-muted)]">
+                            {subtitle}
+                          </p>
+                          {meta ? (
+                            <p className="mt-0.5 text-xs text-[var(--text-subtle)]">
+                              {meta}
+                            </p>
+                          ) : null}
+                        </div>
+                        <div className="flex shrink-0 items-center gap-3 pt-0.5">
+                          {low > 0 ? (
                             <span className="font-mono text-sm text-[var(--text)]">
                               {usd(low)}+
                             </span>
-                          ) : null;
-                        })()}
-                        <Badge tone={TONE[p.status]}>{LABEL[p.status]}</Badge>
-                      </div>
-                    </Link>
-                  </li>
-                ))}
+                          ) : null}
+                          <Badge tone={TONE[p.status]}>{LABEL[p.status]}</Badge>
+                        </div>
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </section>
           );
