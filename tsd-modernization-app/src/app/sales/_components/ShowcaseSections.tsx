@@ -1,4 +1,10 @@
-import { ExternalLink, FileText, Image as ImageIcon } from "lucide-react";
+import type { ReactNode } from "react";
+import {
+  ExternalLink,
+  FileText,
+  Image as ImageIcon,
+  ShieldCheck,
+} from "lucide-react";
 import { SERVICE_LABEL, usd, type ServiceKey } from "@/lib/sales/services";
 import type { Showcase } from "@/lib/sales/load-showcase";
 
@@ -86,16 +92,66 @@ export function EstimatesCard({
   );
 }
 
+/** Minimal inline markdown: **bold** only (outlines are mostly headings/bullets). */
+function mdInline(text: string): ReactNode[] {
+  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
+    part.startsWith("**") && part.endsWith("**") ? (
+      <strong key={i}>{part.slice(2, -2)}</strong>
+    ) : (
+      <span key={i}>{part}</span>
+    ),
+  );
+}
+
 export function OutlineCard({ md }: { md: string | null }) {
   if (!md) return null;
+  const blocks: ReactNode[] = [];
+  let bullets: string[] = [];
+  const flush = (key: string) => {
+    if (bullets.length) {
+      const items = bullets;
+      bullets = [];
+      blocks.push(
+        <ul
+          key={key}
+          className="ml-5 list-disc space-y-1 text-sm leading-relaxed text-[var(--text)]"
+        >
+          {items.map((b, i) => (
+            <li key={i}>{mdInline(b)}</li>
+          ))}
+        </ul>,
+      );
+    }
+  };
+  md.split("\n").forEach((raw, i) => {
+    const line = raw.trim();
+    if (/^#{1,3}\s/.test(line)) {
+      flush(`f${i}`);
+      blocks.push(
+        <p key={i} className="font-semibold text-[var(--text)]">
+          {mdInline(line.replace(/^#{1,3}\s+/, ""))}
+        </p>,
+      );
+    } else if (/^[-*]\s/.test(line)) {
+      bullets.push(line.replace(/^[-*]\s+/, ""));
+    } else if (line === "") {
+      flush(`f${i}`);
+    } else {
+      flush(`f${i}`);
+      blocks.push(
+        <p key={i} className="text-sm leading-relaxed text-[var(--text)]">
+          {mdInline(line)}
+        </p>,
+      );
+    }
+  });
+  flush("fend");
   return (
     <section className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
       <h2 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--text-muted)]">
         Project outline
       </h2>
-      <div className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-[var(--text)]">
-        {md}
-      </div>
+      <div className="mt-3 space-y-2">{blocks}</div>
     </section>
   );
 }
@@ -177,6 +233,39 @@ export function ProofCard() {
           className="shrink-0 self-center rounded-lg bg-white p-2"
         />
       </div>
+    </section>
+  );
+}
+
+/**
+ * Risk-reversal card shown right before the close on the pitch + leave-behind.
+ * Surfaces TSD's guarantees (from the $5k Website + AI offer) at the decision
+ * point — the highest-leverage persuasion element, previously absent here.
+ */
+export function GuaranteeCard() {
+  const items = [
+    "Live in 14 days from signing — or 25% back.",
+    "Your first 3 AI-captured leads within 30 days — or we refund the AI and rebuild it free.",
+    "You own the source code from day one.",
+    "Managed AI is optional and cancel-anytime — no lock-in.",
+  ];
+  return (
+    <section className="rounded-[14px] border border-[var(--accent)]/30 bg-[var(--accent-soft)] p-6 shadow-[var(--shadow-card)]">
+      <h2 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--accent)]">
+        Our guarantee — the risk is on us
+      </h2>
+      <ul className="mt-4 space-y-3">
+        {items.map((t) => (
+          <li key={t} className="flex items-start gap-3">
+            <ShieldCheck
+              size={18}
+              className="mt-0.5 shrink-0 text-[var(--accent)]"
+              aria-hidden
+            />
+            <span className="text-sm font-medium text-[var(--text)]">{t}</span>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

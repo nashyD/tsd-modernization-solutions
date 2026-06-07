@@ -119,8 +119,8 @@ export default function ServicePicker({
                 {estimate.managedMonthly > 0 ? `${fmtUsd(estimate.managedMonthly)}/mo` : "Optional"}
               </p>
               <p className="mt-3 text-xs leading-relaxed text-[var(--text-subtle)]">
-                This is an estimate, not a quote. Your exact, fixed price comes from the call. Source
-                code is yours from day one; Managed AI is optional and cancel-anytime.
+                An estimate to frame the conversation — your exact, fixed price
+                comes from the call.
               </p>
             </>
           )}
