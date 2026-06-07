@@ -109,7 +109,12 @@ export default function PasskeyManager() {
       }
       await load();
     } catch (err) {
-      const e = err as { name?: string; code?: string; message?: string };
+      const e = err as {
+        name?: string;
+        code?: string;
+        status?: number;
+        message?: string;
+      };
       if (e.name === "NotAllowedError" || e.name === "AbortError") {
         // user canceled the OS prompt — stay silent
       } else if (
@@ -120,7 +125,15 @@ export default function PasskeyManager() {
           "You've reached the maximum number of passkeys. Remove one before adding another.",
         );
       } else {
-        setError("Couldn't add a passkey. Please try again.");
+        // Surface the real reason — verify-stage failures usually name the RP /
+        // origin problem, which is what we need to see.
+        console.error("[passkey register] failed:", err);
+        const detail = e.code ?? e.name ?? (e.status ? `HTTP ${e.status}` : null);
+        setError(
+          `Couldn't add a passkey${detail ? ` (${detail})` : ""}: ${
+            e.message ?? "unknown error"
+          }.`,
+        );
       }
     } finally {
       setBusy(false);
