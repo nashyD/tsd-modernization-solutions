@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Shield, LayoutGrid } from "lucide-react";
+import { Shield, LayoutGrid, MapPin } from "lucide-react";
 import { requireRole } from "@/lib/auth/require";
 import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -26,6 +26,13 @@ export default async function SalesLayout({
           </Link>
           <div className="flex items-center gap-2">
             <ThemeToggle />
+            <Link
+              href="/sales/next"
+              className="inline-flex items-center gap-1.5 rounded-md border border-[var(--border-strong)] bg-[var(--surface)] px-3 py-1.5 text-xs font-semibold text-[var(--text)] shadow-sm transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+            >
+              <MapPin size={14} strokeWidth={2.25} aria-hidden />
+              Near me
+            </Link>
             <Link
               href="/app"
               className="inline-flex items-center gap-1.5 rounded-md border border-[var(--border-strong)] bg-[var(--surface)] px-3 py-1.5 text-xs font-semibold text-[var(--text)] shadow-sm transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"

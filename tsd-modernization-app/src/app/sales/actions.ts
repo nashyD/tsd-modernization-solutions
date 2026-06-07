@@ -116,6 +116,29 @@ export async function setProspectStatus(formData: FormData) {
   revalidatePath(`/sales/${id}`);
 }
 
+export async function recordVisit(formData: FormData) {
+  await requireRole("admin");
+  const id = z.string().uuid().parse(formData.get("id"));
+  const statusRaw = formData.get("status");
+  const status = statusRaw
+    ? z.enum(["new", "pitched", "won", "lost"]).parse(statusRaw)
+    : undefined;
+  const notesRaw = formData.get("notes");
+  const update: {
+    status?: "new" | "pitched" | "won" | "lost";
+    notes?: string | null;
+  } = {};
+  if (status) update.status = status;
+  if (notesRaw !== null) update.notes = notesRaw.toString().trim() || null;
+  if (Object.keys(update).length === 0) return;
+  const sb = supabaseAdmin();
+  const { error } = await sb.from("prospects").update(update).eq("id", id);
+  if (error) throw new Error(error.message);
+  revalidatePath("/sales");
+  revalidatePath("/sales/next");
+  revalidatePath(`/sales/${id}`);
+}
+
 export async function toggleShare(formData: FormData) {
   await requireRole("admin");
   const id = z.string().uuid().parse(formData.get("id"));
