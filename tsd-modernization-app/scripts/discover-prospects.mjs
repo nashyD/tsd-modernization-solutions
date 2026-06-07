@@ -1,27 +1,23 @@
 /**
  * Gaston County prospect discovery harvester — Google Places API (New).
  *
- * Pulls established, well-reviewed, independent businesses across Gaston County,
+ * Pulls established, well-reviewed, independent businesses inside Gaston County,
  * scores them against TSD's ICP, tags each with the product to LEAD the pitch
  * with, and stages them in `prospect_candidates` for review on /sales/candidates.
  *
- * ICP gate: OPERATIONAL · rating >= 4.0 · >= 40 reviews · independent (not a
- * national chain/franchise — keyword denylist + brand-frequency).
- * Product mapping: no website -> Website; else by category —
- * appointment -> Booking Bridge, catalog/retail -> Concierge, everything else
- * (phone/intake-driven) -> AI Receptionist. Website quality for sites-present is
- * category-inferred for now; a later pass can crawl each site to confirm.
+ * Geofence: every search is hard-bounded to a Gaston County rectangle
+ * (locationRestriction), and results are post-filtered by a lat/lng bounding box
+ * (Places treats a city in the query text as only a soft hint, which otherwise
+ * pulls in Charlotte/Asheville/etc.).
  *
- * Run (needs the Vercel-only keys locally — e.g. `vercel env pull .env.local`
- * from the app dir, which pulls GOOGLE_PLACES_API_KEY + Supabase keys):
+ * ICP gate: OPERATIONAL · rating >= 4.0 · >= 40 reviews · independent (chain
+ * keyword denylist + brand-frequency). Product mapping: no website -> Website;
+ * else by category — appointment -> Booking Bridge, catalog/retail -> Concierge,
+ * everything else (phone/intake-driven) -> AI Receptionist.
+ *
+ * Run (needs the Vercel-only keys locally — fill them into .env.local):
  *   node --env-file=.env.local scripts/discover-prospects.mjs
- * or pass them inline:
- *   GOOGLE_PLACES_API_KEY=... NEXT_PUBLIC_SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... \
- *     node scripts/discover-prospects.mjs
- *
- * DRY=1 prints results without writing. Each search call is billed (~$32/1k Pro
- * Text Search); a full sweep is ~250-400 calls. Already-staged or already-promoted
- * businesses (matched on place_id) are skipped.
+ * DRY=1 prints results without writing.
  */
 
 const KEY = process.env.GOOGLE_PLACES_API_KEY;
@@ -44,22 +40,28 @@ if (!DRY && (!SUPABASE_URL || !SERVICE)) {
   process.exit(1);
 }
 
-const CITIES = [
-  "Gastonia",
-  "Belmont",
-  "Mount Holly",
-  "Cramerton",
-  "Stanley",
-  "Dallas",
-  "Bessemer City",
-  "Lowell",
-  "McAdenville",
-  "High Shoals",
-  "Cherryville",
-];
+// Hard geofence: a rectangle around Gaston County, NC. Charlotte (~-80.84) sits
+// east of the -80.93 edge and is excluded; west Gaston towns reach ~-81.41.
+const GASTON_RECT = {
+  low: { latitude: 35.07, longitude: -81.46 },
+  high: { latitude: 35.49, longitude: -80.995 },
+};
+// Slightly looser box for the post-filter so we never double-cut the edges.
+const inBox = (p) => {
+  const lat = p.location?.latitude;
+  const lng = p.location?.longitude;
+  return (
+    typeof lat === "number" &&
+    typeof lng === "number" &&
+    lat >= 35.05 &&
+    lat <= 35.51 &&
+    lng >= -81.48 &&
+    lng <= -80.995
+  );
+};
 
 // Vertical-agnostic: customer-facing local businesses likely to have cash AND a
-// web/AI gap. Trim or extend freely — each entry is one Places text query/city.
+// web/AI gap. Each entry is one Places text query (geofenced to the county).
 const CATEGORIES = [
   "restaurants",
   "hair salons",
@@ -92,9 +94,33 @@ const CATEGORIES = [
 const MIN_RATING = 4.0;
 const MIN_REVIEWS = 40;
 
-// Obvious national chains / franchises to drop (brand-frequency catches the rest).
+// National chains / franchises to drop (the geofence removes most out-of-county
+// ones; this catches the in-county franchises). Brand-frequency catches the rest.
 const CHAIN_RE =
-  /\b(mcdonald|burger king|wendy|subway|taco bell|domino|pizza hut|papa john|kfc|chick-fil-a|bojangles|hardee|arby|sonic|dunkin|starbucks|chipotle|zaxby|cook ?out|walmart|target|lowe'?s|home depot|cvs|walgreens|rite aid|dollar (general|tree)|family dollar|autozone|o'?reilly|advance auto|firestone|jiffy lube|valvoline|great clips|sport clips|supercuts|aspen dental|jackson hewitt|h&r block|state farm|allstate|edward jones|planet fitness|anytime fitness|food lion|harris teeter|ingles|aldi|circle k)\b/i;
+  /\b(mcdonald|burger king|wendy|subway|taco bell|domino|pizza hut|papa (john|murphy)|kfc|chick-fil-a|bojangles|hardee|arby|sonic|dunkin|starbucks|chipotle|zaxby|cook ?out|hwy 55|waffle house|ihop|denny|cracker barrel|golden corral|texas roadhouse|longhorn|outback|olive garden|applebee|chili'?s|red lobster|panera|jersey mike|jimmy john|firehouse subs|wingstop|wing ?stop|marco'?s|little caesar|tropical smoothie|mcalister|moe'?s|captain d|long john|viva chicken|panda express|five guys|culver|sheetz|qt|quiktrip|circle k|walmart|target|lowe'?s|home depot|cvs|walgreens|rite aid|dollar (general|tree)|family dollar|autozone|o'?reilly|advance auto|napa auto|firestone|jiffy lube|valvoline|take 5|midas|meineke|mavis|discount tire|great clips|sport ?clips|supercuts|fantastic sams|aspen dental|jackson hewitt|h&r block|state farm|allstate|geico|edward jones|planet fitness|anytime fitness|crunch fitness|orangetheory|food lion|harris teeter|ingles|aldi|publix|morris-?jenkins|michael & son|one hour heating|benjamin franklin|mister sparky|aire serv|ars\b|roto-?rooter|mr\.? rooter|servpro|terminix|orkin|two men and a truck|merry maids|pet supplies plus|batteries plus|ace hardware|massage envy|hand & stone|european wax|the joint chiropractic|amazing lash|ashley (homestore|store)|american freight|rnr tire|afc urgent care|nextcare|fastmed|mr\.? (electric|handyman|appliance|rooter)|neighborly|christian brothers automotive|caliber collision|maaco|gerber collision|service experts)\b/i;
+
+// Adjacent non-Gaston towns that creep in at the county border (Lincoln / Mecklenburg / SC).
+const NON_GASTON = new Set([
+  "denver",
+  "lincolnton",
+  "charlotte",
+  "clover",
+  "york",
+  "kings mountain",
+  "shelby",
+  "mooresville",
+  "huntersville",
+  "cornelius",
+  "fort mill",
+  "rock hill",
+  "maiden",
+  "newton",
+  "lowesville",
+  "iron station",
+  "vale",
+  "lake wylie",
+  "tega cay",
+]);
 
 const APPOINTMENT = new Set([
   "dentist",
@@ -157,7 +183,9 @@ async function search(textQuery) {
   const out = [];
   let pageToken = null;
   for (let page = 0; page < 3; page++) {
-    const body = pageToken ? { textQuery, pageToken } : { textQuery };
+    const body = pageToken
+      ? { textQuery, pageToken }
+      : { textQuery, locationRestriction: { rectangle: GASTON_RECT } };
     let resp;
     try {
       resp = await fetch("https://places.googleapis.com/v1/places:searchText", {
@@ -237,25 +265,32 @@ async function existingPlaceIds() {
 
 async function main() {
   console.log(
-    `Harvesting Gaston County · ${CATEGORIES.length} categories × ${CITIES.length} cities…`,
+    `Harvesting Gaston County (geofenced) · ${CATEGORIES.length} categories…`,
   );
   const byId = new Map();
   const nameCount = new Map();
-  for (const city of CITIES) {
-    for (const cat of CATEGORIES) {
-      const found = await search(`${cat} in ${city}, North Carolina`);
-      for (const p of found) {
-        const id = p.id;
-        const name = p.displayName?.text || "";
-        if (!id || !name || byId.has(id)) continue;
-        byId.set(id, p);
-        const k = norm(name);
-        nameCount.set(k, (nameCount.get(k) || 0) + 1);
+  let outOfBox = 0;
+  for (const cat of CATEGORIES) {
+    const found = await search(cat);
+    let kept = 0;
+    for (const p of found) {
+      const id = p.id;
+      const name = p.displayName?.text || "";
+      if (!id || !name) continue;
+      if (!inBox(p)) {
+        outOfBox++;
+        continue;
       }
-      await sleep(200);
+      if (byId.has(id)) continue;
+      byId.set(id, p);
+      const k = norm(name);
+      nameCount.set(k, (nameCount.get(k) || 0) + 1);
+      kept++;
     }
-    console.log(`  ${city} done · unique so far: ${byId.size}`);
+    console.log(`  ${cat}: +${kept} (unique ${byId.size})`);
+    await sleep(200);
   }
+  console.log(`(dropped ${outOfBox} results outside the Gaston box)`);
 
   const skip = await existingPlaceIds();
   const rows = [];
@@ -280,10 +315,14 @@ async function main() {
       chains++;
       continue;
     }
-    const noWebsite = !p.websiteUri;
-    const { product, gap } = mapProduct(p);
     const city =
       (p.formattedAddress || "").match(/,\s*([^,]+),\s*NC/i)?.[1]?.trim() || null;
+    if (city && NON_GASTON.has(city.toLowerCase())) {
+      gated++;
+      continue;
+    }
+    const noWebsite = !p.websiteUri;
+    const { product, gap } = mapProduct(p);
     rows.push({
       place_id: p.id,
       business_name: name,
@@ -310,7 +349,7 @@ async function main() {
   rows.sort((a, b) => (b.fit_score || 0) - (a.fit_score || 0));
 
   console.log(
-    `\nUnique: ${byId.size} · gated out: ${gated} · chains dropped: ${chains} · already known: ${skipped} · NEW candidates: ${rows.length}`,
+    `\nIn-box unique: ${byId.size} · gated out: ${gated} · chains dropped: ${chains} · already known: ${skipped} · NEW candidates: ${rows.length}`,
   );
   const byProduct = rows.reduce((m, r) => {
     m[r.primary_product] = (m[r.primary_product] || 0) + 1;
