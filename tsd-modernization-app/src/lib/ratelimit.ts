@@ -41,6 +41,29 @@ function getEmailLimiter() {
   return emailLimiter;
 }
 
+let showcaseVoiceLimiter: Ratelimit | null = null;
+function getShowcaseVoiceLimiter() {
+  if (showcaseVoiceLimiter) return showcaseVoiceLimiter;
+  const r = redis();
+  if (!r) return null;
+  showcaseVoiceLimiter = new Ratelimit({
+    redis: r,
+    limiter: Ratelimit.slidingWindow(10, "1 d"),
+    analytics: true,
+    prefix: "showcase:voice:ip",
+  });
+  return showcaseVoiceLimiter;
+}
+
+/** Per-IP daily cap on public showcase voice-demo grants (Vapi cost control).
+ *  Falls open if Upstash isn't configured; the per-prospect DB cap still applies. */
+export async function checkShowcaseVoiceRateLimit(ip: string): Promise<boolean> {
+  const l = getShowcaseVoiceLimiter();
+  if (!l) return true;
+  const res = await l.limit(ip || "unknown");
+  return res.success;
+}
+
 export async function checkAuditRateLimit(opts: {
   ip: string;
   email: string;
