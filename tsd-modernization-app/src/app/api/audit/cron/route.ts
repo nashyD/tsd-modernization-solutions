@@ -18,10 +18,14 @@ export async function GET(req: NextRequest) {
   // that or our internal secret so the route can be smoke-tested.
   const auth = req.headers.get("authorization") ?? "";
   const internal = req.headers.get("x-internal-secret") ?? "";
-  if (
-    auth !== `Bearer ${process.env.CRON_SECRET ?? ""}` &&
-    internal !== e.INTERNAL_API_SECRET
-  ) {
+  // Authorize on Vercel's cron Bearer token OR our internal secret. Guard the
+  // unset-CRON_SECRET case: `Bearer ${CRON_SECRET ?? ""}` would collapse to the
+  // literal "Bearer ", and anyone sending that header would pass.
+  const cronSecret = process.env.CRON_SECRET;
+  const authorized =
+    (!!cronSecret && auth === `Bearer ${cronSecret}`) ||
+    internal === e.INTERNAL_API_SECRET;
+  if (!authorized) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
   if (!e.WORKER_URL || !e.WORKER_SECRET) {

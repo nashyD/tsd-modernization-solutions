@@ -31,6 +31,7 @@
 
 import nodemailer from "nodemailer";
 import { Redis } from "@upstash/redis";
+import { Ratelimit } from "@upstash/ratelimit";
 
 import { buildChatTranscriptEmail } from "./_email-template.js";
 
@@ -43,6 +44,26 @@ const upstashUrl = process.env.UPSTASH_REDIS_REST_URL;
 const upstashToken = process.env.UPSTASH_REDIS_REST_TOKEN;
 if (upstashUrl && upstashToken) {
   dedup = new Redis({ url: upstashUrl, token: upstashToken });
+}
+
+/* Per-IP rate limit. This is an unauthenticated, fire-and-forget (sendBeacon)
+   endpoint that emails the founders' inbox, so without a limit anyone could
+   flood it. Mirrors /api/agent: sliding window, shared Upstash, fail-open if
+   Upstash is unconfigured (Vercel platform DDoS protection still applies). */
+let ratelimit = null;
+if (dedup) {
+  ratelimit = new Ratelimit({
+    redis: dedup,
+    limiter: Ratelimit.slidingWindow(10, "10 m"),
+    analytics: true,
+    prefix: "chat-transcript:rl",
+  });
+}
+
+function getClientIP(req) {
+  const fwd = req.headers["x-forwarded-for"];
+  if (typeof fwd === "string") return fwd.split(",")[0]?.trim() || null;
+  return req.headers["x-real-ip"] || req.socket?.remoteAddress || null;
 }
 
 async function alreadySentAtCount(conversationId, messageCount) {
@@ -118,6 +139,28 @@ export default async function handler(req, res) {
     return;
   }
 
+  // Rate-limit before doing any work. Fail open on limiter error so a Upstash
+  // hiccup doesn't drop a legitimate transcript.
+  if (ratelimit) {
+    const ip = getClientIP(req);
+    if (ip) {
+      try {
+        const { success, reset } = await ratelimit.limit(ip);
+        if (!success) {
+          const retryAfter = Math.max(1, Math.ceil((reset - Date.now()) / 1000));
+          res.setHeader("Retry-After", String(retryAfter));
+          res.status(429).json({ error: "Too many requests." });
+          return;
+        }
+      } catch (e) {
+        console.warn(
+          "[chat-transcript] rate-limit check failed:",
+          e?.message || e,
+        );
+      }
+    }
+  }
+
   // sendBeacon doesn't always set application/json — body might be a
   // raw string or already parsed. Normalize.
   let body = req.body;
@@ -148,6 +191,13 @@ export default async function handler(req, res) {
 
   if (!Array.isArray(messages) || !messages.length) {
     res.status(204).end();
+    return;
+  }
+
+  // Bound the work: the email renders every message, so cap the array to keep
+  // a hostile payload from building a giant email.
+  if (messages.length > 200) {
+    res.status(413).json({ error: "Conversation too long." });
     return;
   }
 
