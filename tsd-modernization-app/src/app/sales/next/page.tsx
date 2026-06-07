@@ -13,7 +13,7 @@ export default async function NextNearbyPage() {
   const { data } = await sb
     .from("prospects")
     .select(
-      "id,business_name,business_url,phone,city,lat,lng,status,primary_product,gap_summary,rating,review_count,notes",
+      "id,business_name,business_url,phone,city,lat,lng,place_id,status,primary_product,gap_summary,rating,review_count,notes",
     )
     .in("status", ["new", "pitched"])
     .order("updated_at", { ascending: false });

@@ -267,12 +267,19 @@ export async function approveCandidate(formData: FormData) {
   await requireRole("admin");
   const id = z.string().uuid().parse(formData.get("id"));
   const sb = supabaseAdmin();
+  // Only act on a still-pending candidate; a double-fire / network retry then
+  // finds nothing and no-ops instead of inserting a second prospect.
   const { data: c, error: cErr } = await sb
     .from("prospect_candidates")
     .select("*")
     .eq("id", id)
-    .single();
-  if (cErr || !c) throw new Error(cErr?.message ?? "candidate not found");
+    .eq("status", "pending")
+    .maybeSingle();
+  if (cErr) throw new Error(cErr.message);
+  if (!c) {
+    revalidatePath("/sales/candidates");
+    return;
+  }
   const businessUrl =
     c.website ||
     `https://www.google.com/search?q=${encodeURIComponent(`${c.business_name}, ${c.city ?? ""} NC`)}`;
@@ -301,7 +308,8 @@ export async function approveCandidate(formData: FormData) {
   await sb
     .from("prospect_candidates")
     .update({ status: "approved", promoted_prospect_id: prospect.id })
-    .eq("id", id);
+    .eq("id", id)
+    .eq("status", "pending");
   revalidatePath("/sales/candidates");
   revalidatePath("/sales");
 }
@@ -348,23 +356,48 @@ async function geocodeNC(
   }
 }
 
+/** Validate device-supplied lat/lng (hidden field-form inputs). Returns null
+ *  unless both parse and land inside a sane North Carolina bounding box. */
+function parseFieldCoords(
+  latRaw: FormDataEntryValue | null,
+  lngRaw: FormDataEntryValue | null,
+): { lat: number; lng: number } | null {
+  const lat = parseFloat((latRaw ?? "").toString());
+  const lng = parseFloat((lngRaw ?? "").toString());
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+  if (lat >= 33.5 && lat <= 36.8 && lng >= -84.6 && lng <= -75.0) {
+    return { lat, lng };
+  }
+  return null;
+}
+
 const QuickAddSchema = z.object({
   business_name: z.string().min(2),
   city: z.string().optional().or(z.literal("")),
   phone: z.string().optional().or(z.literal("")),
   business_url: z.string().optional().or(z.literal("")),
+  primary_product: z
+    .enum(["website", "front_desk", "booking_bridge", "concierge"])
+    .optional()
+    .or(z.literal("")),
 });
 
-/** Fast field capture: name + optional city/phone/url. Geocodes so the new
- *  prospect shows up in "Near me". Revalidates the board only (NOT /sales/next,
- *  so the field tool doesn't re-acquire location mid-session). */
-export async function quickAddProspect(formData: FormData) {
+/** Fast field capture: name + optional city/phone/url/product. Prefers the
+ *  device's live GPS (the rep is standing at the business) and falls back to a
+ *  Nominatim geocode, so the new prospect shows up in "Near me". Tagging a
+ *  product lights up its pitch badge + tailored problem card. Revalidates the
+ *  board only (NOT /sales/next, so the field tool doesn't re-acquire location
+ *  mid-session). Returns whether it managed to pin a location. */
+export async function quickAddProspect(
+  formData: FormData,
+): Promise<{ located: boolean }> {
   await requireRole("admin");
   const p = QuickAddSchema.parse({
     business_name: clean(formData.get("business_name")),
     city: clean(formData.get("city")),
     phone: clean(formData.get("phone")),
     business_url: clean(formData.get("business_url")),
+    primary_product: clean(formData.get("primary_product")),
   });
   const name = p.business_name.trim();
   const city = (p.city || "").trim() || null;
@@ -374,17 +407,34 @@ export async function quickAddProspect(formData: FormData) {
       ? rawUrl
       : `https://${rawUrl}`
     : `https://www.google.com/search?q=${encodeURIComponent(`${name}, ${city ?? ""} NC`)}`;
-  const geo = await geocodeNC(`${name}, ${city ?? "Gaston County"}, NC`);
+
+  // Device GPS first (most accurate — the rep is on-site), Nominatim as backup.
+  let coords = parseFieldCoords(formData.get("lat"), formData.get("lng"));
+  if (!coords) {
+    coords = await geocodeNC(`${name}, ${city ?? "Gaston County"}, NC`);
+  }
+
+  const product = (p.primary_product || "") as
+    | "website"
+    | "front_desk"
+    | "booking_bridge"
+    | "concierge"
+    | "";
+  const svc = product ? CANDIDATE_SVC[product] : null;
+
   const sb = supabaseAdmin();
   const { error } = await sb.from("prospects").insert({
     business_name: name,
     business_url: businessUrl,
     city,
     phone: (p.phone || "").trim() || null,
-    lat: geo?.lat ?? null,
-    lng: geo?.lng ?? null,
+    lat: coords?.lat ?? null,
+    lng: coords?.lng ?? null,
+    primary_product: product || null,
+    selected_services: svc ? [svc] : [],
     discovery_source: "manual",
   });
   if (error) throw new Error(error.message);
   revalidatePath("/sales");
+  return { located: coords != null };
 }

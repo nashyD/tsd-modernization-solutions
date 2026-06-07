@@ -16,3 +16,5 @@ dist
 # Claude Code session state
 .claude/launch.json
 .claude/worktrees/
+.vercel
+.env*
