@@ -20,6 +20,7 @@ export type FieldProspect = {
   city: string | null;
   lat: number;
   lng: number;
+  place_id: string | null;
   status: "new" | "pitched" | "won" | "lost";
   primary_product: "website" | "front_desk" | "booking_bridge" | "concierge" | null;
   gap_summary: string | null;
@@ -58,8 +59,15 @@ function haversineMiles(a: LatLng, b: LatLng): number {
 }
 
 function mapsHref(p: FieldProspect): string {
-  const dest = `${p.business_name}, ${p.city ?? ""} NC`.replace(/\s+/g, " ").trim();
-  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(dest)}`;
+  // Prefer the exact Google place id, then our stored coordinates, over a name
+  // search — a name can misroute on an ambiguous or duplicated business name.
+  if (p.place_id) {
+    const dest = `${p.business_name}, ${p.city ?? ""} NC`
+      .replace(/\s+/g, " ")
+      .trim();
+    return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(dest)}&destination_place_id=${encodeURIComponent(p.place_id)}`;
+  }
+  return `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`;
 }
 
 export function NextNearby({

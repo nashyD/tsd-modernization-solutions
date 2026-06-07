@@ -378,7 +378,12 @@ export interface Database {
       };
     };
     Views: { [key: string]: never };
-    Functions: { [key: string]: never };
+    Functions: {
+      claim_showcase_voice_call: {
+        Args: { p_prospect_id: string; p_cap: number };
+        Returns: boolean;
+      };
+    };
     Enums: { [key: string]: never };
     CompositeTypes: { [key: string]: never };
   };
