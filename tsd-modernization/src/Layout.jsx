@@ -28,11 +28,11 @@ const SITE_URL = "https://tsd-modernization.com";
 const ROUTE_META = {
   "/": {
     title: "Charlotte Websites + AI for Established Businesses | TSD Modernization Solutions",
-    description: "Websites and AI for Charlotte-metro businesses people already trust — built so the work doesn't wait on you. Custom sites plus AI that answers the phone, knows your catalog, and runs the busywork. Custom, fixed-price builds — get a real range from the /pricing estimator — source code yours from day one.",
+    description: "Websites and AI for Charlotte-metro businesses people already trust — built so the work doesn't wait on you. Custom sites plus AI that answers the phone, knows your catalog, and runs the busywork. Custom, fixed-price builds — get a real range from the /pricing estimator — managed by us, or owned by you.",
   },
   "/services": {
     title: "Services — Websites, AI Front Desk, Concierge & Booking | TSD Modernization Solutions",
-    description: "What we build: custom websites, the TSD Front Desk AI receptionist, the TSD Concierge site assistant, and TSD Booking Bridge automation — for established Charlotte-metro businesses. Source code yours; Managed AI optional.",
+    description: "What we build: custom websites, the TSD Front Desk AI receptionist, the TSD Concierge site assistant, and TSD Booking Bridge automation — for established Charlotte-metro businesses. Every build managed by us, or owned by you outright.",
   },
   "/services/ai-integration": {
     title: "AI Receptionist, Site Assistant & Booking Automation | TSD Modernization Solutions",
@@ -40,23 +40,23 @@ const ROUTE_META = {
   },
   "/services/websites": {
     title: "Custom Website Design & Redesign | Charlotte Business Web Developer",
-    description: "Fast, mobile-first custom websites with on-page SEO, analytics wiring, and full handoff docs so your team owns the content. Custom, fixed-price builds — get a real range from the /pricing estimator — source code yours from day one, launched in 2-4 weeks.",
+    description: "Fast, mobile-first custom websites with on-page SEO, analytics wiring, and full handoff docs so your team owns the content. Custom, fixed-price builds launched in 2-4 weeks — get a real range from the /pricing estimator. We manage hosting and edits from $49/mo, or you own it outright, source code and all.",
   },
   "/services/process-modernization": {
     title: "Process Modernization & Workflow Automation | TSD Modernization Solutions",
     description: "We take the repetitive work off the owner's plate — consolidated booking, lead routing, and automation built on the tools you already pay for, so the business keeps moving when you step away. Charlotte metro.",
   },
   "/why-us": {
-    title: "Why Us — Local, Accountable, You Own the Build | TSD Modernization Solutions",
-    description: "Why established Charlotte businesses choose TSD: a local team you can reach directly, source code yours from day one, and Managed AI that's a service, never a lock-in. See how we compare to agencies and freelancers.",
+    title: "Why Us — Local, Accountable, Managed or Owned | TSD Modernization Solutions",
+    description: "Why established Charlotte businesses choose TSD: a local team you can reach directly, every build managed by us or owned by you, and recurring plans you can cancel anytime. See how we compare to agencies and freelancers.",
   },
   "/process": {
     title: "Our Process — From Fit Call to Launch | TSD Modernization Solutions",
-    description: "How we work: free fit call, written proposal within 48 hours, hands-on build, and a live training handoff so you own what we build. Source code, credentials, and runbook are yours.",
+    description: "How we work: free fit call, written proposal within 48 hours, hands-on build, then your kind of handoff — we keep it managed and current, or you take it over with source code, credentials, and runbook in hand.",
   },
   "/pricing": {
     title: "Pricing & Estimate — Custom Websites + AI | TSD Modernization Solutions",
-    description: "Build a real estimate in two clicks: tell us your size and what you want running. Custom, fixed-price builds — get a real range from the /pricing estimator, exact price from a free fit call. Source code yours; Managed AI from $73/mo, optional, cancel anytime.",
+    description: "Build a real estimate in two clicks: tell us your size and what you want running. Custom, fixed-price builds — get a real range from the /pricing estimator, exact price from a free fit call. Managed plans from $49/mo for a site and $73/mo for AI, cancel anytime — or own everything outright.",
   },
   "/ai-receptionist": {
     title: "TSD Front Desk — AI Receptionist for Charlotte Businesses | TSD Modernization Solutions",
@@ -64,15 +64,15 @@ const ROUTE_META = {
   },
   "/salons": {
     title: "Custom Website + AI for Charlotte Salons & Spas | TSD Modernization Solutions",
-    description: "Websites and AI for established Charlotte salons and spas — consolidated booking, after-hours chat that answers from your services, and an AI front desk that books while you're with a client. Source code yours from day one.",
+    description: "Websites and AI for established Charlotte salons and spas — consolidated booking, after-hours chat that answers from your services, and an AI front desk that books while you're with a client. Managed by us, or owned by you.",
   },
   "/auto-shops": {
     title: "Custom Website + AI for Charlotte Specialty Auto Shops | TSD Modernization Solutions",
-    description: "Websites and AI for established Charlotte specialty automotive shops — online quote requests, service and parts catalog lookup, and an AI front desk that captures the call you'd have missed. Source code yours from day one.",
+    description: "Websites and AI for established Charlotte specialty automotive shops — online quote requests, service and parts catalog lookup, and an AI front desk that captures the call you'd have missed. Managed by us, or owned by you.",
   },
   "/restaurants": {
     title: "Custom Website + AI for Charlotte Restaurants | TSD Modernization Solutions",
-    description: "Websites and AI for established Charlotte restaurants — reservations, online ordering, and an AI assistant that answers menu and hours questions from your own content. Source code yours from day one.",
+    description: "Websites and AI for established Charlotte restaurants — reservations, online ordering, and an AI assistant that answers menu and hours questions from your own content. Managed by us, or owned by you.",
   },
   "/testimonials": {
     title: "Case Studies Coming Soon | TSD Modernization Solutions",
@@ -88,7 +88,7 @@ const ROUTE_META = {
   },
   "/contact": {
     title: "Contact Us — Start a Project | TSD Modernization Solutions",
-    description: "Tell us what you're trying to fix. Free fit call, then a written proposal within 48 hours. Custom websites and AI for established Charlotte-metro businesses — source code yours from day one.",
+    description: "Tell us what you're trying to fix. Free fit call, then a written proposal within 48 hours. Custom websites and AI for established Charlotte-metro businesses — managed by us, or owned by you.",
   },
 };
 
@@ -726,7 +726,7 @@ export default function Layout() {
                 fontSize: "14px", lineHeight: 1.6, color: v("text-muted"),
                 maxWidth: "320px", marginBottom: "16px",
               }}>
-                Modern websites and AI for established businesses across the Charlotte metro. Built to own — source code yours from day one.
+                Modern websites and AI for established businesses across the Charlotte metro. Managed by us, or owned by you.
               </p>
               <p style={{ fontSize: "12px", color: v("text-dim"), lineHeight: 1.5 }}>
                 A brand of TSD Ventures, LLC<br />

@@ -8,7 +8,7 @@ Established local businesses whose digital presence has fallen behind their repu
 
 ## What we build
 
-- **Custom website** — Fast, mobile-first, built to convert, with on-page SEO and analytics wired in. Source code yours from day one.
+- **Custom website** — Fast, mobile-first, built to convert, with on-page SEO and analytics wired in. Managed by us, or owned by you.
 - **TSD Front Desk** (AI receptionist) — Answers your phone and chat day or night, qualifies the lead, and books the job, then texts you a one-paragraph summary. Built on your real intake flow. Recurring.
 - **TSD Concierge** (site assistant) — Answers visitor questions from your own content and catalog: search across docs, videos, and products, with semantic and image-based catalog lookup (RAG).
 - **TSD Booking Bridge** (booking & automation) — One booking front door plus the calendar and lead-routing automation behind it, built on the tools you already pay for.
@@ -19,12 +19,12 @@ Start with what hurts most and add the rest when you're ready. The website is th
 
 - No fixed public tiers. Every build is a fixed price, quoted in a written proposal within 48 hours of a free fit call.
 - [Pricing & estimate](https://tsd-modernization.com/pricing): Custom, fixed-price builds — get a real range from the /pricing estimator. Tell the estimator your size and what you want running for a realistic range in two clicks; the exact, fixed number depends on your content, your catalog, and the systems you already run.
-- **Managed AI — from $97/mo**: Optional monthly upkeep that keeps your AI sharp — re-indexing new content, prompt and model upkeep, monitoring, and a monthly report. Starts after launch, cancel anytime. A website-only build doesn't need it.
-- Source code, credentials, and a runbook are yours from day one. 100% money-back guarantee. 48-hour written proposal. Managed AI is a service on top, never a lock-in.
+- **Managed plans — website from $49/mo, AI from $73/mo**: Optional monthly upkeep. A managed website gets hosting plus content edits on request; Managed AI gets re-indexing of new content, prompt and model upkeep, monitoring, and a monthly report. Starts after launch, cancel anytime.
+- Every build runs the client's way — Managed (we host it, maintain it, and make changes on request) or Owned (source code, credentials, and a runbook are yours at handoff). 100% money-back guarantee. 48-hour written proposal.
 
 ## Service pages
 
-- [Websites](https://tsd-modernization.com/services/websites): Fast, mobile-first custom websites with on-page SEO, analytics and Search Console wiring, and full handoff docs. Custom, fixed-price builds — get a real range from the /pricing estimator, 2-4 weeks, source code yours from day one.
+- [Websites](https://tsd-modernization.com/services/websites): Fast, mobile-first custom websites with on-page SEO, analytics and Search Console wiring, and full handoff docs. Custom, fixed-price builds — get a real range from the /pricing estimator, 2-4 weeks, managed by us or owned by you outright.
 - [AI integration](https://tsd-modernization.com/services/ai-integration): TSD Front Desk, TSD Concierge, and TSD Booking Bridge — AI built on your real intake, content, and catalog. Managed AI optional.
 - [Process modernization](https://tsd-modernization.com/services/process-modernization): Take the repetitive work off the owner's plate — consolidated booking, lead routing, and automation on the tools you already pay for.
 
@@ -37,8 +37,8 @@ Start with what hurts most and add the rest when you're ready. The website is th
 
 ## How we work
 
-- [Process](https://tsd-modernization.com/process): Free 30-minute fit call → written proposal within 48 hours → 2-4 week build with weekly check-ins → handoff with documentation, video tutorials, and live training. You own the source code from day one.
-- [Why us](https://tsd-modernization.com/why-us): How we compare to agencies and freelancers — a local team you reach directly, source code yours from day one, Managed AI that's a service and never a lock-in.
+- [Process](https://tsd-modernization.com/process): Free 30-minute fit call → written proposal within 48 hours → 2-4 week build with weekly check-ins → handoff with documentation, video tutorials, and live training — then keep it managed by us, or take it over with source code, credentials, and runbook.
+- [Why us](https://tsd-modernization.com/why-us): How we compare to agencies and freelancers — a local team you reach directly, every build managed by us or owned by you, recurring plans you can cancel anytime.
 - [Team](https://tsd-modernization.com/team): Nash Davis (CEO), Bishop Switzer (COO), Grant Tadlock (CFO). When something breaks at 7pm, you talk to the person who built it.
 
 ## Get in touch
@@ -51,11 +51,11 @@ Start with what hurts most and add the rest when you're ready. The website is th
 - Service area: Charlotte metro · Gastonia · Belmont · surrounding Mecklenburg / Gaston counties (NC). Fit calls in person or remote.
 - Permanent studio. No operating window, no cohort cap, no end date.
 - Legal entity: TSD Ventures, LLC. "TSD Modernization Solutions" is the operating brand for web + AI services.
-- Pricing model: custom fixed-price builds — get a real range from the /pricing estimator — plus optional recurring Managed AI (from $97/mo). Source code yours from day one; Managed AI cancellable anytime.
+- Pricing model: custom fixed-price builds — get a real range from the /pricing estimator — plus optional recurring Managed plans (website from $49/mo, AI from $73/mo, cancel anytime). Every build runs the client's way: Managed by us, or Owned outright (source code, credentials, runbook at handoff).
 
 ## Notes for AI agents
 
 - The [pricing page](https://tsd-modernization.com/pricing) is canonical. There are no fixed public tiers — builds are quoted per project. The estimator returns a range; the fixed price comes from a free fit call.
-- The four products (Custom website, TSD Front Desk, TSD Concierge, TSD Booking Bridge) are mixed to fit each client. Managed AI is the only recurring charge and is always optional.
+- The four products (Custom website, TSD Front Desk, TSD Concierge, TSD Booking Bridge) are mixed to fit each client. Recurring charges are the optional Managed plans (website hosting + edits, AI upkeep); every build can instead be owned outright.
 - First step for any prospect: a free fit call at https://tsd-modernization.com/book.
 - Sitemap: https://tsd-modernization.com/sitemap.xml
