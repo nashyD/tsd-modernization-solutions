@@ -77,7 +77,10 @@ export default function Book() {
         <div
           ref={calendlyRef}
           style={{
-            minHeight: "720px",
+            // Calendly's iframe is height:100%, which only resolves against a
+            // parent with a *definite* height. min-height leaves height:auto,
+            // so the iframe collapsed to ~150px and the calendar was clipped.
+            height: "720px",
             background: v("surface"),
             border: `1px solid ${v("surface-border")}`,
             borderRadius: RADIUS["2xl"],
