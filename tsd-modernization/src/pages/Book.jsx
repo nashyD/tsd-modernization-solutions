@@ -81,6 +81,12 @@ export default function Book() {
             // parent with a *definite* height. min-height leaves height:auto,
             // so the iframe collapsed to ~150px and the calendar was clipped.
             height: "720px",
+            // initInlineWidget({parentElement}) doesn't add the
+            // .calendly-inline-widget class, so we must supply its
+            // position:relative ourselves — otherwise Calendly's absolutely
+            // positioned loading spinner escapes the container (top:50% of the
+            // viewport), never gets covered by the iframe, and spins forever.
+            position: "relative",
             background: v("surface"),
             border: `1px solid ${v("surface-border")}`,
             borderRadius: RADIUS["2xl"],
