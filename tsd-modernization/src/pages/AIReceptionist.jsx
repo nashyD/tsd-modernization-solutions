@@ -99,11 +99,11 @@ function ReceptionistHero() {
         position: "relative", zIndex: 1,
       }}>
         <span style={{ flex: "0 0 32px", height: "1px", background: v("divider") }} />
-        <span>Custom setup + $97/mo</span>
+        <span>Custom setup + $73/mo</span>
         <span style={{ color: v("accent"), fontSize: "7px" }}>{"◆"}</span>
         <span>Cancel anytime</span>
         <span style={{ color: v("accent"), fontSize: "7px" }}>{"◆"}</span>
-        <span>Source code yours</span>
+        <span>Managed or owned</span>
         <span style={{ flex: "0 0 32px", height: "1px", background: v("divider") }} />
       </div>
     </section>
@@ -205,7 +205,7 @@ const INCLUDED = [
   "SMS confirmations to caller and to you",
   "Weekly summary of what got booked",
   "Ongoing tuning, monitoring, and model updates (Managed AI)",
-  "Source code and credentials yours from day one",
+  "Yours to own (source code + credentials) — or we manage it for you",
 ];
 
 function TheOffer() {
@@ -247,13 +247,14 @@ function TheOffer() {
 
         <div style={{
           padding: SPACE.xl,
-          borderRadius: RADIUS["2xl"],
-          background: `linear-gradient(160deg, ${v("surface")} 0%, rgba(75,156,211,0.06) 100%)`,
+          borderRadius: "var(--glass-radius)",
+          background: "linear-gradient(160deg, var(--glass-bg) 0%, var(--glass-bg-strong) 100%)",
           border: `2px solid rgba(75,156,211,0.55)`,
-          backdropFilter: "blur(10px)",
-          WebkitBackdropFilter: "blur(10px)",
+          backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+          WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
           position: "relative",
-          boxShadow: "0 16px 40px rgba(75,156,211,0.18), 0 6px 16px rgba(7,13,26,0.10)",
+          isolation: "isolate",
+          boxShadow: "var(--glass-shadow), 0 0 28px var(--glass-glow)",
         }}>
           {/* Top-edge gradient highlight */}
           <span aria-hidden="true" style={{
@@ -279,7 +280,7 @@ function TheOffer() {
               <strong style={{ color: v("text"), fontWeight: 700 }}>Custom setup, scoped to your business.</strong>
             </p>
             <p style={{ fontSize: "13px", color: v("text-muted"), lineHeight: 1.55 }}>
-              Then <strong style={{ color: v("text"), fontWeight: 700 }}>$97/mo Managed AI</strong> keeps it tuned and answering. Cancel anytime — source code and credentials are yours from day one.
+              Then <strong style={{ color: v("text"), fontWeight: 700 }}>$73/mo Managed AI</strong> keeps it tuned and answering. Cancel anytime — source code and credentials are yours from day one.
             </p>
           </div>
 
@@ -312,7 +313,7 @@ function TheOffer() {
             fontSize: "13px", color: v("text-dim"), lineHeight: 1.6,
             marginBottom: SPACE.lg,
           }}>
-            You own the build — source code, credentials, and call log are yours from day one. Managed AI is the optional service that keeps it sharp.
+            Run it your way — own the build (source code, credentials, and call log yours from day one) or let us manage it end to end. Managed AI keeps it sharp; cancel anytime.
           </p>
 
           <Link to="/contact?ref=ai-receptionist" style={{ textDecoration: "none" }}>
@@ -360,8 +361,8 @@ function ClosingCTA() {
 
 const SAAS_COMPARISON = [
   { axis: "Build", saas: "Generic, self-serve", tsd: "Custom-built on your real intake + voice" },
-  { axis: "Pricing", saas: "Locked monthly contracts", tsd: "Fair setup + $97/mo, cancel anytime" },
-  { axis: "Ownership", saas: "Theirs — you rent the whole thing", tsd: "Yours — source code + credentials from day one" },
+  { axis: "Pricing", saas: "Locked monthly contracts", tsd: "Fair setup + $73/mo, cancel anytime" },
+  { axis: "Ownership", saas: "Theirs — you rent the whole thing", tsd: "Your call — we manage it, or you own the source code" },
   { axis: "Support", saas: "Ticket queue, anywhere", tsd: "Charlotte team that picks up the phone" },
 ];
 
@@ -381,9 +382,12 @@ function TheDifference() {
 
       <div style={{
         overflowX: "auto",
-        borderRadius: RADIUS.xl,
-        border: `1px solid ${v("surface-border")}`,
-        boxShadow: SHADOW.sm,
+        borderRadius: "var(--glass-radius)",
+        border: "1px solid var(--glass-border)",
+        backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+        WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+        boxShadow: "var(--glass-shadow)",
+        isolation: "isolate",
       }}>
         <div style={{ minWidth: "640px" }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1.4fr 1.4fr" }}>

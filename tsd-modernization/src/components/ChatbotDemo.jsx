@@ -386,7 +386,7 @@ function PricingPage({ shift }) {
               "On-page SEO + analytics wired in",
               "Written + video documentation",
               "Live training session at handoff",
-              "Source code yours from day one",
+              "Managed by us, or owned by you",
             ],
           }}
           cta="Build an Estimate"
@@ -413,13 +413,13 @@ function PricingPage({ shift }) {
               "Site assistant trained on your content + catalog",
               "Booking + workflow automation",
               "Direct founder access, no ticket queue",
-              "Full source code ownership",
+              "Managed by us, or you own the source code",
             ],
-            bonus: "Managed AI keeps it sharp after launch — from $97/mo, optional, cancel anytime.",
+            bonus: "Managed AI keeps it sharp after launch — from $73/mo, optional, cancel anytime.",
           }}
           cta="Get a Fixed Price"
           footer={{
-            italic: "Fixed price after a free fit call. Source code is yours from day one.",
+            italic: "Fixed price after a free fit call. Managed by us, or owned by you.",
             list: [
               "100% money-back guarantee",
               "48-hour written proposal",
@@ -430,7 +430,7 @@ function PricingPage({ shift }) {
         <PricingTier
           phase="MANAGED AI"
           title="MANAGED AI"
-          price="$97+"
+          price="$73+"
           rateLabel="PER MONTH · OPTIONAL"
           features={{
             list: [
@@ -770,7 +770,7 @@ function buildConversation(t) {
   const u1TypeStart = 4.0, u1TypeEnd = 5.6;
   const u1Send = 5.8;
   const u1BotTypingStart = 6.0, u1BotTypingEnd = 6.8;
-  const u1BotReply = "A custom site that matches your reputation, plus AI that answers the phone and chat, knows your catalog, and handles booking. On-page SEO, analytics, and full source code yours from day one. Builds are custom and fixed-price — the pricing estimator gives you a real range in two clicks.";
+  const u1BotReply = "A custom site that matches your reputation, plus AI that answers the phone and chat, knows your catalog, and handles booking. On-page SEO, analytics, and you choose managed or owned. Builds are custom and fixed-price — the pricing estimator gives you a real range in two clicks.";
   const u1BotEnd = 8.2;
 
   const u2 = "How does pricing work?";

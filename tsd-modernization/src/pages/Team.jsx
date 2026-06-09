@@ -3,7 +3,7 @@ import {
   C, v, useFadeIn,
   DiamondDivider, Button,
   Eyebrow, ChapterRule, GradientText,
-  SPACE, RADIUS, SHADOW,
+  SPACE, RADIUS,
 } from "../shared";
 import { TSDLogo, XIcon } from "../icons";
 import PageShell from "./PageShell";
@@ -343,7 +343,7 @@ function FounderSpread({ member, index, onView }) {
         aspectRatio: "4 / 5",
         borderRadius: "16px", overflow: "hidden",
         background: v("surface"),
-        border: `1px solid ${v("surface-border")}`,
+        border: "1px solid var(--glass-border)",
       }}>
         <img
           src={member.image} alt={`${member.name}, ${member.role}`}
@@ -389,7 +389,9 @@ function FounderSpread({ member, index, onView }) {
           padding: "20px 24px",
           borderLeft: `2px solid ${v("accent")}`,
           marginBottom: "28px",
-          background: v("surface"),
+          background: "var(--glass-bg-strong)",
+          backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+          WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
           borderRadius: "0 10px 10px 0",
         }}>
           <p style={{
@@ -438,7 +440,7 @@ function FounderSpread({ member, index, onView }) {
           onClick={() => onView(member)}
           style={{
             background: "none",
-            border: `1px solid ${v("surface-border")}`,
+            border: "1px solid var(--glass-border)",
             borderRadius: "100px",
             padding: "10px 20px",
             fontSize: "11px", fontWeight: 700, letterSpacing: "2px", textTransform: "uppercase",
@@ -447,12 +449,12 @@ function FounderSpread({ member, index, onView }) {
             transition: "background 0.2s ease, border-color 0.2s ease",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = v("surface");
-            e.currentTarget.style.borderColor = v("accent");
+            e.currentTarget.style.background = "var(--glass-bg-strong)";
+            e.currentTarget.style.borderColor = "var(--glass-border-strong)";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background = "none";
-            e.currentTarget.style.borderColor = v("surface-border");
+            e.currentTarget.style.borderColor = "var(--glass-border)";
           }}
         >
           View business card &nbsp;&rarr;

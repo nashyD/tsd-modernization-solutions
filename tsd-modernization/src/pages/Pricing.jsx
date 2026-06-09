@@ -66,7 +66,7 @@ const PRODUCT_LEGEND = [
   {
     name: "Custom website",
     tagline: "The storefront that finally matches your reputation.",
-    points: ["Fast, mobile-first, built to convert", "On-page SEO + analytics wired in", "Source code yours from day one"],
+    points: ["Fast, mobile-first, built to convert", "On-page SEO + analytics wired in", "Managed by us, or owned by you"],
   },
   {
     name: "TSD Front Desk",
@@ -144,7 +144,7 @@ function ProductLegend() {
 const UNIVERSAL_GUARANTEES = [
   "100% money-back guarantee",
   "48-hour written proposal",
-  "Source code yours — Managed AI is optional, cancel anytime",
+  "Managed by us or owned by you — cancel anytime",
 ];
 
 function GuaranteeStrip() {
@@ -168,7 +168,7 @@ function GuaranteeStrip() {
 const FAQS = [
   { q: "How does pricing work?", a: "Every build is a fixed price, quoted in a written proposal within 48 hours of a free fit call. The estimator above gives you a realistic range; the exact number depends on your content, your catalog, and the systems you already run." },
   { q: "What's Managed AI, and is it required?", a: "AI tools drift if nobody tends them — new content to index, prompts to tune, models that keep improving. Managed AI keeps yours sharp: re-indexing, prompt and model upkeep, monitoring, and a monthly report. It's optional, starts after launch, and you can cancel anytime. A website-only build doesn't need it." },
-  { q: "Do I own what you build?", a: "Yes. Source code, credentials, and a runbook are yours from day one, with written + video documentation and a live training session at handoff. Managed AI is a service on top — never a lock-in." },
+  { q: "Do I own it, or do you manage it?", a: "Your choice. Owned: source code, credentials, and a runbook are yours from day one, with written + video docs and a live training session — you or your IT team run it. Managed: we host it and handle every change for you — just text us, from $49/mo for a site or $73/mo for AI, cancel anytime. Never a lock-in either way." },
   { q: "How long does a build take?", a: "Most websites and AI builds run 2–4 weeks from approved scope to launch. Larger, multi-system engagements — big catalogs, multiple integrations — are scoped individually." },
   { q: "What kinds of businesses do you work with?", a: "Established local businesses whose digital presence has fallen behind their reputation — salons and spas, specialty automotive, wholesale and supply, studios and makers, professional services, specialty retail. If the business runs on the owner's hours, that's exactly what we fix." },
   { q: "What's the first step?", a: "A free fit call — 30 minutes, in person or remote. We'll tell you honestly whether we can help, and if so, send a fixed-price proposal within 48 hours." },
@@ -187,9 +187,12 @@ function FAQSection() {
           const isOpen = openIndex === i;
           return (
             <div key={i} style={{
-              background: isOpen ? `linear-gradient(180deg, rgba(75,156,211,0.06) 0%, ${v("surface")} 100%)` : v("surface"),
-              border: `1px solid ${isOpen ? "rgba(75,156,211,0.4)" : v("surface-border")}`,
+              background: isOpen ? `linear-gradient(180deg, rgba(75,156,211,0.06) 0%, var(--glass-bg-strong) 100%)` : "var(--glass-bg-strong)",
+              backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+              WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+              border: `1px solid ${isOpen ? "rgba(75,156,211,0.4)" : "var(--glass-border)"}`,
               borderRadius: RADIUS.lg, overflow: "hidden",
+              boxShadow: "var(--glass-shadow)",
               transition: "border-color 0.3s ease, background 0.3s ease",
             }}>
               <button onClick={() => setOpenIndex(isOpen ? null : i)} style={{

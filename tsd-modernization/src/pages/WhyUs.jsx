@@ -1,10 +1,10 @@
-import { C, v, SectionHeader, useFadeIn, Eyebrow, SPACE, RADIUS, SHADOW } from "../shared";
+import { C, v, SectionHeader, useFadeIn, Eyebrow, SPACE, RADIUS } from "../shared";
 import { CheckIcon, XIcon } from "../icons";
 import PageShell from "./PageShell";
 
 const ROWS = [
   { feature: "Founder direct support (no ticket queue)", tsd: true, agency: false, freelancer: "varies", diy: "n/a" },
-  { feature: "Source code + repo ownership at handoff", tsd: true, agency: "extra", freelancer: "varies", diy: true },
+  { feature: "Managed for you, or full source-code ownership — your call", tsd: true, agency: "extra", freelancer: "varies", diy: false },
   { feature: "Claude + GitHub continuity (no vendor lock-in)", tsd: true, agency: false, freelancer: false, diy: false },
   { feature: "48-hour written proposal", tsd: true, agency: false, freelancer: "varies", diy: "n/a" },
   { feature: "Money-back if we miss the mark", tsd: true, agency: false, freelancer: false, diy: "n/a" },
@@ -55,9 +55,11 @@ export default function WhyUs() {
         <div ref={ref} style={{
           ...fade,
           overflowX: "auto",
-          borderRadius: RADIUS.xl,
-          border: `1px solid ${v("surface-border")}`,
-          boxShadow: SHADOW.sm,
+          borderRadius: "var(--glass-radius)",
+          border: "1px solid var(--glass-border)",
+          backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+          WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+          boxShadow: "var(--glass-shadow)",
         }}>
           <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "640px" }}>
             <thead>
@@ -107,7 +109,7 @@ export default function WhyUs() {
 const thStyle = {
   padding: "20px 22px", textAlign: "center",
   borderBottom: `1px solid var(--c-divider)`,
-  background: "var(--c-surface)",
+  background: "var(--glass-bg-strong)",
   verticalAlign: "middle",
 };
 

@@ -35,11 +35,13 @@ function VideoCard({ video, gradient }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         borderRadius: RADIUS.lg, overflow: "hidden",
-        border: `1px solid ${hovered ? v("surface-border-hover") : v("surface-border")}`,
-        background: v("surface"),
+        border: `1px solid ${hovered ? "var(--glass-border-strong)" : "var(--glass-border)"}`,
+        background: "var(--glass-bg-strong)",
+        backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+        WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
         transition: "border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease",
         transform: hovered ? "translateY(-2px)" : "translateY(0)",
-        boxShadow: hovered ? SHADOW.md : SHADOW.sm,
+        boxShadow: hovered ? "var(--glass-shadow), 0 0 28px var(--glass-glow)" : "var(--glass-shadow)",
       }}>
       <div style={{
         height: "180px", background: gradient, position: "relative",
@@ -55,7 +57,7 @@ function VideoCard({ video, gradient }) {
           padding: "4px 10px",
           fontSize: "10px", fontWeight: 700, letterSpacing: "1.5px",
           textTransform: "uppercase", color: "#fff",
-          backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+          backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))", WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
         }}>Coming Soon</span>
       </div>
       <div style={{ padding: SPACE.md }}>
@@ -78,7 +80,7 @@ function GallerySlideshow({ slides, gradient }) {
     width: "44px", height: "44px", borderRadius: RADIUS.full,
     background: "rgba(7,13,26,0.6)",
     border: "1px solid rgba(255,255,255,0.18)",
-    backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
+    backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))", WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
     color: "#fff", fontSize: "20px", cursor: "pointer",
     display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2,
     transition: "transform 0.2s ease, background 0.2s ease",
@@ -246,17 +248,35 @@ export default function ServiceDetail() {
         }}>
           <div style={{
             padding: SPACE.lg, borderRadius: RADIUS.lg,
-            background: v("surface"),
-            border: `1px solid ${v("surface-border")}`,
+            background: "var(--glass-bg-strong)",
+            border: "1px solid var(--glass-border)",
+            backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+            WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+            boxShadow: "var(--glass-shadow)",
+            position: "relative", isolation: "isolate",
           }}>
+            <span aria-hidden="true" style={{
+              position: "absolute", top: 0, left: "8%", right: "8%", height: "1px",
+              background: "linear-gradient(90deg, transparent, var(--glass-rim), transparent)",
+              pointerEvents: "none",
+            }} />
             <Eyebrow style={{ marginBottom: SPACE.sm }}>Typical Timeline</Eyebrow>
             <p style={{ fontSize: "14px", lineHeight: 1.65, color: v("text-muted"), margin: 0 }}>{service.timeline}</p>
           </div>
           <div style={{
             padding: SPACE.lg, borderRadius: RADIUS.lg,
-            background: "linear-gradient(180deg, rgba(75,156,211,0.10) 0%, rgba(75,156,211,0.04) 100%)",
-            border: "1px solid rgba(75,156,211,0.22)",
+            background: "var(--glass-bg-strong)",
+            border: "1px solid var(--glass-border-strong)",
+            backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+            WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+            boxShadow: "var(--glass-shadow), 0 0 28px var(--glass-glow)",
+            position: "relative", isolation: "isolate",
           }}>
+            <span aria-hidden="true" style={{
+              position: "absolute", top: 0, left: "8%", right: "8%", height: "1px",
+              background: "linear-gradient(90deg, transparent, var(--glass-rim), transparent)",
+              pointerEvents: "none",
+            }} />
             <Eyebrow style={{ marginBottom: SPACE.sm }}>Starting Price</Eyebrow>
             <p style={{ fontSize: "14px", lineHeight: 1.65, color: v("text"), margin: 0 }}>{service.price}</p>
           </div>

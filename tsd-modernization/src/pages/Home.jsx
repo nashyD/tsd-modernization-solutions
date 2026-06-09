@@ -152,7 +152,7 @@ function Hero() {
           color: "var(--c-hero-text-soft)",
         }}>
           <EditorialMasthead
-            items={["Charlotte Metro", "Web + AI Studio", "Built to Own"]}
+            items={["Charlotte Metro", "Web + AI Studio", "Built Your Way"]}
             color="var(--c-hero-text-soft)"
           />
         </div>
@@ -182,7 +182,7 @@ function Hero() {
           color: "var(--c-hero-text-soft)",
           maxWidth: "580px", margin: "0 auto 20px",
         }}>
-          We modernize the digital side of established Charlotte businesses: a custom site that finally matches your reputation, plus AI that answers the phone, knows your catalog, and handles the busywork. <span style={{ fontWeight: 700, color: "var(--c-hero-text)" }}>Custom-built and priced to your size — source code yours from day one.</span>
+          We modernize the digital side of established Charlotte businesses: a custom site that finally matches your reputation, plus AI that answers the phone, knows your catalog, and handles the busywork. <span style={{ fontWeight: 700, color: "var(--c-hero-text)" }}>Custom-built and priced to your size — managed by us, or owned by you.</span>
         </p>
 
         <div ref={r4} style={{
@@ -309,7 +309,7 @@ function Hero() {
         {!isMobile && (
           <span style={{ flex: "0 0 32px", height: "1px", background: "var(--c-hero-rule)" }} />
         )}
-        <span style={{ whiteSpace: "nowrap" }}>Source code yours</span>
+        <span style={{ whiteSpace: "nowrap" }}>Managed or owned</span>
         <span style={{ color: "var(--c-accent)", fontSize: "7px" }}>{"◆"}</span>
         <span style={{ whiteSpace: "nowrap" }}>Charlotte-built</span>
         <span style={{ color: "var(--c-accent)", fontSize: "7px" }}>{"◆"}</span>
@@ -348,7 +348,7 @@ function SegmentStrip() {
       padding: "clamp(24px, 5vw, 36px) 20px",
       borderTop: `1px solid ${v("divider")}`,
       borderBottom: `1px solid ${v("divider")}`,
-      background: v("bg-alt"),
+      background: "transparent",
       position: "relative",
     }}>
       <div style={{
@@ -399,7 +399,7 @@ const TICKER_ITEMS = [
   "Booking automation",
   "Managed AI",
   "48-hour proposals",
-  "Source code yours",
+  "Managed or owned",
   "Charlotte-built",
 ];
 
@@ -410,7 +410,7 @@ function ServiceTicker() {
       position: "relative", overflow: "hidden",
       borderBottom: `1px solid ${v("divider")}`,
       padding: "20px 0",
-      background: v("bg"),
+      background: "transparent",
     }}>
       <style>{`
         @keyframes tickerSlide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
@@ -478,15 +478,15 @@ function Stats() {
         <div ref={ref48} className="stats-hero" style={{
           position: "relative",
           padding: "56px",
-          borderRadius: RADIUS["2xl"],
-          background: `linear-gradient(160deg, ${v("surface")} 0%, ${v("bg-alt")} 100%)`,
-          border: `1px solid ${v("surface-border")}`,
-          backdropFilter: "blur(10px)",
-          WebkitBackdropFilter: "blur(10px)",
+          borderRadius: "var(--glass-radius)",
+          background: "linear-gradient(160deg, var(--glass-bg) 0%, var(--glass-bg-strong) 100%)",
+          border: "1px solid var(--glass-border)",
+          backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+          WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
           overflow: "hidden",
           display: "flex", flexDirection: "column", justifyContent: "space-between",
           minHeight: "340px",
-          boxShadow: SHADOW.md,
+          boxShadow: "var(--glass-shadow)",
         }}>
           {/* Background diamond — decorative */}
           <span aria-hidden="true" style={{
@@ -540,8 +540,11 @@ function Stats() {
         <div style={{
           display: "flex", flexDirection: "column", gap: "1px",
           background: v("divider-soft"),
-          borderRadius: RADIUS["2xl"], overflow: "hidden",
-          border: `1px solid ${v("surface-border")}`,
+          borderRadius: "var(--glass-radius)", overflow: "hidden",
+          border: "1px solid var(--glass-border)",
+          backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+          WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+          boxShadow: "var(--glass-shadow)",
         }}>
           <SupportStat
             value="2 clicks"
@@ -569,7 +572,7 @@ function SupportStat({ forwardRef, value, label, note }) {
   return (
     <div ref={forwardRef} style={{
       padding: "26px 28px",
-      background: v("surface"),
+      background: "var(--glass-bg-strong)",
       display: "flex", flexDirection: "column", justifyContent: "center",
       minHeight: "108px",
       transition: "background 0.25s ease",
@@ -615,9 +618,9 @@ const WHY_BEATS = [
     body: "When every quote, every booking, every after-hours call routes through one person, growth caps at that person's hours. We put AI on the repetitive work — answering, qualifying, scheduling — so the business keeps moving when you step away.",
   },
   {
-    label: "Yours to keep",
-    title: "You own what we build",
-    body: "Every project ends with documentation and a live training session. You own the source code, the credentials, and the runbook. Managed AI keeps it sharp if you want us to — but it's a service, never a lock-in.",
+    label: "Your way",
+    title: "Managed by us, or owned by you",
+    body: "Run it however fits. Managed: we host it and make every change for you — just text us. Owned: the source code, credentials, and runbook are yours from day one, with docs and a live training session. Either way it's yours — never a lock-in.",
   },
 ];
 
@@ -740,16 +743,23 @@ function WhyCard({ beat, index }) {
       style={{
         ...fade,
         padding: SPACE.xl,
-        borderRadius: RADIUS.xl,
-        background: v("surface"),
-        border: `1px solid ${hovered ? v("surface-border-hover") : v("surface-border")}`,
-        backdropFilter: "blur(10px)",
-        WebkitBackdropFilter: "blur(10px)",
+        borderRadius: "var(--glass-radius)",
+        background: "var(--glass-bg-strong)",
+        border: `1px solid ${hovered ? "var(--glass-border-strong)" : "var(--glass-border)"}`,
+        backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+        WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
         transition: "border-color 0.3s ease, transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s cubic-bezier(0.16,1,0.3,1)",
         transform: hovered ? "translateY(-3px)" : "translateY(0)",
-        boxShadow: hovered ? SHADOW.lg : SHADOW.sm,
+        boxShadow: hovered ? "var(--glass-shadow), 0 0 28px var(--glass-glow)" : "var(--glass-shadow)",
         position: "relative",
+        isolation: "isolate",
       }}>
+      {/* Specular top-edge rim — same liquid highlight the shared Card uses. */}
+      <span aria-hidden="true" style={{
+        position: "absolute", top: 0, left: "8%", right: "8%", height: "1px",
+        background: "linear-gradient(90deg, transparent, var(--glass-rim), transparent)",
+        pointerEvents: "none",
+      }} />
       {variants[index]?.header}
       <h3 style={{
         fontFamily: "var(--font-body)", fontSize: "22px", fontWeight: 700,
@@ -982,7 +992,7 @@ function FoundingClientOffer() {
           color: "rgba(255,255,255,0.92)",
           maxWidth: "680px", margin: "0 auto 36px",
         }}>
-          Custom websites, AI that runs the busywork, and Managed AI to keep it sharp. Direct founder access, source code yours from day one. Tell us your size and you'll have a real estimate in two clicks — then a fixed price from a free fit call.
+          Custom websites, AI that runs the busywork, and Managed plans to keep it sharp. Direct founder access; managed by us or owned by you. Tell us your size and you'll have a real estimate in two clicks — then a fixed price from a free fit call.
         </p>
         <Link to="/pricing" style={{ textDecoration: "none" }}>
           <Button as="span" variant="onAccent" size="lg" iconRight={<ArrowRightIcon size={16} />}>

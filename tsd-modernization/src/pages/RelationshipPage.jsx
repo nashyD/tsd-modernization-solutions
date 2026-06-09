@@ -48,7 +48,7 @@ function RelationshipHero({ rel }) {
       }} />
 
       <div ref={r1} style={{ ...f1, marginBottom: SPACE.xl, position: "relative", zIndex: 1 }}>
-        <EditorialMasthead items={["Custom Website + AI", rel.vertical, "Built to Own"]} />
+        <EditorialMasthead items={["Custom Website + AI", rel.vertical, "Built Your Way"]} />
       </div>
 
       <h1 ref={r2} style={{
@@ -113,13 +113,22 @@ function TheBuild({ rel }) {
             display: "flex", alignItems: "flex-start", gap: "16px",
             padding: "20px 24px",
             borderRadius: RADIUS.lg,
-            background: v("surface"),
-            border: `1px solid ${v("surface-border")}`,
+            background: "var(--glass-bg-strong)",
+            backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+            WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+            border: "1px solid var(--glass-border)",
             transition: "border-color 0.25s ease",
+            position: "relative",
+            isolation: "isolate",
           }}
-            onMouseEnter={(e) => e.currentTarget.style.borderColor = v("surface-border-hover")}
-            onMouseLeave={(e) => e.currentTarget.style.borderColor = v("surface-border")}
+            onMouseEnter={(e) => e.currentTarget.style.borderColor = "var(--glass-border-strong)"}
+            onMouseLeave={(e) => e.currentTarget.style.borderColor = "var(--glass-border)"}
           >
+            <span aria-hidden="true" style={{
+              position: "absolute", top: 0, left: "8%", right: "8%", height: "1px",
+              background: "linear-gradient(90deg, transparent, var(--glass-rim), transparent)",
+              pointerEvents: "none",
+            }} />
             <div style={{
               flexShrink: 0, marginTop: "2px",
               width: "22px", height: "22px", borderRadius: RADIUS.full,

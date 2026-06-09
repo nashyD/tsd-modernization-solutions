@@ -10,9 +10,9 @@
 
 **TSD Modernization Solutions** is a permanent, year-round tech-modernization company run by three founders, building custom websites and AI for Charlotte-area small businesses. The wedge: established, reputation-rich local businesses whose digital presence lags their reputation and whose owner has become the bottleneck. The line that carries it — *"You earned the reputation; your tech should carry it"* — and the promise that the work doesn't wait on the owner. The audience is situational, not a trade list: salons & spas, specialty automotive, wholesale & supply, studios & makers, professional services, specialty retail.
 
-Engagements mix to fit from seven products: (1) a custom website (source code yours from day one), (2) **TSD Front Desk** — an AI receptionist that answers phone and chat, qualifies, and books, (3) **TSD Concierge** — a site assistant / RAG over the client's own content and catalog with semantic and image search, (4) **TSD Booking Bridge** — booking consolidation and workflow automation, (5) reviews & reputation, (6) lead follow-up & outreach, and (7) local SEO / Google Business Profile.
+Engagements mix to fit from seven products: (1) a custom website (managed by us, or owned by you), (2) **TSD Front Desk** — an AI receptionist that answers phone and chat, qualifies, and books, (3) **TSD Concierge** — a site assistant / RAG over the client's own content and catalog with semantic and image search, (4) **TSD Booking Bridge** — booking consolidation and workflow automation, (5) reviews & reputation, (6) lead follow-up & outreach, and (7) local SEO / Google Business Profile.
 
-Pricing has no fixed public tiers. A company-size estimator on `/pricing` returns a one-time build range plus an optional recurring **Managed AI** plan (priced by the number of AI products in use, cancel anytime); the exact figure comes from a free fit call and a 48-hour written proposal. Builds are priced to size and product mix — a basic site starts in the low thousands, while larger engagements (30+ employees) typically start near $25,000+. Source code is the client's from day one and every engagement carries a 100% money-back guarantee. (The estimator's exact dollar figures are still placeholders pending sign-off.)
+Pricing has no fixed public tiers. A company-size estimator on `/pricing` returns a one-time build range plus an optional recurring **Managed AI** plan (priced by the number of AI products in use, cancel anytime); the exact figure comes from a free fit call and a 48-hour written proposal. Builds are priced to size and product mix — a basic site starts in the low thousands, while larger engagements (30+ employees) typically start near $25,000+. Each engagement runs the client's way — Managed (TSD hosts and maintains it, edits on request, from $49/mo for a site) or Owned (source code the client's from day one) — and carries a 100% money-back guarantee. (The estimator's exact dollar figures are still placeholders pending sign-off.)
 
 The thesis: ~50,000 small businesses in the Charlotte metro, fewer than 30% with modern tools — a gap caused by agency pricing and the disappearance of dependable freelancers, not buyer reluctance.
 
@@ -113,7 +113,7 @@ The Front Desk has its own product page. The pitch: after-hours missed-call rate
 
 **How it works:** Calls forward to a dedicated AI line → the AI answers in the business's voice, captures name/service/urgency/address, books from the calendar in real time → the owner gets an SMS with the booking + a one-paragraph summary; the caller gets a confirmation text.
 
-**Model:** Custom setup (from ~$1,200, scoped to the business) + recurring **Managed AI** ($97/mo) that keeps the agent tuned, monitored, and current. Source code and credentials are the client's from day one; Managed AI is optional and cancel-anytime. The on-page framing: TSD custom-builds the agent on the client's real intake and they own the build, versus a generic agent on a locked monthly contract.
+**Model:** Custom setup (from ~$1,200, scoped to the business) + recurring **Managed AI** ($73/mo) that keeps the agent tuned, monitored, and current. Source code and credentials are the client's from day one; Managed AI is optional and cancel-anytime. The on-page framing: TSD custom-builds the agent on the client's real intake and they own the build, versus a generic agent on a locked monthly contract.
 
 ---
 
@@ -125,8 +125,8 @@ No fixed public tiers. `/pricing` leads with a **company-size estimator** ([`src
 
 ### How the estimate is built
 - **Size multiplier:** Just me (1–2) ×0.8 · Small team (3–10) ×1.0 · Established (11–30) ×1.3 · Larger (30+) ×2.7. The "Larger" tier renders as a "custom build — typically from $X+" floor (≈ $25,000+ with the full product mix) rather than a bounded range.
-- **Products (one-time setup range, before the size multiplier):** Custom website $3,000–$6,000 · TSD Front Desk $1,200–$2,500 · TSD Concierge $4,000–$9,000 · TSD Booking Bridge $1,200–$3,000 · Reviews & reputation $800–$2,000 · Lead follow-up $1,500–$3,500 · Local SEO $800–$2,500.
-- **Managed AI (recurring, optional, cancel-anytime):** priced by the number of AI products running — $97 / $197 / $297 / $397 / $497 per month for 1–5 AI products. A website-only build needs no monthly plan.
+- **Products (one-time setup range, before the size multiplier):** Custom website $2,900–$4,000 · TSD Front Desk $1,200–$1,600 · TSD Concierge $4,100–$5,800 · TSD Booking Bridge $1,300–$1,900 · Reviews & reputation $900–$1,200 · Lead follow-up $1,600–$2,200 · Local SEO $1,000–$1,500.
+- **Managed AI (recurring, optional, cancel-anytime):** priced by the number of AI products running — $73 / $147 / $222 / $297 / $373 per month for 1–5 AI products. A website-only build needs no monthly plan.
 
 ### What every engagement carries
 - Source code, credentials, and runbook the client's from day one.
@@ -149,7 +149,7 @@ TSD runs as a **permanent, year-round company** — no operating window, no coho
 
 **Capacity.** Technical delivery runs through Nash — scoping, build, and handoff — while Grant and Bishop drive sales and operations alongside. A build runs 2–4 weeks (larger, multi-system engagements scoped individually), so the binding constraint is Nash's available build hours. TSD therefore takes a handful of builds at a time and surfaces that honestly on the site as a real capacity limit — never manufactured scarcity. Build throughput scales only by adding builders, which is the explicit trigger to revisit this section.
 
-**Ownership, not lock-in.** Source code and credentials transfer to the client at handoff; Managed AI is the optional ongoing-care layer on top, cancel-anytime. The relationship continues because the service stays valuable, not because the client is trapped.
+**Managed or owned — never a lock-in.** The client chooses: TSD hosts and maintains it (Managed — website from $49/mo, AI from $73/mo, cancel anytime) or takes full ownership at handoff (source code, credentials, runbook). The relationship continues because the service stays valuable — clients stay by choice.
 
 ---
 
@@ -204,9 +204,9 @@ The public `/testimonials` page is reframed as "The Ledger" — it ships the *me
 
 The strongest post-handoff promise, surfaced on `/process`:
 
-Every TSD build ships on **GitHub + Vercel** — both free for small business. Repo, deployment, and domain belong to the client from day one. During handoff, the client's **Claude account is linked to their GitHub repo**. To make a change, the client screenshots what they want (hours update, hero photo swap, copy edit) and sends it to Claude — Claude commits the fix, Vercel auto-deploys. The workflow is taught in the live training session and becomes muscle memory in a few cycles. For clients who'd rather not self-serve, **Managed AI** is the optional ongoing-care layer that keeps the AI products tuned and current.
+Every TSD build ships on **GitHub + Vercel** — both free for small business — with the domain registered in the client's name. The client chooses how it runs. **Managed** is the default: TSD hosts it, keeps it current, and makes every change on request — the client texts what they want (hours update, hero photo swap, a fresh quote) and it's live, usually same day, with no code or vendor login to touch (website from $49/mo, AI from $73/mo, cancel anytime). **Owned** is for teams who'd rather hold the keys: repo, deployment, and domain are theirs from day one, and during handoff the client's **Claude account is linked to their GitHub repo** so a screenshot sent to Claude commits the fix and Vercel auto-deploys — taught in a live training session.
 
-Promise: *"You own the build from day one — source code, credentials, and a Claude co-pilot. Managed AI is there if you want us to keep it sharp; either way, it's yours."*
+Promise: *"Run it your way — let us manage it end to end, or own the build outright (source code, credentials, and a Claude co-pilot). Either way it's yours, never a lock-in."*
 
 ---
 
@@ -285,7 +285,7 @@ Variable by product mix and company size (see §6 — one-time product ranges ×
 There is no cohort cap, so build revenue scales with how many engagements three founders can deliver (2–4 weeks each; see §7 capacity).
 
 ### 2. Recurring Managed AI (MRR)
-The structural change. Each AI product a client keeps live adds to a monthly base — $97 / $197 / $297 / $397 / $497 for 1–5 AI products, optional and cancel-anytime. MRR compounds across clients:
+The structural change. Each AI product a client keeps live adds to a monthly base — $73 / $147 / $222 / $297 / $373 for 1–5 AI products, optional and cancel-anytime. MRR compounds across clients:
 
 | Book of clients | Avg / client | Approx MRR | Approx ARR |
 |---|---|---|---|

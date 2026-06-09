@@ -32,8 +32,11 @@ function ContactInfo() {
           const inner = (
             <div style={{
               padding: "20px 22px", borderRadius: RADIUS.lg,
-              background: v("surface"),
-              border: `1px solid ${v("surface-border")}`,
+              background: "var(--glass-bg-strong)",
+              backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+              WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+              border: "1px solid var(--glass-border)",
+              boxShadow: "var(--glass-shadow)",
               transition: "border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease",
               display: "flex", alignItems: "center", gap: "14px",
               height: "100%",
@@ -64,14 +67,14 @@ function ContactInfo() {
             <a key={i} href={b.href}
               style={{ display: "block", textDecoration: "none", color: "inherit" }}
               onMouseEnter={(e) => {
-                e.currentTarget.firstChild.style.borderColor = v("surface-border-hover");
+                e.currentTarget.firstChild.style.borderColor = "var(--glass-border-strong)";
                 e.currentTarget.firstChild.style.transform = "translateY(-2px)";
-                e.currentTarget.firstChild.style.boxShadow = SHADOW.md;
+                e.currentTarget.firstChild.style.boxShadow = "var(--glass-shadow), 0 0 28px var(--glass-glow)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.firstChild.style.borderColor = v("surface-border");
+                e.currentTarget.firstChild.style.borderColor = "var(--glass-border)";
                 e.currentTarget.firstChild.style.transform = "translateY(0)";
-                e.currentTarget.firstChild.style.boxShadow = "none";
+                e.currentTarget.firstChild.style.boxShadow = "var(--glass-shadow)";
               }}>
               {inner}
             </a>
@@ -147,18 +150,19 @@ function ContactForm() {
       <div ref={ref} style={{
         ...fadeStyle,
         padding: "clamp(28px, 4vw, 48px)",
-        borderRadius: RADIUS["2xl"],
-        background: `linear-gradient(180deg, ${v("surface")} 0%, ${v("bg-alt")} 100%)`,
-        border: `1px solid ${v("surface-border")}`,
-        backdropFilter: "blur(10px)",
-        WebkitBackdropFilter: "blur(10px)",
+        borderRadius: "var(--glass-radius)",
+        background: "var(--glass-bg-strong)",
+        border: "1px solid var(--glass-border)",
+        backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+        WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
         position: "relative",
-        boxShadow: SHADOW.md,
+        isolation: "isolate",
+        boxShadow: "var(--glass-shadow)",
       }}>
-        {/* Top hairline */}
+        {/* Specular top-edge rim */}
         <span aria-hidden="true" style={{
-          position: "absolute", top: 0, left: "12%", right: "12%", height: "1px",
-          background: "linear-gradient(90deg, transparent, rgba(75,156,211,0.4), transparent)",
+          position: "absolute", top: 0, left: "8%", right: "8%", height: "1px",
+          background: "linear-gradient(90deg, transparent, var(--glass-rim), transparent)",
           pointerEvents: "none",
         }} />
 

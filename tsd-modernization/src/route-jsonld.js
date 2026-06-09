@@ -87,14 +87,14 @@ const BUILD_OFFER = offer({
   name: "Custom Website + AI Build",
   minPrice: "3000",
   description:
-    "Custom website plus AI — TSD Front Desk receptionist, TSD Concierge site assistant, or TSD Booking Bridge automation, mixed to fit. On-page SEO, analytics wiring, and full source-code ownership from day one. Custom, fixed-price builds — get a real range from the /pricing estimator, exact price from a free fit call. 100% money-back guarantee, 48-hour written proposal.",
+    "Custom website plus AI — TSD Front Desk receptionist, TSD Concierge site assistant, or TSD Booking Bridge automation, mixed to fit. On-page SEO, analytics wiring, and your choice of managed or owned. Custom, fixed-price builds — get a real range from the /pricing estimator, exact price from a free fit call. 100% money-back guarantee, 48-hour written proposal.",
   url: `${SITE}/pricing`,
 });
 
 const MANAGED_AI_OFFER = subscriptionOffer({
   name: "Managed AI",
-  minPrice: "97",
-  maxPrice: "497",
+  minPrice: "73",
+  maxPrice: "373",
   description:
     "Optional monthly upkeep for your AI: re-indexing new content, prompt and model upkeep, monitoring, and a monthly report. Starts after launch, cancel anytime. A website-only build doesn't need it.",
   url: `${SITE}/pricing`,
@@ -120,15 +120,15 @@ const PRICING_FAQ = {
       name: "What's Managed AI, and is it required?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "AI tools drift if nobody tends them — new content to index, prompts to tune, models that keep improving. Managed AI keeps yours sharp: re-indexing, prompt and model upkeep, monitoring, and a monthly report, from $97/mo. It's optional, starts after launch, and you can cancel anytime. A website-only build doesn't need it.",
+        text: "AI tools drift if nobody tends them — new content to index, prompts to tune, models that keep improving. Managed AI keeps yours sharp: re-indexing, prompt and model upkeep, monitoring, and a monthly report, from $73/mo. It's optional, starts after launch, and you can cancel anytime. A website-only build doesn't need it.",
       },
     },
     {
       "@type": "Question",
-      name: "Do I own what you build?",
+      name: "Do I own it, or do you manage it?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes. Source code, credentials, and a runbook are yours from day one, with written and video documentation and a live training session at handoff. Managed AI is a service on top — never a lock-in.",
+        text: "Your choice. Owned: source code, credentials, and a runbook are yours from day one, with written and video docs and a live training session — you or your IT team run it. Managed: we host it and handle every change for you, from $49/mo for a site or $73/mo for AI, cancel anytime. Never a lock-in either way.",
       },
     },
     {
@@ -182,7 +182,7 @@ const PROCESS_HOWTO = {
   "@id": `${SITE}/process#howto`,
   name: "How TSD Modernization Solutions runs an engagement",
   description:
-    "Our four-step process: free fit call, written proposal within 48 hours, 2-4 week build with weekly check-ins, and full handoff with documentation and training.",
+    "Our four-step process: free fit call, written proposal within 48 hours, 2-4 week build with weekly check-ins, and launch your way — managed by us, or a full handoff with docs and training.",
   totalTime: "P28D",
   step: [
     {
@@ -206,8 +206,8 @@ const PROCESS_HOWTO = {
     {
       "@type": "HowToStep",
       position: 4,
-      name: "Handoff",
-      text: "Every project ends with written documentation, video tutorials, and a live training session. You own the source code, the credentials, and the deployment from day one. Optional Managed AI keeps your AI sharp afterward — cancel anytime.",
+      name: "Launch",
+      text: "Go live your way: Managed — we host it and make every change for you, just text us (from $49/mo) — or Owned, where the source code, credentials, and deployment are yours from day one with a live training session. Cancel Managed anytime; never a lock-in.",
     },
   ],
 };
@@ -271,7 +271,7 @@ const CONTACT_PAGE = {
 const SERVICE_AI = service({
   name: "AI Receptionist, Site Assistant & Booking Automation",
   description:
-    "AI built on your real intake: TSD Front Desk answers phone and chat, qualifies, and books; TSD Concierge answers visitor questions from your content and catalog with semantic and image search; TSD Booking Bridge consolidates booking and routes leads. Source code yours from day one; optional Managed AI keeps it sharp, cancel anytime.",
+    "AI built on your real intake: TSD Front Desk answers phone and chat, qualifies, and books; TSD Concierge answers visitor questions from your content and catalog with semantic and image search; TSD Booking Bridge consolidates booking and routes leads. Managed by us, or owned by you;optional Managed AI keeps it sharp, cancel anytime.",
   serviceType: "AI Integration and Workflow Automation",
   slug: "/services/ai-integration",
   offers: [BUILD_OFFER, MANAGED_AI_OFFER],
@@ -280,7 +280,7 @@ const SERVICE_AI = service({
 const SERVICE_WEB = service({
   name: "Custom Website Design & Redesign",
   description:
-    "Fast, mobile-first custom websites with on-page SEO, analytics and Search Console wiring, and full written and video handoff documentation. Custom, fixed-price builds — get a real range from the /pricing estimator, launched in 2-4 weeks, source code yours from day one.",
+    "Fast, mobile-first custom websites with on-page SEO, analytics and Search Console wiring, and full written and video handoff documentation. Custom, fixed-price builds — get a real range from the /pricing estimator, launched in 2-4 weeks, managed by us or owned by you.",
   serviceType: "Web Design and Development",
   slug: "/services/websites",
   offers: BUILD_OFFER,
@@ -299,7 +299,7 @@ const SERVICE_PROCESS = service({
 const SERVICE_RECEPTIONIST = service({
   name: "TSD Front Desk — AI Receptionist",
   description:
-    "TSD Front Desk answers your phone and chat day or night, qualifies the lead, and books the job, then texts you a one-paragraph summary. Built on your real intake flow. Source code yours from day one; recurring Managed AI keeps it sharp, cancel anytime. 100% money-back guarantee.",
+    "TSD Front Desk answers your phone and chat day or night, qualifies the lead, and books the job, then texts you a one-paragraph summary. Built on your real intake flow. Managed by us, or owned by you;recurring Managed AI keeps it sharp, cancel anytime. 100% money-back guarantee.",
   serviceType: "AI Phone Answering Service",
   slug: "/ai-receptionist",
   offers: [BUILD_OFFER, MANAGED_AI_OFFER],
@@ -309,7 +309,7 @@ const SERVICE_RECEPTIONIST = service({
 const SERVICE_SALONS = service({
   name: "Custom Website + AI for Charlotte Salons & Spas",
   description:
-    "Custom website plus consolidated booking, after-hours AI chat that answers from your services, and a TSD Front Desk receptionist that books while you're with a client, for established Charlotte salons and spas. Source code yours from day one.",
+    "Custom website plus consolidated booking, after-hours AI chat that answers from your services, and a TSD Front Desk receptionist that books while you're with a client, for established Charlotte salons and spas. Managed by us, or owned by you.",
   serviceType: "Web Design and AI Tooling for Salons and Spas",
   slug: "/salons",
   offers: BUILD_OFFER,
@@ -319,7 +319,7 @@ const SERVICE_SALONS = service({
 const SERVICE_AUTO = service({
   name: "Custom Website + AI for Charlotte Specialty Auto Shops",
   description:
-    "Custom website plus online quote requests, service and parts catalog lookup, and a TSD Front Desk receptionist that captures the call you'd have missed, for established Charlotte specialty automotive shops. Source code yours from day one.",
+    "Custom website plus online quote requests, service and parts catalog lookup, and a TSD Front Desk receptionist that captures the call you'd have missed, for established Charlotte specialty automotive shops. Managed by us, or owned by you.",
   serviceType: "Web Design and AI Tooling for Specialty Automotive",
   slug: "/auto-shops",
   offers: BUILD_OFFER,
@@ -329,7 +329,7 @@ const SERVICE_AUTO = service({
 const SERVICE_RESTAURANTS = service({
   name: "Custom Website + AI for Charlotte Restaurants",
   description:
-    "Custom website plus reservations, online ordering, and a TSD Concierge assistant that answers menu and hours questions from your own content, for established Charlotte restaurants. Source code yours from day one.",
+    "Custom website plus reservations, online ordering, and a TSD Concierge assistant that answers menu and hours questions from your own content, for established Charlotte restaurants. Managed by us, or owned by you.",
   serviceType: "Web Design and AI Tooling for Restaurants",
   slug: "/restaurants",
   offers: BUILD_OFFER,

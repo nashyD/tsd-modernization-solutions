@@ -3,7 +3,7 @@ import { useState } from "react";
 import {
   C, v, useFadeIn,
   SectionHeader, Tag, Eyebrow,
-  SPACE, RADIUS, SHADOW,
+  SPACE, RADIUS,
 } from "../shared";
 import { ArrowRightIcon } from "../icons";
 import PageShell from "./PageShell";
@@ -25,23 +25,24 @@ function ServiceCard({ service, delay }) {
           gap: SPACE.xl,
           alignItems: "center",
           padding: SPACE.xl,
-          borderRadius: RADIUS["2xl"],
-          background: v("surface"),
-          border: `1px solid ${hovered ? v("surface-border-hover") : v("surface-border")}`,
-          backdropFilter: "blur(10px)",
-          WebkitBackdropFilter: "blur(10px)",
+          borderRadius: "var(--glass-radius)",
+          background: "var(--glass-bg-strong)",
+          border: `1px solid ${hovered ? "var(--glass-border-strong)" : "var(--glass-border)"}`,
+          backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+          WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
           transition: "border-color 0.3s ease, transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s cubic-bezier(0.16,1,0.3,1)",
           transform: hovered ? "translateY(-3px)" : "translateY(0)",
-          boxShadow: hovered ? SHADOW.lg : SHADOW.sm,
+          boxShadow: hovered ? "var(--glass-shadow), 0 0 28px var(--glass-glow)" : "var(--glass-shadow)",
           cursor: "pointer",
           position: "relative",
           overflow: "hidden",
+          isolation: "isolate",
         }}
       >
         {/* Top-edge highlight */}
         <span aria-hidden="true" style={{
-          position: "absolute", top: 0, left: "12%", right: "12%", height: "1px",
-          background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)",
+          position: "absolute", top: 0, left: "8%", right: "8%", height: "1px",
+          background: "linear-gradient(90deg, transparent, var(--glass-rim), transparent)",
           pointerEvents: "none",
         }} />
 
@@ -106,7 +107,7 @@ export default function Services() {
         maxWidth: "1140px", margin: "0 auto",
       }}>
         <SectionHeader center label="What We Do" title="Our" titleAccent="services"
-          sub="Every engagement is hands-on and fully documented. You own the source code, and you get a fixed-price proposal within 48 hours." />
+          sub="Every engagement is hands-on and fully documented. Run it your way — managed by us or owned by you — with a fixed-price proposal within 48 hours." />
         <div style={{ display: "flex", flexDirection: "column", gap: SPACE.lg }} className="services-list">
           {SERVICES.map((s, i) => (
             <ServiceCard key={s.slug} service={s} delay={i * 120} />

@@ -72,6 +72,34 @@ export const SHADOW = {
   press: "0 2px 6px rgba(7,13,26,0.16), inset 0 1px 0 rgba(255,255,255,0.04)",
 };
 
+/* ── Liquid glass material ─────────────────────────────────────────
+   The reusable Apple-style recipe, driven by the --glass-* CSS vars
+   defined per theme in Layout.jsx (so it retunes between dark + light).
+   `surface` is the lighter, decorative fill; `panel` is the text-bearing
+   (more opaque) fill that keeps body copy above WCAG AA over the drifting
+   backdrop. Spread a preset onto any bespoke panel, or use the
+   <Card>/<Surface> components which already wrap it. */
+export const GLASS = {
+  blur: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+  radius: "var(--glass-radius)",
+  shadow: "var(--glass-shadow)",
+  rim: "var(--glass-rim)",
+  surface: {
+    background: "var(--glass-bg)",
+    backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+    WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+    border: "1px solid var(--glass-border)",
+    boxShadow: "var(--glass-shadow)",
+  },
+  panel: {
+    background: "var(--glass-bg-strong)",
+    backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+    WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+    border: "1px solid var(--glass-border)",
+    boxShadow: "var(--glass-shadow)",
+  },
+};
+
 /* ── CSS variable helpers (theme-aware) ────────────────────────── */
 export const v = (name) => `var(--c-${name})`;
 
@@ -153,6 +181,32 @@ export function useHasHover() {
     return () => mq.removeEventListener("change", fn);
   }, []);
   return hasHover;
+}
+
+/* Pointer-reactive sheen — returns props to spread on a glass element so a
+   soft highlight tracks the cursor. GPU-cheap: writes CSS vars straight to
+   the node (no React re-render), caches the rect on enter, and no-ops on
+   touch (no hover). Pair with a <span className="glass-sheen" /> child whose
+   opacity is driven by --sheen-o (zeroed under reduced-motion / -transparency
+   by the media rules in Layout). Always returns `ref` so callers can attach. */
+export function useGlassSheen() {
+  const ref = useRef(null);
+  const rect = useRef(null);
+  const hasHover = useHasHover();
+  const onMouseEnter = useCallback(() => {
+    const el = ref.current; if (!el) return;
+    rect.current = el.getBoundingClientRect();
+    el.style.setProperty("--sheen-o", "1");
+  }, []);
+  const onMouseMove = useCallback((e) => {
+    const el = ref.current, r = rect.current; if (!el || !r) return;
+    el.style.setProperty("--mx", `${((e.clientX - r.left) / r.width) * 100}%`);
+    el.style.setProperty("--my", `${((e.clientY - r.top) / r.height) * 100}%`);
+  }, []);
+  const onMouseLeave = useCallback(() => {
+    ref.current?.style.setProperty("--sheen-o", "0");
+  }, []);
+  return hasHover ? { ref, onMouseEnter, onMouseMove, onMouseLeave } : { ref };
 }
 
 /* ── Shared components ─────────────────────────────────────────── */
@@ -417,37 +471,46 @@ export function SectionHeader({ label, num, title, titleAccent, sub, center, sty
    subtle top-edge highlight, refined hover (lift + glow + border tint).
    `interactive` toggles the hover affordance; default true. */
 export function Card({ children, style, delay = 0, hover = true, interactive = true, onClick, padded = true }) {
-  const [ref, fade] = useFadeIn(delay);
+  const [fadeRef, fade] = useFadeIn(delay);
+  const sheen = useGlassSheen();
   const [hovered, setHovered] = useState(false);
   const lift = hovered && hover && interactive;
+  /* One node, two refs: the IntersectionObserver fade-in + the sheen tracker. */
+  const setRefs = useCallback((node) => {
+    fadeRef.current = node;
+    if (sheen.ref) sheen.ref.current = node;
+  }, [fadeRef, sheen]);
   return (
     <div
-      ref={ref}
+      ref={setRefs}
       onClick={onClick}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseEnter={(e) => { setHovered(true); sheen.onMouseEnter?.(e); }}
+      onMouseMove={sheen.onMouseMove}
+      onMouseLeave={(e) => { setHovered(false); sheen.onMouseLeave?.(e); }}
       style={{
         ...fade,
         position: "relative",
+        isolation: "isolate",
         padding: padded ? SPACE.xl : 0,
-        borderRadius: RADIUS.xl,
-        background: v("surface"),
-        border: `1px solid ${lift ? v("surface-border-hover") : v("surface-border")}`,
-        backdropFilter: "blur(10px)",
-        WebkitBackdropFilter: "blur(10px)",
+        borderRadius: "var(--glass-radius)",
+        background: "var(--glass-bg-strong)",
+        border: `1px solid ${lift ? "var(--glass-border-strong)" : "var(--glass-border)"}`,
+        backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+        WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
         transition: "border-color 0.3s ease, transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s cubic-bezier(0.16,1,0.3,1)",
         transform: lift ? "translateY(-3px)" : "translateY(0)",
-        boxShadow: lift ? SHADOW.lg : SHADOW.sm,
+        boxShadow: lift ? "var(--glass-shadow), 0 0 28px var(--glass-glow)" : "var(--glass-shadow)",
         cursor: onClick ? "pointer" : "default",
         ...style,
       }}
     >
-      {/* Top-edge highlight — invisible 1px gradient line that gives the
-          card a sense of physical presence. Stronger in dark mode. */}
+      {/* Pointer-reactive sheen — sits above the glass fill, behind content. */}
+      <span aria-hidden="true" className="glass-sheen" />
+      {/* Specular top-edge rim — bright hairline so the glass reads wet/lensed
+          rather than flat-frosted. */}
       <span aria-hidden="true" style={{
-        position: "absolute", top: 0, left: "12%", right: "12%",
-        height: "1px",
-        background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%)",
+        position: "absolute", top: 0, left: "8%", right: "8%", height: "1px",
+        background: "linear-gradient(90deg, transparent 0%, var(--glass-rim) 50%, transparent 100%)",
         pointerEvents: "none",
       }} />
       {children}
@@ -507,11 +570,12 @@ export function Button({
     },
     secondary: {
       base: {
-        background: hovered ? v("surface-hover") : v("surface"),
+        background: hovered ? "var(--glass-bg-strong)" : "var(--glass-bg)",
         color: v("text"),
-        border: `1px solid ${hovered ? v("surface-border-hover") : v("surface-border")}`,
-        backdropFilter: "blur(10px)",
-        WebkitBackdropFilter: "blur(10px)",
+        border: `1px solid ${hovered ? "var(--glass-border-strong)" : "var(--glass-border)"}`,
+        backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+        WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+        boxShadow: "inset 0 1px 0 var(--glass-rim-soft)",
       },
     },
     ghost: {
@@ -523,11 +587,12 @@ export function Button({
     },
     editorial: {
       base: {
-        background: "rgba(255,255,255,0.10)",
+        background: "rgba(255,255,255,0.12)",
         color: "#fff",
-        border: "1px solid rgba(255,255,255,0.28)",
-        backdropFilter: "blur(10px)",
-        WebkitBackdropFilter: "blur(10px)",
+        border: "1px solid rgba(255,255,255,0.30)",
+        backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+        WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.28)",
       },
     },
     onAccent: {
@@ -649,12 +714,13 @@ export function StatTile({ value, label, note, large, fadeRef, style }) {
    Use it instead of inlining the same panel pattern. */
 export function Surface({ children, tone = "glass", radius = "xl", padding = "xl", style, ...rest }) {
   const tones = {
-    glass: { bg: v("surface"), border: v("surface-border") },
+    glass: { bg: "var(--glass-bg-strong)", border: "var(--glass-border)" },
     solid: { bg: v("bg-alt"), border: v("divider") },
-    accent: { bg: "rgba(75,156,211,0.06)", border: "rgba(75,156,211,0.20)" },
+    accent: { bg: "rgba(75,156,211,0.08)", border: "rgba(75,156,211,0.24)" },
     inverse: { bg: C.gradientPrism, border: "transparent", color: "#fff" },
   };
   const t = tones[tone] || tones.glass;
+  const isGlass = tone === "glass";
   return (
     <div {...rest} style={{
       background: t.bg,
@@ -662,8 +728,9 @@ export function Surface({ children, tone = "glass", radius = "xl", padding = "xl
       borderRadius: RADIUS[radius] || radius,
       padding: SPACE[padding] || padding,
       color: t.color,
-      backdropFilter: tone === "glass" ? "blur(10px)" : "none",
-      WebkitBackdropFilter: tone === "glass" ? "blur(10px)" : "none",
+      backdropFilter: isGlass ? "blur(var(--glass-blur)) saturate(var(--glass-saturate))" : "none",
+      WebkitBackdropFilter: isGlass ? "blur(var(--glass-blur)) saturate(var(--glass-saturate))" : "none",
+      boxShadow: isGlass ? "var(--glass-shadow)" : undefined,
       ...style,
     }}>
       {children}

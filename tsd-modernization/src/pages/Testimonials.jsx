@@ -3,7 +3,7 @@ import {
   C, v, useFadeIn,
   DiamondDivider, Button,
   Eyebrow, ChapterRule, GradientText,
-  SPACE, RADIUS, SHADOW,
+  SPACE, RADIUS,
 } from "../shared";
 import { ArrowRightIcon, ClockIcon, ChartBarIcon, ClipboardIcon } from "../icons";
 import PageShell from "./PageShell";
@@ -76,11 +76,13 @@ export default function Testimonials() {
           gridTemplateColumns: "repeat(auto-fit, minmax(290px, 1fr))",
           gap: "1px",
           background: v("divider-soft"),
-          borderRadius: RADIUS["2xl"],
+          borderRadius: "var(--glass-radius)",
           overflow: "hidden",
-          border: `1px solid ${v("surface-border")}`,
+          border: "1px solid var(--glass-border)",
+          backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+          WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
           marginBottom: SPACE["3xl"],
-          boxShadow: SHADOW.sm,
+          boxShadow: "var(--glass-shadow)",
         }}>
           {LEDGER_COLUMNS.map((col, i) => (
             <LedgerColumn key={i} col={col} delay={i * 140} />
@@ -96,10 +98,19 @@ export default function Testimonials() {
               gridTemplateColumns: "auto 1fr auto",
               gap: SPACE.lg, alignItems: "center",
               padding: "22px 26px",
-              background: v("surface"),
-              border: `1px dashed ${v("surface-border")}`,
+              background: "var(--glass-bg-strong)",
+              backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+              WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+              border: "1px dashed var(--glass-border)",
               borderRadius: RADIUS.lg,
+              position: "relative",
+              isolation: "isolate",
             }}>
+              <span aria-hidden="true" style={{
+                position: "absolute", top: 0, left: "8%", right: "8%", height: "1px",
+                background: "linear-gradient(90deg, transparent, var(--glass-rim), transparent)",
+                pointerEvents: "none",
+              }} />
               <div style={{
                 fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
                 fontSize: "32px", letterSpacing: "-1px",
@@ -185,7 +196,7 @@ function LedgerColumn({ col, delay }) {
     <div ref={ref} style={{
       ...fade,
       padding: "40px 32px",
-      background: v("surface"),
+      background: "var(--glass-bg-strong)",
       display: "flex", flexDirection: "column",
     }}>
       <div style={{

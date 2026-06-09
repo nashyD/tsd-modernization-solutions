@@ -10,7 +10,7 @@ const STEPS = [
   { num: "01", title: "Fit call", desc: "A 1-2 hour conversation where we walk through your business, your operations, and what you'd want modernized. You leave with a clear read on whether we're the right fit.", detail: "In-person or remote. Free, no commitment. If we're a match, the next step is a fixed-price proposal for a custom build scoped to your business." },
   { num: "02", title: "Proposal", desc: "Within 48 hours, you receive a written modernization roadmap with clear scope, timeline, and pricing. No surprises.", detail: "Typically 2-4 pages. Includes technical approach, deliverables, and payment schedule." },
   { num: "03", title: "Build", desc: "We execute the project on a 2-4 week timeline with regular check-ins. You see progress throughout, not just at the end.", detail: "Weekly updates. Revisions included. We don't disappear." },
-  { num: "04", title: "Handoff", desc: "Every project ends with written documentation, video tutorials, and a live training session. You own the source code, the credentials, and the deployment when we're done.", detail: "Optional Managed AI keeps your tools sharp after launch — cancel anytime." },
+  { num: "04", title: "Launch, your way", desc: "Go live Managed — we host it and make every change for you, just text us — or Owned, where the source code, credentials, and deployment are yours with documentation and a live training session.", detail: "Managed plans from $49/mo (site) or $73/mo (AI) keep it sharp after launch — cancel anytime." },
 ];
 
 function PostSeason() {
@@ -37,9 +37,9 @@ function PostSeason() {
         fontSize: "16px", lineHeight: 1.7, color: v("text-muted"),
         maxWidth: "740px",
       }}>
-        <p>Every TSD build ships on GitHub + Vercel. The repo, the deployment, and the domain belong to you from day one.</p>
-        <p>During handoff we link your Claude account to your GitHub repo. When you want to make a change to your site, you screenshot what you want — anything from your hours to your hero photo — and send it to Claude. Claude commits the fix, and Vercel deploys it automatically. You learn the workflow in the training session, and after a few cycles it's muscle memory.</p>
-        <p>Want us to keep the AI side sharp? Managed AI handles re-indexing, prompt and model upkeep, and monitoring after launch — it's optional, and you can cancel anytime.</p>
+        <p>You choose how it runs. Managed is the simplest path: we host it, keep it current, and make every change for you. Text us what you need — a new hours line, a swapped hero photo, a fresh quote — and it's done. Your domain stays registered in your name, and you never touch code or a vendor login. From $49/mo for a site, $73/mo for AI, cancel anytime.</p>
+        <p>Owned is for teams who'd rather hold the keys: the repo, the deployment, and the domain are yours from day one. During handoff we link your Claude account to your GitHub repo, so to make a change you screenshot what you want and send it to Claude — Claude commits the fix, and Vercel deploys it automatically. You learn the workflow in the training session, and after a few cycles it's muscle memory.</p>
+        <p>Either way, it's yours — never a lock-in. Managed is a service you can cancel anytime; Owned is a clean handoff with documentation and training.</p>
       </div>
     </section>
   );

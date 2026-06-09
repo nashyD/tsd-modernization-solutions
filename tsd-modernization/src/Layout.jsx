@@ -56,7 +56,7 @@ const ROUTE_META = {
   },
   "/pricing": {
     title: "Pricing & Estimate — Custom Websites + AI | TSD Modernization Solutions",
-    description: "Build a real estimate in two clicks: tell us your size and what you want running. Custom, fixed-price builds — get a real range from the /pricing estimator, exact price from a free fit call. Source code yours; Managed AI from $97/mo, optional, cancel anytime.",
+    description: "Build a real estimate in two clicks: tell us your size and what you want running. Custom, fixed-price builds — get a real range from the /pricing estimator, exact price from a free fit call. Source code yours; Managed AI from $73/mo, optional, cancel anytime.",
   },
   "/ai-receptionist": {
     title: "TSD Front Desk — AI Receptionist for Charlotte Businesses | TSD Modernization Solutions",
@@ -168,6 +168,12 @@ export default function Layout() {
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes scanLine { 0% { top: -2px; } 100% { top: 100%; } }
         @keyframes shimmer { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        /* ── Liquid-glass spatial backdrop drift ────────────────────────
+           Two large Carolina auroras oscillate slowly on the GPU (transform
+           only) so the fixed backdrop the glass floats over feels alive and
+           refracting. Disabled wholesale under prefers-reduced-motion. */
+        @keyframes auroraDrift1 { 0%,100% { transform: translate3d(0,0,0) scale(1); } 33% { transform: translate3d(7vw,-5vh,0) scale(1.14); } 66% { transform: translate3d(-6vw,4vh,0) scale(0.92); } }
+        @keyframes auroraDrift2 { 0%,100% { transform: translate3d(0,0,0) scale(1.06); } 50% { transform: translate3d(-8vw,6vh,0) scale(1.2); } }
 
         :root, [data-theme="dark"] {
           --font-display: 'Playfair Display', Georgia, serif;
@@ -197,6 +203,24 @@ export default function Layout() {
           --c-card-accent: ${C.carolinaLight};
           --c-card-divider: rgba(123,184,224,0.3);
 
+          /* ── Liquid glass material (dark) ─────────────────────────────
+             One recipe consumed by Card / Surface / Button + bespoke panels.
+             glass-bg-strong is the text-bearing fill — opaque enough that
+             cream body copy clears WCAG AA over the drifting backdrop;
+             glass-bg is the lighter fill for decorative / non-text glass. */
+          --glass-blur: 26px;
+          --glass-saturate: 200%;
+          --glass-bg: rgba(20,34,56,0.42);
+          --glass-bg-strong: rgba(12,21,36,0.64);
+          --glass-border: rgba(255,255,255,0.14);
+          --glass-border-strong: rgba(123,184,224,0.52);
+          --glass-rim: rgba(255,255,255,0.72);
+          --glass-rim-soft: rgba(255,255,255,0.22);
+          --glass-glow: rgba(75,156,211,0.30);
+          --glass-sheen: rgba(180,214,240,0.24);
+          --glass-radius: 24px;
+          --glass-shadow: 0 26px 60px rgba(7,13,26,0.50), 0 6px 16px rgba(7,13,26,0.32), inset 0 1px 0 rgba(255,255,255,0.13), 0 0 56px rgba(75,156,211,0.18);
+
           /* Hero — theme-scoped tokens. The hero composition swaps
              wholesale between dark and light: bg gradient, text colors,
              blueprint grid, aurora glow, frame chrome, and skyline
@@ -210,7 +234,7 @@ export default function Layout() {
           --c-hero-text-muted: rgba(236,228,214,0.78);
           --c-hero-rule: rgba(236,228,214,0.32);
           --c-hero-grid: rgba(123,184,224,0.07);
-          --c-hero-aurora: rgba(75,156,211,0.20);
+          --c-hero-aurora: rgba(75,156,211,0.30);
           --c-hero-grain-blend: overlay;
           --c-hero-grain-opacity: 0.05;
           --c-hero-frame-border: rgba(75,156,211,0.32);
@@ -249,6 +273,20 @@ export default function Layout() {
           --c-card-accent: ${C.steel};
           --c-card-divider: rgba(44,95,138,0.25);
 
+          /* ── Liquid glass material (light) — frosted white, macOS-light. */
+          --glass-blur: 22px;
+          --glass-saturate: 180%;
+          --glass-bg: rgba(255,255,255,0.44);
+          --glass-bg-strong: rgba(255,253,248,0.70);
+          --glass-border: rgba(19,41,75,0.14);
+          --glass-border-strong: rgba(44,95,138,0.46);
+          --glass-rim: rgba(255,255,255,0.96);
+          --glass-rim-soft: rgba(255,255,255,0.70);
+          --glass-glow: rgba(75,156,211,0.22);
+          --glass-sheen: rgba(255,255,255,0.72);
+          --glass-radius: 24px;
+          --glass-shadow: 0 26px 60px rgba(19,41,75,0.16), 0 6px 16px rgba(19,41,75,0.10), inset 0 1px 0 rgba(255,255,255,0.85), 0 0 56px rgba(75,156,211,0.18);
+
           /* Hero — light-mode counterparts. The hero is the same scene
              but in soft daylight: cream paper background, navy ink text,
              steel-blue frame chrome, and watercolor Charlotte at the
@@ -261,7 +299,7 @@ export default function Layout() {
           --c-hero-text-muted: rgba(19,41,75,0.72);
           --c-hero-rule: rgba(19,41,75,0.28);
           --c-hero-grid: rgba(19,41,75,0.05);
-          --c-hero-aurora: rgba(75,156,211,0.12);
+          --c-hero-aurora: rgba(75,156,211,0.18);
           --c-hero-grain-blend: multiply;
           --c-hero-grain-opacity: 0.04;
           --c-hero-frame-border: rgba(44,95,138,0.32);
@@ -280,10 +318,13 @@ export default function Layout() {
            viewport on iOS, letting the page pinch-zoom-pan off-center. clip
            is widely supported (Safari 16+, Chrome 90+) and unlike hidden
            does not establish a new containing block / scroll boundary. */
-        html { scroll-behavior: smooth; overflow-x: clip; }
+        /* Base colour lives on <html> so the fixed .liquid-bg backdrop
+           (z-index:-1) is never occluded by the body canvas, and there is
+           no pre-hydration flash. <body> is transparent on top of it. */
+        html { scroll-behavior: smooth; overflow-x: clip; background: var(--c-bg); transition: background 0.4s ease; }
         body {
           font-family: var(--font-body);
-          background: var(--c-bg);
+          background: transparent;
           color: var(--c-text);
           overflow-x: clip;
           transition: background 0.4s ease, color 0.4s ease;
@@ -317,16 +358,9 @@ export default function Layout() {
         main:focus { outline: none; }
         main { scroll-margin-top: 100px; }
 
-        /* Subtle ambient gradient that brightens on light mode for warmth */
-        body::before {
-          content: "";
-          position: fixed; inset: 0;
-          z-index: -1;
-          pointer-events: none;
-          background:
-            radial-gradient(ellipse 80% 60% at 50% 0%, var(--c-glow), transparent 60%),
-            radial-gradient(ellipse 50% 40% at 100% 100%, rgba(75,156,211,0.06), transparent 60%);
-        }
+        /* Ambient backdrop now lives on the .liquid-bg element (rendered
+           below the <style> tag) so each aurora layer animates its own GPU
+           transform. Kept off the body pseudo to avoid a second fixed layer. */
 
         /* Suppress every flavor of native video chrome on the hero loop.
            iOS Safari paints a giant tap-to-play button when it can't
@@ -369,7 +403,98 @@ export default function Layout() {
         @media (max-width: 360px) {
           .site-nav-brand-text { display: none !important; }
         }
+
+        /* ── Liquid-glass accessibility fallbacks ───────────────────────
+           Honor the three OS-level "calm it down" signals. Reduced-motion
+           freezes the aurora drift + sheen; reduced-transparency drops the
+           glass to solid opaque surfaces (no blur, full legibility); high
+           contrast strengthens every glass border. */
+        @media (prefers-reduced-motion: reduce) {
+          .liquid-bg__aura { animation: none !important; }
+          .glass-sheen { opacity: 0 !important; }
+        }
+        @media (prefers-reduced-transparency: reduce) {
+          :root, [data-theme="dark"], [data-theme="light"] {
+            --glass-bg: var(--c-card-front);
+            --glass-bg-strong: var(--c-card-front);
+            --glass-blur: 0px;
+            --glass-saturate: 100%;
+          }
+          .liquid-bg__aura, .liquid-bg__skyline, .liquid-bg__grain { display: none !important; }
+          .glass-sheen { opacity: 0 !important; }
+        }
+        @media (prefers-contrast: more) {
+          :root, [data-theme="dark"], [data-theme="light"] {
+            --glass-border: var(--c-text-muted);
+            --glass-border-strong: var(--c-accent);
+            --glass-bg-strong: var(--c-card-front);
+          }
+        }
+
+        /* Glass surfaces opt into hardware compositing + clip the sheen. */
+        .glass-surface { transform: translateZ(0); }
+        .glass-sheen {
+          position: absolute; inset: 0; border-radius: inherit; z-index: -1;
+          pointer-events: none; opacity: var(--sheen-o, 0);
+          transition: opacity 0.45s ease;
+          background: radial-gradient(circle 220px at var(--mx, 50%) var(--my, 0%), var(--glass-sheen), transparent 60%);
+        }
       `}</style>
+
+      {/* ── Liquid-glass spatial backdrop ───────────────────────────
+          One fixed, GPU-composited world the whole site's glass floats
+          over: ambient glow, two slowly drifting Carolina auroras, a
+          faint Charlotte skyline silhouette, and film grain. All four
+          layers are theme-aware via CSS vars and degrade under the
+          reduced-motion / reduced-transparency media rules above. */}
+      <div className="liquid-bg" aria-hidden="true" style={{
+        position: "fixed", inset: 0, zIndex: -1, pointerEvents: "none", overflow: "hidden",
+        background: v("bg"),
+      }}>
+        <div style={{
+          position: "absolute", inset: 0,
+          background: "radial-gradient(ellipse 80% 55% at 50% 0%, var(--c-glow), transparent 60%)",
+        }} />
+        <div className="liquid-bg__aura" style={{
+          position: "absolute", top: "-14%", left: "-8%",
+          width: "72vw", height: "72vw", maxWidth: "1040px", maxHeight: "1040px",
+          borderRadius: "50%", filter: "blur(80px)", willChange: "transform",
+          background: "radial-gradient(circle at 50% 50%, var(--c-hero-aurora), transparent 66%)",
+          animation: "auroraDrift1 26s ease-in-out infinite",
+        }} />
+        <div className="liquid-bg__aura" style={{
+          position: "absolute", bottom: "-18%", right: "-10%",
+          width: "66vw", height: "66vw", maxWidth: "960px", maxHeight: "960px",
+          borderRadius: "50%", filter: "blur(80px)", willChange: "transform",
+          background: "radial-gradient(circle at 50% 50%, var(--glass-glow), transparent 68%)",
+          animation: "auroraDrift2 34s ease-in-out infinite",
+        }} />
+        {/* Third, central aura — keeps the world glowing behind mid-page
+            sections so the glass always has colour to refract. */}
+        <div className="liquid-bg__aura" style={{
+          position: "absolute", top: "34%", left: "50%",
+          width: "60vw", height: "60vw", maxWidth: "820px", maxHeight: "820px",
+          marginLeft: "-30vw", borderRadius: "50%", filter: "blur(96px)", willChange: "transform",
+          background: "radial-gradient(circle at 50% 50%, var(--glass-glow), transparent 70%)",
+          animation: "auroraDrift2 44s ease-in-out infinite reverse",
+        }} />
+        <div className="liquid-bg__skyline" style={{
+          position: "absolute", left: 0, right: 0, bottom: 0, height: "32vh",
+          backgroundImage: "var(--c-hero-skyline)",
+          backgroundRepeat: "no-repeat", backgroundPosition: "center bottom", backgroundSize: "cover",
+          opacity: 0.1,
+          WebkitMaskImage: "linear-gradient(to top, #000 0%, transparent 100%)",
+          maskImage: "linear-gradient(to top, #000 0%, transparent 100%)",
+        }} />
+        <div className="liquid-bg__grain" style={{
+          position: "absolute", inset: 0,
+          opacity: "var(--c-hero-grain-opacity)",
+          mixBlendMode: "var(--c-hero-grain-blend)",
+          backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.7 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")`,
+          backgroundSize: "180px 180px",
+        }} />
+      </div>
+
       <RouteMeta />
       <a href="#main" className="skip-link">Skip to main content</a>
       {/* ── Nav ─────────────────────────────── */}
@@ -377,9 +502,10 @@ export default function Layout() {
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
         padding: scrolled ? "10px clamp(16px, 4vw, 48px)" : "18px clamp(16px, 4vw, 48px)",
         background: scrolled ? v("nav-bg") : "transparent",
-        backdropFilter: scrolled ? "blur(20px) saturate(140%)" : "none",
-        WebkitBackdropFilter: scrolled ? "blur(20px) saturate(140%)" : "none",
-        borderBottom: scrolled ? `1px solid ${v("divider-soft")}` : "1px solid transparent",
+        backdropFilter: scrolled ? "blur(var(--glass-blur)) saturate(var(--glass-saturate))" : "none",
+        WebkitBackdropFilter: scrolled ? "blur(var(--glass-blur)) saturate(var(--glass-saturate))" : "none",
+        borderBottom: scrolled ? "1px solid var(--glass-border)" : "1px solid transparent",
+        boxShadow: scrolled ? "inset 0 1px 0 var(--glass-rim-soft), 0 10px 30px rgba(7,13,26,0.26)" : "none",
         transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
         display: "flex", alignItems: "center", justifyContent: "space-between",
       }}>
@@ -452,11 +578,11 @@ export default function Layout() {
                 position: "absolute", top: "calc(100% + 14px)", right: 0,
                 minWidth: "260px", padding: "10px",
                 background: v("nav-bg"),
-                backdropFilter: "blur(28px) saturate(140%)",
-                WebkitBackdropFilter: "blur(28px) saturate(140%)",
-                border: `1px solid ${v("surface-border")}`,
+                backdropFilter: "blur(calc(var(--glass-blur) + 8px)) saturate(var(--glass-saturate))",
+                WebkitBackdropFilter: "blur(calc(var(--glass-blur) + 8px)) saturate(var(--glass-saturate))",
+                border: "1px solid var(--glass-border)",
                 borderRadius: RADIUS.xl,
-                boxShadow: SHADOW.xl,
+                boxShadow: "var(--glass-shadow)",
                 animation: "fadeUp 0.22s cubic-bezier(0.16,1,0.3,1)",
               }}>
                 {NAV_ITEMS.map((item) => {
@@ -550,8 +676,11 @@ export default function Layout() {
       <footer style={{
         marginTop: SPACE["3xl"],
         padding: "72px clamp(24px, 4vw, 48px) 48px",
-        background: v("bg-alt"),
-        borderTop: `1px solid ${v("divider")}`,
+        background: "var(--glass-bg-strong)",
+        backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+        WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+        borderTop: "1px solid var(--glass-border)",
+        boxShadow: "inset 0 1px 0 var(--glass-rim-soft)",
         position: "relative",
       }}>
         {/* Top hairline accent — single gradient rule that spans the page width */}

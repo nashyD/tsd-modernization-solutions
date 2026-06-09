@@ -87,11 +87,13 @@ export default function Book() {
             // positioned loading spinner escapes the container (top:50% of the
             // viewport), never gets covered by the iframe, and spins forever.
             position: "relative",
-            background: v("surface"),
-            border: `1px solid ${v("surface-border")}`,
-            borderRadius: RADIUS["2xl"],
+            background: "var(--glass-bg-strong)",
+            backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+            WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+            border: "1px solid var(--glass-border)",
+            borderRadius: "var(--glass-radius)",
             overflow: "hidden",
-            boxShadow: SHADOW.md,
+            boxShadow: "var(--glass-shadow)",
           }}
         />
 

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import {
   C, v, useFadeIn,
   Button, Eyebrow,
-  SPACE, RADIUS, SHADOW,
+  SPACE, RADIUS,
 } from "../shared";
 import { ArrowRightIcon, CheckIcon } from "../icons";
 
@@ -27,7 +27,7 @@ const SIZES = [
    the sales pitch page and this public estimator must agree to the dollar.
    Pinned by estimator.test.ts in the app; change both files together. */
 const PRODUCTS = [
-  { id: "website",   label: "A new website",        detail: "Custom, fast, source code yours",     low: 2900, high: 4000, ai: false },
+  { id: "website",   label: "A new website",        detail: "Custom, fast — managed or owned",     low: 2900, high: 4000, ai: false },
   { id: "frontDesk", label: "TSD Front Desk",     detail: "AI receptionist — phone + chat, books work", low: 1200, high: 1600, ai: true },
   { id: "concierge", label: "TSD Concierge",      detail: "Site assistant — answers from your content + catalog", low: 4100, high: 5800, ai: true },
   { id: "booking",   label: "TSD Booking Bridge", detail: "Booking + workflow automation", low: 1300, high: 1900, ai: true },
@@ -111,16 +111,19 @@ export default function PricingEstimator() {
       }} className="estimator-grid">
         {/* ── Inputs ─────────────────────────────── */}
         <div style={{
-          background: `linear-gradient(180deg, ${v("surface")} 0%, ${v("bg-alt")} 100%)`,
-          border: `1px solid ${v("surface-border")}`,
-          borderRadius: RADIUS["2xl"],
+          background: "var(--glass-bg-strong)",
+          backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+          WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+          border: "1px solid var(--glass-border)",
+          borderRadius: "var(--glass-radius)",
           padding: "clamp(24px, 3.5vw, 40px)",
-          boxShadow: SHADOW.md,
+          boxShadow: "var(--glass-shadow)",
           position: "relative",
+          isolation: "isolate",
         }}>
           <span aria-hidden="true" style={{
             position: "absolute", top: 0, left: "12%", right: "12%", height: "1px",
-            background: "linear-gradient(90deg, transparent, rgba(75,156,211,0.4), transparent)",
+            background: "linear-gradient(90deg, transparent, var(--glass-rim), transparent)",
             pointerEvents: "none",
           }} />
 
@@ -158,14 +161,24 @@ export default function PricingEstimator() {
 
         {/* ── Result ─────────────────────────────── */}
         <div style={{
-          background: "linear-gradient(180deg, rgba(75,156,211,0.10) 0%, rgba(75,156,211,0.03) 100%)",
-          border: "1px solid rgba(75,156,211,0.4)",
-          borderRadius: RADIUS["2xl"],
+          background: "var(--glass-bg-strong)",
+          backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+          WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+          border: "1px solid var(--glass-border)",
+          borderRadius: "var(--glass-radius)",
           padding: "clamp(24px, 3.5vw, 40px)",
           position: "relative",
           overflow: "hidden",
+          isolation: "isolate",
+          boxShadow: "var(--glass-shadow)",
           minHeight: "100%",
         }}>
+          {/* Specular top-edge rim — liquid highlight matching the shared Card. */}
+          <span aria-hidden="true" style={{
+            position: "absolute", top: 0, left: "8%", right: "8%", height: "1px",
+            background: "linear-gradient(90deg, transparent, var(--glass-rim), transparent)",
+            pointerEvents: "none",
+          }} />
           <span aria-hidden="true" style={{
             position: "absolute", top: "-50px", right: "-50px",
             fontSize: "220px", color: v("accent"), opacity: 0.06,
@@ -215,7 +228,7 @@ export default function PricingEstimator() {
               <p style={{ fontSize: "12px", color: v("text-dim"), lineHeight: 1.5, marginTop: "6px" }}>
                 {result.managed > 0
                   ? "Keeps your AI current — re-indexing, prompt + model upkeep, monitoring, a monthly report. Cancel anytime."
-                  : "A website-only build needs no monthly plan. Add an AI product to include Managed AI."}
+                  : "Want us to host + maintain your site? Managed Website from $49/mo — or own it outright, set on your fit call."}
               </p>
 
               <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: SPACE.lg }}>
@@ -240,7 +253,7 @@ export default function PricingEstimator() {
         textAlign: "center", maxWidth: "660px", margin: `${SPACE.lg} auto 0`,
       }}>
         <strong style={{ color: v("text-muted"), fontWeight: 700 }}>This is an estimate, not a quote.</strong>{" "}
-        Real scope depends on your content, catalog, and the systems you already run. You get an exact, fixed price in a free 48-hour proposal after your fit call. Source code is yours from day one; Managed AI is optional and cancel-anytime.
+        Real scope depends on your content, catalog, and the systems you already run. You get an exact, fixed price in a free 48-hour proposal after your fit call. Own it outright (source code yours from day one) or let us manage it — Managed plans from $49/mo for a site, $73/mo for AI, cancel anytime.
       </p>
 
       <style>{`
