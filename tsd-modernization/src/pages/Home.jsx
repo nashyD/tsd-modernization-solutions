@@ -776,27 +776,6 @@ function WhyCard({ beat, index }) {
 }
 
 /* ── Founders strip ────────────────────────────────────────────── */
-const FOUNDERS = [
-  {
-    number: "01",
-    name: "Nash Davis", role: "CEO & Head of Modernization", school: "UNC Chapel Hill",
-    bio: "AI and technology strategy. Leads technical delivery and solution architecture.",
-    image: "/nash-davis.png",
-  },
-  {
-    number: "02",
-    name: "Bishop Switzer", role: "COO — Operations", school: "UNC Wilmington",
-    bio: "Project tracking, proposals, invoicing, and handoff documentation.",
-    image: "/bishop-switzer.jpg",
-  },
-  {
-    number: "03",
-    name: "Grant Tadlock", role: "CFO & Sales Lead", school: "UNC Charlotte",
-    bio: "Financial planning, pricing strategy, and client acquisition.",
-    image: "/grant-tadlock.jpg",
-  },
-];
-
 function FoundersStrip() {
   const [headRef, headFade] = useFadeIn(0);
   const [quoteRef, quoteFade] = useFadeIn(100);
@@ -807,17 +786,6 @@ function FoundersStrip() {
     }}>
       <div ref={headRef} style={{ ...headFade, marginBottom: SPACE["3xl"] }}>
         <ChapterRule label="The Masthead" num="02" />
-      </div>
-
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-        gap: "clamp(24px, 3vw, 36px)",
-        marginBottom: SPACE["3xl"],
-      }}>
-        {FOUNDERS.map((f, i) => (
-          <FounderPortrait key={i} founder={f} delay={i * 140} />
-        ))}
       </div>
 
       {/* Pull quote */}
@@ -855,82 +823,6 @@ function FoundersStrip() {
         </Link>
       </div>
     </section>
-  );
-}
-
-function FounderPortrait({ founder, delay }) {
-  const [ref, fade] = useFadeIn(delay);
-  const [hovered, setHovered] = useState(false);
-  return (
-    <div ref={ref}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{ ...fade, cursor: "default" }}>
-      <div style={{
-        position: "relative",
-        aspectRatio: "4 / 5",
-        borderRadius: RADIUS.lg,
-        overflow: "hidden",
-        border: `1px solid ${hovered ? v("surface-border-hover") : v("surface-border")}`,
-        background: v("surface"),
-        marginBottom: SPACE.lg,
-        transition: "border-color 0.3s ease, transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s cubic-bezier(0.16,1,0.3,1)",
-        transform: hovered ? "translateY(-3px)" : "translateY(0)",
-        boxShadow: hovered ? SHADOW.lg : SHADOW.sm,
-      }}>
-        <img
-          src={founder.image} alt={`${founder.name}, ${founder.role}`}
-          style={{
-            width: "100%", height: "100%", objectFit: "cover",
-            filter: "saturate(1.05) contrast(1.02)",
-            transition: "transform 0.6s cubic-bezier(0.16,1,0.3,1)",
-            transform: hovered ? "scale(1.04)" : "scale(1)",
-          }}
-        />
-        {/* Number chip */}
-        <div style={{
-          position: "absolute", top: "16px", left: "16px",
-          padding: "5px 12px", borderRadius: RADIUS.full,
-          background: "rgba(7,13,26,0.7)",
-          backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
-          border: "1px solid rgba(255,255,255,0.18)",
-          fontSize: "10px", fontWeight: 700, letterSpacing: "2.5px",
-          color: "#fff",
-          fontFeatureSettings: '"tnum" 1',
-        }}>
-          No. {founder.number}
-        </div>
-        {/* Bottom gradient + name plate */}
-        <div style={{
-          position: "absolute", left: 0, right: 0, bottom: 0,
-          padding: "60px 20px 20px",
-          background: "linear-gradient(to top, rgba(7,13,26,0.96) 0%, rgba(7,13,26,0.72) 50%, transparent 100%)",
-        }}>
-          <div style={{
-            fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-            fontSize: "24px", color: "#fff", letterSpacing: "-0.3px", lineHeight: 1.15,
-          }}>
-            {founder.name}
-          </div>
-          <div style={{
-            fontSize: "11px", fontWeight: 600, letterSpacing: "1.5px", textTransform: "uppercase",
-            color: C.carolinaLight, marginTop: "5px",
-          }}>
-            {founder.role}
-          </div>
-        </div>
-      </div>
-      <p style={{
-        fontSize: "13px", lineHeight: 1.65, color: v("text-muted"),
-        paddingLeft: "4px",
-      }}>
-        <span style={{
-          display: "block", fontSize: "10px", color: v("text-dim"),
-          letterSpacing: "2px", textTransform: "uppercase", marginBottom: "6px", fontWeight: 700,
-        }}>{founder.school}</span>
-        {founder.bio}
-      </p>
-    </div>
   );
 }
 
