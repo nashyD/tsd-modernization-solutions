@@ -71,7 +71,15 @@ export async function checkAuditRateLimit(opts: {
   const ipL = getIpLimiter();
   const emailL = getEmailLimiter();
   if (!ipL || !emailL) {
-    // Upstash not configured — fail open in dev. Configure in prod.
+    // Upstash not configured. Fail OPEN in dev for convenience, but fail CLOSED
+    // in production — otherwise a missing env var silently disables the limiter
+    // that throttles the (SSRF-capable) audit scraper and the Anthropic spend.
+    if (process.env.NODE_ENV === "production") {
+      return {
+        ok: false,
+        reason: "Audits are temporarily unavailable. Please try again shortly.",
+      };
+    }
     return { ok: true };
   }
   const [ipRes, emailRes] = await Promise.all([
