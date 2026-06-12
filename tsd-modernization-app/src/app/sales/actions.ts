@@ -438,3 +438,66 @@ export async function quickAddProspect(
   revalidatePath("/sales");
   return { located: coords != null };
 }
+
+// ---------------------------------------------------------------------------
+// Demo shelf — park a built demo site as a prospect before it converts.
+
+const ParkDemoSchema = z.object({
+  business_name: z.string().min(2),
+  demo_site_url: urlField,
+  business_url: z.string().optional().or(z.literal("")),
+  city: z.string().optional().or(z.literal("")),
+  notes: z.string().optional().or(z.literal("")),
+});
+
+export async function parkDemo(formData: FormData) {
+  await requireRole("admin");
+  const p = ParkDemoSchema.parse({
+    business_name: clean(formData.get("business_name")),
+    demo_site_url: clean(formData.get("demo_site_url")),
+    business_url: clean(formData.get("business_url")),
+    city: clean(formData.get("city")),
+    notes: clean(formData.get("notes")),
+  });
+  const name = p.business_name.trim();
+  const city = (p.city || "").trim() || null;
+  const rawUrl = (p.business_url || "").trim();
+  // Same convention as quickAddProspect: business_url is NOT NULL, and demo
+  // prospects often have no real site — that absence is the pitch.
+  const businessUrl = rawUrl
+    ? rawUrl.startsWith("http")
+      ? rawUrl
+      : `https://${rawUrl}`
+    : `https://www.google.com/search?q=${encodeURIComponent(`${name}, ${city ?? ""} NC`)}`;
+
+  const sb = supabaseAdmin();
+  const { error } = await sb.from("prospects").insert({
+    business_name: name,
+    business_url: businessUrl,
+    demo_site_url: p.demo_site_url,
+    city,
+    notes: (p.notes || "").trim() || null,
+    primary_product: "website",
+    selected_services: [CANDIDATE_SVC.website],
+    discovery_source: "demo_shelf",
+  });
+  if (error) throw new Error(error.message);
+  revalidatePath("/sales/demos");
+  revalidatePath("/sales");
+  return { ok: true };
+}
+
+export async function setDemoUrl(formData: FormData) {
+  await requireRole("admin");
+  const id = z.string().uuid().parse(formData.get("id"));
+  const demo_site_url = urlField.parse(clean(formData.get("demo_site_url")));
+  const sb = supabaseAdmin();
+  const { error } = await sb
+    .from("prospects")
+    .update({ demo_site_url })
+    .eq("id", id);
+  if (error) throw new Error(error.message);
+  revalidatePath("/sales/demos");
+  revalidatePath(`/sales/${id}`);
+  revalidatePath("/sales");
+}
