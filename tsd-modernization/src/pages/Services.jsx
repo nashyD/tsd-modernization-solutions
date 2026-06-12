@@ -7,9 +7,9 @@ import {
 } from "../shared";
 import { ArrowRightIcon } from "../icons";
 import PageShell from "./PageShell";
-import { SERVICES } from "../services-data";
+import { SERVICES, ADDONS } from "../services-data";
 
-function ServiceCard({ service, delay }) {
+function ServiceCard({ service, delay, badge }) {
   const [ref, fade] = useFadeIn(delay);
   const [hovered, setHovered] = useState(false);
   return (
@@ -65,15 +65,28 @@ function ServiceCard({ service, delay }) {
             fontSize: "24px", fontWeight: 700,
             color: v("text"), marginBottom: SPACE.sm,
             letterSpacing: "-0.4px",
-          }}>{service.title}</h3>
+            display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap",
+          }}>
+            {service.title}
+            {badge && (
+              <span style={{
+                fontSize: "11px", fontWeight: 700, letterSpacing: "1.5px",
+                textTransform: "uppercase", color: v("accent"),
+                padding: "4px 10px", borderRadius: RADIUS.full,
+                background: "rgba(75,156,211,0.12)",
+                border: `1px solid ${v("divider")}`,
+              }}>{badge}</span>
+            )}
+          </h3>
           <p style={{
             fontSize: "15px", lineHeight: 1.65,
             color: v("text-muted"), marginBottom: SPACE.sm,
           }}>{service.desc}</p>
           <p style={{
-            fontSize: "13px", lineHeight: 1.65,
-            color: v("text-dim"), marginBottom: SPACE.md,
-          }}>{service.longDesc}</p>
+            fontFamily: "var(--font-display)", fontStyle: "italic",
+            fontSize: "15px", lineHeight: 1.6,
+            color: v("accent-light"), marginBottom: SPACE.md,
+          }}>{service.saves}</p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
             {service.tags.map((t) => <Tag key={t}>{t}</Tag>)}
           </div>
@@ -99,6 +112,43 @@ function ServiceCard({ service, delay }) {
   );
 }
 
+function AddonsStrip() {
+  const [ref, fade] = useFadeIn(0);
+  return (
+    <div ref={ref} style={{
+      ...fade,
+      marginTop: SPACE["2xl"],
+      paddingTop: SPACE.xl,
+      borderTop: `1px solid ${v("divider-soft")}`,
+    }}>
+      <Eyebrow style={{ marginBottom: SPACE.md }}>Add-ons</Eyebrow>
+      <p style={{ fontSize: "14px", color: v("text-muted"), lineHeight: 1.6, marginBottom: SPACE.lg, maxWidth: "640px" }}>
+        Smaller pieces that ride along with a build — each one a line item in the
+        {" "}<Link to="/pricing" style={{ color: v("accent"), fontWeight: 600 }}>pricing estimator</Link>.
+      </p>
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+        gap: SPACE.md,
+      }}>
+        {ADDONS.map((a) => (
+          <div key={a.name} style={{
+            padding: "16px 18px",
+            borderRadius: RADIUS.lg,
+            background: "var(--glass-bg)",
+            border: "1px solid var(--glass-border)",
+            backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+            WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+          }}>
+            <div style={{ fontSize: "14px", fontWeight: 700, color: v("text"), marginBottom: "4px" }}>{a.name}</div>
+            <div style={{ fontSize: "13px", color: v("text-muted"), lineHeight: 1.5 }}>{a.blurb}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Services() {
   return (
     <PageShell>
@@ -106,13 +156,19 @@ export default function Services() {
         padding: `${SPACE.xl} clamp(20px, 4vw, 48px) ${SPACE["4xl"]}`,
         maxWidth: "1140px", margin: "0 auto",
       }}>
-        <SectionHeader center label="What We Do" title="Our" titleAccent="services"
-          sub="Every engagement is hands-on and fully documented. Run it your way — managed by us or owned by you — with a fixed-price proposal within 48 hours." />
+        <SectionHeader center label="What We Build" title="Six services." titleAccent="Each one stops a leak."
+          sub="Missed calls, repeated answers, no-shows, bloated vendor bills — every service below exists because a real business was losing real money there. Fixed-price proposal in 48 hours; managed by us, or owned by you." />
         <div style={{ display: "flex", flexDirection: "column", gap: SPACE.lg }} className="services-list">
           {SERVICES.map((s, i) => (
-            <ServiceCard key={s.slug} service={s} delay={i * 120} />
+            <ServiceCard
+              key={s.slug}
+              service={s}
+              delay={i * 120}
+              badge={s.slug === "cost-cut-audit" ? "Start here" : undefined}
+            />
           ))}
         </div>
+        <AddonsStrip />
       </div>
       <style>{`
         @media (max-width: 720px) {

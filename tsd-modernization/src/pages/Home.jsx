@@ -164,14 +164,14 @@ function Hero() {
           letterSpacing: "-2px", lineHeight: 1.04,
           color: "var(--c-hero-text)", marginBottom: SPACE.sm,
         }}>
-          Websites and AI for the businesses
+          We find the money
           <br />
-          people already trust —
+          your business is leaking —
           <br />
           <span style={{
             fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
             color: "var(--c-hero-text-strong)",
-          }}>built so the work doesn't wait on you.</span>
+          }}>and build what stops it.</span>
         </h1>
 
         <DiamondDivider width={150} style={{ marginBottom: SPACE.md }} />
@@ -182,7 +182,7 @@ function Hero() {
           color: "var(--c-hero-text-soft)",
           maxWidth: "580px", margin: "0 auto 20px",
         }}>
-          We modernize the digital side of established Charlotte businesses: a custom site that finally matches your reputation, plus AI that answers the phone, knows your catalog, and handles the busywork. <span style={{ fontWeight: 700, color: "var(--c-hero-text)" }}>Custom-built and priced to your size — managed by us, or owned by you.</span>
+          Missed after-hours calls, slow quotes, forgotten subscriptions — one local bakery was losing $540 a month until we cut it. Custom websites and AI for established Charlotte businesses. <span style={{ fontWeight: 700, color: "var(--c-hero-text)" }}>Priced to your size — managed by us, or owned by you.</span>
         </p>
 
         <div ref={r4} style={{
@@ -191,9 +191,9 @@ function Hero() {
           <BookCallButton variant="primary" refSource="home-hero">
             Book a fit call
           </BookCallButton>
-          <Link to="/pricing" style={{ textDecoration: "none" }}>
+          <Link to="/savings" style={{ textDecoration: "none" }}>
             <Button as="span" variant="editorial" size="lg">
-              See pricing
+              See what you're losing
             </Button>
           </Link>
         </div>
@@ -393,14 +393,14 @@ function SegmentStrip() {
 
 /* ── Service ticker ────────────────────────────────────────────── */
 const TICKER_ITEMS = [
+  "TSD Front Desk",
+  "TSD Concierge",
+  "TSD Booking Bridge",
   "Custom websites",
-  "AI receptionists",
-  "Site assistants",
-  "Booking automation",
-  "Managed AI",
+  "Lead engines",
+  "Cost-cut audits",
   "48-hour proposals",
   "Managed or owned",
-  "Charlotte-built",
 ];
 
 function ServiceTicker() {
@@ -449,7 +449,7 @@ function ServiceTicker() {
 /* ── Stats — editorial "by the numbers" block ──────────────────── */
 function Stats() {
   const [headRef, headFade] = useFadeIn(0);
-  const [count48, ref48] = useCountUp(48, 1600);
+  const [count540, ref540] = useCountUp(540, 1600);
   const [count100, ref100] = useCountUp(100, 1400);
 
   return (
@@ -474,8 +474,8 @@ function Stats() {
           }
         `}</style>
 
-        {/* Hero stat — the 48-hour proposal */}
-        <div ref={ref48} className="stats-hero" style={{
+        {/* Hero stat — the bakery teardown */}
+        <div ref={ref540} className="stats-hero" style={{
           position: "relative",
           padding: "56px",
           borderRadius: "var(--glass-radius)",
@@ -502,23 +502,27 @@ function Stats() {
             pointerEvents: "none",
           }} />
 
-          <Eyebrow>The Differentiator</Eyebrow>
+          <Eyebrow>Found &amp; Cut</Eyebrow>
 
           <div style={{ position: "relative" }}>
             <div className="stats-hero-num" style={{
               fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-              fontSize: "clamp(120px, 16vw, 188px)", lineHeight: 1.05, letterSpacing: "-4px",
+              fontSize: "clamp(96px, 13vw, 156px)", lineHeight: 1.05, letterSpacing: "-4px",
               background: C.gradientAccent,
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
               marginBottom: 0,
               paddingBottom: "0.08em",
               fontFeatureSettings: '"tnum" 1',
             }}>
-              {count48}
+              <span style={{
+                fontFamily: "var(--font-body)", fontStyle: "normal", fontSize: "0.5em",
+                letterSpacing: "-2px", marginRight: "4px", fontWeight: 800,
+              }}>$</span>
+              {count540}
               <span style={{
                 fontFamily: "var(--font-body)", fontStyle: "normal", fontSize: "0.32em",
                 letterSpacing: "0", marginLeft: "10px", fontWeight: 600,
-              }}>hrs</span>
+              }}>/mo</span>
             </div>
             <div style={{
               fontFamily: "var(--font-body)", fontSize: "clamp(20px, 2.4vw, 26px)",
@@ -526,12 +530,12 @@ function Stats() {
               marginTop: SPACE.lg, marginBottom: SPACE.sm,
               letterSpacing: "-0.4px",
             }}>
-              From first call to custom proposal.
+              Found and cut at one local bakery.
             </div>
             <div style={{
               fontSize: "14px", lineHeight: 1.7, color: v("text-muted"), maxWidth: "480px",
             }}>
-              Agencies take weeks. We take two days — with scope, timeline, and a fixed price.
+              A website vendor and a domain middleman, gone in one audit — $6,480 a year back on the P&amp;L. The audit is free if it can't find its own fee.
             </div>
           </div>
         </div>
@@ -547,20 +551,20 @@ function Stats() {
           boxShadow: "var(--glass-shadow)",
         }}>
           <SupportStat
-            value="2 clicks"
-            label="To a real price estimate"
-            note="Tell us your size on the pricing page."
+            value="48 hrs"
+            label="From first call to fixed-price proposal"
+            note="Agencies take weeks. We take two days."
           />
           <SupportStat
             value="24/7"
             label="AI that answers when you can't"
-            note="The phone, the chat, the busywork."
+            note="Phone, chat, after-hours — from $73/mo."
           />
           <SupportStat
             forwardRef={ref100}
             value={`${count100}%`}
             label="Money-back guarantee on every engagement"
-            note="The promise we stand behind."
+            note="The audit goes further — free if it can't pay for itself."
           />
         </div>
       </div>
@@ -605,6 +609,115 @@ function SupportStat({ forwardRef, value, label, note }) {
   );
 }
 
+/* ── The math — three leaks, priced ────────────────────────────── */
+const LEAKS = [
+  {
+    label: "Leak 01 — The missed call",
+    value: "≈ $1,350 /mo",
+    body: "Five missed calls a week, a $250 average ticket, and winning just one in four of them. That's the cost of voicemail.",
+  },
+  {
+    label: "Leak 02 — The front desk",
+    value: "$1,500–2,500 /mo",
+    body: "What part-time desk coverage actually costs, loaded. TSD Front Desk answers the same calls from $73 a month, managed.",
+  },
+  {
+    label: "Leak 03 — Subscription creep",
+    value: "$540 /mo",
+    body: "A website vendor, a domain middleman, a tool from 2019 nobody opens. That's what one audit found at a local bakery.",
+  },
+];
+
+function TheMath() {
+  const [headRef, headFade] = useFadeIn(0);
+  return (
+    <section style={{
+      padding: `${SPACE["3xl"]} clamp(20px, 4vw, 48px) ${SPACE["4xl"]}`,
+      maxWidth: "1200px", margin: "0 auto",
+    }}>
+      <div ref={headRef} style={{ ...headFade, marginBottom: SPACE.xl }}>
+        <ChapterRule label="The Math" num="02" />
+      </div>
+
+      <div style={{ maxWidth: "860px", marginBottom: SPACE["2xl"] }}>
+        <h2 style={{
+          fontFamily: "var(--font-body)", fontWeight: 800,
+          fontSize: "clamp(30px, 4.5vw, 52px)",
+          letterSpacing: "-1px", lineHeight: 1.08,
+          color: v("text"), marginBottom: SPACE.lg,
+        }}>
+          Three leaks, <GradientText>priced.</GradientText>
+        </h2>
+        <p style={{
+          fontSize: "18px", lineHeight: 1.6, color: v("text-muted"),
+          maxWidth: "720px",
+        }}>
+          Conservative arithmetic on purpose — your numbers will differ. The calculator takes sixty seconds and shows you where yours go.
+        </p>
+      </div>
+
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+        gap: "20px",
+        marginBottom: SPACE["2xl"],
+      }}>
+        {LEAKS.map((leak, i) => (
+          <LeakCard key={i} leak={leak} index={i} />
+        ))}
+      </div>
+
+      <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+        <Link to="/savings" style={{ textDecoration: "none" }}>
+          <Button as="span" variant="primary" iconRight={<ArrowRightIcon size={14} />}>
+            See what you're losing
+          </Button>
+        </Link>
+        <Link to="/services/cost-cut-audit" style={{ textDecoration: "none" }}>
+          <Button as="span" variant="ghost">
+            Or have us find it — guaranteed
+          </Button>
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+function LeakCard({ leak, index }) {
+  const [ref, fade] = useFadeIn(index * 120);
+  return (
+    <div ref={ref} style={{
+      ...fade,
+      padding: SPACE.xl,
+      borderRadius: "var(--glass-radius)",
+      background: "var(--glass-bg-strong)",
+      border: "1px solid var(--glass-border)",
+      backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+      WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+      boxShadow: "var(--glass-shadow)",
+      position: "relative",
+      isolation: "isolate",
+    }}>
+      <span aria-hidden="true" style={{
+        position: "absolute", top: 0, left: "8%", right: "8%", height: "1px",
+        background: "linear-gradient(90deg, transparent, var(--glass-rim), transparent)",
+        pointerEvents: "none",
+      }} />
+      <Eyebrow style={{ marginBottom: SPACE.md }}>{leak.label}</Eyebrow>
+      <div style={{
+        fontFamily: "var(--font-body)", fontWeight: 800,
+        fontSize: "clamp(28px, 3.4vw, 38px)", letterSpacing: "-1px",
+        background: C.gradientAccent,
+        WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+        paddingBottom: "0.08em",
+        fontFeatureSettings: '"tnum" 1',
+        marginBottom: SPACE.sm,
+      }}>{leak.value}</div>
+      <p style={{ fontSize: "14px", lineHeight: 1.7, color: v("text-muted"), margin: 0 }}>{leak.body}</p>
+    </div>
+  );
+}
+
 /* ── Why we do this ────────────────────────────────────────────── */
 const WHY_BEATS = [
   {
@@ -615,7 +728,7 @@ const WHY_BEATS = [
   {
     label: "Off the critical path",
     title: "The business shouldn't wait on you",
-    body: "When every quote, every booking, every after-hours call routes through one person, growth caps at that person's hours. We put AI on the repetitive work — answering, qualifying, scheduling — so the business keeps moving when you step away.",
+    body: "When every quote, every booking, every after-hours call routes through one person, growth caps at that person's hours — and every miss has a dollar figure. We put AI on the repetitive work — answering, qualifying, scheduling — so the business keeps earning when you step away.",
   },
   {
     label: "Your way",
@@ -632,7 +745,7 @@ function WhyWeDo() {
       maxWidth: "1200px", margin: "0 auto",
     }}>
       <div ref={headRef} style={{ ...headFade, marginBottom: SPACE.xl }}>
-        <ChapterRule label="The Thesis" num="03" />
+        <ChapterRule label="The Thesis" num="04" />
       </div>
 
       <div style={{ maxWidth: "860px", marginBottom: SPACE["3xl"] }}>
@@ -649,7 +762,7 @@ function WhyWeDo() {
           fontSize: "18px", lineHeight: 1.6, color: v("text-muted"),
           maxWidth: "720px",
         }}>
-          Established local businesses spend years building trust — then a dated website and an owner who's become the bottleneck quietly cap how far that trust travels. We close the gap with modern websites and AI that does the work you're tired of doing.
+          Established local businesses spend years building trust — then a dated website and an owner who's become the bottleneck quietly tax it: missed calls, slow quotes, subscriptions nobody audits. We close the gap with modern websites and AI that pay for themselves.
         </p>
       </div>
 
@@ -785,7 +898,7 @@ function FoundersStrip() {
       maxWidth: "1200px", margin: "0 auto",
     }}>
       <div ref={headRef} style={{ ...headFade, marginBottom: SPACE["3xl"] }}>
-        <ChapterRule label="The Masthead" num="02" />
+        <ChapterRule label="The Masthead" num="03" />
       </div>
 
       {/* Pull quote */}
@@ -884,13 +997,23 @@ function FoundingClientOffer() {
           color: "rgba(255,255,255,0.92)",
           maxWidth: "680px", margin: "0 auto 36px",
         }}>
-          Custom websites, AI that runs the busywork, and Managed plans to keep it sharp. Direct founder access; managed by us or owned by you. Tell us your size and you'll have a real estimate in two clicks — then a fixed price from a free fit call.
+          Custom websites, AI that runs the busywork, and an audit that cuts what you stopped needing. Direct founder access; managed by us, or owned by you. Sixty seconds on the calculator shows what the leaks cost — a free fit call prices the fix.
         </p>
-        <Link to="/pricing" style={{ textDecoration: "none" }}>
-          <Button as="span" variant="onAccent" size="lg" iconRight={<ArrowRightIcon size={16} />}>
-            See pricing
-          </Button>
-        </Link>
+        <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+          <Link to="/book" style={{ textDecoration: "none" }}>
+            <Button as="span" variant="onAccent" size="lg" iconRight={<ArrowRightIcon size={16} />}>
+              Book a fit call
+            </Button>
+          </Link>
+          <Link to="/savings" style={{
+            display: "inline-flex", alignItems: "center",
+            color: "rgba(255,255,255,0.92)", fontSize: "15px", fontWeight: 600,
+            textDecoration: "underline", textUnderlineOffset: "4px",
+            textDecorationColor: "rgba(255,255,255,0.4)",
+          }}>
+            See what you're losing →
+          </Link>
+        </div>
       </div>
     </section>
   );
@@ -904,6 +1027,7 @@ export default function Home() {
       <SegmentStrip />
       <ServiceTicker />
       <Stats />
+      <TheMath />
       <FoundersStrip />
       <WhyWeDo />
       <FoundingClientOffer />

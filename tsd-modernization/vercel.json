@@ -1,9 +1,12 @@
 {
   "redirects": [
-    { "source": "/hvac", "destination": "/ai-receptionist", "permanent": true },
-    { "source": "/electricians", "destination": "/ai-receptionist", "permanent": true },
-    { "source": "/plumbers", "destination": "/ai-receptionist", "permanent": true },
-    { "source": "/missed-call-calculator", "destination": "/pricing", "permanent": true }
+    { "source": "/hvac", "destination": "/services/front-desk", "permanent": true },
+    { "source": "/electricians", "destination": "/services/front-desk", "permanent": true },
+    { "source": "/plumbers", "destination": "/services/front-desk", "permanent": true },
+    { "source": "/ai-receptionist", "destination": "/services/front-desk", "permanent": true },
+    { "source": "/services/ai-integration", "destination": "/services/front-desk", "permanent": true },
+    { "source": "/services/process-modernization", "destination": "/services/booking-bridge", "permanent": true },
+    { "source": "/missed-call-calculator", "destination": "/savings", "permanent": true }
   ],
   "rewrites": [
     { "source": "/audit", "destination": "https://tsd-modernization-solutions-uc71.vercel.app/audit" },

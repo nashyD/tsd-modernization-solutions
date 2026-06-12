@@ -6,6 +6,7 @@ import { C, v, useTheme, DiamondDivider, Button, RADIUS, SHADOW, SPACE } from ".
 import { TSDLogo, SunIcon, MoonIcon, MenuIcon, XIcon, ArrowRightIcon } from "./icons";
 import { trackPageView } from "./analytics.js";
 import { ROUTE_JSONLD } from "./route-jsonld.js";
+import { SERVICES } from "./services-data";
 import TSDAgent from "./components/TSDAgent.jsx";
 import CallButton from "./components/CallButton.jsx";
 
@@ -14,6 +15,7 @@ const NAV_ITEMS = [
   { label: "Why Us", to: "/why-us" },
   { label: "Process", to: "/process" },
   { label: "Pricing", to: "/pricing" },
+  { label: "Savings", to: "/savings" },
   { label: "Testimonials", to: "/testimonials" },
   { label: "Team", to: "/team" },
   { label: "Contact", to: "/contact" },
@@ -27,24 +29,40 @@ const NAV_ITEMS = [
 const SITE_URL = "https://tsd-modernization.com";
 const ROUTE_META = {
   "/": {
-    title: "Charlotte Websites + AI for Established Businesses | TSD Modernization Solutions",
-    description: "Websites and AI for Charlotte-metro businesses people already trust — built so the work doesn't wait on you. Custom sites plus AI that answers the phone, knows your catalog, and runs the busywork. Custom, fixed-price builds — get a real range from the /pricing estimator — managed by us, or owned by you.",
+    title: "Charlotte Websites + AI That Pay for Themselves | TSD Modernization Solutions",
+    description: "We find the money your business is leaking — missed after-hours calls, slow quotes, forgotten subscriptions — and build what stops it. Custom websites and AI for established Charlotte businesses; one bakery saved $540/mo. Managed by us, or owned by you.",
   },
   "/services": {
-    title: "Services — Websites, AI Front Desk, Concierge & Booking | TSD Modernization Solutions",
-    description: "What we build: custom websites, the TSD Front Desk AI receptionist, the TSD Concierge site assistant, and TSD Booking Bridge automation — for established Charlotte-metro businesses. Every build managed by us, or owned by you outright.",
+    title: "Six Services That Stop the Leak | TSD Modernization Solutions",
+    description: "TSD Front Desk, TSD Concierge, TSD Booking Bridge, custom websites, TSD Lead Engine, and the TSD Cost-Cut Audit — each one priced by what it saves an established Charlotte business. Managed by us, or owned by you.",
   },
-  "/services/ai-integration": {
-    title: "AI Receptionist, Site Assistant & Booking Automation | TSD Modernization Solutions",
-    description: "AI that carries your reputation: TSD Front Desk answers phone and chat and books, TSD Concierge answers from your content and catalog, TSD Booking Bridge ties it together. Built on your real intake. Managed AI optional, cancel anytime.",
+  "/services/front-desk": {
+    title: "TSD Front Desk — AI Receptionist That Books Jobs | TSD Modernization Solutions",
+    description: "An AI receptionist on your existing phone line and chat: answers 24/7, qualifies the caller, and books real calendar slots — for a fraction of a $1,500–2,500/mo front-desk hire. From $73/mo managed; free if it books nothing in your first 30 days.",
+  },
+  "/services/concierge": {
+    title: "TSD Concierge — Site Assistant Trained on Your Catalog | TSD Modernization Solutions",
+    description: "Visitors ask in plain English; it answers from your real products, docs, and policies with the source linked — 24/7. Running for a Charlotte wholesale importer at $73/mo. Saves the hours your staff burns repeating the same answers.",
+  },
+  "/services/booking-bridge": {
+    title: "TSD Booking Bridge — One Booking Front Door | TSD Modernization Solutions",
+    description: "Bookings from DMs, forms, and calls land in one calendar, with confirmations, reminders, and lead routing automated behind it. Cuts the phone tag, the double-bookings, and the no-shows they cause. Built on the tools you already pay for.",
   },
   "/services/websites": {
     title: "Custom Website Design & Redesign | Charlotte Business Web Developer",
-    description: "Fast, mobile-first custom websites with on-page SEO, analytics wiring, and full handoff docs so your team owns the content. Custom, fixed-price builds launched in 2-4 weeks — get a real range from the /pricing estimator. We manage hosting and edits from $49/mo, or you own it outright, source code and all.",
+    description: "Fast, mobile-first custom websites with on-page SEO and analytics wired in, launched in 2-4 weeks. Saves the agency retainer: Managed hosting + edits from $49/mo, or own it outright — source code, credentials, and runbook from day one.",
   },
-  "/services/process-modernization": {
-    title: "Process Modernization & Workflow Automation | TSD Modernization Solutions",
-    description: "We take the repetitive work off the owner's plate — consolidated booking, lead routing, and automation built on the tools you already pay for, so the business keeps moving when you step away. Charlotte metro.",
+  "/services/lead-engine": {
+    title: "TSD Lead Engine — Landing Funnel + Lead Dashboard | TSD Modernization Solutions",
+    description: "A conversion-built landing funnel plus a dashboard your team actually works leads from — capture, qualify, follow up, close. Stops referrals and ad clicks from dying in an unread inbox. Running live for a Carolina insurance agency.",
+  },
+  "/services/cost-cut-audit": {
+    title: "TSD Cost-Cut Audit — We Find the Money You're Leaking | TSD Modernization Solutions",
+    description: "A line-by-line teardown of your software, subscription, and vendor bills — overlap mapped, a kill list with dollar amounts, a switch plan for every cut. $540/mo found at one local bakery. Free if it can't find its fee in annual savings.",
+  },
+  "/savings": {
+    title: "Savings Calculator — What Your Business Is Losing | TSD Modernization Solutions",
+    description: "Four questions, sixty seconds: missed calls, ticket size, software spend, and your admin hours — priced with deliberately conservative math. See the monthly leak, then get a fixed-price proposal to stop it within 48 hours.",
   },
   "/why-us": {
     title: "Why Us — Local, Accountable, Managed or Owned | TSD Modernization Solutions",
@@ -57,10 +75,6 @@ const ROUTE_META = {
   "/pricing": {
     title: "Pricing & Estimate — Custom Websites + AI | TSD Modernization Solutions",
     description: "Build a real estimate in two clicks: tell us your size and what you want running. Custom, fixed-price builds — get a real range from the /pricing estimator, exact price from a free fit call. Managed plans from $49/mo for a site and $73/mo for AI, cancel anytime — or own everything outright.",
-  },
-  "/ai-receptionist": {
-    title: "TSD Front Desk — AI Receptionist for Charlotte Businesses | TSD Modernization Solutions",
-    description: "TSD Front Desk answers your phone and chat day or night, qualifies the lead, and books the job — then texts you a summary. Built on your real intake flow. Recurring Managed AI keeps it sharp; cancel anytime. Money-back guarantee.",
   },
   "/salons": {
     title: "Custom Website + AI for Charlotte Salons & Spas | TSD Modernization Solutions",
@@ -91,6 +105,17 @@ const ROUTE_META = {
     description: "Tell us what you're trying to fix. Free fit call, then a written proposal within 48 hours. Custom websites and AI for established Charlotte-metro businesses — managed by us, or owned by you.",
   },
 };
+
+/* Savings sheets — one printable one-pager per service, generated from
+   the same catalog the routes prerender from. The pages themselves
+   carry a noindex robots tag (sales collateral, thin duplicates of the
+   service pages). */
+SERVICES.forEach((s) => {
+  ROUTE_META[`/sheets/${s.slug}`] = {
+    title: `${s.title} — Savings Sheet | TSD Modernization Solutions`,
+    description: s.saves,
+  };
+});
 
 function RouteMeta() {
   const { pathname } = useLocation();

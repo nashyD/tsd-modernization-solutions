@@ -26,19 +26,26 @@ const PRICE_CURRENCY = "USD";
    "starting at" floor via priceSpecification (minPrice) rather than a
    single fixed price, and let the /pricing estimator + fit call set the
    exact number. */
-const offer = ({ name, description, url, minPrice }) => ({
-  "@type": "Offer",
-  name,
-  description,
-  priceSpecification: {
-    "@type": "PriceSpecification",
-    priceCurrency: PRICE_CURRENCY,
-    minPrice,
-  },
-  availability: "https://schema.org/InStock",
-  url,
-  seller: PROVIDER,
-});
+const offer = ({ name, description, url, minPrice }) => {
+  const node = {
+    "@type": "Offer",
+    name,
+    description,
+    availability: "https://schema.org/InStock",
+    url,
+    seller: PROVIDER,
+  };
+  /* Flat-fee offers quoted per engagement (e.g. the Cost-Cut Audit)
+     omit minPrice rather than publish a made-up floor. */
+  if (minPrice) {
+    node.priceSpecification = {
+      "@type": "PriceSpecification",
+      priceCurrency: PRICE_CURRENCY,
+      minPrice,
+    };
+  }
+  return node;
+};
 
 /* Recurring Managed AI — published as a subscription offer with a price
    range. Optional, cancel anytime. */
@@ -267,42 +274,99 @@ const CONTACT_PAGE = {
   mainEntity: PROVIDER,
 };
 
-/* Service nodes for the three /services/{slug} pages. */
-const SERVICE_AI = service({
-  name: "AI Receptionist, Site Assistant & Booking Automation",
+/* Service nodes for the six /services/{slug} pages. minPrice floors
+   mirror the estimator's per-product lows (placeholders pending Nash's
+   pricing sign-off — change them together). */
+const SERVICE_FRONT_DESK = service({
+  name: "TSD Front Desk — AI Receptionist",
   description:
-    "AI built on your real intake: TSD Front Desk answers phone and chat, qualifies, and books; TSD Concierge answers visitor questions from your content and catalog with semantic and image search; TSD Booking Bridge consolidates booking and routes leads. Managed by us, or owned by you;optional Managed AI keeps it sharp, cancel anytime.",
-  serviceType: "AI Integration and Workflow Automation",
-  slug: "/services/ai-integration",
-  offers: [BUILD_OFFER, MANAGED_AI_OFFER],
+    "An AI receptionist on your existing phone line and website chat: answers 24/7, qualifies the caller, and books real calendar slots, then texts you a summary. Replaces a $1,500–2,500/mo front-desk hire for a fraction of the cost. Free if it books nothing in your first 30 days.",
+  serviceType: "AI Phone Answering Service",
+  slug: "/services/front-desk",
+  offers: [
+    offer({
+      name: "TSD Front Desk Setup",
+      minPrice: "1200",
+      description: "Custom AI receptionist built on your real intake and voice — phone + chat, calendar booking, SMS summaries. 30-day booked-appointment guarantee.",
+      url: `${SITE}/services/front-desk`,
+    }),
+    MANAGED_AI_OFFER,
+  ],
+});
+
+const SERVICE_CONCIERGE = service({
+  name: "TSD Concierge — Site Assistant",
+  description:
+    "A site assistant trained on your own catalog, documents, and policies. Visitors ask in plain English; it answers from your real products and pages with the source linked, 24/7 — and saves the hours your staff spends repeating the same answers.",
+  serviceType: "AI Site Assistant and Catalog Search",
+  slug: "/services/concierge",
+  offers: [
+    offer({
+      name: "TSD Concierge Build",
+      minPrice: "4100",
+      description: "Custom-trained site assistant with semantic + image search across your products, docs, and videos, cited answers, and lead capture.",
+      url: `${SITE}/services/concierge`,
+    }),
+    MANAGED_AI_OFFER,
+  ],
+});
+
+const SERVICE_BOOKING = service({
+  name: "TSD Booking Bridge — Booking & Automation",
+  description:
+    "One booking front door wired to the calendar you already use, with confirmations, reminders, and lead routing automated behind it. Cuts phone tag, double-bookings, and the no-shows they cause.",
+  serviceType: "Booking Consolidation and Workflow Automation",
+  slug: "/services/booking-bridge",
+  offers: [
+    offer({
+      name: "TSD Booking Bridge Build",
+      minPrice: "1300",
+      description: "Booking front door, calendar sync, automated confirmations and reminders, and lead-routing automation on the tools you already pay for.",
+      url: `${SITE}/services/booking-bridge`,
+    }),
+    MANAGED_AI_OFFER,
+  ],
 });
 
 const SERVICE_WEB = service({
   name: "Custom Website Design & Redesign",
   description:
-    "Fast, mobile-first custom websites with on-page SEO, analytics and Search Console wiring, and full written and video handoff documentation. Custom, fixed-price builds — get a real range from the /pricing estimator, launched in 2-4 weeks, managed by us or owned by you.",
+    "Fast, mobile-first custom websites with on-page SEO, analytics and Search Console wiring, and full written and video handoff documentation. Launched in 2-4 weeks. Saves the agency retainer: Managed hosting + edits from $49/mo, or owned outright.",
   serviceType: "Web Design and Development",
   slug: "/services/websites",
-  offers: BUILD_OFFER,
+  offers: offer({
+    name: "Custom Website Build",
+    minPrice: "2900",
+    description: "Custom-designed, mobile-first website with SEO, analytics, and AI chat integration — managed by us from $49/mo, or owned by you outright.",
+    url: `${SITE}/services/websites`,
+  }),
 });
 
-const SERVICE_PROCESS = service({
-  name: "Process Modernization & Workflow Automation",
+const SERVICE_LEAD_ENGINE = service({
+  name: "TSD Lead Engine — Landing Funnel + Lead Dashboard",
   description:
-    "We take the repetitive work off the owner's plate — consolidated booking, calendar and lead-routing automation, and the workflow glue behind it, built on the tools you already pay for so the business keeps moving when you step away.",
-  serviceType: "Business Process Consulting",
-  slug: "/services/process-modernization",
-  offers: BUILD_OFFER,
+    "A conversion-built landing funnel plus a lead dashboard your team actually works from — capture, qualify, follow up, close. Stops referrals and ad clicks from dying in an unread inbox. Running live for a Carolina insurance agency.",
+  serviceType: "Lead Generation Funnel and CRM Tooling",
+  slug: "/services/lead-engine",
+  offers: offer({
+    name: "TSD Lead Engine Build",
+    minPrice: "2400",
+    description: "Conversion-tuned landing funnel (multilingual when needed), lead dashboard with statuses and ownership, automated follow-up, spam protection, and outcome analytics.",
+    url: `${SITE}/services/lead-engine`,
+  }),
 });
 
-/* /ai-receptionist — Service for the TSD Front Desk AI receptionist. */
-const SERVICE_RECEPTIONIST = service({
-  name: "TSD Front Desk — AI Receptionist",
+const SERVICE_AUDIT = service({
+  name: "TSD Cost-Cut Audit",
   description:
-    "TSD Front Desk answers your phone and chat day or night, qualifies the lead, and books the job, then texts you a one-paragraph summary. Built on your real intake flow. Managed by us, or owned by you;recurring Managed AI keeps it sharp, cancel anytime. 100% money-back guarantee.",
-  serviceType: "AI Phone Answering Service",
-  slug: "/ai-receptionist",
-  offers: [BUILD_OFFER, MANAGED_AI_OFFER],
+    "A line-by-line teardown of your software, subscription, and vendor bills: overlap mapped, a kill list with dollar amounts, and a switch plan for every cut. $540/mo found at one local bakery. Flat fee — free if it can't find at least its fee in annual savings.",
+  serviceType: "Business Cost Reduction Audit",
+  slug: "/services/cost-cut-audit",
+  offers: offer({
+    name: "TSD Cost-Cut Audit",
+    description: "Flat-fee vendor and subscription teardown, quoted on a free fit call. Guaranteed: if the audit doesn't find at least its fee in annual savings, it's free.",
+    url: `${SITE}/services/cost-cut-audit`,
+  }),
 });
 
 /* Segment-page Service nodes — custom website + AI build, different audience. */
@@ -344,11 +408,12 @@ export const ROUTE_JSONLD = {
   "/team": [TEAM_LIST],
   "/contact": [CONTACT_PAGE],
 
-  "/services/ai-integration": [SERVICE_AI],
+  "/services/front-desk": [SERVICE_FRONT_DESK],
+  "/services/concierge": [SERVICE_CONCIERGE],
+  "/services/booking-bridge": [SERVICE_BOOKING],
   "/services/websites": [SERVICE_WEB],
-  "/services/process-modernization": [SERVICE_PROCESS],
-
-  "/ai-receptionist": [SERVICE_RECEPTIONIST],
+  "/services/lead-engine": [SERVICE_LEAD_ENGINE],
+  "/services/cost-cut-audit": [SERVICE_AUDIT],
 
   "/salons": [SERVICE_SALONS],
   "/auto-shops": [SERVICE_AUTO],

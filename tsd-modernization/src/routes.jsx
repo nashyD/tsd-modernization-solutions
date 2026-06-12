@@ -5,12 +5,14 @@ import ServiceDetail from "./pages/ServiceDetail";
 import WhyUs from "./pages/WhyUs";
 import Process from "./pages/Process";
 import Pricing from "./pages/Pricing";
+import Savings from "./pages/Savings";
+import Sheet from "./pages/Sheet";
 import Testimonials from "./pages/Testimonials";
 import Team from "./pages/Team";
 import Contact from "./pages/Contact";
-import AIReceptionist from "./pages/AIReceptionist";
 import RelationshipPage from "./pages/RelationshipPage";
 import { RELATIONSHIPS } from "./relationships-data";
+import { SERVICES } from "./services-data";
 import Book from "./pages/Book";
 
 /* Relationship-channel landing pages — vertical-specific pages for warm
@@ -20,6 +22,13 @@ import Book from "./pages/Book";
 function SalonsPage() { return <RelationshipPage rel={RELATIONSHIPS.salons} />; }
 function AutoShopsPage() { return <RelationshipPage rel={RELATIONSHIPS["auto-shops"]} />; }
 function RestaurantsPage() { return <RelationshipPage rel={RELATIONSHIPS.restaurants} />; }
+
+/* Six named services + a printable savings sheet per service, both
+   prerendered from the catalog so a new service in services-data.js
+   automatically gets its routes. The old bucket slugs (ai-integration,
+   process-modernization) and /ai-receptionist 301 in vercel.json. */
+const SERVICE_PATHS = SERVICES.map((s) => `services/${s.slug}`);
+const SHEET_PATHS = SERVICES.map((s) => `sheets/${s.slug}`);
 
 export const routes = [
   {
@@ -32,16 +41,17 @@ export const routes = [
       {
         path: "services/:slug",
         Component: ServiceDetail,
-        getStaticPaths: () => [
-          "services/ai-integration",
-          "services/websites",
-          "services/process-modernization",
-        ],
+        getStaticPaths: () => SERVICE_PATHS,
+      },
+      {
+        path: "sheets/:slug",
+        Component: Sheet,
+        getStaticPaths: () => SHEET_PATHS,
       },
       { path: "why-us", Component: WhyUs },
       { path: "process", Component: Process },
       { path: "pricing", Component: Pricing },
-      { path: "ai-receptionist", Component: AIReceptionist },
+      { path: "savings", Component: Savings },
       { path: "salons", Component: SalonsPage },
       { path: "auto-shops", Component: AutoShopsPage },
       { path: "restaurants", Component: RestaurantsPage },

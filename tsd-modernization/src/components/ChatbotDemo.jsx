@@ -1,4 +1,4 @@
-/* ChatbotDemo.jsx — animated demo for /services/ai-integration's "Custom
+/* ChatbotDemo.jsx — animated demo for /services/concierge's "Custom
    Chatbot Interface" gallery card. 15.5s loop: pricing page → cursor clicks
    "Chat with TSD" → widget slides in → camera zooms to chat → conversation
    plays out (greeting, three user messages, three bot replies).

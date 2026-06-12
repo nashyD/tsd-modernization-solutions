@@ -1,4 +1,4 @@
-/* MakeFlowDemo.jsx — animated demo for /services/ai-integration's "Make
+/* MakeFlowDemo.jsx — animated demo for /services/booking-bridge's "Make
    Automation Flow" gallery card. Sibling to ChatbotDemo: same 1280×720
    stage, same 15.5s loop, same visual language. Shows a contact-form
    submission firing through a 5-node Make scenario (Webhook → HubSpot →
