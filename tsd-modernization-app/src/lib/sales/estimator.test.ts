@@ -50,6 +50,31 @@ describe("estimate", () => {
     expect(r.serviceIds).toEqual(["website"]);
     expect(r.sizeId).toBe("small"); // default fallback
   });
+
+  it("defaults to managed ownership", () => {
+    expect(estimate("small", ["website"]).ownership).toBe("managed");
+  });
+
+  it("owned applies OWNED_MULT to the one-time range", () => {
+    // website small owned: 2900*1.0*1.25 = 3625 -> 3600; 4000*1.25 = 5000
+    const r = estimate("small", ["website"], "owned");
+    expect(r.ownership).toBe("owned");
+    expect(r.low).toBe(3600);
+    expect(r.high).toBe(5000);
+  });
+
+  it("owned composes with the team-size multiplier", () => {
+    // established website owned: 2900*1.3*1.25 = 4712.5 -> 4700; 4000*1.3*1.25 = 6500
+    const r = estimate("established", ["website"], "owned");
+    expect(r.low).toBe(4700);
+    expect(r.high).toBe(6500);
+  });
+
+  it("owned zeroes the Managed AI monthly but still counts AI products", () => {
+    const r = estimate("small", ["frontDesk", "concierge"], "owned");
+    expect(r.aiCount).toBe(2);
+    expect(r.managedMonthly).toBe(0);
+  });
 });
 
 describe("depositFromSelection", () => {
@@ -74,5 +99,10 @@ describe("depositFromSelection", () => {
 
   it("every SIZES tier has a positive multiplier", () => {
     for (const s of SIZES) expect(s.mult).toBeGreaterThan(0);
+  });
+
+  it("owned ownership flows through to the deposit", () => {
+    // owned website small low = 3600; 10% = 360
+    expect(depositFromSelection("small", ["website"], 10, "owned")).toBe(360);
   });
 });

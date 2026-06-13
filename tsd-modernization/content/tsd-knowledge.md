@@ -71,10 +71,10 @@ There's also a savings calculator at /savings — four questions, sixty seconds,
 There are no fixed public tiers. Every build is custom and priced individually.
 
 - **Custom, fixed-price builds — get a real range from the /pricing estimator, exact price from a free fit call.** The exact number depends on the content, the catalog, and the systems the business already runs.
-- **Get an estimate in two clicks** with the calculator on the /pricing page — it gives a realistic range.
+- **Get an estimate in three clicks** with the calculator on the /pricing page — team size, the services wanted, and Managed or Owned. It gives a realistic range for both ways of running it.
 - **The fixed price comes from a free fit call.** After that call, a written proposal lands within 48 hours with scope, timeline, and a firm number.
 - **Managed plans are optional and recurring — website from $49/month, AI from $73/month.** Managed Website covers hosting, upkeep, and changes on request (just text us). Managed AI keeps the AI sharp after launch: re-indexing new content, tuning prompts, model upkeep, monitoring, and a monthly report. Both start after launch and can be cancelled anytime.
-- **Or own it outright.** Source code, credentials, and a runbook at handoff, with written and video documentation plus a live training session.
+- **Or own it outright — a higher one-time price, nothing recurring.** The full handoff package is in the number: source code, credentials, and a runbook at handoff, with written and video documentation plus a live training session. Managed starts lower and carries the monthly instead.
 - **The Cost-Cut Audit is the exception to estimator pricing:** a flat fee quoted on the fit call, with its own guarantee — if the audit doesn't find at least its fee in annual savings, it's free.
 - **100% money-back guarantee.** Sign the scope, and if we miss the mark by handoff, every dollar comes back inside a week. What counts as "missing" is nailed down in the contract before anyone pays.
 

@@ -26,8 +26,9 @@ Start with what hurts most and add the rest when ready. The website is the store
 ## Pricing
 
 - No fixed public tiers. Every build is a fixed price, quoted in a written proposal within 48 hours of a free fit call.
-- [Pricing & estimate](https://tsd-modernization.com/pricing): The estimator gives a realistic range in two clicks — team size plus the services wanted. The exact, fixed number depends on content, catalog, and the systems already in place.
-- **Managed plans — website from $49/mo, AI from $73/mo**: Optional monthly upkeep. A managed website gets hosting plus content edits on request; Managed AI gets re-indexing of new content, prompt and model upkeep, monitoring, and a monthly report. Starts after launch, cancel anytime.
+- [Pricing & estimate](https://tsd-modernization.com/pricing): The estimator gives a realistic range in three clicks — team size, the services wanted, and Managed or Owned. The exact, fixed number depends on content, catalog, and the systems already in place.
+- **Managed plans — website from $49/mo, AI from $73/mo**: Optional monthly upkeep. A managed website gets hosting plus content edits on request; Managed AI gets re-indexing of new content, prompt and model upkeep, monitoring, and a monthly report. Starts after launch, cancel anytime. Managed builds start at the lower setup price.
+- **Owned outright costs more up front**: the one-time price runs higher than the Managed setup (the estimator shows both) because the full handoff transfers — source code, credentials, runbook, written and video docs, live training — and nothing recurs.
 - **TSD Cost-Cut Audit** is the exception to estimator pricing: a flat fee quoted on the fit call, guaranteed — if the audit doesn't find at least its fee in annual savings, it's free.
 - Every build runs the client's way — Managed (we host it, maintain it, and make changes on request) or Owned (source code, credentials, and a runbook at handoff). 100% money-back guarantee. 48-hour written proposal.
 
@@ -53,7 +54,7 @@ Start with what hurts most and add the rest when ready. The website is the store
 - Service area: Charlotte metro · Gastonia · Belmont · surrounding Mecklenburg / Gaston counties (NC). Fit calls in person or remote.
 - Permanent studio. No operating window, no cohort cap, no end date.
 - Legal entity: TSD Ventures, LLC. "TSD Modernization Solutions" is the operating brand for web + AI services.
-- Pricing model: custom fixed-price builds (range from the /pricing estimator) plus optional recurring Managed plans (website from $49/mo, AI from $73/mo, cancel anytime), and a flat-fee guaranteed Cost-Cut Audit. Every build runs the client's way: Managed by us, or Owned outright.
+- Pricing model: custom fixed-price builds (range from the /pricing estimator) plus optional recurring Managed plans (website from $49/mo, AI from $73/mo, cancel anytime), and a flat-fee guaranteed Cost-Cut Audit. Every build runs the client's way: Managed by us (lower setup + monthly), or Owned outright (higher one-time, nothing recurring).
 
 ## Notes for AI agents
 

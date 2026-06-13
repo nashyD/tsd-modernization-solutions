@@ -116,7 +116,7 @@ Line-by-line teardown of software, subscription, and vendor bills: overlap map, 
 
 ## 6. Pricing & Packaging
 
-No fixed public tiers. `/pricing` leads with a **company-size estimator** ([`src/components/PricingEstimator.jsx`](src/components/PricingEstimator.jsx)): the prospect picks their team size and which products they want running, and gets a realistic **one-time build range** plus an optional **monthly Managed AI** figure. The exact, fixed price comes from a free fit call + a 48-hour written proposal.
+No fixed public tiers. `/pricing` leads with a **company-size estimator** ([`src/components/PricingEstimator.jsx`](src/components/PricingEstimator.jsx)): the prospect picks their team size, which products they want running, and **how it should run — Managed or Owned (step added 2026-06-12)** — and gets a realistic **one-time build range** plus the matching **monthly** figure. The exact, fixed price comes from a free fit call + a 48-hour written proposal.
 
 > **The dollar figures in the estimator are placeholders pending Nash's sign-off.** Tune them in the `SIZES` / `PRODUCTS` / `MANAGED` config at the top of `PricingEstimator.jsx`.
 
@@ -125,6 +125,7 @@ No fixed public tiers. `/pricing` leads with a **company-size estimator** ([`src
 - **Products (one-time setup range, before the size multiplier):** Custom website $2,900–$4,000 · TSD Front Desk $1,200–$1,600 · TSD Concierge $4,100–$5,800 · TSD Booking Bridge $1,300–$1,900 · TSD Lead Engine $2,400–$3,400 (added 2026-06-12, placeholder) · Reviews & reputation $900–$1,200 · Lead follow-up $1,600–$2,200 · Local SEO $1,000–$1,500. Kept in dollar-lockstep with `tsd-modernization-app/src/lib/sales/estimator.ts` (pinned by its test).
 - **TSD Cost-Cut Audit (outside the estimator):** a flat fee quoted on the fit call, with its own risk reversal — if the audit doesn't find at least its fee in annual savings, it's free. Fee amount pending Nash's sign-off.
 - **Managed AI (recurring, optional, cancel-anytime):** priced by the number of AI products running — $73 / $147 / $222 / $297 / $373 per month for 1–5 AI products. A website-only build needs no monthly plan.
+- **Ownership multiplier (added 2026-06-12):** Managed = base setup price + the monthly. **Owned = setup × 1.25 with nothing recurring** — the handoff package (source code, credentials, runbook, docs, live training) and the forgone recurring revenue priced into the one-time fee. The multiplier is a placeholder pending Nash's sign-off, defined once as `OWNED_MULT` in both `PricingEstimator.jsx` and the app's `estimator.ts` (pinned by `estimator.test.ts`; `depositFromSelection` carries the ownership choice so Square deposits track the owned price).
 
 ### What every engagement carries
 - Source code, credentials, and runbook the client's from day one.

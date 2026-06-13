@@ -74,7 +74,7 @@ const ROUTE_META = {
   },
   "/pricing": {
     title: "Pricing & Estimate — Custom Websites + AI | TSD Modernization Solutions",
-    description: "Build a real estimate in two clicks: tell us your size and what you want running. Custom, fixed-price builds — get a real range from the /pricing estimator, exact price from a free fit call. Managed plans from $49/mo for a site and $73/mo for AI, cancel anytime — or own everything outright.",
+    description: "Build a real estimate in three clicks: your size, what you want running, and whether we manage it or you own it. Managed starts lower with a monthly you can cancel anytime ($49/mo site, $73/mo AI); Owned runs higher one-time with the full handoff included. Exact fixed price from a free fit call.",
   },
   "/salons": {
     title: "Custom Website + AI for Charlotte Salons & Spas | TSD Modernization Solutions",

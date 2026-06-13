@@ -167,7 +167,7 @@ function ClosingCTA({ rel }) {
         fontSize: "15px", lineHeight: 1.65, color: v("text-muted"),
         marginBottom: SPACE.xl,
       }}>
-        Get an estimate in two clicks, then a fixed price from a free fit call. 100% money-back guarantee.
+        Get an estimate in three clicks, then a fixed price from a free fit call. 100% money-back guarantee.
       </p>
       <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
         <Link to={contactHref} style={{ textDecoration: "none" }}>

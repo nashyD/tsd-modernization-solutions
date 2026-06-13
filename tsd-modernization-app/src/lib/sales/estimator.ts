@@ -54,6 +54,17 @@ export const MANAGED: Record<number, number> = {
   5: 373,
 };
 
+/**
+ * Owned-outright builds carry a higher one-time fee: the handoff package
+ * (source code, credentials, runbook, docs + live training) plus the
+ * recurring revenue forgone. Managed keeps the base setup price and adds
+ * the monthly. ⚠️ PLACEHOLDER multiplier pending Nash's sign-off — keep in
+ * sync with the marketing PricingEstimator.jsx.
+ */
+export const OWNED_MULT = 1.25;
+
+export type Ownership = "managed" | "owned";
+
 export const DEFAULT_SIZE = "small";
 
 const round100 = (n: number): number => Math.round(n / 100) * 100;
@@ -62,6 +73,7 @@ export interface EstimateResult {
   sizeId: string;
   pkg: string;
   serviceIds: string[];
+  ownership: Ownership;
   low: number;
   high: number;
   isLarger: boolean;
@@ -72,22 +84,31 @@ export interface EstimateResult {
 /**
  * Compute the estimate for a given team size + selected service ids.
  * Unknown ids are ignored. An unknown size falls back to the default tier.
+ * Ownership defaults to "managed" (base price + monthly); "owned" applies
+ * OWNED_MULT to the one-time range and zeroes the monthly.
  */
-export function estimate(sizeId: string, serviceIds: string[]): EstimateResult {
+export function estimate(
+  sizeId: string,
+  serviceIds: string[],
+  ownership: Ownership = "managed",
+): EstimateResult {
   const sz = SIZES.find((s) => s.id === sizeId) ?? SIZES.find((s) => s.id === DEFAULT_SIZE)!;
   const chosen = PRODUCTS.filter((p) => serviceIds.includes(p.id));
-  const low = round100(chosen.reduce((a, p) => a + p.low, 0) * sz.mult);
-  const high = round100(chosen.reduce((a, p) => a + p.high, 0) * sz.mult);
+  const owned = ownership === "owned";
+  const mult = sz.mult * (owned ? OWNED_MULT : 1);
+  const low = round100(chosen.reduce((a, p) => a + p.low, 0) * mult);
+  const high = round100(chosen.reduce((a, p) => a + p.high, 0) * mult);
   const aiCount = Math.min(chosen.filter((p) => p.ai).length, 5);
   return {
     sizeId: sz.id,
     pkg: sz.pkg,
     serviceIds: chosen.map((p) => p.id),
+    ownership: owned ? "owned" : "managed",
     low,
     high,
     isLarger: sz.id === "larger",
     aiCount,
-    managedMonthly: MANAGED[aiCount] ?? 0,
+    managedMonthly: owned ? 0 : MANAGED[aiCount] ?? 0,
   };
 }
 
@@ -101,8 +122,9 @@ export function depositFromSelection(
   sizeId: string,
   serviceIds: string[],
   depositPct: number,
+  ownership: Ownership = "managed",
 ): number {
-  const { low } = estimate(sizeId, serviceIds);
+  const { low } = estimate(sizeId, serviceIds, ownership);
   const pct = Math.min(100, Math.max(0, Number(depositPct) || 0));
   return Math.round((low * pct) / 100);
 }

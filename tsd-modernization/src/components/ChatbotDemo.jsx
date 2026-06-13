@@ -770,14 +770,14 @@ function buildConversation(t) {
   const u1TypeStart = 4.0, u1TypeEnd = 5.6;
   const u1Send = 5.8;
   const u1BotTypingStart = 6.0, u1BotTypingEnd = 6.8;
-  const u1BotReply = "A custom site that matches your reputation, plus AI that answers the phone and chat, knows your catalog, and handles booking. On-page SEO, analytics, and you choose managed or owned. Builds are custom and fixed-price — the pricing estimator gives you a real range in two clicks.";
+  const u1BotReply = "A custom site that matches your reputation, plus AI that answers the phone and chat, knows your catalog, and handles booking. On-page SEO, analytics, and you choose managed or owned. Builds are custom and fixed-price — the pricing estimator gives you a real range in three clicks.";
   const u1BotEnd = 8.2;
 
   const u2 = "How does pricing work?";
   const u2TypeStart = 9.0, u2TypeEnd = 10.2;
   const u2Send = 10.4;
   const u2BotTypingStart = 10.6, u2BotTypingEnd = 11.3;
-  const u2BotReply = "The estimator here gives you a realistic range in two clicks. The fixed price comes from a free fit call, with a written proposal in 48 hours. Want me to set up a call with one of the founders?";
+  const u2BotReply = "The estimator here gives you a realistic range in three clicks — size, services, and managed or owned. The fixed price comes from a free fit call, with a written proposal in 48 hours. Want me to set up a call with one of the founders?";
   const u2BotEnd = 12.6;
 
   const u3 = "Yes, book a call.";

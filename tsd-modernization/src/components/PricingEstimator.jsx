@@ -40,6 +40,18 @@ const PRODUCTS = [
 /* Monthly Managed AI, by how many AI products are running. */
 const MANAGED = { 0: 0, 1: 73, 2: 147, 3: 222, 4: 297, 5: 373 };
 
+/* Owned-outright builds carry a higher one-time fee: the handoff package
+   (source code, credentials, runbook, docs + live training) plus the
+   recurring revenue TSD forgoes. Managed keeps the base setup price and
+   adds the monthly. ⚠️ PLACEHOLDER multiplier pending Nash's sign-off —
+   KEEP IN SYNC with estimator.ts (same caveat as PRODUCTS above). */
+const OWNED_MULT = 1.25;
+
+const OWNERSHIP = [
+  { id: "managed", label: "Managed by us", detail: "Lower setup — we host, maintain, and make your changes; monthly, cancel anytime" },
+  { id: "owned", label: "Owned by you", detail: "Higher setup — source code, credentials + runbook at handoff; nothing monthly" },
+];
+
 const round100 = (n) => Math.round(n / 100) * 100;
 const fmt$ = (n) => "$" + Math.round(n).toLocaleString();
 
@@ -85,6 +97,7 @@ export default function PricingEstimator() {
   const [ref, fade] = useFadeIn(0);
   const [size, setSize] = useState("small");
   const [selected, setSelected] = useState(["website"]);
+  const [ownership, setOwnership] = useState("managed");
 
   const toggle = (id) =>
     setSelected((cur) => (cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id]));
@@ -92,12 +105,14 @@ export default function PricingEstimator() {
   const result = useMemo(() => {
     const sz = SIZES.find((s) => s.id === size);
     const chosen = PRODUCTS.filter((p) => selected.includes(p.id));
-    const low = round100(chosen.reduce((a, p) => a + p.low, 0) * sz.mult);
-    const high = round100(chosen.reduce((a, p) => a + p.high, 0) * sz.mult);
+    const owned = ownership === "owned";
+    const mult = sz.mult * (owned ? OWNED_MULT : 1);
+    const low = round100(chosen.reduce((a, p) => a + p.low, 0) * mult);
+    const high = round100(chosen.reduce((a, p) => a + p.high, 0) * mult);
     const aiCount = Math.min(chosen.filter((p) => p.ai).length, 5);
-    const managed = MANAGED[aiCount];
-    return { sz, chosen, low, high, aiCount, managed };
-  }, [size, selected]);
+    const managed = owned ? 0 : MANAGED[aiCount];
+    return { sz, chosen, owned, low, high, aiCount, managed };
+  }, [size, selected, ownership]);
 
   const hasPicks = result.chosen.length > 0;
   const isLarger = size === "larger";
@@ -143,7 +158,7 @@ export default function PricingEstimator() {
             </div>
           </div>
 
-          <div>
+          <div style={{ marginBottom: SPACE.xl }}>
             <Eyebrow style={{ marginBottom: SPACE.md }}>02 — What do you want running?</Eyebrow>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
               {PRODUCTS.map((p) => (
@@ -154,6 +169,21 @@ export default function PricingEstimator() {
                   label={p.label}
                   detail={p.detail}
                   check
+                />
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <Eyebrow style={{ marginBottom: SPACE.md }}>03 — How should it run?</Eyebrow>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+              {OWNERSHIP.map((o) => (
+                <OptionButton
+                  key={o.id}
+                  active={ownership === o.id}
+                  onClick={() => setOwnership(o.id)}
+                  label={o.label}
+                  detail={o.detail}
                 />
               ))}
             </div>
@@ -203,7 +233,11 @@ export default function PricingEstimator() {
                 fontSize: "12px", color: v("text-dim"), letterSpacing: "1.5px",
                 textTransform: "uppercase", fontWeight: 700, marginBottom: SPACE.md,
               }}>
-                {isLarger ? "Custom build — typically from" : "Estimated one-time build"}
+                {isLarger
+                  ? "Custom build — typically from"
+                  : result.owned
+                    ? "One-time build — owned outright"
+                    : "One-time build — managed"}
               </div>
               <div style={{
                 fontFamily: "var(--font-body)", fontWeight: 800,
@@ -221,15 +255,17 @@ export default function PricingEstimator() {
                 fontSize: "12px", color: v("text-dim"), letterSpacing: "1.5px",
                 textTransform: "uppercase", fontWeight: 700, marginBottom: "6px",
               }}>
-                + Managed AI
+                {result.owned ? "+ Monthly" : "+ Managed AI"}
               </div>
               <div style={{ fontSize: "26px", fontWeight: 800, color: v("text"), letterSpacing: "-0.5px", fontFeatureSettings: '"tnum" 1' }}>
-                {result.managed > 0 ? `${fmt$(result.managed)}/mo` : "Optional"}
+                {result.owned ? "$0" : result.managed > 0 ? `${fmt$(result.managed)}/mo` : "Optional"}
               </div>
               <p style={{ fontSize: "12px", color: v("text-dim"), lineHeight: 1.5, marginTop: "6px" }}>
-                {result.managed > 0
-                  ? "Keeps your AI current — re-indexing, prompt + model upkeep, monitoring, a monthly report. Cancel anytime."
-                  : "Want us to host + maintain your site? Managed Website from $49/mo — or own it outright, set on your fit call."}
+                {result.owned
+                  ? "Owned outright — source code, credentials, and a runbook at handoff, with docs and a live training session baked into the setup price. Nothing recurring."
+                  : result.managed > 0
+                    ? "Keeps your AI current — re-indexing, prompt + model upkeep, monitoring, a monthly report. Cancel anytime."
+                    : "We host + maintain your site and make changes on request — Managed Website from $49/mo, set on your fit call."}
               </p>
 
               <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: SPACE.lg }}>
@@ -254,7 +290,7 @@ export default function PricingEstimator() {
         textAlign: "center", maxWidth: "660px", margin: `${SPACE.lg} auto 0`,
       }}>
         <strong style={{ color: v("text-muted"), fontWeight: 700 }}>This is an estimate, not a quote.</strong>{" "}
-        Real scope depends on your content, catalog, and the systems you already run. You get an exact, fixed price in a free 48-hour proposal after your fit call. Own it outright (source code yours from day one) or let us manage it — Managed plans from $49/mo for a site, $73/mo for AI, cancel anytime.
+        Real scope depends on your content, catalog, and the systems you already run. You get an exact, fixed price in a free 48-hour proposal after your fit call. Managed starts lower and carries a monthly you can cancel anytime ($49/mo for a site, $73/mo per AI tier). Owned carries a higher one-time price and nothing recurring — the full handoff (source code, credentials, runbook, live training) is in the number.
       </p>
 
       <style>{`

@@ -84,6 +84,11 @@ const PRODUCT_LEGEND = [
     points: ["Consolidates scattered booking", "Calendar + lead routing automation", "Built on the tools you already pay for"],
   },
   {
+    name: "TSD Lead Engine",
+    tagline: "A funnel that converts, plus a dashboard your team actually works.",
+    points: ["Capture, qualify, follow up, close", "Spam-proof; multilingual when your market needs it", "Stops leads dying in an unread inbox"],
+  },
+  {
     name: "Reviews & reputation",
     tagline: "Turns happy jobs into reviews — and watches the ones that land.",
     points: ["Auto-requests a review after each job", "Monitors Google + Yelp, alerts on new ones", "Compounds the reputation you already have"],
@@ -168,7 +173,7 @@ function GuaranteeStrip() {
 const FAQS = [
   { q: "How does pricing work?", a: "Every build is a fixed price, quoted in a written proposal within 48 hours of a free fit call. The estimator above gives you a realistic range; the exact number depends on your content, your catalog, and the systems you already run." },
   { q: "What's Managed AI, and is it required?", a: "AI tools drift if nobody tends them — new content to index, prompts to tune, models that keep improving. Managed AI keeps yours sharp: re-indexing, prompt and model upkeep, monitoring, and a monthly report. It's optional, starts after launch, and you can cancel anytime. A website-only build doesn't need it." },
-  { q: "Do I own it, or do you manage it?", a: "Your choice. Owned: source code, credentials, and a runbook are yours from day one, with written + video docs and a live training session — you or your IT team run it. Managed: we host it and handle every change for you — just text us, from $49/mo for a site or $73/mo for AI, cancel anytime. Never a lock-in either way." },
+  { q: "Do I own it, or do you manage it?", a: "Your choice, and the estimator prices both. Owned carries a higher one-time fee with nothing recurring — source code, credentials, a runbook, written + video docs, and a live training session are yours from day one, and the full handoff is in the number. Managed starts lower and adds a monthly: we host it and handle every change for you — just text us, from $49/mo for a site or $73/mo for AI, cancel anytime. Never a lock-in either way." },
   { q: "How long does a build take?", a: "Most websites and AI builds run 2–4 weeks from approved scope to launch. Larger, multi-system engagements — big catalogs, multiple integrations — are scoped individually." },
   { q: "What kinds of businesses do you work with?", a: "Established local businesses whose digital presence has fallen behind their reputation — salons and spas, specialty automotive, wholesale and supply, studios and makers, professional services, specialty retail. If the business runs on the owner's hours, that's exactly what we fix." },
   { q: "What's the first step?", a: "A free fit call — 30 minutes, in person or remote. We'll tell you honestly whether we can help, and if so, send a fixed-price proposal within 48 hours." },
@@ -245,7 +250,7 @@ export default function Pricing() {
           label="Estimate"
           title="Build an estimate,"
           titleAccent="then talk to a human."
-          sub="Tell us your size and what you want running. You'll get a realistic range in two clicks — the exact, fixed price comes from a free fit call."
+          sub="Tell us your size, what you want running, and how you want it run. You'll get a realistic range in three clicks — the exact, fixed price comes from a free fit call."
         />
         <GuaranteeBlock />
         <PricingEstimator />

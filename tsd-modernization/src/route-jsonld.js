@@ -135,7 +135,7 @@ const PRICING_FAQ = {
       name: "Do I own it, or do you manage it?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Your choice. Owned: source code, credentials, and a runbook are yours from day one, with written and video docs and a live training session — you or your IT team run it. Managed: we host it and handle every change for you, from $49/mo for a site or $73/mo for AI, cancel anytime. Never a lock-in either way.",
+        text: "Your choice, and the estimator prices both. Owned carries a higher one-time fee with nothing recurring — source code, credentials, a runbook, written and video docs, and a live training session are yours from day one, and the full handoff is in the number. Managed starts lower and adds a monthly: we host it and handle every change for you, from $49/mo for a site or $73/mo for AI, cancel anytime. Never a lock-in either way.",
       },
     },
     {
