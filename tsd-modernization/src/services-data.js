@@ -63,7 +63,7 @@ export const SERVICES = [
     ],
     timeline: "Live in about a week.",
     price: "Custom setup from $1,200, scoped on your fit call. Then optional Managed AI from $73/mo keeps it tuned, monitored, and answering — cancel anytime. Prefer to run it in-house? Source code, credentials, and the call log are yours from day one.",
-    pairsWith: ["booking-bridge", "websites"],
+    pairsWith: ["concierge", "websites"],
     videos: [
       { title: "TSD Front Desk Walkthrough", desc: "See the AI receptionist answer a call, qualify the lead, and book the job." },
       { title: "Managed vs. Owned", desc: "The two ways to run it — we host and tune it, or you take the keys with full docs and training." },
@@ -108,42 +108,6 @@ export const SERVICES = [
       { Icon: BotIcon, embed: "chatbot-demo", title: "TSD Concierge — Site Assistant", desc: "Branded AI assistant embedded on a client's site, answering questions and capturing leads 24/7." },
       { Icon: SearchIcon, title: "Semantic + Image Search", desc: "Finds the right product from a plain-English question or an uploaded photo." },
       { Icon: ChartBarIcon, title: "Monthly Insight Report", desc: "What visitors asked, what it answered, and the leads it captured." },
-    ],
-  },
-  {
-    slug: "booking-bridge",
-    Icon: CalendarIcon,
-    title: "TSD Booking Bridge",
-    desc: "One booking front door wired to the calendar you already use — with confirmations, reminders, and lead routing automated behind it.",
-    longDesc: "Instagram DMs, the website form, walk-in calls: all of it lands in one calendar, with the busywork automated on the tools you already pay for.",
-    tags: ["One front door", "Reminders", "No-show defense", "Make / Zapier"],
-    gradient: "linear-gradient(135deg, #2c5f8a 0%, #13294B 100%)",
-    saves: "Saves the phone tag, the double-bookings, and the no-shows they cause.",
-    savesRows: [
-      { label: "Two no-shows a month at a $120 ticket", value: "≈ $240 /mo" },
-      { label: "Three hours a week of scheduling phone tag", value: "≈ $455 /mo" },
-      { label: "TSD Booking Bridge", value: "one fixed-price build" },
-    ],
-    savesNote: "Owner time at $35/hr. Automated reminders cut no-shows by a third or more in most service businesses.",
-    proof: "Being built right now for a Gastonia salon that books by DM, text, and walk-in.",
-    sheetLine: "One saved no-show a month is the whole pitch.",
-    included: [
-      "One booking front door on your site and socials",
-      "Calendar sync with what you already run (Google, Apple, your booking system)",
-      "Automated confirmations and reminders",
-      "Lead routing and follow-up automations",
-      "Built on the tools you already pay for",
-    ],
-    timeline: "Most bridges ship within 1-3 weeks.",
-    price: "Scoped to the size of the workflow and quoted as a fixed price after a free fit call — estimate on the /pricing calculator. 100% money-back guarantee.",
-    pairsWith: ["front-desk", "websites"],
-    videos: [
-      { title: "Booking Bridge Walkthrough", desc: "See scattered booking consolidated into one front door, synced to your calendar." },
-    ],
-    gallery: [
-      { Icon: BoltIcon, embed: "make-flow-demo", title: "Automation Flow", desc: "Multi-step automation connecting a contact form to CRM, reminders, and calendar booking." },
-      { Icon: CalendarIcon, title: "Consolidated Booking", desc: "One booking front door wired to the system you already use, with calendar sync and lead routing." },
-      { Icon: ChatBubbleIcon, title: "Reminders That Land", desc: "Confirmation and reminder texts that cut no-shows without you lifting a finger." },
     ],
   },
   {
@@ -221,33 +185,38 @@ export const SERVICES = [
     ],
   },
   {
+    /* Not a paid SKU — the audit is the diagnostic we run inside the free
+       30-min fit call. Kept off the /services card grid (gridHidden) but
+       keeps its own page + sheet as the money-saver keyword surface and
+       the funnel's "find the leak" proof. */
     slug: "cost-cut-audit",
+    gridHidden: true,
     Icon: ClipboardIcon,
     title: "TSD Cost-Cut Audit",
-    desc: "We tear down your software, subscription, and vendor bills line by line — then cut, replace, or renegotiate what you stopped needing.",
-    longDesc: "Most established businesses carry years of vendor sediment: the site guy, the booking platform, the marketing tool someone sold you in 2019. We map every recurring charge, show the overlap, and hand you a kill list with a switch plan for each cut.",
-    tags: ["Bill teardown", "Kill list", "Switch plan", "Guaranteed"],
+    desc: "The free diagnostic inside every fit call: we tear down your software, subscription, and vendor bills line by line and show you what to cut before you spend a dollar with us.",
+    longDesc: "Most established businesses carry years of vendor sediment: the site guy, the booking platform, the marketing tool someone sold you in 2019. On your free 30-minute fit call we map every recurring charge, show the overlap, and hand you a kill list with a switch plan for each cut — yours to keep whether or not you hire us.",
+    tags: ["Free with your fit call", "Bill teardown", "Kill list", "Switch plan"],
     gradient: "linear-gradient(135deg, #13294B 0%, #2c5f8a 100%)",
-    saves: "Found $540/mo at one local bakery. If we don't find our fee in annual savings, it's free.",
+    saves: "Found $540/mo at one local bakery — and it's part of your free fit call.",
     savesRows: [
       { label: "Found at one local bakery", value: "$540 /mo" },
       { label: "Typical overlap — two tools doing one job", value: "$50–300 /mo" },
-      { label: "The audit", value: "flat fee, quoted on your fit call" },
+      { label: "The audit", value: "free — part of your fit call" },
     ],
     savesNote: "The bakery's cuts: a $300+/mo website vendor and a domain middleman. Annualized, $6,480.",
     proof: "$540 a month — $6,480 a year — cut for a local bakery by replacing its website vendor and a domain middleman.",
-    sheetLine: "If the audit doesn't find at least its fee in annual savings, it's free.",
-    riskReversal: "If the audit doesn't find at least its fee in annual savings, it's free.",
+    sheetLine: "It's free — part of your 30-minute fit call.",
+    riskReversal: "It costs you nothing — the audit is part of the free fit call, and the kill list is yours to keep whether or not you hire us.",
     included: [
       "Line-by-line teardown of software, subscription, and vendor spend",
       "Overlap and dead-weight map — what's duplicated, what's unused",
       "A kill list with dollar amounts on every line",
       "A switch plan and migration help for each cut",
-      "30-day check-in after the cuts land",
+      "Run live on your free 30-minute fit call — the kill list is yours to keep",
     ],
-    timeline: "One week from statements-in to kill-list-out.",
-    price: "A flat fee, quoted on your fit call. The guarantee does the underwriting: if we don't find at least the fee in annual savings, you pay nothing.",
-    pairsWith: ["websites", "booking-bridge"],
+    timeline: "Runs inside your free 30-minute fit call; the full kill list follows within a couple of days.",
+    price: "Free — it's part of your 30-minute fit call. We tear down your bills with you and hand over the kill list with no fee and no obligation. Book the call to start.",
+    pairsWith: ["websites", "front-desk"],
     videos: [
       { title: "What an Audit Finds", desc: "A real teardown: the overlap map, the kill list, and the switch plan." },
     ],
@@ -262,6 +231,7 @@ export const SERVICES = [
    Rendered as the add-ons strip on /services; still individually
    selectable line items in the pricing estimator. */
 export const ADDONS = [
+  { name: "Booking automation", blurb: "One booking front door with reminders + lead routing — rides with a site or Front Desk." },
   { name: "Reviews & reputation", blurb: "Auto-requested after each job; monitored on Google + Yelp." },
   { name: "Lead follow-up", blurb: "Re-engages old leads, no-shows, and stale quotes." },
   { name: "Local SEO", blurb: "Google Business Profile and the map pack." },

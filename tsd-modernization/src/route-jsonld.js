@@ -94,7 +94,7 @@ const BUILD_OFFER = offer({
   name: "Custom Website + AI Build",
   minPrice: "3000",
   description:
-    "Custom website plus AI — TSD Front Desk receptionist, TSD Concierge site assistant, or TSD Booking Bridge automation, mixed to fit. On-page SEO, analytics wiring, and your choice of managed or owned. Custom, fixed-price builds — get a real range from the /pricing estimator, exact price from a free fit call. 100% money-back guarantee, 48-hour written proposal.",
+    "Custom website plus AI — TSD Front Desk receptionist, TSD Concierge site assistant, or TSD Lead Engine funnel, mixed to fit. On-page SEO, analytics wiring, and your choice of managed or owned. Custom, fixed-price builds — get a real range from the /pricing estimator, exact price from a free fit call. 100% money-back guarantee, 48-hour written proposal.",
   url: `${SITE}/pricing`,
 });
 
@@ -311,23 +311,6 @@ const SERVICE_CONCIERGE = service({
   ],
 });
 
-const SERVICE_BOOKING = service({
-  name: "TSD Booking Bridge — Booking & Automation",
-  description:
-    "One booking front door wired to the calendar you already use, with confirmations, reminders, and lead routing automated behind it. Cuts phone tag, double-bookings, and the no-shows they cause.",
-  serviceType: "Booking Consolidation and Workflow Automation",
-  slug: "/services/booking-bridge",
-  offers: [
-    offer({
-      name: "TSD Booking Bridge Build",
-      minPrice: "1300",
-      description: "Booking front door, calendar sync, automated confirmations and reminders, and lead-routing automation on the tools you already pay for.",
-      url: `${SITE}/services/booking-bridge`,
-    }),
-    MANAGED_AI_OFFER,
-  ],
-});
-
 const SERVICE_WEB = service({
   name: "Custom Website Design & Redesign",
   description:
@@ -359,12 +342,12 @@ const SERVICE_LEAD_ENGINE = service({
 const SERVICE_AUDIT = service({
   name: "TSD Cost-Cut Audit",
   description:
-    "A line-by-line teardown of your software, subscription, and vendor bills: overlap mapped, a kill list with dollar amounts, and a switch plan for every cut. $540/mo found at one local bakery. Flat fee — free if it can't find at least its fee in annual savings.",
+    "The free diagnostic inside every 30-minute fit call: a line-by-line teardown of your software, subscription, and vendor bills, with an overlap map, a kill list with dollar amounts, and a switch plan for every cut. $540/mo found at one local bakery. Yours to keep whether or not you hire us.",
   serviceType: "Business Cost Reduction Audit",
   slug: "/services/cost-cut-audit",
   offers: offer({
     name: "TSD Cost-Cut Audit",
-    description: "Flat-fee vendor and subscription teardown, quoted on a free fit call. Guaranteed: if the audit doesn't find at least its fee in annual savings, it's free.",
+    description: "Included free in every 30-minute fit call. We tear down your software and vendor bills and hand over a kill list — no fee, no obligation.",
     url: `${SITE}/services/cost-cut-audit`,
   }),
 });
@@ -410,7 +393,6 @@ export const ROUTE_JSONLD = {
 
   "/services/front-desk": [SERVICE_FRONT_DESK],
   "/services/concierge": [SERVICE_CONCIERGE],
-  "/services/booking-bridge": [SERVICE_BOOKING],
   "/services/websites": [SERVICE_WEB],
   "/services/lead-engine": [SERVICE_LEAD_ENGINE],
   "/services/cost-cut-audit": [SERVICE_AUDIT],

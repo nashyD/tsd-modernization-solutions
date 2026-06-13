@@ -65,13 +65,21 @@ export default function Book() {
 
         <p ref={r3} style={{
           ...f3, fontSize: "17px", lineHeight: 1.65, color: v("text-muted"),
-          maxWidth: "660px", margin: `0 auto ${SPACE["2xl"]}`,
+          maxWidth: "660px", margin: `0 auto ${SPACE.lg}`,
           textAlign: "center",
         }}>
           One of us hops on a thirty-minute call to walk through what you're
           trying to fix and how a custom build scoped to your business would
           take it on. No commitment, no slide deck, written proposal within
           48 hours if there's a fit.
+        </p>
+
+        <p style={{
+          ...f3, fontSize: "15px", lineHeight: 1.6, color: v("text"),
+          maxWidth: "640px", margin: `0 auto ${SPACE["2xl"]}`,
+          textAlign: "center", fontWeight: 600,
+        }}>
+          Every fit call includes a free <span style={{ color: v("accent") }}>cost-cut audit</span> — we tear down your software and vendor bills and show you what to cut before you spend a dollar. The kill list is yours to keep either way.
         </p>
 
         <div

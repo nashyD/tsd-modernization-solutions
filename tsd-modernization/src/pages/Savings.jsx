@@ -293,7 +293,7 @@ export default function Savings() {
                   <Link to="/services/cost-cut-audit" style={{ textDecoration: "none" }}
                     onClick={() => trackEvent("savings_calc_audit_click")}>
                     <Button as="span" variant="secondary" fullWidth>
-                      Have us find it — guaranteed
+                      Have us find it — free on your fit call
                     </Button>
                   </Link>
                 </div>
@@ -309,7 +309,7 @@ export default function Savings() {
             textAlign: "center", maxWidth: "660px", margin: `${SPACE.lg} auto 0`,
           }}>
             <strong style={{ color: v("text-muted"), fontWeight: 700 }}>This is an estimate built to understate.</strong>{" "}
-            The fix is priced on the <Link to="/pricing" style={{ color: v("accent"), fontWeight: 600 }}>estimator</Link> and quoted fixed after a free fit call — and the cost-cut audit is free if it can't find its own fee in annual savings.
+            The fix is priced on the <Link to="/pricing" style={{ color: v("accent"), fontWeight: 600 }}>estimator</Link> and quoted fixed after a free fit call — which includes a cost-cut audit that finds what you're overpaying for before you spend a dollar.
           </p>
         </section>
       </div>

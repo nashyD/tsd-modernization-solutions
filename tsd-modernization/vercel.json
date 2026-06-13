@@ -5,7 +5,9 @@
     { "source": "/plumbers", "destination": "/services/front-desk", "permanent": true },
     { "source": "/ai-receptionist", "destination": "/services/front-desk", "permanent": true },
     { "source": "/services/ai-integration", "destination": "/services/front-desk", "permanent": true },
-    { "source": "/services/process-modernization", "destination": "/services/booking-bridge", "permanent": true },
+    { "source": "/services/process-modernization", "destination": "/services/websites", "permanent": true },
+    { "source": "/services/booking-bridge", "destination": "/services/websites", "permanent": true },
+    { "source": "/sheets/booking-bridge", "destination": "/services/websites", "permanent": true },
     { "source": "/missed-call-calculator", "destination": "/savings", "permanent": true }
   ],
   "rewrites": [

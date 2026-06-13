@@ -79,11 +79,6 @@ const PRODUCT_LEGEND = [
     points: ["Search across your docs, videos, products", "Image + semantic catalog lookup", "Your expertise, on every page"],
   },
   {
-    name: "TSD Booking Bridge",
-    tagline: "Booking and automation — one front door, plus the workflow glue behind it.",
-    points: ["Consolidates scattered booking", "Calendar + lead routing automation", "Built on the tools you already pay for"],
-  },
-  {
     name: "TSD Lead Engine",
     tagline: "A funnel that converts, plus a dashboard your team actually works.",
     points: ["Capture, qualify, follow up, close", "Spam-proof; multilingual when your market needs it", "Stops leads dying in an unread inbox"],

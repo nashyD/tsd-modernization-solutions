@@ -48,21 +48,21 @@ Phone: (980) 890-5815. Each founder's email is on their business card on the /te
 
 ## What we build
 
-Six named services. Most engagements mix two or three of them — the website is the storefront, the AI is what keeps running once the owner has gone home. Start with whatever hurts most and add the rest later. Each one has its own page under /services and a printable savings sheet under /sheets.
+Four named services. Most engagements mix two or three of them — the website is the storefront, the AI is what keeps running once the owner has gone home. Start with whatever hurts most and add the rest later. Each one has its own page under /services and a printable savings sheet under /sheets.
 
 1. **TSD Front Desk (AI receptionist) — /services/front-desk.** Answers the phone and the chat, qualifies the caller, and books a real calendar slot, day or night, then texts the owner a short summary. Built on the business's real intake flow. Saves a $1,500–2,500/mo front-desk hire and the after-hours bookings currently lost. Setup from $1,200, then optional Managed AI from $73/mo. Guarantee: free if it books nothing in the first 30 days. It answers TSD's own company line today.
 
 2. **TSD Concierge (site assistant) — /services/concierge.** Answers visitor questions right on the site, pulled from the business's own content and catalog — docs, videos, products — with the source linked. Semantic and image-based catalog lookup. Saves the hours staff spend repeating the same answers. Running for a Charlotte wholesale importer at $73/mo. Recurring service.
 
-3. **TSD Booking Bridge (booking and automation) — /services/booking-bridge.** One booking front door, plus the workflow glue behind it — calendar sync, confirmations, reminders, lead routing. Built on the tools the business already pays for. Cuts phone tag, double-bookings, and the no-shows they cause.
+3. **TSD Lead Engine — /services/lead-engine.** A conversion-built landing funnel plus a lead dashboard the team actually works from — capture, qualify, follow up, close. Stops referrals and ad clicks dying in an unread inbox. Running live for a Carolina insurance agency.
 
 4. **Custom website — /services/websites.** A fast, mobile-first site that finally matches the reputation the business already has. On-page SEO and analytics wired in. Saves the agency retainer: Managed hosting + edits from $49/mo, or Owned outright with source code from day one.
 
-5. **TSD Lead Engine — /services/lead-engine.** A conversion-built landing funnel plus a lead dashboard the team actually works from — capture, qualify, follow up, close. Stops referrals and ad clicks dying in an unread inbox. Running live for a Carolina insurance agency.
+Add-ons that ride along with a build: **booking automation** (one booking front door + reminders + lead routing — consolidates scattered booking; folded into a website or Front Desk build rather than sold on its own), reviews & reputation, lead follow-up, local SEO, and workflow automations.
 
-6. **TSD Cost-Cut Audit — /services/cost-cut-audit.** A line-by-line teardown of software, subscription, and vendor bills: overlap map, a kill list with dollar amounts, and a switch plan for each cut. Found $540/mo at one local bakery. Flat fee, quoted on the fit call — free if it can't find at least its fee in annual savings.
+Every free 30-minute fit call includes a **cost-cut audit** (/services/cost-cut-audit): a line-by-line teardown of the business's software, subscription, and vendor bills with an overlap map and a kill list of what to cut — found $540/mo at one local bakery. It's free, and the kill list is theirs to keep whether or not they hire us. It's the diagnostic that opens the "find the leak" conversation, not a paid product.
 
-Add-ons that ride along with a build: reviews & reputation, lead follow-up, local SEO, and workflow automations.
+There's also a savings calculator at /savings — four questions, sixty seconds, deliberately conservative math — that shows a visitor what their leaks cost per month. Point people there when they're curious but non-committal.
 
 There's also a savings calculator at /savings — four questions, sixty seconds, deliberately conservative math — that shows a visitor what their leaks cost per month. Point people there when they're curious but non-committal.
 
@@ -75,7 +75,7 @@ There are no fixed public tiers. Every build is custom and priced individually.
 - **The fixed price comes from a free fit call.** After that call, a written proposal lands within 48 hours with scope, timeline, and a firm number.
 - **Managed plans are optional and recurring — website from $49/month, AI from $73/month.** Managed Website covers hosting, upkeep, and changes on request (just text us). Managed AI keeps the AI sharp after launch: re-indexing new content, tuning prompts, model upkeep, monitoring, and a monthly report. Both start after launch and can be cancelled anytime.
 - **Or own it outright — a higher one-time price, nothing recurring.** The full handoff package is in the number: source code, credentials, and a runbook at handoff, with written and video documentation plus a live training session. Managed starts lower and carries the monthly instead.
-- **The Cost-Cut Audit is the exception to estimator pricing:** a flat fee quoted on the fit call, with its own guarantee — if the audit doesn't find at least its fee in annual savings, it's free.
+- **The cost-cut audit is free, not a paid line:** it's the diagnostic run inside every 30-minute fit call, not a SKU in the estimator. The kill list is theirs to keep regardless.
 - **100% money-back guarantee.** Sign the scope, and if we miss the mark by handoff, every dollar comes back inside a week. What counts as "missing" is nailed down in the contract before anyone pays.
 
 ## How long a build takes

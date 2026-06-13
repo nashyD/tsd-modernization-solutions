@@ -33,8 +33,8 @@ const ROUTE_META = {
     description: "We find the money your business is leaking — missed after-hours calls, slow quotes, forgotten subscriptions — and build what stops it. Custom websites and AI for established Charlotte businesses; one bakery saved $540/mo. Managed by us, or owned by you.",
   },
   "/services": {
-    title: "Six Services That Stop the Leak | TSD Modernization Solutions",
-    description: "TSD Front Desk, TSD Concierge, TSD Booking Bridge, custom websites, TSD Lead Engine, and the TSD Cost-Cut Audit — each one priced by what it saves an established Charlotte business. Managed by us, or owned by you.",
+    title: "Websites + AI That Stop the Leak | TSD Modernization Solutions",
+    description: "Four services for established Charlotte businesses: TSD Front Desk, TSD Concierge, TSD Lead Engine, and custom websites — each priced by what it saves. Every free fit call includes a cost-cut audit. Managed by us, or owned by you.",
   },
   "/services/front-desk": {
     title: "TSD Front Desk — AI Receptionist That Books Jobs | TSD Modernization Solutions",
@@ -43,10 +43,6 @@ const ROUTE_META = {
   "/services/concierge": {
     title: "TSD Concierge — Site Assistant Trained on Your Catalog | TSD Modernization Solutions",
     description: "Visitors ask in plain English; it answers from your real products, docs, and policies with the source linked — 24/7. Running for a Charlotte wholesale importer at $73/mo. Saves the hours your staff burns repeating the same answers.",
-  },
-  "/services/booking-bridge": {
-    title: "TSD Booking Bridge — One Booking Front Door | TSD Modernization Solutions",
-    description: "Bookings from DMs, forms, and calls land in one calendar, with confirmations, reminders, and lead routing automated behind it. Cuts the phone tag, the double-bookings, and the no-shows they cause. Built on the tools you already pay for.",
   },
   "/services/websites": {
     title: "Custom Website Design & Redesign | Charlotte Business Web Developer",
@@ -57,8 +53,8 @@ const ROUTE_META = {
     description: "A conversion-built landing funnel plus a dashboard your team actually works leads from — capture, qualify, follow up, close. Stops referrals and ad clicks from dying in an unread inbox. Running live for a Carolina insurance agency.",
   },
   "/services/cost-cut-audit": {
-    title: "TSD Cost-Cut Audit — We Find the Money You're Leaking | TSD Modernization Solutions",
-    description: "A line-by-line teardown of your software, subscription, and vendor bills — overlap mapped, a kill list with dollar amounts, a switch plan for every cut. $540/mo found at one local bakery. Free if it can't find its fee in annual savings.",
+    title: "TSD Cost-Cut Audit — Free With Your Fit Call | TSD Modernization Solutions",
+    description: "The free diagnostic inside every 30-minute fit call: a line-by-line teardown of your software, subscription, and vendor bills, with a kill list and a switch plan for every cut. $540/mo found at one local bakery. Yours to keep whether or not you hire us.",
   },
   "/savings": {
     title: "Savings Calculator — What Your Business Is Losing | TSD Modernization Solutions",

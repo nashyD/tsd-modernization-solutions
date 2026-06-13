@@ -395,7 +395,7 @@ function SegmentStrip() {
 const TICKER_ITEMS = [
   "TSD Front Desk",
   "TSD Concierge",
-  "TSD Booking Bridge",
+  "Booking automation",
   "Custom websites",
   "Lead engines",
   "Cost-cut audits",
@@ -535,7 +535,7 @@ function Stats() {
             <div style={{
               fontSize: "14px", lineHeight: 1.7, color: v("text-muted"), maxWidth: "480px",
             }}>
-              A website vendor and a domain middleman, gone in one audit — $6,480 a year back on the P&amp;L. The audit is free if it can't find its own fee.
+              A website vendor and a domain middleman, gone in one audit — $6,480 a year back on the P&amp;L. The audit's part of your free fit call.
             </div>
           </div>
         </div>
@@ -675,7 +675,7 @@ function TheMath() {
         </Link>
         <Link to="/services/cost-cut-audit" style={{ textDecoration: "none" }}>
           <Button as="span" variant="ghost">
-            Or have us find it — guaranteed
+            Or have us find it — free on your fit call
           </Button>
         </Link>
       </div>

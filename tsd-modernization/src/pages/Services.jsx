@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import {
   C, v, useFadeIn,
-  SectionHeader, Tag, Eyebrow,
+  SectionHeader, Tag, Eyebrow, Button,
   SPACE, RADIUS,
 } from "../shared";
 import { ArrowRightIcon } from "../icons";
@@ -156,18 +156,46 @@ export default function Services() {
         padding: `${SPACE.xl} clamp(20px, 4vw, 48px) ${SPACE["4xl"]}`,
         maxWidth: "1140px", margin: "0 auto",
       }}>
-        <SectionHeader center label="What We Build" title="Six services." titleAccent="Each one stops a leak."
-          sub="Missed calls, repeated answers, no-shows, bloated vendor bills — every service below exists because a real business was losing real money there. Fixed-price proposal in 48 hours; managed by us, or owned by you." />
+        <SectionHeader center label="What We Build" title="Four services." titleAccent="Each one stops a leak."
+          sub="Missed calls, repeated answers, leads gone cold, a site that undersells you — every service below exists because a real business was losing real money there. Fixed-price proposal in 48 hours; managed by us, or owned by you." />
         <div style={{ display: "flex", flexDirection: "column", gap: SPACE.lg }} className="services-list">
-          {SERVICES.map((s, i) => (
+          {SERVICES.filter((s) => !s.gridHidden).map((s, i) => (
             <ServiceCard
               key={s.slug}
               service={s}
               delay={i * 120}
-              badge={s.slug === "cost-cut-audit" ? "Start here" : undefined}
             />
           ))}
         </div>
+
+        {/* Funnel entry — the audit isn't a paid SKU, it's the free
+            diagnostic inside the fit call. Keep it visible as the
+            "start here" door without giving it a card. */}
+        <div style={{
+          marginTop: SPACE.xl, padding: "20px 24px",
+          borderRadius: "var(--glass-radius)",
+          background: "var(--glass-bg)",
+          border: "1px dashed var(--glass-border-strong)",
+          backdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+          WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(var(--glass-saturate))",
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          gap: "16px", flexWrap: "wrap",
+        }}>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: "16px", fontWeight: 700, color: v("text"), marginBottom: "4px" }}>
+              Not sure where the leak is? Start with a free fit call.
+            </div>
+            <div style={{ fontSize: "14px", color: v("text-muted"), lineHeight: 1.55 }}>
+              Every 30-minute fit call includes a <Link to="/services/cost-cut-audit" style={{ color: v("accent"), fontWeight: 600 }}>cost-cut audit</Link> — we tear down your software and vendor bills and show you what to cut before you spend a dollar.
+            </div>
+          </div>
+          <Link to="/book" style={{ textDecoration: "none", flexShrink: 0 }}>
+            <Button as="span" variant="primary" iconRight={<ArrowRightIcon size={14} />}>
+              Book a fit call
+            </Button>
+          </Link>
+        </div>
+
         <AddonsStrip />
       </div>
       <style>{`
