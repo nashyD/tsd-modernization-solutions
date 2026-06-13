@@ -28,8 +28,8 @@ export interface ProductDef {
 
 export const SIZES: SizeTier[] = [
   { id: "solo", label: "Just me", detail: "1–2 people", mult: 0.8, pkg: "Starter Modernization" },
-  { id: "small", label: "Small team", detail: "3–10 people", mult: 1.0, pkg: "Core Modernization" },
-  { id: "established", label: "Established", detail: "11–30 people", mult: 1.3, pkg: "Full Modernization" },
+  { id: "small", label: "Small team", detail: "3–7 people", mult: 1.0, pkg: "Core Modernization" },
+  { id: "established", label: "Established", detail: "8–30 people", mult: 1.3, pkg: "Full Modernization" },
   { id: "larger", label: "Larger", detail: "30+ people", mult: 2.7, pkg: "Custom Engagement" },
 ];
 

@@ -121,7 +121,7 @@ No fixed public tiers. `/pricing` leads with a **company-size estimator** ([`src
 > **The dollar figures in the estimator are placeholders pending Nash's sign-off.** Tune them in the `SIZES` / `PRODUCTS` / `MANAGED` config at the top of `PricingEstimator.jsx`.
 
 ### How the estimate is built
-- **Size multiplier:** Just me (1–2) ×0.8 · Small team (3–10) ×1.0 · Established (11–30) ×1.3 · Larger (30+) ×2.7. The "Larger" tier renders as a "custom build — typically from $X+" floor (≈ $25,000+ with the full product mix) rather than a bounded range.
+- **Size multiplier:** Just me (1–2) ×0.8 · Small team (3–7) ×1.0 · Established (8–30) ×1.3 · Larger (30+) ×2.7. The "Larger" tier renders as a "custom build — typically from $X+" floor (≈ $25,000+ with the full product mix) rather than a bounded range.
 - **Products in the estimator (one-time setup range, before the size multiplier):** Custom website $2,900–$4,000 · TSD Front Desk $1,200–$1,600 · TSD Concierge $4,100–$5,800 · TSD Lead Engine $2,400–$3,400 — the four sold services, kept in dollar-lockstep with `tsd-modernization-app/src/lib/sales/estimator.ts` (pinned by its test). **The add-ons (booking automation, reviews & reputation, lead follow-up, local SEO, workflow automations) were removed from the estimator picker + the Pricing legend on 2026-06-12** so the pricing page shows only the four services; they're still real work, now scoped and quoted on the fit call rather than self-served. Only Front Desk and Concierge are AI products, so Managed AI through the estimator reaches at most 2 tiers ($147/mo); the per-product MANAGED rule ($73–$373 for 1–5) is unchanged and forward-compatible if an AI add-on returns.
 - **The cost-cut audit is free, not an estimator line:** it's the diagnostic run inside the 30-minute fit call (reframed from a flat-fee SKU on 2026-06-12). The kill list is the prospect's to keep regardless.
 - **Managed AI (recurring, optional, cancel-anytime):** priced by the number of AI products running — $73 / $147 / $222 / $297 / $373 per month for 1–5 AI products. A website-only build needs no monthly plan.
@@ -279,8 +279,8 @@ Variable by product mix and company size (see §6 — one-time product ranges ×
 
 | Engagement | Illustrative one-time |
 |---|---|
-| Small team (3–10) — website + TSD Front Desk | ≈ $4,200–$8,500 |
-| Established (11–30) — website + Front Desk + Concierge + booking automation | ≈ $13,000–$28,000 |
+| Small team (3–7) — website + TSD Front Desk | ≈ $4,200–$8,500 |
+| Established (8–30) — website + Front Desk + Concierge + booking automation | ≈ $13,000–$28,000 |
 | Larger (30+) — full product mix | custom, **from ≈ $25,000+** |
 
 There is no cohort cap, so build revenue scales with how many engagements three founders can deliver (2–4 weeks each; see §7 capacity).
