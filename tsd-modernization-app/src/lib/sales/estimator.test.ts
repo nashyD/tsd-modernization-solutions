@@ -25,19 +25,20 @@ describe("estimate", () => {
   });
 
   it("counts AI products for Managed AI tiering", () => {
-    // frontDesk + concierge + booking = 3 AI products -> $222/mo
-    const r = estimate("small", ["frontDesk", "concierge", "booking"]);
-    expect(r.aiCount).toBe(3);
-    expect(r.managedMonthly).toBe(222);
-    // low = (1200+4100+1300) * 1.0 = 6600
-    expect(r.low).toBe(6600);
+    // frontDesk + concierge = 2 AI products -> $147/mo
+    const r = estimate("small", ["frontDesk", "concierge"]);
+    expect(r.aiCount).toBe(2);
+    expect(r.managedMonthly).toBe(147);
+    // low = (1200+4100) * 1.0 = 5300
+    expect(r.low).toBe(5300);
   });
 
-  it("caps Managed AI at 5 AI products", () => {
-    const allAi = PRODUCTS.filter((p) => p.ai).map((p) => p.id); // 5 AI products
+  it("counts every AI product (Front Desk + Concierge are the only two)", () => {
+    const allAi = PRODUCTS.filter((p) => p.ai).map((p) => p.id);
+    expect(allAi.sort()).toEqual(["concierge", "frontDesk"]);
     const r = estimate("small", allAi);
-    expect(r.aiCount).toBe(5);
-    expect(r.managedMonthly).toBe(373);
+    expect(r.aiCount).toBe(2);
+    expect(r.managedMonthly).toBe(147);
   });
 
   it("flags the larger tier", () => {

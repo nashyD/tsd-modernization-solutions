@@ -83,21 +83,6 @@ const PRODUCT_LEGEND = [
     tagline: "A funnel that converts, plus a dashboard your team actually works.",
     points: ["Capture, qualify, follow up, close", "Spam-proof; multilingual when your market needs it", "Stops leads dying in an unread inbox"],
   },
-  {
-    name: "Reviews & reputation",
-    tagline: "Turns happy jobs into reviews — and watches the ones that land.",
-    points: ["Auto-requests a review after each job", "Monitors Google + Yelp, alerts on new ones", "Compounds the reputation you already have"],
-  },
-  {
-    name: "Lead follow-up",
-    tagline: "Re-engages the leads that slipped through the cracks.",
-    points: ["Follows up old leads, no-shows, and stale quotes", "AI plus outbound calls and texts", "Recovers revenue you already earned"],
-  },
-  {
-    name: "Local SEO",
-    tagline: "Gets you found when people search locally.",
-    points: ["Google Business Profile optimization", "Local citations + landing content", "Show up in the map pack"],
-  },
 ];
 
 function ProductLegend() {

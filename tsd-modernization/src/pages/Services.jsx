@@ -123,8 +123,8 @@ function AddonsStrip() {
     }}>
       <Eyebrow style={{ marginBottom: SPACE.md }}>Add-ons</Eyebrow>
       <p style={{ fontSize: "14px", color: v("text-muted"), lineHeight: 1.6, marginBottom: SPACE.lg, maxWidth: "640px" }}>
-        Smaller pieces that ride along with a build — each one a line item in the
-        {" "}<Link to="/pricing" style={{ color: v("accent"), fontWeight: 600 }}>pricing estimator</Link>.
+        Smaller pieces that ride along with a build — scoped and quoted on your
+        {" "}<Link to="/book" style={{ color: v("accent"), fontWeight: 600 }}>free fit call</Link>.
       </p>
       <div style={{
         display: "grid",

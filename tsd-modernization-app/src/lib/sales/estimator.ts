@@ -37,11 +37,7 @@ export const PRODUCTS: ProductDef[] = [
   { id: "website", label: "A new website", detail: "Custom, fast, source code yours", low: 2900, high: 4000, ai: false },
   { id: "frontDesk", label: "TSD Front Desk", detail: "AI receptionist — phone + chat, books work", low: 1200, high: 1600, ai: true },
   { id: "concierge", label: "TSD Concierge", detail: "Site assistant — answers from your content + catalog", low: 4100, high: 5800, ai: true },
-  { id: "booking", label: "Booking automation", detail: "Consolidate booking + reminders — rides with a site or Front Desk", low: 1300, high: 1900, ai: true },
   { id: "leadEngine", label: "TSD Lead Engine", detail: "Landing funnel + a lead dashboard your team works", low: 2400, high: 3400, ai: false },
-  { id: "reviews", label: "Reviews & reputation", detail: "Auto-requests reviews, monitors Google + Yelp", low: 900, high: 1200, ai: true },
-  { id: "outreach", label: "Lead follow-up", detail: "Re-engages old leads, no-shows, stale quotes", low: 1600, high: 2200, ai: true },
-  { id: "seo", label: "Local SEO", detail: "Google Profile + local search visibility", low: 1000, high: 1500, ai: false },
 ];
 
 /** Monthly Managed AI, by how many AI products are running. */

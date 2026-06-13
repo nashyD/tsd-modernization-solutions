@@ -121,6 +121,21 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-06-12 — Strip the add-ons off the pricing page: estimator + legend show only the four services
+
+**What.** Removed the four add-on options — **Booking automation, Reviews & reputation, Lead follow-up, Local SEO** — from the `/pricing` estimator's "What do you want running?" picker and the matching cards from the Pricing product legend. The picker and legend now show only the four sold services (website, Front Desk, Concierge, Lead Engine). Done in lockstep across [`PricingEstimator.jsx`](src/components/PricingEstimator.jsx) and the app's [`estimator.ts`](../tsd-modernization-app/src/lib/sales/estimator.ts) `PRODUCTS` (the `booking`/`reviews`/`outreach`/`seo` ids are gone); the two estimator tests that depended on those ids (the AI-count and the 5-product cap) were rewritten — Front Desk + Concierge are now the only two AI products, so Managed AI through the estimator tops out at $147/mo (17 tests still pass). The add-ons remain real work: the `/services` add-ons strip still lists them, but its copy changed from "each one a line item in the pricing estimator" to "scoped and quoted on your free fit call" so nothing contradicts.
+
+**Why.** Nash's call — the add-on options cluttered the estimator and pulled focus from the four services the same-day focus-to-four pass settled on. Self-serving five secondary line items undercut the "four services, each stops a leak" story; they're better sold as part of a build on the fit call.
+
+**Files touched.**
+- [`src/components/PricingEstimator.jsx`](src/components/PricingEstimator.jsx) + [`../tsd-modernization-app/src/lib/sales/estimator.ts`](../tsd-modernization-app/src/lib/sales/estimator.ts) — `PRODUCTS` trimmed to the four services (lockstep).
+- [`../tsd-modernization-app/src/lib/sales/estimator.test.ts`](../tsd-modernization-app/src/lib/sales/estimator.test.ts) — AI-count test → 2 products/$147; cap test → asserts Front Desk + Concierge are the only AI products.
+- [`src/pages/Pricing.jsx`](src/pages/Pricing.jsx) — dropped the Reviews & reputation, Lead follow-up, and Local SEO legend cards (Booking Bridge card was already gone).
+- [`src/pages/Services.jsx`](src/pages/Services.jsx) — add-ons strip copy: estimator-line-item → fit-call-quoted.
+- [`BUSINESS_PLAN.md`](BUSINESS_PLAN.md) — §6 estimator-products list trimmed to four + the Managed-AI-tops-at-2 note.
+
+**Principle reinforced.** *The price tool should sell the headline offer, not the long tail.* Every extra checkbox on an estimator is a small invitation to wander off the four things you actually want to sell.
+
 ### 2026-06-12 — Focus to four: cut Booking Bridge to a capability, fold the Cost-Cut Audit into the free fit call
 
 **What.** Trimmed this morning's six-SKU catalog to **four sold services** — TSD Front Desk, TSD Concierge, TSD Lead Engine, custom websites. Two changes behind that: (1) **TSD Booking Bridge is no longer a SKU** — its `services-data.js` entry + `/services/booking-bridge` page + `/sheets/booking-bridge` are gone (301'd to `/services/websites`), and booking is now a capability: an estimator add-on relabeled `booking` → "Booking automation" and a line folded into the website + Front Desk story. (2) **The TSD Cost-Cut Audit is no longer a paid product** — it's reframed as the free diagnostic run inside the 30-minute fit call. Its page is *kept* (flagged `gridHidden` so it's off the `/services` card grid) as the money-saver keyword surface and is now surfaced as a fit-call benefit on `/services` (a dashed "start here" strip), `/book`, `/savings`, and the home funnel; the "$540/mo, free if it can't find its fee" guarantee language is replaced everywhere by "free — part of your fit call, kill list yours to keep." Lead Engine stays (Nash owns the funnel IP, built as the State Farm intern). Grid `SERVICES.filter(s => !s.gridHidden)` renders four; routes/sheets still generate the audit page from the same array.
