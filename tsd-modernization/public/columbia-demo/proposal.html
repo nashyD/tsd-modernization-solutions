@@ -126,7 +126,7 @@
   <div class="util">
     <span>TSD Modernization Solutions · Proposal</span>
     <span class="spacer"></span>
-    <a href="index.html">← Open the live demo</a>
+    <a href="index.html" id="backToDemo">← Open the live demo</a>
     <a class="solid" href="#" onclick="window.print();return false">⤓ Save as PDF</a>
   </div>
 
@@ -303,5 +303,14 @@
     </div>
     <p class="disc">This proposal was prepared at the request of an IBC Resident Assistant for discussion with Columbia University Pre-College Programs leadership. "IBC Assistant" is a proposed TSD product and is not an official Columbia University system. References to the IBC Residential Life Handbook and training materials are to documents provided by program staff and are used here solely to illustrate the proposed assistant.</p>
   </div>
+  <script>
+    /* When embedded in the demo shell: hide the redundant standalone back-link,
+       and make any in-page "open the demo" links break out to the top window
+       (the parent's Live Demo / Proposal toggle handles navigation). */
+    if (window.self !== window.top) {
+      var b = document.getElementById("backToDemo"); if (b) b.style.display = "none";
+      document.querySelectorAll('a[href="index.html"]').forEach(function (a) { a.setAttribute("target", "_top"); });
+    }
+  </script>
 </body>
 </html>

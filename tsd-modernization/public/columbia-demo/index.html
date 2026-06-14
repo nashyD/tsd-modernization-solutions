@@ -34,9 +34,13 @@
         </div>
       </div>
       <div class="spacer"></div>
-      <span class="pill">Retrieval-Augmented · answers from the program's own documents</span>
+      <nav class="seg" aria-label="View">
+        <button class="seg-btn on" data-view="demo">Live Demo</button>
+        <button class="seg-btn" data-view="proposal">Proposal</button>
+      </nav>
     </header>
 
+    <div id="view-demo">
     <main class="frame">
       <div class="frame-bar">
         <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
@@ -84,8 +88,13 @@
       <span class="built"><span class="tsd" aria-hidden="true"></span> Built by TSD Modernization Solutions</span>
       <span class="spacer"></span>
       <span>Demonstration only · not an official Columbia University system · sample data from provided IBC materials.</span>
-      <a class="cta" href="proposal.html">Read the proposal →</a>
+      <a class="cta" href="#proposal">Read the proposal →</a>
     </footer>
+    </div><!-- /#view-demo -->
+
+    <section id="view-proposal" hidden aria-label="Proposal">
+      <iframe id="propFrame" title="IBC Assistant — Proposal for Columbia University" src="proposal.html" loading="lazy"></iframe>
+    </section>
   </div>
 
   <!-- modal -->
