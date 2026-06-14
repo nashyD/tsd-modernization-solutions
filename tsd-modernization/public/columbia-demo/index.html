@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>IBC Assistant — Live RAG Demo · TSD Modernization Solutions</title>
+  <meta name="description" content="A demonstration AI assistant trained on Columbia University's Internship in Building Community (IBC) Residential Life Handbook and training materials. Built by TSD Modernization Solutions.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- liquid-glass spatial backdrop: ambient glow + 3 drifting auroras + grain -->
+  <div class="liquid-bg" aria-hidden="true">
+    <div class="lb-glow"></div>
+    <div class="lb-aura lb-aura1"></div>
+    <div class="lb-aura lb-aura2"></div>
+    <div class="lb-aura lb-aura3"></div>
+    <div class="lb-grain"></div>
+  </div>
+
+  <div class="wrap">
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="crown" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M3 8l3.5 3L12 5l5.5 6L21 8l-1.5 10h-15L3 8z" fill="currentColor" opacity=".95"/><circle cx="3" cy="8" r="1.6" fill="currentColor"/><circle cx="21" cy="8" r="1.6" fill="currentColor"/><circle cx="12" cy="5" r="1.8" fill="currentColor"/></svg>
+        </div>
+        <div class="brand-txt">
+          <h1>IBC Assistant</h1>
+          <p>Internship in Building Community · concept demo</p>
+        </div>
+      </div>
+      <div class="spacer"></div>
+      <span class="pill">Retrieval-Augmented · answers from the program's own documents</span>
+    </header>
+
+    <main class="frame">
+      <div class="frame-bar">
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="url">🔒 <b>ibc.columbia.edu</b>/assistant&nbsp; · &nbsp;<span style="color:var(--faint)">demonstration</span></div>
+        <div class="frame-tools">
+          <span id="modeTag" class="mode-tag offline">Demo engine</span>
+          <button class="tbtn" id="themeBtn" title="Toggle light / dark glass" aria-label="Toggle theme">☀</button>
+          <button class="tbtn" id="settingsBtn" title="Optional: connect live AI">⚙ Live AI</button>
+        </div>
+      </div>
+
+      <div class="panes">
+        <!-- CHAT -->
+        <section class="chat">
+          <div class="chat-head">
+            <div class="bot-mark">IBC</div>
+            <div class="who"><b>IBC Assistant</b><span>Columbia Pre-College · trained on the Residential Life Handbook</span></div>
+            <div class="spacer" style="flex:1"></div>
+            <span class="live-dot" title="online"></span>
+          </div>
+          <div id="msgs" class="msgs"></div>
+          <div class="composer">
+            <div id="chips" class="chips"></div>
+            <div class="inrow">
+              <textarea id="ta" rows="1" placeholder="Ask anything from the IBC handbook…"></textarea>
+              <button id="send" class="send" title="Send">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M4 12l16-8-6 16-2.5-6.5L4 12z" fill="currentColor"/></svg>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- UNDER THE HOOD -->
+        <aside class="hood">
+          <div class="hood-head">
+            <h3>Under the hood</h3>
+            <p>Every answer is retrieved from <span id="srcCount">the IBC documents</span>, then grounded and cited — nothing is invented.</p>
+          </div>
+          <div id="hoodBody" class="hood-body"></div>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="footnote">
+      <span class="built"><span class="tsd" aria-hidden="true"></span> Built by TSD Modernization Solutions</span>
+      <span class="spacer"></span>
+      <span>Demonstration only · not an official Columbia University system · sample data from provided IBC materials.</span>
+      <a class="cta" href="proposal.html">Read the proposal →</a>
+    </footer>
+  </div>
+
+  <!-- modal -->
+  <div id="modalBg" class="modal-bg">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <h3 id="modalTitle">Source</h3><div class="spacer"></div><button class="x" aria-label="Close">✕</button>
+      </div>
+      <div id="modalBody" class="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="corpus.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Proposal · IBC Assistant for Columbia University — TSD Modernization Solutions</title>
+  <meta name="description" content="A proposal from TSD Modernization Solutions to build the IBC Assistant — an AI knowledge assistant trained on Columbia's Internship in Building Community materials.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --columbia:#9bcbeb; --columbia-deep:#1d4f91; --navy:#0a2240; --ink:#10243f;
+      --paper:#f5f8fc; --surface:#fff; --surface-2:#f0f5fb; --line:#e1e8f2;
+      --muted:#5c6c86; --faint:#8896ab; --good:#1a9d6e; --gold:#b8893f;
+      --serif:"Playfair Display",Georgia,serif; --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.62;-webkit-font-smoothing:antialiased;font-size:15.5px}
+    a{color:var(--columbia-deep)}
+    .doc{max-width:860px;margin:0 auto;padding:0 22px 80px}
+
+    /* top utility bar */
+    .util{max-width:860px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted)}
+    .util .spacer{flex:1}
+    .util a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:600;border:1px solid var(--line);background:var(--surface);padding:7px 13px;border-radius:9px;color:var(--ink)}
+    .util a:hover{border-color:var(--columbia)}
+    .util a.solid{background:linear-gradient(160deg,var(--columbia-deep),var(--navy));color:#fff;border-color:transparent}
+
+    /* cover */
+    .cover{background:linear-gradient(150deg,var(--navy),#10325f 60%,var(--columbia-deep));color:#fff;border-radius:22px;padding:46px 44px;position:relative;overflow:hidden;box-shadow:0 24px 60px rgba(10,34,64,.22)}
+    .cover:after{content:"";position:absolute;inset:0;background:radial-gradient(520px 300px at 88% -10%,rgba(155,203,235,.34),transparent 60%);pointer-events:none}
+    .cover .kicker{font-size:12.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--columbia);font-weight:600;position:relative}
+    .cover h1{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.12;margin:14px 0 6px;position:relative;max-width:18ch}
+    .cover .sub{font-size:17px;color:#d6e6f5;position:relative;max-width:54ch}
+    .cover .meta{display:flex;flex-wrap:wrap;gap:26px;margin-top:30px;position:relative;font-size:13.5px}
+    .cover .meta .k{color:var(--columbia);text-transform:uppercase;letter-spacing:.6px;font-size:10.5px;font-weight:600}
+    .cover .meta .v{font-weight:600;margin-top:3px}
+    .crowny{position:absolute;right:40px;bottom:34px;width:120px;height:120px;opacity:.22;color:#fff}
+
+    h2{font-family:var(--serif);font-weight:700;font-size:25px;margin:46px 0 6px;letter-spacing:.2px}
+    h2 .n{color:var(--columbia-deep);font-size:15px;font-weight:700;margin-right:10px;font-family:var(--sans);background:rgba(155,203,235,.22);padding:3px 9px;border-radius:8px;vertical-align:middle}
+    h3{font-size:16.5px;font-weight:700;margin:26px 0 6px;color:var(--ink)}
+    p{margin:11px 0}
+    .lead{font-size:17px;color:#23364f}
+    .rule{height:1px;background:var(--line);margin:8px 0 0}
+    ul,ol{margin:11px 0;padding-left:22px}
+    li{margin:7px 0}
+    strong{font-weight:700}
+    .muted{color:var(--muted)}
+
+    .callout{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--columbia-deep);border-radius:12px;padding:16px 18px;margin:18px 0;box-shadow:0 8px 24px rgba(10,34,64,.05)}
+    .callout.gold{border-left-color:var(--gold)}
+    .callout .ct{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:var(--columbia-deep);margin-bottom:4px}
+    .callout.gold .ct{color:var(--gold)}
+    .quote{font-family:var(--serif);font-size:19px;line-height:1.5;color:var(--navy);border-left:3px solid var(--columbia);padding:4px 0 4px 20px;margin:20px 0;font-style:italic}
+    .quote cite{display:block;font-family:var(--sans);font-style:normal;font-size:12.5px;color:var(--faint);margin-top:8px;font-weight:600}
+
+    /* feature grid */
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+    @media(max-width:680px){.grid{grid-template-columns:1fr}}
+    .feat{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:16px 17px}
+    .feat .ic{width:34px;height:34px;border-radius:9px;background:rgba(155,203,235,.2);color:var(--columbia-deep);display:grid;place-items:center;font-size:17px;margin-bottom:9px}
+    .feat h4{margin:0 0 4px;font-size:14.5px}
+    .feat p{margin:0;font-size:13.5px;color:var(--muted)}
+
+    /* tables */
+    table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+    th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+    th{background:var(--surface-2);font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700}
+    tr:last-child td{border-bottom:none}
+    td .price{font-weight:700;color:var(--navy);white-space:nowrap}
+    .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(26,157,110,.12);color:#157a55}
+
+    /* timeline */
+    .phase{display:flex;gap:16px;margin:16px 0}
+    .phase .dot{flex:0 0 auto;width:32px;height:32px;border-radius:50%;background:linear-gradient(160deg,var(--columbia),var(--columbia-deep));color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}
+    .phase .pc{flex:1;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 16px}
+    .phase .pc h4{margin:0 0 2px;font-size:15px}
+    .phase .pc .when{font-size:12px;color:var(--columbia-deep);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+    .phase .pc p{margin:6px 0 0;font-size:13.5px;color:var(--muted)}
+
+    .foot{margin-top:54px;padding-top:22px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .foot .tsd{width:20px;height:20px;border-radius:6px;background:linear-gradient(160deg,#4b9cd3,#13294b);display:inline-block}
+    .foot .spacer{flex:1}
+    .disc{font-size:11.5px;color:var(--faint);margin-top:8px}
+
+    /* ── liquid-glass backdrop + frosted surfaces (matches the demo) ── */
+    html{background:var(--paper)}
+    body{background:transparent}
+    .liquid-bg{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+    .lb-glow{position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(155,203,235,.30),transparent 60%)}
+    .lb-aura{position:absolute;border-radius:50%;filter:blur(82px);will-change:transform}
+    .lb-aura1{top:-12%;left:-10%;width:62vw;height:62vw;max-width:920px;max-height:920px;background:radial-gradient(circle at 50% 50%,rgba(110,170,220,.26),transparent 66%);animation:auroraDrift1 28s ease-in-out infinite}
+    .lb-aura2{bottom:-16%;right:-12%;width:56vw;height:56vw;max-width:860px;max-height:860px;background:radial-gradient(circle at 50% 50%,rgba(75,140,205,.16),transparent 68%);animation:auroraDrift2 38s ease-in-out infinite}
+    .lb-grain{position:absolute;inset:0;opacity:.035;mix-blend-mode:multiply;background-size:180px 180px;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.7 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+    @keyframes auroraDrift1{0%,100%{transform:translate3d(0,0,0) scale(1)}33%{transform:translate3d(6vw,-4vh,0) scale(1.12)}66%{transform:translate3d(-5vw,3vh,0) scale(.94)}}
+    @keyframes auroraDrift2{0%,100%{transform:translate3d(0,0,0) scale(1.05)}50%{transform:translate3d(-7vw,5vh,0) scale(1.18)}}
+    .callout,.feat,table,.phase .pc{background:rgba(255,255,255,.6);-webkit-backdrop-filter:blur(16px) saturate(165%);backdrop-filter:blur(16px) saturate(165%)}
+    th{background:rgba(238,244,251,.72)}
+    .util a{-webkit-backdrop-filter:blur(12px) saturate(160%);backdrop-filter:blur(12px) saturate(160%);background:rgba(255,255,255,.6)}
+    @media (prefers-reduced-motion: reduce){.lb-aura{animation:none}}
+    @media (prefers-reduced-transparency: reduce){.lb-aura,.lb-glow,.lb-grain{display:none}.callout,.feat,table,.phase .pc{background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none}}
+
+    @media print{
+      .liquid-bg{display:none!important}
+      .callout,.feat,table,.phase .pc{background:#fff!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+      .util{display:none}
+      body{background:#fff;font-size:11.5pt}
+      .cover{box-shadow:none;border-radius:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      .callout,.feat,.phase .pc,table{box-shadow:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      h2{break-after:avoid}
+      .phase,.feat,.callout{break-inside:avoid}
+    }
+  </style>
+</head>
+<body>
+  <div class="liquid-bg" aria-hidden="true">
+    <div class="lb-glow"></div>
+    <div class="lb-aura lb-aura1"></div>
+    <div class="lb-aura lb-aura2"></div>
+    <div class="lb-grain"></div>
+  </div>
+  <div class="util">
+    <span>TSD Modernization Solutions · Proposal</span>
+    <span class="spacer"></span>
+    <a href="index.html">← Open the live demo</a>
+    <a class="solid" href="#" onclick="window.print();return false">⤓ Save as PDF</a>
+  </div>
+
+  <div class="doc">
+    <!-- COVER -->
+    <header class="cover">
+      <div class="kicker">Prepared for Columbia University · Pre-College Programs</div>
+      <h1>The IBC Assistant</h1>
+      <p class="sub">An AI knowledge assistant trained on the Internship in Building Community's own handbook, policies, and training materials — so every RA has command of the information, instantly.</p>
+      <div class="meta">
+        <div><div class="k">Prepared by</div><div class="v">TSD Modernization Solutions</div></div>
+        <div><div class="k">Prepared for</div><div class="v">IBC &amp; Pre-College Student Affairs Leadership</div></div>
+        <div><div class="k">At the request of</div><div class="v">Bishop Switzer, IBC Resident Assistant</div></div>
+        <div><div class="k">Date</div><div class="v">June 2026 · Summer 2026 Pilot</div></div>
+      </div>
+      <svg class="crowny" viewBox="0 0 24 24" fill="none"><path d="M3 8l3.5 3L12 5l5.5 6L21 8l-1.5 10h-15L3 8z" fill="currentColor"/><circle cx="3" cy="8" r="1.6" fill="currentColor"/><circle cx="21" cy="8" r="1.6" fill="currentColor"/><circle cx="12" cy="5" r="1.8" fill="currentColor"/></svg>
+    </header>
+
+    <!-- EXEC SUMMARY -->
+    <h2><span class="n">01</span>Executive summary</h2>
+    <p class="lead">The IBC runs on information. Every summer, ~125 newly trained interns become the front line for the safety and experience of nearly 2,700 high-school students — and the handbook says it plainly: <em>authority is having command of information</em>. The challenge is that the information lives in a 60-page handbook, a separate Conduct &amp; Community Standards guide, Canvas decks, GroupMe blasts, Lionmail threads, and a dozen forms — and it has to be recalled correctly, often at 11&nbsp;PM, by someone three weeks into the job.</p>
+    <p>We propose to build the <strong>IBC Assistant</strong>: a private AI assistant trained exclusively on the program's own documents. An RA can ask it anything — in plain language, in any language — and get a direct, accurate answer with a citation to the exact handbook passage it came from. It never invents policy; when something isn't in the materials, it says so and points the RA to their SRA or <span class="muted">ibc@columbia.edu</span>. It is live and working today — <a href="index.html">you can try the working demo here</a>, built on the real Summer 2026 handbook and training rosters you already use.</p>
+    <div class="callout">
+      <div class="ct">The short version</div>
+      <p style="margin:0">Give every intern instant, cited answers to the questions they actually ask on the floor — curfew rules, duty rounds, who to call, what to do when a student is in distress — and give your leadership team a live view of what the staff is unsure about, so training and the handbook keep getting sharper. Lower the load on SRAs and admin; raise the floor on consistency and safety.</p>
+    </div>
+
+    <!-- THE OPPORTUNITY -->
+    <h2><span class="n">02</span>The opportunity</h2>
+    <p>Bishop Switzer — an IBC Resident Assistant this summer — raised this with your directors, who expressed strong interest. Working from inside the program, here is the gap we see, in the program's own terms:</p>
+
+    <div class="quote">"A key definition of 'authority' in the IBC is that of 'having command of information.' … interns who ask lots of questions in turn have lots of answers."
+      <cite>— IBC Residential Life Handbook, Staff Communication &amp; Information</cite>
+    </div>
+
+    <p>The handbook is excellent and thorough. That thoroughness is exactly why recall is hard under pressure:</p>
+    <ul>
+      <li><strong>The information is large and scattered.</strong> Residential Life Handbook, the Student Conduct &amp; Community Standards guide, Canvas training decks, GroupMe channels, Lionmail, and forms for curfew, incidents, off-campus passes, POM, and gender-based misconduct.</li>
+      <li><strong>The stakes are high and time-sensitive.</strong> A locked-out student at 2&nbsp;AM, a student in emotional distress, a curfew that differs on weekends, a duty-round schedule, a mandated-reporter obligation — these need the <em>right</em> answer, now, not a best guess.</li>
+      <li><strong>The staff is new every summer.</strong> ~125 IBCers and ~1,500 alumni to date; each cohort re-learns the same body of knowledge in a two-week Seminar, then is expected to have it cold for six weeks of Practicum.</li>
+      <li><strong>The load rolls uphill.</strong> Every answerable question an RA can't recall becomes a call to an SRA, an RD, or the AD. The handbook's own remedy — "ask lots of questions" — works, but it consumes senior staff time that a well-built assistant can absorb for the routine 80%.</li>
+      <li><strong>Many students and staff are multilingual.</strong> The program draws interns and students "from across the USA and world." Answers should be available in the reader's language without a separate translation step.</li>
+    </ul>
+
+    <!-- THE SOLUTION -->
+    <h2><span class="n">03</span>The solution — a Retrieval-Augmented assistant</h2>
+    <p>The IBC Assistant uses <strong>Retrieval-Augmented Generation (RAG)</strong>. In plain terms: it does not "make things up" from a general model. For every question it (1) <strong>retrieves</strong> the most relevant passages from <em>your</em> documents, then (2) composes an answer <strong>grounded only in those passages</strong>, with a citation back to each source. If the documents don't contain the answer, it declines and escalates rather than guessing.</p>
+
+    <div class="callout gold">
+      <div class="ct">See it working</div>
+      <p style="margin:0">The accompanying demo is the real thing, built on your Summer 2026 Residential Life Handbook and the BCD &amp; CPR/AED training rosters. Ask it <em>"What time is curfew on Friday?"</em>, <em>"A student is 40 minutes late — what do I do?"</em>, <em>"A student tells me they're feeling depressed,"</em> or <em>"¿A qué hora es el toque de queda?"</em> — and watch the "under the hood" panel show exactly which passages it retrieved and used. → <a href="index.html"><strong>Open the demo</strong></a></p>
+    </div>
+
+    <h3>How a question flows</h3>
+    <p class="muted" style="font-size:14px">Question → retrieve the most relevant handbook passages → answer grounded in those passages, with citations → if not found, decline and route to the SRA / program office. For any emergency, surface "call Public Safety 212-854-5555 / 911" first.</p>
+
+    <!-- WHAT WE PROVIDE -->
+    <h2><span class="n">04</span>What we would provide</h2>
+    <p>A complete, managed system — not a chatbot bolted onto a generic model. The scope below is what TSD delivers and operates for the IBC.</p>
+
+    <div class="grid">
+      <div class="feat"><div class="ic">📑</div><h4>Grounded, cited answers</h4><p>Every reply is drawn from your documents and shows its sources, so staff (and leadership) can trust and verify it. No invented policy.</p></div>
+      <div class="feat"><div class="ic">🛟</div><h4>Safety guardrails</h4><p>Emergency, self-harm, abuse, and medical questions always surface "call Public Safety 212-854-5555 / 911" first and route to the documented reporting protocol. It never plays counselor, Title&nbsp;IX adjudicator, or doctor.</p></div>
+      <div class="feat"><div class="ic">🙅</div><h4>Honest escalation</h4><p>When the answer isn't in the materials, it says so and points to the SRA, RD, or ibc@columbia.edu — the handbook's own "find the right voice" behavior, automated.</p></div>
+      <div class="feat"><div class="ic">🌐</div><h4>Multilingual</h4><p>Ask and answer in 90+ languages — English, Spanish, Mandarin, and more — for your international interns and students, from the same single source of truth.</p></div>
+      <div class="feat"><div class="ic">📥</div><h4>Document ingestion pipeline</h4><p>We ingest the Residential Life Handbook, the Conduct &amp; Community Standards guide, Canvas decks, rosters, and forms (PDF, Word, slides). Updates are simple — re-upload and the assistant is current.</p></div>
+      <div class="feat"><div class="ic">📊</div><h4>Leadership analytics dashboard</h4><p>A private dashboard of what staff ask most, what the assistant couldn't answer, and where confusion clusters — a live map of where the handbook or training has gaps.</p></div>
+      <div class="feat"><div class="ic">🔐</div><h4>Access modes &amp; roles</h4><p>An RA/staff assistant, an optional student-facing assistant with a narrower, student-appropriate corpus, and an admin view — each sees only what it should.</p></div>
+      <div class="feat"><div class="ic">🧩</div><h4>Delivery surfaces</h4><p>A clean web app for phones and laptops, an embeddable widget for Canvas or a program site, and optional SMS/GroupMe access so it meets staff where they already are.</p></div>
+      <div class="feat"><div class="ic">✍️</div><h4>Answer controls</h4><p>Your team can pin canonical answers, correct or override a response, and add FAQs that aren't yet written down — so the assistant improves with your guidance.</p></div>
+    </div>
+
+    <h3>What it looks like in practice</h3>
+    <table>
+      <tr><th style="width:46%">An intern asks…</th><th>The assistant does</th></tr>
+      <tr><td>"A student is locked out of their room at 2&nbsp;AM."</td><td>Returns the master-key procedure (verify the roster/Orah, confirm ID, contact the Housing Coordinator on call for a temporary card) — cited to the handbook — instead of a call to a sleeping SRA.</td></tr>
+      <tr><td>"A student tells me they're feeling really depressed."</td><td>Surfaces the distress protocol — console, then contact the Wellness Coordinator and submit a Maxient report; call Public Safety if there's immediate danger — and explicitly reminds them not to take it on alone.</td></tr>
+      <tr><td>"When are my duty rounds?"</td><td>"15, 45, and 75 minutes after curfew; tell your SRA after each; duty report at 8:50&nbsp;AM." Cited, instant, correct.</td></tr>
+      <tr><td>"¿Cuándo es la mudanza de la Sesión&nbsp;B?"</td><td>Answers the Session&nbsp;B move-out dates in Spanish, from the same English handbook.</td></tr>
+      <tr><td>"What's the wifi password for the gym?"</td><td>Declines honestly — "I don't have that; ask your SRA or ibc@columbia.edu" — rather than guessing. Trust is the product.</td></tr>
+    </table>
+
+    <!-- WHY IT FITS -->
+    <h2><span class="n">05</span>Why this fits the IBC specifically</h2>
+    <ul>
+      <li><strong>It operationalizes your own philosophy.</strong> The handbook defines authority as command of information and tells interns to ask lots of questions. The assistant is a tireless place to ask — available the instant a question arises, at 2&nbsp;AM on a lounge shift.</li>
+      <li><strong>It compresses the learning curve.</strong> New interns reach "command of information" faster, and the Seminar's two weeks of policy training get reinforced all summer instead of fading.</li>
+      <li><strong>It protects senior staff time.</strong> SRAs, RDs, and the AD keep handling judgment calls and real escalations; the assistant absorbs the high-volume, look-it-up questions.</li>
+      <li><strong>It raises the floor on consistency and safety.</strong> Every intern gets the same correct curfew time, the same reporting protocol, the same emergency number — and safety-critical questions always lead with the right call.</li>
+      <li><strong>It makes the handbook a living document.</strong> Your analytics show what people actually ask and where they get stuck — feeding next year's handbook and Seminar.</li>
+    </ul>
+
+    <!-- PRIVACY -->
+    <h2><span class="n">06</span>Data privacy, FERPA &amp; Protection of Minors</h2>
+    <p>This program serves minors and handles sensitive student information, so trust and compliance are first-class requirements — not an afterthought. Our commitments:</p>
+    <ul>
+      <li><strong>Your documents stay yours.</strong> The corpus is your handbook, policies, and training materials. They are used only to answer your staff's questions and are never sold, shared, or used to train third-party AI models.</li>
+      <li><strong>Built for a minors-serving program.</strong> The assistant is scoped to policy and operations. It is explicitly instructed not to give clinical, legal, or Title&nbsp;IX-adjudication advice, and to route all reporting (POM, gender-based misconduct, students of concern) to the documented protocol and the right office — reinforcing your mandated-reporter obligations rather than substituting for them.</li>
+      <li><strong>No student PII required.</strong> The base assistant runs entirely on program <em>policy</em> documents. We do not ingest student records, health forms, or rosters of minors unless and until you decide a specific use case warrants it, under your governance.</li>
+      <li><strong>Access control &amp; least privilege.</strong> Separate staff, student, and admin scopes; the student-facing assistant sees only a student-appropriate subset of the corpus.</li>
+      <li><strong>FERPA-aligned handling &amp; data residency.</strong> We will work within Columbia's data-governance and vendor-security requirements (data handling, retention, access logging, and a written data-processing agreement). The pilot can run on a policy-only corpus that contains no protected student data at all.</li>
+      <li><strong>Transparency by design.</strong> Because every answer is cited, your team can always audit why the assistant said what it said.</li>
+    </ul>
+    <div class="callout">
+      <div class="ct">Low-risk by construction</div>
+      <p style="margin:0">The Summer 2026 pilot can be built entirely on non-student policy documents — the handbook, conduct guide, and training materials — so it carries essentially no student-data risk while proving the value.</p>
+    </div>
+
+    <!-- PLAN -->
+    <h2><span class="n">07</span>Implementation plan</h2>
+    <p>We recommend a <strong>pilot-first</strong> path: prove the value this summer on the staff-facing assistant, evaluate with real usage, then expand. Indicative timeline:</p>
+
+    <div class="phase"><div class="dot">1</div><div class="pc"><div class="when">Week 1 · Scope &amp; ingest</div><h4>Set up &amp; load the corpus</h4><p>A short scoping call, a data-handling agreement, and ingestion of the Residential Life Handbook, Conduct &amp; Community Standards guide, and key training materials and forms.</p></div></div>
+    <div class="phase"><div class="dot">2</div><div class="pc"><div class="when">Week 1–2 · Build &amp; tune</div><h4>Configure the staff assistant</h4><p>Brand it for the IBC, tune the safety guardrails and escalation rules with your team, and validate answers against the handbook with a few of your SRAs.</p></div></div>
+    <div class="phase"><div class="dot">3</div><div class="pc"><div class="when">Summer 2026 · Pilot</div><h4>Roll out to interns</h4><p>Launch to the IBC staff via web + an embeddable widget (and optional SMS). We monitor accuracy, gather the analytics, and refine weekly through the Practicum.</p></div></div>
+    <div class="phase"><div class="dot">4</div><div class="pc"><div class="when">End of summer · Review</div><h4>Evaluate &amp; report</h4><p>A usage &amp; impact readout — questions answered, deflection from senior staff, gaps surfaced — and a recommendation for whether and how to expand.</p></div></div>
+    <div class="phase"><div class="dot">5</div><div class="pc"><div class="when">Future · Expand</div><h4>Student-facing &amp; deeper integration</h4><p>Optionally add a student-facing assistant, Canvas integration, year-round coverage across Pre-College sessions, and additional document sets — scoped after the pilot proves out.</p></div></div>
+
+    <!-- INVESTMENT -->
+    <h2><span class="n">08</span>Investment</h2>
+    <p>TSD offers every deliverable two ways — <strong>Managed</strong> (we host, maintain, and keep it current; you change things by asking) or <strong>Owned</strong> (a one-time build handed off with source, credentials, and a runbook for your IT to run). The figures below are <strong>indicative ranges</strong> to frame the conversation; exact pricing is set after a 30-minute scoping call and delivered as a written proposal within 48&nbsp;hours.</p>
+
+    <table>
+      <tr><th>Option</th><th>What's included</th><th>Indicative investment</th></tr>
+      <tr>
+        <td><strong>Summer 2026 Pilot</strong><br><span class="tag">Recommended start</span></td>
+        <td>Staff-facing IBC Assistant on your policy corpus — ingestion, configuration, safety/escalation tuning, branded web app + embeddable widget, leadership analytics, and weekly refinement through the Practicum.</td>
+        <td><span class="price">$4,500 – $8,500</span><br><span class="muted" style="font-size:12.5px">one-time pilot build</span></td>
+      </tr>
+      <tr>
+        <td><strong>Managed operation</strong></td>
+        <td>Hosting, monitoring, document updates, model &amp; security maintenance, and support. Can run seasonally (summer only) or year-round.</td>
+        <td><span class="price">$300 – $700 / mo</span><br><span class="muted" style="font-size:12.5px">or a seasonal flat fee</span></td>
+      </tr>
+      <tr>
+        <td><strong>Full rollout</strong></td>
+        <td>Student-facing assistant, Canvas integration, additional corpora, and year-round coverage across Pre-College sessions.</td>
+        <td><span class="muted">Scoped after the pilot</span></td>
+      </tr>
+      <tr>
+        <td><strong>Owned alternative</strong></td>
+        <td>One-time build handed off to Columbia IT — source code, credentials, and runbook are yours to host and run.</td>
+        <td><span class="muted">Quoted on request</span></td>
+      </tr>
+    </table>
+    <p class="disc">Indicative figures for discussion only; not a quote. Final pricing depends on corpus size, integrations, and Columbia's security/procurement requirements, and is confirmed in a written 48-hour proposal after a scoping call.</p>
+
+    <!-- ABOUT -->
+    <h2><span class="n">09</span>About TSD Modernization Solutions</h2>
+    <p>TSD Modernization Solutions builds practical AI and modern web tools for organizations whose operations have outgrown their tooling. We specialize in exactly this kind of system: private, document-grounded AI assistants that answer from an organization's own knowledge — with citations, guardrails, and honest "I don't know" behavior — deployed as clean, maintainable products.</p>
+    <ul>
+      <li><strong>We build production RAG assistants today</strong> for real clients, with the same architecture proposed here — grounded answers, forced citations, multilingual support, and safe escalation.</li>
+      <li><strong>A working demo, not a slide.</strong> The IBC Assistant in the attached link already runs on your Summer 2026 materials. We prove value before you commit.</li>
+      <li><strong>An inside advocate.</strong> Bishop Switzer is part of the IBC this summer and part of TSD — so this is built by someone who understands the floor, the shifts, and the questions interns actually ask.</li>
+    </ul>
+
+    <!-- NEXT STEPS -->
+    <h2><span class="n">10</span>Next steps</h2>
+    <ol>
+      <li><strong>Try the demo.</strong> Spend five minutes with the <a href="index.html">live IBC Assistant</a> and ask it the questions your interns ask.</li>
+      <li><strong>A 30-minute scoping call.</strong> We confirm the document set, your security and FERPA requirements, the surfaces you want (web, widget, SMS), and success criteria for the pilot.</li>
+      <li><strong>A written proposal in 48 hours.</strong> Fixed scope, fixed price, and a start date for the Summer 2026 pilot.</li>
+    </ol>
+    <div class="callout">
+      <div class="ct">Let's talk</div>
+      <p style="margin:0">Bishop Switzer can coordinate directly with the IBC leadership team, or reach TSD at <strong>nashdavis@tsd-ventures.com</strong>. We can have the staff-facing pilot live for interns this summer.</p>
+    </div>
+
+    <div class="foot">
+      <span class="tsd"></span>
+      <span><strong>TSD Modernization Solutions</strong> · tsd-modernization.com</span>
+      <span class="spacer"></span>
+      <span>Proposal · IBC Assistant · June 2026</span>
+    </div>
+    <p class="disc">This proposal was prepared at the request of an IBC Resident Assistant for discussion with Columbia University Pre-College Programs leadership. "IBC Assistant" is a proposed TSD product and is not an official Columbia University system. References to the IBC Residential Life Handbook and training materials are to documents provided by program staff and are used here solely to illustrate the proposed assistant.</p>
+  </div>
+</body>
+</html>

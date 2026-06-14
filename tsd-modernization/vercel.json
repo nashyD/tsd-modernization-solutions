@@ -8,9 +8,11 @@
     { "source": "/services/process-modernization", "destination": "/services/websites", "permanent": true },
     { "source": "/services/booking-bridge", "destination": "/services/websites", "permanent": true },
     { "source": "/sheets/booking-bridge", "destination": "/services/websites", "permanent": true },
-    { "source": "/missed-call-calculator", "destination": "/savings", "permanent": true }
+    { "source": "/missed-call-calculator", "destination": "/savings", "permanent": true },
+    { "source": "/columbia-demo", "destination": "/columbia-demo/", "permanent": false }
   ],
   "rewrites": [
+    { "source": "/columbia-demo/", "destination": "/columbia-demo/index.html" },
     { "source": "/audit", "destination": "https://tsd-modernization-solutions-uc71.vercel.app/audit" },
     { "source": "/audit/:path*", "destination": "https://tsd-modernization-solutions-uc71.vercel.app/audit/:path*" },
     { "source": "/app", "destination": "https://tsd-modernization-solutions-uc71.vercel.app/app" },
