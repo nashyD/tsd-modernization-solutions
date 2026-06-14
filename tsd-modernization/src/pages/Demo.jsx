@@ -70,7 +70,7 @@ export default function Demo() {
               src={DEMO_URL}
               title="TSD live RAG demo"
               allow="microphone; clipboard-write"
-              style={{ width: "100%", height: "min(86vh, 900px)", border: "none", display: "block", background: "#fbfaf7" }}
+              style={{ width: "100%", height: "min(90vh, 960px)", border: "none", display: "block", background: "#fbfaf7" }}
             />
           </div>
           <p style={{ textAlign: "center", fontSize: "13px", color: v("text-dim"), marginTop: SPACE.md }}>
