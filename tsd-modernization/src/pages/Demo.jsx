@@ -81,7 +81,7 @@ export default function Demo() {
         {/* How it works */}
         <section style={{ paddingBottom: SPACE["3xl"] }}>
           <SectionHeader center label="How it works" num="01" title="Retrieval-augmented, not" titleAccent="made up" sub="The difference between a real assistant and a chatbot that hallucinates: it can only answer from what your business actually published." />
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: SPACE.lg }}>
+          <div className="card-grid" style={{ "--cg-min": "260px", gap: SPACE.lg }}>
             {STEPS.map((s, i) => (
               <Card key={s.n} delay={i * 80}>
                 <div style={{ fontFamily: "var(--font-display)", fontSize: "14px", color: v("accent"), fontWeight: 700, letterSpacing: "2px", marginBottom: SPACE.sm }}>{s.n}</div>
@@ -95,7 +95,7 @@ export default function Demo() {
         {/* Feature grid */}
         <section style={{ paddingBottom: SPACE["3xl"] }}>
           <SectionHeader center label="Every feature" num="02" title="Everything we'd put in" titleAccent="a real build" />
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: SPACE.md }}>
+          <div className="card-grid" style={{ "--cg-min": "280px", "--cg-max": "360px", gap: SPACE.md }}>
             {FEATURES.map(([title, body], i) => (
               <Card key={title} delay={i * 60} padded>
                 <div style={{ display: "flex", alignItems: "center", gap: SPACE.sm, marginBottom: SPACE.xs }}>

@@ -126,9 +126,8 @@ function AddonsStrip() {
         Smaller pieces that ride along with a build — scoped and quoted on your
         {" "}<Link to="/book" style={{ color: v("accent"), fontWeight: 600 }}>free fit call</Link>.
       </p>
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+      <div className="card-grid" style={{
+        "--cg-min": "220px",
         gap: SPACE.md,
       }}>
         {ADDONS.map((a) => (

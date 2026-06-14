@@ -656,9 +656,8 @@ function TheMath() {
         </p>
       </div>
 
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+      <div className="card-grid" style={{
+        "--cg-min": "280px",
         gap: "20px",
         marginBottom: SPACE["2xl"],
       }}>
@@ -766,9 +765,8 @@ function WhyWeDo() {
         </p>
       </div>
 
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+      <div className="card-grid" style={{
+        "--cg-min": "300px",
         gap: "20px",
       }}>
         {WHY_BEATS.map((b, i) => (

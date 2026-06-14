@@ -23,9 +23,8 @@ function ContactInfo() {
       padding: `${SPACE.xl} clamp(20px, 4vw, 48px) 0`,
       maxWidth: "780px", margin: "0 auto",
     }}>
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))",
+      <div className="card-grid" style={{
+        "--cg-min": "190px",
         gap: SPACE.md,
       }}>
         {blocks.map((b, i) => {

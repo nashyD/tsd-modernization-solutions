@@ -88,9 +88,8 @@ const PRODUCT_LEGEND = [
 function ProductLegend() {
   return (
     <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(20px, 4vw, 48px)" }}>
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+      <div className="card-grid" style={{
+        "--cg-min": "240px",
         gap: "20px",
       }}>
         {PRODUCT_LEGEND.map((p, i) => (

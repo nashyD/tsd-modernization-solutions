@@ -184,6 +184,10 @@ export default function Layout() {
   return (
     <>
       <style>{`
+        /* Centered card grids — flex-wrap so partial/last rows center instead of
+           left-aligning a stranded card. Per-grid column width via --cg-min. */
+        .card-grid { display: flex; flex-wrap: wrap; justify-content: center; }
+        .card-grid > * { flex: 1 1 var(--cg-min, 280px); max-width: var(--cg-max, calc(var(--cg-min, 280px) + 200px)); min-width: 0; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeUpBig { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes float1 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }

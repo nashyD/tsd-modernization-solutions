@@ -242,9 +242,8 @@ function StepsSection({ steps }) {
   return (
     <section style={{ marginBottom: SPACE["3xl"] }}>
       <Eyebrow style={{ marginBottom: SPACE.lg }}>How it works</Eyebrow>
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+      <div className="card-grid" style={{
+        "--cg-min": "240px",
         gap: SPACE.lg,
       }}>
         {steps.map((s, i) => (
@@ -419,9 +418,8 @@ export default function ServiceDetail() {
           </ul>
         </section>
 
-        <section style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+        <section className="card-grid" style={{
+          "--cg-min": "260px",
           gap: SPACE.lg,
           marginBottom: SPACE["3xl"],
         }}>
@@ -451,9 +449,8 @@ export default function ServiceDetail() {
 
         <section style={{ marginBottom: SPACE["3xl"] }}>
           <Eyebrow style={{ marginBottom: SPACE.lg }}>Demo Videos</Eyebrow>
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+          <div className="card-grid" style={{
+            "--cg-min": "280px",
             gap: SPACE.lg,
           }}>
             {service.videos.map((vid, i) => <VideoCard key={i} video={vid} gradient={service.gradient} />)}
