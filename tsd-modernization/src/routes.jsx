@@ -14,6 +14,7 @@ import RelationshipPage from "./pages/RelationshipPage";
 import { RELATIONSHIPS } from "./relationships-data";
 import { SERVICES } from "./services-data";
 import Book from "./pages/Book";
+import Demo from "./pages/Demo";
 
 /* Relationship-channel landing pages — vertical-specific pages for warm
    leads who arrived via founder DM or word-of-mouth. Wrapper functions let
@@ -58,6 +59,7 @@ export const routes = [
       { path: "testimonials", Component: Testimonials },
       { path: "team", Component: Team },
       { path: "book", Component: Book },
+      { path: "demo", Component: Demo },
       { path: "contact", Component: Contact },
       { path: "*", Component: Home },
     ],

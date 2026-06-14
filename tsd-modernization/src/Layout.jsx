@@ -12,6 +12,7 @@ import CallButton from "./components/CallButton.jsx";
 
 const NAV_ITEMS = [
   { label: "Services", to: "/services" },
+  { label: "Live Demo", to: "/demo" },
   { label: "Why Us", to: "/why-us" },
   { label: "Process", to: "/process" },
   { label: "Pricing", to: "/pricing" },
@@ -59,6 +60,10 @@ const ROUTE_META = {
   "/savings": {
     title: "Savings Calculator — What Your Business Is Losing | TSD Modernization Solutions",
     description: "Four questions, sixty seconds: missed calls, ticket size, software spend, and your admin hours — priced with deliberately conservative math. See the monthly leak, then get a fixed-price proposal to stop it within 48 hours.",
+  },
+  "/demo": {
+    title: "Live AI Demo — Try a RAG Assistant Trained on Your Business | TSD Modernization Solutions",
+    description: "Talk to a live AI assistant trained on a sample business — auto shop, salon, restaurant, law firm, or store. Grounded answers with cited sources, voice, and English/Spanish/Chinese. The exact concierge TSD builds for clients.",
   },
   "/why-us": {
     title: "Why Us — Local, Accountable, Managed or Owned | TSD Modernization Solutions",

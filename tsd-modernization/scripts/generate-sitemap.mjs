@@ -24,6 +24,7 @@ const PRIORITY_META = {
   "/why-us": { priority: 0.8, changefreq: "monthly" },
   "/process": { priority: 0.7, changefreq: "monthly" },
   "/pricing": { priority: 0.9, changefreq: "monthly" },
+  "/demo": { priority: 0.8, changefreq: "monthly" },
   "/ai-receptionist": { priority: 0.8, changefreq: "monthly" },
   "/testimonials": { priority: 0.6, changefreq: "monthly" },
   "/team": { priority: 0.6, changefreq: "monthly" },

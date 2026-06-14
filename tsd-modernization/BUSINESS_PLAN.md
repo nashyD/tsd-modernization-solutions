@@ -170,6 +170,7 @@ A Hormozi-style audit run on 2026-04-25 named the constraint as a **lead problem
 | Site-to-form contact | Live | `/contact` (Web3Forms backend) |
 | Self-serve booking | Live (added 2026-04-30) | `/book` standalone + "Book a fit call" CTAs across the site (Home hero primary, plus siblings on Pricing, the product pages, and the nav dropdown). Calendly event at `calendly.com/nashdavis-tsd-ventures/30min` (30 min, Nash-hosted today; round-robin across the three founders when Bishop + Grant onboard onto Calendly Teams). `utm_source=<source>` attribution rides on the Calendly URL. |
 | On-site AI chat agent | Live (added 2026-04-25, hardened with Upstash distributed rate limit 2026-04-26) | Captures lead in chat → posts to Web3Forms tagged `[Chat agent]` |
+| Live AI demo (lead magnet + sales asset) | Live (added 2026-06-14) | `/demo` — a standalone Next.js RAG concierge (`tsd-rag-demo`) embedded via iframe, plus a "Live Demo" nav item. A visitor talks to an AI assistant trained on a sample business (auto, salon, restaurant, law, retail) — grounded cited answers, voice, EN/ES/中, and a bring-your-own-document mode — and is offered a fit call. The "can you actually build one of these?" buyer presses a button and tries it. See §11.5. |
 
 ### 8.3 The chat agent as eat-our-own-dog-food
 
@@ -266,7 +267,11 @@ The portal's magic-link auth and row-level security are verified end to end; the
 
 ### 11.4 Operating cost
 
-GitHub + Vercel free tier across both Vercel projects; ~$24/month for the chat agent at 100 conversations/day; Supabase, Resend, Upstash, the analytics stack, and Sentry all free at pre-launch volume; voice usage (the Quo line plus Vapi assistant minutes) is a few dollars a month at TSD's volume. The audit PDF's Chromium binary adds a ~3–4s cold start on first invoke, with no recurring cost. Marginal cost per closed deal is effectively zero — labor is the cost.
+GitHub + Vercel free tier across all three Vercel projects; ~$24/month for the chat agent at 100 conversations/day; Supabase, Resend, Upstash, the analytics stack, and Sentry all free at pre-launch volume; voice usage (the Quo line plus Vapi assistant minutes) is a few dollars a month at TSD's volume. The audit PDF's Chromium binary adds a ~3–4s cold start on first invoke, with no recurring cost. Marginal cost per closed deal is effectively zero — labor is the cost.
+
+### 11.5 The live RAG demo (`tsd-rag-demo`)
+
+A third app, `tsd-rag-demo/`, is a standalone Next.js 16 project in its own GitHub repo (`nashyD/tsd-rag-demo`) and Vercel project (`tsd-rag-demo1.vercel.app`), surfaced on the marketing site's `/demo` page via an iframe (env `VITE_DEMO_URL`). It is a public, playable retrieval-augmented (RAG) concierge modeled on the Bisque "Clay" build and generalized to five sample businesses (auto shop, salon, restaurant, law firm, retail), so a prospect can talk to "a business like mine." Grounded, cited answers (Claude `claude-sonnet-4-6` with forced-tool-call citations) run over OpenAI embeddings + Supabase pgvector, with a live "under the hood" retrieval panel, EN/ES/中 voice (ElevenLabs → OpenAI → browser fallback), image search, a bring-your-own-document sandbox (PDF / URL / paste), hybrid vector + keyword retrieval, and a password-gated `/admin` analytics view. It doubles as a lead magnet — the assistant offers a fit call — and falls back to a degraded offline keyword mode when cloud keys are absent. Env: `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` (plus optional `ELEVENLABS_API_KEY`, `RESEND_API_KEY`, `ADMIN_PASSWORD`). Built 2026-06-14.
 
 ---
 
