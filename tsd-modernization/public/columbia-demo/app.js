@@ -194,18 +194,24 @@
     // words (e.g. "wifi", "hamster") matched nothing and only a common word
     // overlapped, fall back to escalation instead of answering confidently-wrong.
     const top = strong[0].doc;
-    const cTokens = qTokens.filter(t => t.length >= 3 && !GENERIC.has(t));
-    const totalIdf = cTokens.reduce((a, t) => a + idf(t), 0) || 1;
     const dt = docTokens(top);
-    // A term counts as covered if it — or one of its synonyms (e.g. "toque"→
-    // "curfew", "fired"→"dismissal") — appears in the passage, so cross-language
-    // and paraphrased questions are credited, not just literal word matches.
+    const cTokens = qTokens.filter(t => t.length >= 3 && !GENERIC.has(t));
+    // A term is "covered" if it — or one of its synonyms (e.g. "toque"→"curfew",
+    // "bleeding"→"medical") — appears in the passage, so cross-language and
+    // paraphrased questions are credited, not just literal word matches.
     const covered = t => dt.has(t) || (SYN[t] || []).some(s => dt.has(s));
-    const matchedIdf = cTokens.filter(covered).reduce((a, t) => a + idf(t), 0);
-    // Answer when the top passage is either a strong overall match OR covers a
-    // real share of the salient terms. Fall back only when both are weak — that
-    // is the genuinely-out-of-scope case, where guessing would be dishonest.
-    if (strong[0].score < 0.3 && matchedIdf / totalIdf < 0.42) return fallbackAns();
+    // Honesty gate by SUBJECT coverage. The most salient (highest-IDF) query
+    // term — ignoring bare numbers/times like "2am" — should be what the passage
+    // is actually about. If the real subject ("dog", "wifi") matched nothing and
+    // only an incidental rare word ("party", "allowed") did, fall back instead of
+    // answering confidently-wrong. The score escape keeps wordy-but-genuine
+    // questions ("depressed and alone", where an incidental word is technically
+    // rarest) answering, because their passage is an overwhelmingly strong match.
+    const pool = cTokens.filter(t => !/\d/.test(t));
+    const sub = pool.length ? pool : cTokens;
+    const maxIdf = sub.reduce((m, t) => Math.max(m, idf(t)), 0.0001);
+    const coveredMaxIdf = sub.filter(covered).reduce((m, t) => Math.max(m, idf(t)), 0);
+    if (coveredMaxIdf < maxIdf * 0.85 && strong[0].score < 0.6) return fallbackAns();
 
     const lead = bestSentences(top, qset, top.body.split(" ").length < 55 ? 5 : 3);
     let text = lead.join(" ");
