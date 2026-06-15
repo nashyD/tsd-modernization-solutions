@@ -21,16 +21,16 @@
   --bg: radial-gradient(1200px 700px at 82% -10%, #123a63 0%, transparent 60%),
         radial-gradient(1000px 800px at -10% 110%, #0d2546 0%, transparent 55%),
         #06122a;
-  --ink: #e9f2fb;
-  --ink-soft: #cdddee;
-  --muted: #9fb6d2;
-  --faint: #748aa6;
-  --line: rgba(255, 255, 255, 0.12);
-  --line-2: rgba(255, 255, 255, 0.08);
-  --link: #bfe0f5;
-  --good: #4fdca0;
-  --surface-card: rgba(255, 255, 255, 0.055);
-  --surface-card-2: rgba(255, 255, 255, 0.085);
+  --ink: #f3f7fd;
+  --ink-soft: #e0eaf5;
+  --muted: #c8d6e8;
+  --faint: #a3b5cd;
+  --line: rgba(255, 255, 255, 0.16);
+  --line-2: rgba(255, 255, 255, 0.1);
+  --link: #cfe7f7;
+  --good: #5fe2aa;
+  --surface-card: rgba(255, 255, 255, 0.09);
+  --surface-card-2: rgba(255, 255, 255, 0.13);
   --surface-input: rgba(255, 255, 255, 0.07);
   --chip-bg: rgba(155, 203, 235, 0.14);
   --on-accent: #ffffff;
@@ -44,7 +44,7 @@
   --glass-blur: 26px;
   --glass-saturate: 200%;
   --glass-bg: rgba(18, 32, 58, 0.42);
-  --glass-bg-strong: rgba(10, 20, 40, 0.62);
+  --glass-bg-strong: rgba(9, 18, 37, 0.74);
   --glass-border: rgba(255, 255, 255, 0.14);
   --glass-border-strong: rgba(155, 203, 235, 0.5);
   --glass-rim: rgba(255, 255, 255, 0.7);
@@ -59,18 +59,18 @@
   --bg: radial-gradient(1200px 700px at 82% -10%, rgba(155, 203, 235, 0.40), transparent 60%),
         radial-gradient(1000px 800px at -10% 110%, rgba(29, 79, 145, 0.14), transparent 55%),
         #eef4fb;
-  --ink: #10243f;
-  --ink-soft: #243a57;
-  --muted: #54657f;
-  --faint: #8092aa;
-  --line: rgba(13, 40, 75, 0.12);
+  --ink: #0c1f38;
+  --ink-soft: #1d3552;
+  --muted: #41526b;
+  --faint: #5b6c86;
+  --line: rgba(13, 40, 75, 0.16);
   --line-2: rgba(13, 40, 75, 0.07);
   --link: #1d4f91;
   --good: #1a9d6e;
-  --surface-card: rgba(255, 255, 255, 0.55);
-  --surface-card-2: rgba(255, 255, 255, 0.78);
-  --surface-input: rgba(255, 255, 255, 0.6);
-  --chip-bg: rgba(155, 203, 235, 0.22);
+  --surface-card: rgba(255, 255, 255, 0.66);
+  --surface-card-2: rgba(255, 255, 255, 0.84);
+  --surface-input: rgba(255, 255, 255, 0.7);
+  --chip-bg: rgba(155, 203, 235, 0.28);
   --on-accent: #ffffff;
 
   --aurora-1: rgba(110, 170, 220, 0.28);
@@ -82,7 +82,7 @@
   --glass-blur: 22px;
   --glass-saturate: 180%;
   --glass-bg: rgba(255, 255, 255, 0.5);
-  --glass-bg-strong: rgba(255, 255, 255, 0.74);
+  --glass-bg-strong: rgba(255, 255, 255, 0.84);
   --glass-border: rgba(13, 40, 75, 0.12);
   --glass-border-strong: rgba(29, 79, 145, 0.42);
   --glass-rim: rgba(255, 255, 255, 0.95);
