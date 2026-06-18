@@ -60,7 +60,10 @@ export default async function ShowcasePage({
           depositPct={prospect.deposit_pct ?? 10}
           estimates={estimates}
         >
-          <BookCallCard name={prospect.contact_name} email={prospect.email} />
+          {/* Public surface: don't prefill (serialize) the prospect's email into
+              the client bundle — they know their own email. Internal present mode
+              still prefills it. */}
+          <BookCallCard name={prospect.contact_name} />
           <OutlineCard md={prospect.outline_md} />
           <AssetsCard assets={assets} />
         </PitchBody>

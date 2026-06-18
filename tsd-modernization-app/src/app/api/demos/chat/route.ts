@@ -12,8 +12,9 @@ const MAX_HISTORY = 16;
 const LANGS = new Set<DemoLang>(["en", "es"]);
 
 // Self-contained limiter so the public concierge stays resilient: it reads
-// Upstash creds directly and fails OPEN when they're absent (local/dev), rather
-// than coupling to the strict env() validator the rest of the app uses.
+// Upstash creds directly rather than coupling to the strict env() validator the
+// rest of the app uses. When Upstash is absent it falls back to a per-instance
+// cap (below) instead of fully open — this route bills Claude tokens.
 let limiter: Ratelimit | null | undefined;
 function getLimiter(): Ratelimit | null {
   if (limiter !== undefined) return limiter;
@@ -31,11 +32,28 @@ function getLimiter(): Ratelimit | null {
   return limiter;
 }
 
+// Per-instance fallback: 30 requests / minute / IP when Upstash is unconfigured.
+const memHits = new Map<string, { count: number; reset: number }>();
+function memAllow(ip: string): boolean {
+  const now = Date.now();
+  const b = memHits.get(ip);
+  if (!b || now > b.reset) {
+    memHits.set(ip, { count: 1, reset: now + 60_000 });
+    return true;
+  }
+  if (b.count >= 30) return false;
+  b.count += 1;
+  return true;
+}
+
 export async function POST(req: NextRequest) {
   const ip =
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    req.headers.get("x-real-ip")?.trim() ||
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    "unknown";
   const l = getLimiter();
-  if (l && !(await l.limit(ip)).success) {
+  const allowed = l ? (await l.limit(ip)).success : memAllow(ip);
+  if (!allowed) {
     return NextResponse.json({ error: "rate_limited" }, { status: 429 });
   }
 

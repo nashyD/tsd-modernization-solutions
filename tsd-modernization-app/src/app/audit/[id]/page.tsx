@@ -34,7 +34,7 @@ export default async function AuditViewPage({
   const { data: audit } = await sb
     .from("audits")
     .select(
-      "id,status,scores,report_md,error_message,owner_id,owner_type,created_at"
+      "id,status,scores,report_md,owner_id,owner_type,created_at"
     )
     .eq("id", id)
     .single();
@@ -92,11 +92,6 @@ export default async function AuditViewPage({
           We hit an error running your audit. The TSD team has been notified —
           we&apos;ll re-run it and email you when it&apos;s done.
         </p>
-        {audit.error_message && (
-          <p className="mt-6 max-w-md rounded border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 text-left text-xs font-mono text-[var(--text-subtle)]">
-            {audit.error_message}
-          </p>
-        )}
       </main>
     );
   }

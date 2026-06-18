@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
-import { checkShowcaseVoiceRateLimit } from "@/lib/ratelimit";
+import { checkShowcaseVoiceRateLimit, clientIp } from "@/lib/ratelimit";
 
 export const runtime = "nodejs";
 const DAILY_CAP = 5;
@@ -11,8 +11,7 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ token: string }> },
 ) {
-  const ip =
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const ip = clientIp(req);
   if (!(await checkShowcaseVoiceRateLimit(ip))) {
     return NextResponse.json(
       { error: "Too many demo calls from your network today." },

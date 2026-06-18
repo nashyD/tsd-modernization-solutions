@@ -18,6 +18,15 @@ export async function ensureProspectAssetsBucket(): Promise<void> {
   if (!existing) {
     const { error } = await sb.storage.createBucket(PROSPECT_ASSETS_BUCKET, {
       public: false,
+      // Defense in depth alongside the server-side check in uploadAsset.
+      fileSizeLimit: 15 * 1024 * 1024,
+      allowedMimeTypes: [
+        "image/png",
+        "image/jpeg",
+        "image/webp",
+        "image/gif",
+        "application/pdf",
+      ],
     });
     // Ignore "already exists" races between concurrent uploads.
     if (error && !/exist/i.test(error.message)) {

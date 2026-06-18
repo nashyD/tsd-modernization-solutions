@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { env } from "@/lib/env";
+import { safeEqual } from "@/lib/safe-compare";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -18,10 +19,12 @@ export async function GET(req: NextRequest) {
   // that or our internal secret so the route can be smoke-tested.
   const auth = req.headers.get("authorization") ?? "";
   const internal = req.headers.get("x-internal-secret") ?? "";
-  if (
-    auth !== `Bearer ${process.env.CRON_SECRET ?? ""}` &&
-    internal !== e.INTERNAL_API_SECRET
-  ) {
+  const cronSecret = process.env.CRON_SECRET;
+  // Timing-safe; the bearer path only counts when CRON_SECRET is actually set
+  // (an unset secret must never let `Bearer ` through).
+  const cronOk = !!cronSecret && safeEqual(auth, `Bearer ${cronSecret}`);
+  const internalOk = safeEqual(internal, e.INTERNAL_API_SECRET);
+  if (!cronOk && !internalOk) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
   if (!e.WORKER_URL || !e.WORKER_SECRET) {

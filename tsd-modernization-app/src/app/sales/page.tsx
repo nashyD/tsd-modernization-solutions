@@ -32,7 +32,7 @@ type ProductKey = EstimateServiceKey;
 const PRODUCT_LABEL: Record<ProductKey, string> = {
   website: "Website",
   front_desk: "AI Receptionist",
-  booking_bridge: "Booking",
+  booking_bridge: "Lead Engine",
   concierge: "Concierge",
 };
 const PRODUCT_ORDER: ProductKey[] = [

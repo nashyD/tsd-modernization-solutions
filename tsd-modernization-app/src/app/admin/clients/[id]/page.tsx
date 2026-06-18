@@ -10,6 +10,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { requireRole } from "@/lib/auth/require";
 import {
   upsertWorkItem,
   deleteWorkItem,
@@ -32,6 +33,9 @@ export default async function AdminClientDetail({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  // Defense in depth alongside admin/layout.tsx (no middleware; Next 16 partial
+  // rendering can reach a page without re-running the layout).
+  await requireRole("admin");
   const { id } = await params;
   const sb = supabaseAdmin();
   const { data: client } = await sb

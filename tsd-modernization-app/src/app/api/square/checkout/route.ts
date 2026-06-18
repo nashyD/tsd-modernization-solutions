@@ -32,7 +32,17 @@ export async function POST(req: NextRequest) {
       { status: 503 },
     );
   }
-  const body = Body.parse(await req.json());
+  let parsedBody: unknown;
+  try {
+    parsedBody = await req.json();
+  } catch {
+    return NextResponse.json({ error: "invalid json" }, { status: 400 });
+  }
+  const parsed = Body.safeParse(parsedBody);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "invalid body" }, { status: 400 });
+  }
+  const body = parsed.data;
   const sb = supabaseAdmin();
 
   const cols =

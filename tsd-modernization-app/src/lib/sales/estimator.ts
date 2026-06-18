@@ -33,11 +33,15 @@ export const SIZES: SizeTier[] = [
   { id: "larger", label: "Larger", detail: "30+ people", mult: 2.7, pkg: "Custom Engagement" },
 ];
 
+// Product ids are the CANONICAL service keys, identical to `prospect_estimates.service_key`,
+// `prospects.primary_product`, and SERVICE_KEYS in services.ts. Keeping one vocabulary
+// everywhere is what makes the picker, value rows, and deposit all line up — historically
+// these ids drifted (frontDesk/leadEngine) and a tagged Booking SKU priced to $0.
 export const PRODUCTS: ProductDef[] = [
   { id: "website", label: "A new website", detail: "Custom, fast, source code yours", low: 2900, high: 4000, ai: false },
-  { id: "frontDesk", label: "TSD Front Desk", detail: "AI receptionist — phone + chat, books work", low: 1200, high: 1600, ai: true },
+  { id: "front_desk", label: "TSD Front Desk", detail: "AI receptionist — phone + chat, books work", low: 1200, high: 1600, ai: true },
   { id: "concierge", label: "TSD Concierge", detail: "Site assistant — answers from your content + catalog", low: 4100, high: 5800, ai: true },
-  { id: "leadEngine", label: "TSD Lead Engine", detail: "Landing funnel + a lead dashboard your team works", low: 2400, high: 3400, ai: false },
+  { id: "booking_bridge", label: "TSD Lead Engine", detail: "Landing funnel + a lead dashboard your team works", low: 2400, high: 3400, ai: false },
 ];
 
 /** Monthly Managed AI, by how many AI products are running. */

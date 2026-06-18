@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Plus, Building2, Eye } from "lucide-react";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { requireRole } from "@/lib/auth/require";
 import { PACKAGE_TIERS } from "@/lib/packages";
 import { createClient } from "./actions";
 import { viewAsClient } from "../view-as-actions";
@@ -13,6 +14,10 @@ import { Button } from "@/components/ui/Button";
 export const dynamic = "force-dynamic";
 
 export default async function AdminClientsPage() {
+  // Defense in depth: there is no middleware, and Next 16 partial rendering can
+  // reach a page without re-running the layout — so guard here too, not only in
+  // admin/layout.tsx, before any service-role (RLS-bypassing) read.
+  await requireRole("admin");
   const sb = supabaseAdmin();
   const { data: clients } = await sb
     .from("clients")

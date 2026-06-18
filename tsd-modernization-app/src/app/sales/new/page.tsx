@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Input, Label, Textarea, Select } from "@/components/ui/Input";
-import { Button } from "@/components/ui/Button";
+import { SubmitButton } from "@/components/ui/SubmitButton";
 import BackLink from "@/components/BackLink";
 import { PACKAGE_TIERS } from "@/lib/packages";
 import { createProspect } from "../actions";
@@ -65,7 +65,7 @@ export default function NewProspectPage() {
           <Textarea id="notes" name="notes" rows={2} className="mt-1.5" />
         </div>
         <div className="sm:col-span-2">
-          <Button type="submit">Create prospect</Button>
+          <SubmitButton pendingText="Creating…">Create prospect</SubmitButton>
         </div>
       </form>
     </div>

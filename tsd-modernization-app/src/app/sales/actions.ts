@@ -138,6 +138,46 @@ export async function recordVisit(formData: FormData) {
   revalidatePath(`/sales/${id}`);
 }
 
+// ---------------------------------------------------------------------------
+// Demo / pitch notes — an append-only, author-stamped log per prospect. Unlike
+// the single `prospects.notes` field (which any save overwrites), every call here
+// adds a new timestamped entry, so the rep can record what happened on each visit
+// without clobbering the last one. Author is taken from the signed-in user, never
+// the form, so it can't be spoofed.
+const NoteSchema = z.object({
+  prospect_id: z.string().uuid(),
+  body: z.string().trim().min(1).max(5000),
+});
+
+export async function addProspectNote(formData: FormData) {
+  const { user } = await requireRole("admin");
+  const { prospect_id, body } = NoteSchema.parse({
+    prospect_id: clean(formData.get("prospect_id")),
+    body: clean(formData.get("body")),
+  });
+  const sb = supabaseAdmin();
+  const { error } = await sb.from("prospect_notes").insert({
+    prospect_id,
+    body,
+    author_user_id: user.id,
+    author_email: user.email ?? null,
+  });
+  if (error) throw new Error(error.message);
+  // Surface the new note on both the work page and the present-mode pitch screen.
+  revalidatePath(`/sales/${prospect_id}`);
+  revalidatePath(`/present/${prospect_id}`);
+}
+
+export async function deleteProspectNote(formData: FormData) {
+  await requireRole("admin");
+  const id = z.string().uuid().parse(formData.get("id"));
+  const prospectId = z.string().uuid().parse(formData.get("prospect_id"));
+  const sb = supabaseAdmin();
+  const { error } = await sb.from("prospect_notes").delete().eq("id", id);
+  if (error) throw new Error(error.message);
+  revalidatePath(`/sales/${prospectId}`);
+}
+
 export async function toggleShare(formData: FormData) {
   await requireRole("admin");
   const id = z.string().uuid().parse(formData.get("id"));
@@ -190,27 +230,33 @@ export async function runAudit(formData: FormData) {
   // Link immediately so the pitch page can poll this audit's status.
   await sb.from("prospects").update({ audit_id: audit.id }).eq("id", prospectId);
 
+  // Await the (now fast-acking) kick so the dispatch is reliable; the run route
+  // does the heavy work via after().
   const e = env();
-  void fetch(`${e.NEXT_PUBLIC_SITE_URL}/api/audit/run`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-internal-secret": e.INTERNAL_API_SECRET,
-    },
-    body: JSON.stringify({
-      auditId: audit.id,
-      leadId: prospectId, // pipeline uses this for logging only
-      prospectId,
-      input: {
-        business_name: prospect.business_name,
-        business_url: prospect.business_url,
-        email: prospect.email || "internal@tsd-modernization.com",
-        phone: prospect.phone || "0000000000",
-        city: "",
+  try {
+    await fetch(`${e.NEXT_PUBLIC_SITE_URL}/api/audit/run`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-internal-secret": e.INTERNAL_API_SECRET,
       },
-    }),
-    cache: "no-store",
-  }).catch((err) => console.error("[sales] audit kick failed", err));
+      body: JSON.stringify({
+        auditId: audit.id,
+        leadId: prospectId, // pipeline uses this for logging only
+        prospectId,
+        input: {
+          business_name: prospect.business_name,
+          business_url: prospect.business_url,
+          email: prospect.email || "internal@tsd-modernization.com",
+          phone: prospect.phone || "0000000000",
+          city: "",
+        },
+      }),
+      cache: "no-store",
+    });
+  } catch (err) {
+    console.error("[sales] audit kick failed", err);
+  }
 
   revalidatePath(`/sales/${prospectId}`);
 }
@@ -254,15 +300,6 @@ export async function promoteLead(formData: FormData) {
   redirect(`/sales/${data.id}`);
 }
 
-// Map primary_product (prospect vocab) -> estimator service id, so an approved
-// candidate opens the pitch pre-selected on its lead product.
-const CANDIDATE_SVC: Record<string, string> = {
-  website: "website",
-  front_desk: "frontDesk",
-  booking_bridge: "booking",
-  concierge: "concierge",
-};
-
 export async function approveCandidate(formData: FormData) {
   await requireRole("admin");
   const id = z.string().uuid().parse(formData.get("id"));
@@ -283,7 +320,9 @@ export async function approveCandidate(formData: FormData) {
   const businessUrl =
     c.website ||
     `https://www.google.com/search?q=${encodeURIComponent(`${c.business_name}, ${c.city ?? ""} NC`)}`;
-  const svc = c.primary_product ? CANDIDATE_SVC[c.primary_product] : null;
+  // primary_product is already a canonical service key, so it doubles as the
+  // pre-selected service on the pitch.
+  const svc = c.primary_product || null;
   const { data: prospect, error: pErr } = await sb
     .from("prospects")
     .insert({
@@ -420,7 +459,7 @@ export async function quickAddProspect(
     | "booking_bridge"
     | "concierge"
     | "";
-  const svc = product ? CANDIDATE_SVC[product] : null;
+  const svc = product || null;
 
   const sb = supabaseAdmin();
   const { error } = await sb.from("prospects").insert({
@@ -478,7 +517,7 @@ export async function parkDemo(formData: FormData) {
     city,
     notes: (p.notes || "").trim() || null,
     primary_product: "website",
-    selected_services: [CANDIDATE_SVC.website],
+    selected_services: ["website"],
     discovery_source: "demo_shelf",
   });
   if (error) throw new Error(error.message);

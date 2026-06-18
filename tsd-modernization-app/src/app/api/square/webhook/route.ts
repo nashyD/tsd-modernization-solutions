@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { getOrderState } from "@/lib/square/checkout";
 import { verifySquareWebhook } from "@/lib/square/webhook";
+import { findOrInviteOwner } from "@/lib/clients";
 
 export const runtime = "nodejs";
 
@@ -14,9 +15,12 @@ export async function POST(req: NextRequest) {
 
   const event = JSON.parse(raw) as {
     type?: string;
-    data?: { object?: { payment?: { order_id?: string; status?: string } } };
+    data?: {
+      object?: { payment?: { id?: string; order_id?: string; status?: string } };
+    };
   };
-  const orderId = event.data?.object?.payment?.order_id;
+  const payment = event.data?.object?.payment;
+  const orderId = payment?.order_id;
   if (!orderId) return NextResponse.json({ ok: true }); // not a payment event we track
 
   const sb = supabaseAdmin();
@@ -30,17 +34,22 @@ export async function POST(req: NextRequest) {
 
   // Defense in depth: confirm with Square the order is actually completed/paid.
   const state = await getOrderState(orderId);
-  if (
-    state !== "COMPLETED" &&
-    event.data?.object?.payment?.status !== "COMPLETED"
-  ) {
+  if (state !== "COMPLETED" && payment?.status !== "COMPLETED") {
     return NextResponse.json({ ok: true });
   }
 
-  await sb
+  // Atomic, conditional paid-transition: only the caller that flips pending->paid
+  // proceeds to create the client. A concurrent webhook retry gets zero rows back
+  // and bails, so we never double-create the client. Store the real payment id.
+  const { data: claimed } = await sb
     .from("prospect_deposits")
-    .update({ status: "paid", square_payment_id: orderId })
-    .eq("id", deposit.id);
+    .update({ status: "paid", square_payment_id: payment?.id ?? orderId })
+    .eq("id", deposit.id)
+    .eq("status", "pending")
+    .select("id");
+  if (!claimed || claimed.length === 0) {
+    return NextResponse.json({ ok: true }); // another retry already handled it
+  }
 
   // Load the prospect and auto-create the client (carry fields forward).
   const { data: prospect } = await sb
@@ -70,6 +79,17 @@ export async function POST(req: NextRequest) {
         .from("leads")
         .update({ converted_client_id: client.id })
         .eq("id", prospect.source_lead_id);
+    }
+    // Close the funnel's last leg: give the paying client portal access. Without
+    // this the conversion created an orphaned clients row with no client_users
+    // link, so the new client couldn't log in until an admin noticed. Best-effort
+    // — never fail the payment webhook on an invite hiccup.
+    if (client && prospect.email) {
+      try {
+        await findOrInviteOwner({ clientId: client.id, email: prospect.email });
+      } catch (err) {
+        console.error("[square/webhook] owner invite failed", err);
+      }
     }
   } else {
     await sb.from("prospects").update({ status: "won" }).eq("id", prospect.id);

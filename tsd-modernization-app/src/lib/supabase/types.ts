@@ -376,6 +376,26 @@ export interface Database {
         >;
         Relationships: [];
       };
+      prospect_notes: {
+        Row: {
+          id: string;
+          prospect_id: string;
+          body: string;
+          author_user_id: string | null;
+          author_email: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          prospect_id: string;
+          body: string;
+          author_user_id?: string | null;
+          author_email?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["prospect_notes"]["Insert"]>;
+        Relationships: [];
+      };
     };
     Views: { [key: string]: never };
     Functions: {

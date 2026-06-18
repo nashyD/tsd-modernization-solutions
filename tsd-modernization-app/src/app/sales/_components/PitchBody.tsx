@@ -7,19 +7,6 @@ import { EstimatesCard, GuaranteeCard } from "./ShowcaseSections";
 import DepositPanel from "./DepositPanel";
 
 /**
- * Bridge between the service-picker product ids (estimator `PRODUCTS`) and the
- * value-estimate `service_key`s (`prospect_estimates`). Only the four core
- * services carry value rows; the marketing add-ons (reviews/outreach/seo) have
- * no estimate row, so selecting them simply adds no "what it's worth" line.
- */
-const PICKER_TO_ESTIMATE_KEY: Record<string, string> = {
-  website: "website",
-  frontDesk: "front_desk",
-  concierge: "concierge",
-  booking: "booking_bridge",
-};
-
-/**
  * Client wrapper that owns the live service selection (team size + services)
  * for the pitch / showcase page. Renders the service picker, then the value
  * card filtered to the SAME selection (so "what each service is worth" tracks
@@ -51,10 +38,9 @@ export default function PitchBody({
 
   const est = estimate(sizeId, serviceIds);
   const depositAmount = depositFromSelection(sizeId, serviceIds, depositPct);
-  // Value lines follow the picker: only show worth for services in the deal.
-  const selectedKeys = serviceIds
-    .map((id) => PICKER_TO_ESTIMATE_KEY[id])
-    .filter((k): k is string => Boolean(k));
+  // Picker ids ARE the value-estimate service_keys now, so the selection drives
+  // the "what each service is worth" rows directly.
+  const selectedKeys = serviceIds;
 
   useEffect(() => {
     if (firstRender.current) {

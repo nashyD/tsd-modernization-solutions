@@ -185,8 +185,8 @@ export default function AuditReport({
             ))}
           </ul>
 
-          {(pkg.guarantee || true) && (
-            <div className="mt-7 grid gap-2.5 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)]/60 p-4 text-sm text-[var(--text-muted)] sm:grid-cols-2">
+          {/* Cohort line always shows; the guarantee row is conditional within. */}
+          <div className="mt-7 grid gap-2.5 rounded-[12px] border border-[var(--border)] bg-[var(--surface-2)]/60 p-4 text-sm text-[var(--text-muted)] sm:grid-cols-2">
               {pkg.guarantee && (
                 <div className="flex items-start gap-2.5">
                   <ShieldCheck
@@ -218,7 +218,6 @@ export default function AuditReport({
                 </span>
               </div>
             </div>
-          )}
 
           <div className="mt-7 flex flex-wrap items-center gap-3 print:hidden">
             <LinkButton

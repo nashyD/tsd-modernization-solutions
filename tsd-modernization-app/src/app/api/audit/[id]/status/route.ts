@@ -12,10 +12,12 @@ export async function GET(
   if (!/^[0-9a-f-]{36}$/i.test(id)) {
     return NextResponse.json({ error: "invalid id" }, { status: 400 });
   }
+  // Public capability-URL poller (the lead/admin audit page polls this by UUID).
+  // Never return error_message — it can carry raw exception text / LLM tool dumps.
   const sb = supabaseAdmin();
   const { data, error } = await sb
     .from("audits")
-    .select("id,status,error_message,updated_at")
+    .select("id,status,updated_at")
     .eq("id", id)
     .single();
   if (error || !data) {

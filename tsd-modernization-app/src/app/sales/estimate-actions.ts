@@ -91,18 +91,34 @@ export async function draftEstimates(formData: FormData) {
   revalidatePath(`/sales/${prospectId}`);
 }
 
+// Allow-list for pitch work files: images + PDF only. Anything else is rejected
+// rather than bucketed as "other", so the private bucket never holds arbitrary
+// uploads (HTML/SVG/scripts) that a signed URL could later serve.
+const IMAGE_EXTS = new Set(["png", "jpg", "jpeg", "webp", "gif"]);
+const ALLOWED_MIME = new Set([
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "image/gif",
+  "application/pdf",
+]);
+const MAX_UPLOAD_BYTES = 15 * 1024 * 1024; // 15 MB
+
 export async function uploadAsset(formData: FormData) {
   await requireRole("admin");
   const prospectId = z.string().uuid().parse(formData.get("prospect_id"));
   const file = formData.get("file");
   if (!(file instanceof File) || file.size === 0) throw new Error("No file.");
+  if (file.size > MAX_UPLOAD_BYTES) throw new Error("File too large (15 MB max).");
   const label = (formData.get("label") ?? "").toString() || null;
-  const ext = file.name.split(".").pop()?.toLowerCase() ?? "bin";
-  const kind = ["png", "jpg", "jpeg", "webp", "gif"].includes(ext)
-    ? "image"
-    : ext === "pdf"
-      ? "pdf"
-      : "other";
+  const ext = file.name.split(".").pop()?.toLowerCase() ?? "";
+  const isImage = IMAGE_EXTS.has(ext);
+  const isPdf = ext === "pdf";
+  // Both the extension AND the browser-reported MIME must be in the allow-list.
+  if ((!isImage && !isPdf) || (file.type && !ALLOWED_MIME.has(file.type))) {
+    throw new Error("Only images (png/jpg/webp/gif) and PDFs are allowed.");
+  }
+  const kind = isImage ? "image" : "pdf";
   const path = `${prospectId}/${crypto.randomUUID()}.${ext}`;
   const sb = supabaseAdmin();
   await ensureProspectAssetsBucket();

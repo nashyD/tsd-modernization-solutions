@@ -24,6 +24,7 @@
     { "source": "/api/audit/:path*", "destination": "https://tsd-modernization-solutions-uc71.vercel.app/api/audit/:path*" },
     { "source": "/sales", "destination": "https://tsd-modernization-solutions-uc71.vercel.app/sales" },
     { "source": "/sales/:path*", "destination": "https://tsd-modernization-solutions-uc71.vercel.app/sales/:path*" },
+    { "source": "/present/:path*", "destination": "https://tsd-modernization-solutions-uc71.vercel.app/present/:path*" },
     { "source": "/showcase/:path*", "destination": "https://tsd-modernization-solutions-uc71.vercel.app/showcase/:path*" },
     { "source": "/api/square/:path*", "destination": "https://tsd-modernization-solutions-uc71.vercel.app/api/square/:path*" },
     { "source": "/api/showcase/:path*", "destination": "https://tsd-modernization-solutions-uc71.vercel.app/api/showcase/:path*" },

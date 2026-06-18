@@ -25,8 +25,8 @@ describe("estimate", () => {
   });
 
   it("counts AI products for Managed AI tiering", () => {
-    // frontDesk + concierge = 2 AI products -> $147/mo
-    const r = estimate("small", ["frontDesk", "concierge"]);
+    // front_desk + concierge = 2 AI products -> $147/mo
+    const r = estimate("small", ["front_desk", "concierge"]);
     expect(r.aiCount).toBe(2);
     expect(r.managedMonthly).toBe(147);
     // low = (1200+4100) * 1.0 = 5300
@@ -35,10 +35,16 @@ describe("estimate", () => {
 
   it("counts every AI product (Front Desk + Concierge are the only two)", () => {
     const allAi = PRODUCTS.filter((p) => p.ai).map((p) => p.id);
-    expect(allAi.sort()).toEqual(["concierge", "frontDesk"]);
+    expect(allAi.sort()).toEqual(["concierge", "front_desk"]);
     const r = estimate("small", allAi);
     expect(r.aiCount).toBe(2);
     expect(r.managedMonthly).toBe(147);
+  });
+
+  it("prices the Booking/Lead Engine SKU (regression: used to be $0 via a stale id map)", () => {
+    const r = estimate("small", ["booking_bridge"]);
+    expect(r.low).toBe(2400);
+    expect(r.high).toBe(3400);
   });
 
   it("flags the larger tier", () => {
@@ -72,7 +78,7 @@ describe("estimate", () => {
   });
 
   it("owned zeroes the Managed AI monthly but still counts AI products", () => {
-    const r = estimate("small", ["frontDesk", "concierge"], "owned");
+    const r = estimate("small", ["front_desk", "concierge"], "owned");
     expect(r.aiCount).toBe(2);
     expect(r.managedMonthly).toBe(0);
   });

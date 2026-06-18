@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { X } from "lucide-react";
+import { requireRole } from "@/lib/auth/require";
 import { loadShowcaseById } from "@/lib/sales/load-showcase";
 import {
   SiteCard,
@@ -8,9 +9,10 @@ import {
   AssetsCard,
   ProofCard,
   ProblemCard,
-} from "../../_components/ShowcaseSections";
-import PitchBody from "../../_components/PitchBody";
-import BookCallCard from "../../_components/BookCallCard";
+} from "@/app/sales/_components/ShowcaseSections";
+import PitchBody from "@/app/sales/_components/PitchBody";
+import BookCallCard from "@/app/sales/_components/BookCallCard";
+import { PresentModeNote } from "@/app/sales/_components/PitchNotes";
 import VoiceWidget from "@/app/app/voice/VoiceWidget";
 import { Logo } from "@/components/ui/Logo";
 import { DEFAULT_SIZE } from "@/lib/sales/estimator";
@@ -18,9 +20,9 @@ import { DEFAULT_SIZE } from "@/lib/sales/estimator";
 export const dynamic = "force-dynamic";
 
 // Full-screen, TSD-branded "present mode" — what the client sees when the iPad
-// is handed over. No status pills, no edit controls; just the branded demo,
-// live build estimate, value, and booking. One discreet exit returns to the
-// work page. Mirrors the public /showcase leave-behind, internal voice widget.
+// is handed over. No internal nav (it lives outside /sales), no status pills, no
+// edit controls; just the branded demo, live build estimate, value, and booking.
+// One discreet exit returns to the work page or the field queue.
 export default async function PresentPitch({
   params,
   searchParams,
@@ -28,6 +30,7 @@ export default async function PresentPitch({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ from?: string }>;
 }) {
+  await requireRole("admin");
   const { id } = await params;
   const { from } = await searchParams;
   // When launched from the field tool, Exit returns to the queue, not the work page.
@@ -38,7 +41,7 @@ export default async function PresentPitch({
 
   return (
     <div className="mx-auto w-full max-w-2xl">
-      {/* TSD brand bar + discreet exit */}
+      {/* TSD brand bar + discreet exit + rep-only note control */}
       <div className="mb-8 flex items-center justify-between gap-4">
         <span className="inline-flex items-center gap-2.5">
           <Logo height={22} />
@@ -46,12 +49,15 @@ export default async function PresentPitch({
             TSD Modernization Solutions
           </span>
         </span>
-        <Link
-          href={exitHref}
-          className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium text-[var(--text-subtle)] transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
-        >
-          <X size={14} aria-hidden /> Exit pitch
-        </Link>
+        <div className="flex items-center gap-1">
+          <PresentModeNote prospectId={prospect.id} />
+          <Link
+            href={exitHref}
+            className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium text-[var(--text-subtle)] transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
+          >
+            <X size={14} aria-hidden /> Exit pitch
+          </Link>
+        </div>
       </div>
 
       {/* Hero */}

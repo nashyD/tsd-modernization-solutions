@@ -1,8 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { after } from "next/server";
 import { z } from "zod";
 import { env } from "@/lib/env";
 import { runAuditPipeline } from "@/lib/audit/run";
 import { AuditFormSchema } from "@/lib/audit/types";
+import { safeEqual } from "@/lib/safe-compare";
 
 export const runtime = "nodejs";
 // Vercel Fluid Compute supports up to 800s on Hobby. Claude tool-use synthesis can
@@ -20,7 +22,7 @@ const RunPayload = z.object({
 export async function POST(req: NextRequest) {
   const e = env();
   const secret = req.headers.get("x-internal-secret");
-  if (secret !== e.INTERNAL_API_SECRET) {
+  if (!safeEqual(secret, e.INTERNAL_API_SECRET)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
   let body: z.infer<typeof RunPayload>;
@@ -32,11 +34,22 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
   }
-  await runAuditPipeline({
-    auditId: body.auditId,
-    leadId: body.leadId,
-    input: body.input,
-    prospectId: body.prospectId,
+  // Ack immediately, then run the long pipeline via after() so the caller's kick
+  // is a fast, reliable round-trip instead of holding the connection open for up
+  // to maxDuration (where Vercel can drop a fire-and-forget request mid-flight,
+  // leaving the audit stuck in 'pending'). The pipeline updates the audit row's
+  // status as it progresses, which the audit page polls.
+  after(async () => {
+    try {
+      await runAuditPipeline({
+        auditId: body.auditId,
+        leadId: body.leadId,
+        input: body.input,
+        prospectId: body.prospectId,
+      });
+    } catch (err) {
+      console.error("[audit/run] pipeline failed", err);
+    }
   });
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, queued: true });
 }

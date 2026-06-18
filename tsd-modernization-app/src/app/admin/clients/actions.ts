@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireRole } from "@/lib/auth/require";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { findOrInviteOwner } from "@/lib/clients";
 import { PACKAGE_TIERS } from "@/lib/packages";
 import { env } from "@/lib/env";
 
@@ -191,37 +192,11 @@ export async function inviteOwner(formData: FormData) {
     email: formData.get("email"),
     role: formData.get("role") || "owner",
   });
-
-  const sb = supabaseAdmin();
-
-  // 1. Find or invite the auth user.
-  const { data: list } = await sb.auth.admin.listUsers();
-  let user = list.users.find((u) => u.email === parsed.email);
-  if (!user) {
-    await sb.auth.admin.inviteUserByEmail(parsed.email, {
-      redirectTo: `${env().NEXT_PUBLIC_SITE_URL}/auth/callback`,
-    });
-    const { data: refreshed } = await sb.auth.admin.listUsers();
-    user = refreshed.users.find((u) => u.email === parsed.email);
-    if (!user) throw new Error("Invite sent but user lookup failed");
-  }
-
-  // 2. Idempotent link — if already linked, no-op.
-  const { data: existing } = await sb
-    .from("client_users")
-    .select("user_id")
-    .eq("user_id", user.id)
-    .eq("client_id", parsed.client_id)
-    .maybeSingle();
-  if (!existing) {
-    const { error } = await sb.from("client_users").insert({
-      user_id: user.id,
-      client_id: parsed.client_id,
-      role: parsed.role,
-    });
-    if (error) throw new Error(error.message);
-  }
-
+  await findOrInviteOwner({
+    clientId: parsed.client_id,
+    email: parsed.email,
+    role: parsed.role,
+  });
   revalidatePath(`/admin/clients/${parsed.client_id}`);
 }
 

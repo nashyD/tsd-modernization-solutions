@@ -4,11 +4,12 @@ import { loadShowcaseById } from "@/lib/sales/load-showcase";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { Input, Label, Textarea, Select } from "@/components/ui/Input";
 import { Button, LinkButton } from "@/components/ui/Button";
+import { SubmitButton } from "@/components/ui/SubmitButton";
 import BackLink from "@/components/BackLink";
 import { PACKAGE_TIERS } from "@/lib/packages";
 import { SERVICE_KEYS, SERVICE_LABEL, type ServiceKey } from "@/lib/sales/services";
 import { env } from "@/lib/env";
-import { updateProspect, deleteProspect } from "../actions";
+import { updateProspect, deleteProspect, deleteProspectNote } from "../actions";
 import {
   upsertEstimate,
   deleteEstimate,
@@ -17,6 +18,7 @@ import {
   deleteAsset,
 } from "../estimate-actions";
 import PitchActions from "./PitchActions";
+import { NoteComposer } from "../_components/PitchNotes";
 import AuditRunner from "./AuditRunner";
 import type { AuditStatus } from "@/lib/supabase/types";
 
@@ -24,6 +26,14 @@ export const dynamic = "force-dynamic";
 
 const CARD =
   "rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]";
+
+const NOTE_TIME = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  hour: "numeric",
+  minute: "2-digit",
+  timeZone: "America/New_York",
+});
 
 export default async function ProspectWorkspace({
   params,
@@ -47,6 +57,13 @@ export default async function ProspectWorkspace({
     auditStatus = (audit?.status as AuditStatus) ?? null;
   }
 
+  // Append-only demo/pitch log, newest first.
+  const { data: notes } = await supabaseAdmin()
+    .from("prospect_notes")
+    .select("id,body,author_email,created_at")
+    .eq("prospect_id", id)
+    .order("created_at", { ascending: false });
+
   return (
     <div className="space-y-8 animate-fade-up">
       <BackLink href="/sales" label="All prospects" />
@@ -59,7 +76,7 @@ export default async function ProspectWorkspace({
           <p className="mt-1 text-sm text-[var(--text-muted)]">{p.business_url}</p>
         </div>
         <LinkButton
-          href={`/sales/${id}/pitch`}
+          href={`/present/${id}`}
           size="lg"
           leftIcon={<Presentation size={18} />}
         >
@@ -131,13 +148,61 @@ export default async function ProspectWorkspace({
             <Textarea id="outline_md" name="outline_md" rows={5} defaultValue={p.outline_md ?? ""} className="mt-1.5" />
           </div>
           <div className="sm:col-span-2">
-            <Label htmlFor="notes" hint="(internal)">Notes</Label>
+            <Label htmlFor="notes" hint="(internal · one-line pin, overwritten on save — use the demo log below for visit history)">
+              Quick summary
+            </Label>
             <Textarea id="notes" name="notes" rows={2} defaultValue={p.notes ?? ""} className="mt-1.5" />
           </div>
           <div className="sm:col-span-2">
-            <Button type="submit">Save changes</Button>
+            <SubmitButton pendingText="Saving…">Save changes</SubmitButton>
           </div>
         </form>
+      </section>
+
+      {/* Demo & pitch notes — append-only log of what happened on each visit */}
+      <section className={CARD}>
+        <h2 className="font-display text-lg font-semibold text-[var(--text)]">
+          Demo &amp; pitch notes
+        </h2>
+        <p className="mt-1 text-xs text-[var(--text-muted)]">
+          Logged after each visit — who, when, and what happened. Internal only.
+        </p>
+        <div className="mt-4">
+          <NoteComposer prospectId={p.id} />
+        </div>
+        <ul className="mt-6 space-y-3">
+          {(notes ?? []).map((n) => (
+            <li
+              key={n.id}
+              className="rounded-lg border border-[var(--border)] bg-[var(--surface-2)] p-3"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-xs font-medium text-[var(--text-muted)]">
+                  {n.author_email ?? "TSD"} ·{" "}
+                  {NOTE_TIME.format(new Date(n.created_at))}
+                </span>
+                <form action={deleteProspectNote}>
+                  <input type="hidden" name="id" value={n.id} />
+                  <input type="hidden" name="prospect_id" value={p.id} />
+                  <button
+                    className="text-[var(--text-subtle)] transition-colors hover:text-[var(--danger)]"
+                    aria-label="Delete note"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </form>
+              </div>
+              <p className="mt-1.5 whitespace-pre-wrap text-sm text-[var(--text)]">
+                {n.body}
+              </p>
+            </li>
+          ))}
+          {(notes ?? []).length === 0 && (
+            <li className="rounded-lg border border-dashed border-[var(--border)] px-3 py-6 text-center text-sm text-[var(--text-subtle)]">
+              No notes yet — add one after your demo.
+            </li>
+          )}
+        </ul>
       </section>
 
       {/* Value estimates — the "what each service is worth" data shown on the pitch */}
@@ -225,7 +290,7 @@ export default async function ProspectWorkspace({
           <input type="hidden" name="prospect_id" value={p.id} />
           <input type="file" name="file" required className="text-sm text-[var(--text-muted)]" />
           <Input name="label" placeholder="Label (optional)" className="flex-1 min-w-[160px]" aria-label="Label" />
-          <Button type="submit" size="sm">Upload</Button>
+          <SubmitButton size="sm" pendingText="Uploading…">Upload</SubmitButton>
         </form>
       </section>
 

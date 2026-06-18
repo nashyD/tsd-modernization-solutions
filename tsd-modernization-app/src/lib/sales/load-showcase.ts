@@ -62,16 +62,23 @@ export async function loadShowcaseById(id: string): Promise<Showcase | null> {
   };
 }
 
+// Explicit allow-list for the PUBLIC token surface — only fields the leave-behind
+// page actually renders. Keeps internal columns (notes, email, gap_summary,
+// fit_score, source_url, max_discount_pct, deposit_target, firmographics) out of
+// the server payload entirely, so a careless future prop-pass can't leak them.
+const PUBLIC_PROSPECT_COLS =
+  "id,business_name,demo_site_url,vapi_assistant_id,outline_md,share_token,team_size,selected_services,deposit_pct,primary_product,contact_name";
+
 export async function loadShowcaseByToken(
   token: string,
 ): Promise<Showcase | null> {
   const sb = supabaseAdmin();
   const { data: prospect } = await sb
     .from("prospects")
-    .select("*")
+    .select(PUBLIC_PROSPECT_COLS)
     .eq("share_token", token)
     .eq("share_enabled", true)
-    .maybeSingle();
+    .maybeSingle<ProspectRow>();
   if (!prospect) return null;
   const { data: estimates } = await sb
     .from("prospect_estimates")

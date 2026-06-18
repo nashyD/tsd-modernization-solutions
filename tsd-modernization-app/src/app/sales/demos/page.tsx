@@ -89,7 +89,7 @@ function DemoCard({ row }: { row: DemoRow }) {
           Open demo <ExternalLink size={14} aria-hidden />
         </a>
         <Link
-          href={`/sales/${row.id}/pitch`}
+          href={`/present/${row.id}`}
           className="inline-flex h-10 items-center gap-1.5 rounded-md border border-[var(--border-strong)] bg-[var(--surface)] px-4 text-sm font-semibold text-[var(--text)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
         >
           <Presentation size={14} aria-hidden /> Pitch

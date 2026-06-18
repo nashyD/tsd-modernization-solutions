@@ -30,8 +30,8 @@ export async function startAudit(
   const input = parsed.data;
   const h = await headers();
   const ip =
+    h.get("x-real-ip")?.trim() ||
     h.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    h.get("x-real-ip") ||
     "unknown";
 
   const limit = await checkAuditRateLimit({ ip, email: input.email });
@@ -67,25 +67,28 @@ export async function startAudit(
     return { message: "Could not start the audit. Try again in a moment." };
   }
 
-  // Fire-and-forget pipeline kick. We hit our own API with a long timeout from Vercel's perspective.
-  // Awaiting the fetch's promise resolution is intentional in dev for stack traces; in production
-  // Vercel keeps the function alive long enough for the secondary request to start independently.
+  // Kick the pipeline. The run route now acks immediately and does the heavy
+  // work via after(), so awaiting here is a fast, reliable round-trip — no more
+  // dropped fire-and-forget request leaving the audit stuck 'pending'.
   const e = env();
-  void fetch(`${e.NEXT_PUBLIC_SITE_URL}/api/audit/run`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-internal-secret": e.INTERNAL_API_SECRET,
-    },
-    body: JSON.stringify({
-      auditId: audit.id,
-      leadId: lead.id,
-      input,
-    }),
-    cache: "no-store",
-  }).catch((err) => {
+  try {
+    await fetch(`${e.NEXT_PUBLIC_SITE_URL}/api/audit/run`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-internal-secret": e.INTERNAL_API_SECRET,
+      },
+      body: JSON.stringify({
+        auditId: audit.id,
+        leadId: lead.id,
+        input,
+      }),
+      cache: "no-store",
+    });
+  } catch (err) {
     console.error("[audit] pipeline kick failed", err);
-  });
+  }
 
+  // Outside the try so Next's redirect signal isn't swallowed.
   redirect(`/audit/${audit.id}`);
 }

@@ -1,10 +1,36 @@
 import type { NextConfig } from "next";
 
-// Baseline security headers on every response. No CSP yet — a strict policy
-// needs the Vapi / Supabase / Square / QR / analytics origins allowlisted and
-// careful testing; the headers below are safe and high-value. Permissions-Policy
-// must keep geolocation (the "Near me" field tool) and microphone (the Vapi
-// voice demo) enabled for same-origin.
+// Content-Security-Policy. Shipped REPORT-ONLY first: the browser reports
+// violations (devtools console) but blocks nothing, so it can't break the live
+// pitch (Vapi voice, Calendly embed, QR, Supabase). Verify on a preview deploy
+// with no violations, then flip CSP_ENFORCE to true. Dropping 'unsafe-inline'
+// from script-src later needs per-request nonces (not wired here yet).
+const CSP_ENFORCE = false;
+const supabaseOrigin = (() => {
+  try {
+    return new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").origin;
+  } catch {
+    return "";
+  }
+})();
+const CSP = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "object-src 'none'",
+  "frame-ancestors 'self'",
+  "form-action 'self'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com https://*.squarecdn.com",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://assets.calendly.com",
+  "font-src 'self' https://fonts.gstatic.com",
+  "img-src 'self' data: blob: https://api.qrserver.com https://*.calendly.com",
+  `connect-src 'self' ${supabaseOrigin} https://*.supabase.co wss://*.supabase.co https://*.vapi.ai wss://*.vapi.ai https://*.daily.co wss://*.daily.co https://api.calendly.com`,
+  "frame-src 'self' https://calendly.com https://*.calendly.com https://*.squarecdn.com",
+  "media-src 'self' blob: https://*.vapi.ai https://*.daily.co",
+].join("; ");
+
+// Baseline security headers on every response. Permissions-Policy must keep
+// geolocation (the "Near me" field tool) and microphone (the Vapi voice demo)
+// enabled for same-origin.
 const SECURITY_HEADERS = [
   {
     key: "Strict-Transport-Security",
@@ -16,6 +42,12 @@ const SECURITY_HEADERS = [
   {
     key: "Permissions-Policy",
     value: "geolocation=(self), microphone=(self), camera=()",
+  },
+  {
+    key: CSP_ENFORCE
+      ? "Content-Security-Policy"
+      : "Content-Security-Policy-Report-Only",
+    value: CSP,
   },
 ];
 

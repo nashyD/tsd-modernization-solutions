@@ -49,7 +49,8 @@ export default async function ProgressPage() {
 
   type Item = NonNullable<typeof items>[number];
   const grouped: Record<WorkItemStatus, Item[]> = { todo: [], doing: [], done: [] };
-  (items ?? []).forEach((it) => grouped[it.status].push(it));
+  // Guard the bucket lookup so an unexpected status value can't throw and 500 the page.
+  (items ?? []).forEach((it) => grouped[it.status as WorkItemStatus]?.push(it));
 
   return (
     <div className="space-y-8 animate-fade-up">
