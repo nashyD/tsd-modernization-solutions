@@ -115,54 +115,47 @@ export default async function SalesBoard({
         }
       />
 
-      {/* Filter the board by the product we're pitching */}
-      <div className="flex flex-wrap gap-2">
-        {filters.map((f) => {
-          const active = (f.key === "all" && !product) || f.key === product;
-          return (
-            <Link
-              key={f.key}
-              href={f.href}
-              className={
-                active
-                  ? "inline-flex items-center gap-1.5 rounded-full border border-[var(--accent)] bg-[var(--accent)] px-3 py-1.5 text-sm font-medium text-white"
-                  : "inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-sm text-[var(--text-muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
-              }
-            >
-              {f.label}
-              <span
+      {/* One toolbar: product filter (left) + a compact pipeline summary (right).
+          Per-status counts live in the grouped section headers below, so there's
+          no separate stat-card grid duplicating them. */}
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+        <div className="flex flex-wrap gap-2">
+          {filters.map((f) => {
+            const active = (f.key === "all" && !product) || f.key === product;
+            return (
+              <Link
+                key={f.key}
+                href={f.href}
                 className={
                   active
-                    ? "font-mono text-xs text-white/80"
-                    : "font-mono text-xs text-[var(--text-subtle)]"
+                    ? "inline-flex items-center gap-1.5 rounded-full border border-[var(--accent)] bg-[var(--accent)] px-3 py-1.5 text-sm font-medium text-white"
+                    : "inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-sm text-[var(--text-muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
                 }
               >
-                {f.count}
-              </span>
-            </Link>
-          );
-        })}
-      </div>
-
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {(
-          [
-            ["New", counts.new],
-            ["Pitched", counts.pitched],
-            ["Won", counts.won],
-            ["All", counts.all],
-          ] as const
-        ).map(([label, value]) => (
-          <div
-            key={label}
-            className="rounded-[12px] border border-[var(--border)] bg-[var(--surface)] px-4 py-3"
-          >
-            <div className="text-[11px] uppercase tracking-[0.14em] text-[var(--text-subtle)]">
-              {label}
-            </div>
-            <div className="font-mono text-2xl text-[var(--text)]">{value}</div>
-          </div>
-        ))}
+                {f.label}
+                <span
+                  className={
+                    active
+                      ? "font-mono text-xs text-white/80"
+                      : "font-mono text-xs text-[var(--text-subtle)]"
+                  }
+                >
+                  {f.count}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+        <div className="flex items-center gap-4 px-1 text-xs text-[var(--text-subtle)]">
+          <span>
+            <span className="font-mono text-sm text-[var(--text)]">{counts.all}</span>{" "}
+            total
+          </span>
+          <span>
+            <span className="font-mono text-sm text-[var(--success)]">{counts.won}</span>{" "}
+            won
+          </span>
+        </div>
       </div>
 
       {rows.length === 0 ? (
