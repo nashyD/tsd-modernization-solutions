@@ -7,7 +7,6 @@ import {
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { AuditScoresSchema } from "@/lib/audit/types";
 import type { AuditScores } from "@/lib/audit/types";
-import BackLink from "@/components/BackLink";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { EmptyState } from "@/components/ui/EmptyState";
 
@@ -20,7 +19,6 @@ export default async function SnapshotPage() {
   if (!active) {
     return (
       <div className="space-y-6">
-        <BackLink href="/app" label="Dashboard" />
         <EmptyState
           icon={<LineChart size={20} />}
           title="No client linked yet"
@@ -46,7 +44,6 @@ export default async function SnapshotPage() {
   if (!latest) {
     return (
       <div className="space-y-8 animate-fade-up">
-        <BackLink href="/app" label="Dashboard" />
         <PageHeader
           eyebrow="Monthly snapshot"
           title="No snapshot yet"
@@ -62,7 +59,6 @@ export default async function SnapshotPage() {
   if (!latestScores.success) {
     return (
       <div className="space-y-6">
-        <BackLink href="/app" label="Dashboard" />
         <div className="rounded-[14px] border border-[var(--warning)]/30 bg-[var(--warning-soft)] p-5 text-[var(--warning)]">
           Snapshot data is malformed. The TSD team has been notified.
         </div>
@@ -72,7 +68,6 @@ export default async function SnapshotPage() {
 
   return (
     <div className="space-y-8 animate-fade-up">
-      <BackLink href="/app" label="Dashboard" />
       <PageHeader
         eyebrow="Monthly snapshot"
         title={`Latest audit · ${new Date(latest.created_at).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}`}

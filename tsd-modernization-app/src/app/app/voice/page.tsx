@@ -6,7 +6,6 @@ import {
 } from "@/lib/auth/require";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import VoiceWidget from "./VoiceWidget";
-import BackLink from "@/components/BackLink";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { EmptyState } from "@/components/ui/EmptyState";
 
@@ -19,7 +18,6 @@ export default async function VoicePage() {
   if (!active) {
     return (
       <div className="space-y-6">
-        <BackLink href="/app" label="Dashboard" />
         <EmptyState
           icon={<PhoneCall size={20} />}
           title="No client linked yet"
@@ -38,7 +36,6 @@ export default async function VoicePage() {
 
   return (
     <div className="space-y-8 animate-fade-up">
-      <BackLink href="/app" label="Dashboard" />
 
       <PageHeader
         eyebrow="Voice"

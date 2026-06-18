@@ -5,7 +5,6 @@ import {
   getActiveClient,
 } from "@/lib/auth/require";
 import { packageByTier } from "@/lib/packages";
-import BackLink from "@/components/BackLink";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Badge } from "@/components/ui/Badge";
@@ -21,7 +20,6 @@ export default async function PackagePage() {
   if (!pkg) {
     return (
       <div className="space-y-6">
-        <BackLink href="/app" label="Dashboard" />
         <EmptyState
           icon={<PackageIcon size={20} />}
           title="No package assigned yet"
@@ -33,7 +31,6 @@ export default async function PackagePage() {
 
   return (
     <div className="space-y-8 animate-fade-up">
-      <BackLink href="/app" label="Dashboard" />
 
       <PageHeader
         eyebrow="Your package"

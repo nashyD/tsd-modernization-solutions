@@ -6,7 +6,6 @@ import {
 } from "@/lib/auth/require";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import type { WorkItemStatus } from "@/lib/supabase/types";
-import BackLink from "@/components/BackLink";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { EmptyState } from "@/components/ui/EmptyState";
 
@@ -30,7 +29,6 @@ export default async function ProgressPage() {
   if (!active) {
     return (
       <div className="space-y-6">
-        <BackLink href="/app" label="Dashboard" />
         <EmptyState
           icon={<ListChecks size={20} />}
           title="No client linked yet"
@@ -54,7 +52,6 @@ export default async function ProgressPage() {
 
   return (
     <div className="space-y-8 animate-fade-up">
-      <BackLink href="/app" label="Dashboard" />
       <PageHeader
         eyebrow="Progress"
         title="What we&rsquo;re building"

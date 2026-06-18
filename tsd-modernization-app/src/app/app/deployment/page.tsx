@@ -6,7 +6,6 @@ import {
 } from "@/lib/auth/require";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { env } from "@/lib/env";
-import BackLink from "@/components/BackLink";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Badge } from "@/components/ui/Badge";
@@ -74,7 +73,6 @@ export default async function DeploymentPage() {
   if (!active) {
     return (
       <div className="space-y-6">
-        <BackLink href="/app" label="Dashboard" />
         <EmptyState
           icon={<CloudUpload size={20} />}
           title="No client linked yet"
@@ -101,7 +99,6 @@ export default async function DeploymentPage() {
 
   return (
     <div className="space-y-8 animate-fade-up">
-      <BackLink href="/app" label="Dashboard" />
 
       <PageHeader
         eyebrow="Deployment"

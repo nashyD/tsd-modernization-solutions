@@ -1,5 +1,3 @@
-import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -25,12 +23,6 @@ export default async function NextNearbyPage() {
 
   return (
     <div className="space-y-6 animate-fade-up">
-      <Link
-        href="/sales"
-        className="inline-flex items-center gap-1 text-sm text-[var(--text-muted)] transition-colors hover:text-[var(--accent)]"
-      >
-        <ChevronLeft size={16} /> Board
-      </Link>
       <PageHeader
         eyebrow="Sales · Field"
         title="Next prospect near you"

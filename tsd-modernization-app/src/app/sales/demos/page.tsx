@@ -3,6 +3,9 @@ import { ExternalLink, Presentation, FileText, Link2 } from "lucide-react";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Badge } from "@/components/ui/Badge";
+import { LinkButton } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { SubmitButton } from "@/components/ui/SubmitButton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import type { ProspectStatus } from "@/lib/supabase/types";
 import { ParkDemo } from "../_components/ParkDemo";
@@ -80,26 +83,28 @@ function DemoCard({ row }: { row: DemoRow }) {
         </p>
       ) : null}
       <div className="mt-auto flex flex-wrap items-center gap-2">
-        <a
+        <LinkButton
           href={row.demo_site_url}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex h-10 items-center gap-1.5 rounded-md bg-[var(--primary-bg)] px-4 text-sm font-semibold text-[var(--primary-fg)] transition-colors hover:bg-[var(--primary-bg-hover)]"
+          rightIcon={<ExternalLink size={14} aria-hidden />}
         >
-          Open demo <ExternalLink size={14} aria-hidden />
-        </a>
-        <Link
+          Open demo
+        </LinkButton>
+        <LinkButton
           href={`/present/${row.id}`}
-          className="inline-flex h-10 items-center gap-1.5 rounded-md border border-[var(--border-strong)] bg-[var(--surface)] px-4 text-sm font-semibold text-[var(--text)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+          variant="secondary"
+          leftIcon={<Presentation size={14} aria-hidden />}
         >
-          <Presentation size={14} aria-hidden /> Pitch
-        </Link>
-        <Link
+          Pitch
+        </LinkButton>
+        <LinkButton
           href={`/sales/${row.id}`}
-          className="inline-flex h-10 items-center gap-1.5 rounded-md border border-[var(--border-strong)] bg-[var(--surface)] px-4 text-sm font-semibold text-[var(--text)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+          variant="secondary"
+          leftIcon={<FileText size={14} aria-hidden />}
         >
-          <FileText size={14} aria-hidden /> Record
-        </Link>
+          Record
+        </LinkButton>
       </div>
     </li>
   );
@@ -155,13 +160,6 @@ export default async function DemoShelf() {
     (r) => r.converted_client_id == null && r.status === "lost",
   );
 
-  const counts = [
-    ["Shelf", active.length],
-    ["Won", won.length],
-    ["Converted", converted.length],
-    ["All demos", rows.length],
-  ] as const;
-
   return (
     <div className="space-y-8 animate-fade-up">
       <PageHeader
@@ -170,20 +168,6 @@ export default async function DemoShelf() {
         description="Every demo site we've built, parked here until it becomes a real project. Open one on the iPad, pitch it, and mark the prospect won to move it along."
         actions={<ParkDemo />}
       />
-
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {counts.map(([label, value]) => (
-          <div
-            key={label}
-            className="rounded-[12px] border border-[var(--border)] bg-[var(--surface)] px-4 py-3"
-          >
-            <div className="text-[11px] uppercase tracking-[0.14em] text-[var(--text-subtle)]">
-              {label}
-            </div>
-            <div className="font-mono text-2xl text-[var(--text)]">{value}</div>
-          </div>
-        ))}
-      </div>
 
       {rows.length === 0 ? (
         <EmptyState
@@ -227,17 +211,22 @@ export default async function DemoShelf() {
                 </div>
                 <form action={setDemoUrl} className="flex shrink-0 items-center gap-2">
                   <input type="hidden" name="id" value={p.id} />
-                  <input
+                  <Input
                     name="demo_site_url"
                     required
                     inputMode="url"
                     placeholder="demo-url.vercel.app"
                     aria-label={`Demo URL for ${p.business_name}`}
-                    className="w-56 rounded-[10px] border border-[var(--border-strong)] bg-[var(--surface-2)] px-3 py-2 text-sm text-[var(--text)] outline-none placeholder:text-[var(--text-subtle)] transition-colors focus:border-[var(--accent)]"
+                    className="w-56"
                   />
-                  <button className="inline-flex h-9 items-center gap-1.5 rounded-md border border-[var(--border-strong)] px-3 text-sm font-semibold text-[var(--text)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]">
-                    <Link2 size={14} aria-hidden /> Save
-                  </button>
+                  <SubmitButton
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<Link2 size={14} aria-hidden />}
+                    pendingText="Saving…"
+                  >
+                    Save
+                  </SubmitButton>
                 </form>
               </li>
             ))}

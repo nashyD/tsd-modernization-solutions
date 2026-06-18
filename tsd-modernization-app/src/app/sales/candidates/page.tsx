@@ -1,5 +1,3 @@
-import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { CandidateList, type Candidate } from "./CandidateList";
@@ -20,12 +18,6 @@ export default async function CandidatesPage() {
 
   return (
     <div className="space-y-6 animate-fade-up">
-      <Link
-        href="/sales"
-        className="inline-flex items-center gap-1 text-sm text-[var(--text-muted)] transition-colors hover:text-[var(--accent)]"
-      >
-        <ChevronLeft size={16} /> Board
-      </Link>
       <PageHeader
         eyebrow="Sales · Discovery"
         title={`Candidates${rows.length ? ` · ${rows.length}` : ""}`}
