@@ -15,6 +15,7 @@ import { RELATIONSHIPS } from "./relationships-data";
 import { SERVICES } from "./services-data";
 import Book from "./pages/Book";
 import Demo from "./pages/Demo";
+import RootError from "./components/RootError";
 
 /* Relationship-channel landing pages — vertical-specific pages for warm
    leads who arrived via founder DM or word-of-mouth. Wrapper functions let
@@ -36,6 +37,7 @@ export const routes = [
     path: "/",
     element: <Layout />,
     entry: "src/Layout.jsx",
+    errorElement: <RootError />,
     children: [
       { index: true, Component: Home },
       { path: "services", Component: Services },
