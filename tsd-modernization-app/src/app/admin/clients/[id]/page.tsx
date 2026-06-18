@@ -8,6 +8,7 @@ import {
   UserPlus,
   Save,
   ExternalLink,
+  ChevronRight,
 } from "lucide-react";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireRole } from "@/lib/auth/require";
@@ -231,52 +232,66 @@ export default async function AdminClientDetail({
           </ul>
         )}
 
-        <form
-          action={inviteOwner}
-          className="mt-5 rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)]"
-        >
-          <input type="hidden" name="client_id" value={client.id} />
-          <h3 className="font-semibold text-[var(--text)]">Invite an owner</h3>
-          <p className="mt-1 text-sm text-[var(--text-muted)]">
-            They&rsquo;ll receive a magic-link email and land in this client&rsquo;s portal.
-          </p>
-          <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto_auto]">
-            <div>
-              <Label htmlFor="invite-email" className="sr-only">
-                Email
-              </Label>
-              <Input
-                id="invite-email"
-                name="email"
-                type="email"
-                required
-                placeholder="owner@business.com"
-              />
+        <details className="group mt-5 rounded-[14px] border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-card)]">
+          <summary className="flex cursor-pointer list-none items-center gap-2 px-5 py-4 text-sm font-semibold text-[var(--text)] [&::-webkit-details-marker]:hidden">
+            <UserPlus size={16} strokeWidth={2.25} aria-hidden />
+            Invite an owner
+            <ChevronRight
+              size={16}
+              strokeWidth={2.25}
+              aria-hidden
+              className="ml-auto text-[var(--text-subtle)] transition-transform group-open:rotate-90"
+            />
+          </summary>
+          <form
+            action={inviteOwner}
+            className="border-t border-[var(--border)] px-5 pb-5 pt-4"
+          >
+            <input type="hidden" name="client_id" value={client.id} />
+            <p className="text-sm text-[var(--text-muted)]">
+              They&rsquo;ll receive a magic-link email and land in this client&rsquo;s portal.
+            </p>
+            <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto_auto]">
+              <div>
+                <Label htmlFor="invite-email" className="sr-only">
+                  Email
+                </Label>
+                <Input
+                  id="invite-email"
+                  name="email"
+                  type="email"
+                  required
+                  placeholder="owner@business.com"
+                />
+              </div>
+              <Select
+                name="role"
+                defaultValue="owner"
+                aria-label="Role"
+                className="w-auto"
+              >
+                <option value="owner">owner</option>
+                <option value="manager">manager</option>
+                <option value="admin">admin</option>
+              </Select>
+              <Button
+                type="submit"
+                leftIcon={<UserPlus size={16} strokeWidth={2.25} />}
+              >
+                Send invite
+              </Button>
             </div>
-            <Select
-              name="role"
-              defaultValue="owner"
-              aria-label="Role"
-              className="w-auto"
-            >
-              <option value="owner">owner</option>
-              <option value="manager">manager</option>
-              <option value="admin">admin</option>
-            </Select>
-            <Button
-              type="submit"
-              leftIcon={<UserPlus size={16} strokeWidth={2.25} />}
-            >
-              Send invite
-            </Button>
-          </div>
-        </form>
+          </form>
+        </details>
       </section>
 
       <section>
         <h2 className="font-display text-xl font-semibold tracking-tight text-[var(--text)]">
           Work items
         </h2>
+        <p className="mt-1 text-sm text-[var(--text-muted)]">
+          What we&rsquo;re building — these power the client&rsquo;s progress board.
+        </p>
         {workItems?.length === 0 ? (
           <div className="mt-4">
             <EmptyState
@@ -318,63 +333,75 @@ export default async function AdminClientDetail({
                       <option value="doing">doing</option>
                       <option value="done">done</option>
                     </Select>
-                    <Button type="submit" size="sm">
-                      Save
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      {/* Same form; formAction routes this button to delete instead of upsert. */}
+                      <button
+                        type="submit"
+                        formAction={deleteWorkItem}
+                        aria-label="Delete work item"
+                        title="Delete work item"
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-md text-[var(--text-subtle)] transition-colors hover:bg-[var(--danger-soft)] hover:text-[var(--danger)]"
+                      >
+                        <Trash2 size={14} strokeWidth={2} aria-hidden />
+                      </button>
+                      <Button type="submit" size="sm">
+                        Save
+                      </Button>
+                    </div>
                   </div>
-                </form>
-                <form action={deleteWorkItem} className="mt-2 border-t border-[var(--border)] pt-2">
-                  <input type="hidden" name="id" value={w.id} />
-                  <input type="hidden" name="client_id" value={id} />
-                  <button
-                    type="submit"
-                    className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--danger)] hover:underline"
-                  >
-                    <Trash2 size={12} strokeWidth={2} aria-hidden />
-                    Delete work item
-                  </button>
                 </form>
               </li>
             ))}
           </ul>
         )}
 
-        <form
-          action={upsertWorkItem}
-          className="mt-6 space-y-4 rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)]"
-        >
-          <input type="hidden" name="client_id" value={id} />
-          <h3 className="font-semibold text-[var(--text)]">Add work item</h3>
-          <div>
-            <Label htmlFor={`title-new`}>Title</Label>
-            <Input id={`title-new`} name="title" required placeholder="Build the homepage" className="mt-1.5" />
-          </div>
-          <div>
-            <Label htmlFor={`desc-new`} hint="(optional)">
-              Description
-            </Label>
-            <Textarea
-              id={`desc-new`}
-              name="description"
-              rows={2}
-              className="mt-1.5"
-              placeholder="What this entails…"
+        <details className="group mt-6 rounded-[14px] border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-card)]">
+          <summary className="flex cursor-pointer list-none items-center gap-2 px-5 py-4 text-sm font-semibold text-[var(--text)] [&::-webkit-details-marker]:hidden">
+            <Plus size={16} strokeWidth={2.25} aria-hidden />
+            Add work item
+            <ChevronRight
+              size={16}
+              strokeWidth={2.25}
+              aria-hidden
+              className="ml-auto text-[var(--text-subtle)] transition-transform group-open:rotate-90"
             />
-          </div>
-          <div className="flex flex-wrap items-end gap-3">
+          </summary>
+          <form
+            action={upsertWorkItem}
+            className="space-y-4 border-t border-[var(--border)] px-5 pb-5 pt-4"
+          >
+            <input type="hidden" name="client_id" value={id} />
             <div>
-              <Label htmlFor={`status-new`}>Status</Label>
-              <Select id={`status-new`} name="status" defaultValue="todo" className="mt-1.5 w-auto">
-                <option value="todo">todo</option>
-                <option value="doing">doing</option>
-                <option value="done">done</option>
-              </Select>
+              <Label htmlFor={`title-new`}>Title</Label>
+              <Input id={`title-new`} name="title" required placeholder="Build the homepage" className="mt-1.5" />
             </div>
-            <Button type="submit" leftIcon={<Plus size={16} strokeWidth={2.25} />}>
-              Add work item
-            </Button>
-          </div>
-        </form>
+            <div>
+              <Label htmlFor={`desc-new`} hint="(optional)">
+                Description
+              </Label>
+              <Textarea
+                id={`desc-new`}
+                name="description"
+                rows={2}
+                className="mt-1.5"
+                placeholder="What this entails…"
+              />
+            </div>
+            <div className="flex flex-wrap items-end gap-3">
+              <div>
+                <Label htmlFor={`status-new`}>Status</Label>
+                <Select id={`status-new`} name="status" defaultValue="todo" className="mt-1.5 w-auto">
+                  <option value="todo">todo</option>
+                  <option value="doing">doing</option>
+                  <option value="done">done</option>
+                </Select>
+              </div>
+              <Button type="submit" leftIcon={<Plus size={16} strokeWidth={2.25} />}>
+                Add work item
+              </Button>
+            </div>
+          </form>
+        </details>
       </section>
     </div>
   );
