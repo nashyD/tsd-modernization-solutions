@@ -167,6 +167,16 @@ select {
   color-scheme: inherit;
 }
 
+/* Hide the scrollbar on horizontally-scrollable strips (e.g. the portal
+   section-tab nav) — swipeable on touch, clean on desktop. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Subtle entrance: fade + lift */
 @keyframes tsd-fade-up {
   from {
