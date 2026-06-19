@@ -121,6 +121,22 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-06-19 — Public News / Field Notes page with an inaugural post
+
+**What.** Added a public `/news` index and `/news/:slug` post page (React Router + `vite-react-ssg` prerender), driven by a `src/news-data.js` posts catalog. First post — "Field Notes #001 — Here's What We've Been Building" — recaps shipped work (the dog-fooded AI receptionist, the cited Concierge, the free cost-cut audit, demo-first builds) using only the anonymized client references already published on the site ("a Charlotte wholesale importer", "one local bakery $540/mo"). "News" added to `Layout.jsx` NAV_ITEMS (and so to the footer); per-post `<title>/<meta>` plus a `Blog` + `BlogPosting` JSON-LD generated from the catalog. SSG build prerenders both routes; sitemap now 27 routes.
+
+**Why.** A standing public "here's what we did" surface — social proof for prospects and the company-level twin of the per-client monthly value report. Routes, nav meta, and JSON-LD all read from `news-data.js`, so publishing the next post is one object.
+
+**Files touched.**
+- `src/news-data.js` (new) — posts catalog + `getPost`.
+- `src/pages/News.jsx`, `src/pages/NewsDetail.jsx` (new) — index + article, glass-panel patterns.
+- `src/routes.jsx` — `/news` + `/news/:slug` (getStaticPaths from the catalog).
+- `src/Layout.jsx` — NAV_ITEMS "News"; ROUTE_META index + per-post entries.
+- `src/route-jsonld.js` — `Blog` node + per-post `BlogPosting`.
+- `BUSINESS_PLAN.md` — §8.2 content channel + §14 done.
+
+**Principle reinforced.** *A content surface should be a data file, not a code change.* One catalog feeds the page, the nav meta, and the schema, so the site publishes a post without touching components.
+
 ### 2026-06-12 — Strip the add-ons off the pricing page: estimator + legend show only the four services
 
 **What.** Removed the four add-on options — **Booking automation, Reviews & reputation, Lead follow-up, Local SEO** — from the `/pricing` estimator's "What do you want running?" picker and the matching cards from the Pricing product legend. The picker and legend now show only the four sold services (website, Front Desk, Concierge, Lead Engine). Done in lockstep across [`PricingEstimator.jsx`](src/components/PricingEstimator.jsx) and the app's [`estimator.ts`](../tsd-modernization-app/src/lib/sales/estimator.ts) `PRODUCTS` (the `booking`/`reviews`/`outreach`/`seo` ids are gone); the two estimator tests that depended on those ids (the AI-count and the 5-product cap) were rewritten — Front Desk + Concierge are now the only two AI products, so Managed AI through the estimator tops out at $147/mo (17 tests still pass). The add-ons remain real work: the `/services` add-ons strip still lists them, but its copy changed from "each one a line item in the pricing estimator" to "scoped and quoted on your free fit call" so nothing contradicts.
