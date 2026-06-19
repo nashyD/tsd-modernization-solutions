@@ -34,9 +34,9 @@ function CellVal({ val }) {
   );
   return (
     <span style={{
-      fontSize: "11px", fontWeight: 700, color: v("text-dim"),
+      fontSize: "11px", fontWeight: 400, color: v("text-dim"),
       textTransform: "uppercase", letterSpacing: "1.5px",
-      fontStyle: "italic", fontFamily: "var(--font-display)",
+      fontStyle: "normal", fontFamily: "var(--font-body)",
     }}>{val}</span>
   );
 }
@@ -74,10 +74,10 @@ export default function WhyUs() {
                 }}>
                   <Eyebrow>TSD</Eyebrow>
                   <div style={{
-                    fontSize: "9px", fontWeight: 700, letterSpacing: "1.5px",
+                    fontSize: "9px", fontWeight: 400, letterSpacing: "1.5px",
                     textTransform: "uppercase",
                     color: C.carolinaLight, marginTop: "4px",
-                    fontStyle: "italic", fontFamily: "var(--font-display)",
+                    fontStyle: "normal", fontFamily: "var(--font-body)",
                   }}>You are here</div>
                 </th>
                 <th style={thStyle}><Eyebrow color={v("text-muted")} diamond={false}>Agency</Eyebrow></th>

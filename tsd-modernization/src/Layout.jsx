@@ -752,7 +752,7 @@ export default function Layout() {
                 </div>
               </Link>
               <p style={{
-                fontFamily: "var(--font-display)", fontStyle: "italic",
+                fontFamily: "var(--font-body)", fontStyle: "normal",
                 fontSize: "14px", lineHeight: 1.6, color: v("text-muted"),
                 maxWidth: "320px", marginBottom: "16px",
               }}>
@@ -812,7 +812,7 @@ export default function Layout() {
               }}>Reach us</div>
               <a href="tel:+19808905815" style={{
                 display: "block", marginBottom: "10px",
-                fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
+                fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
                 fontSize: "20px", letterSpacing: "-0.3px",
                 color: v("text"),
               }}>

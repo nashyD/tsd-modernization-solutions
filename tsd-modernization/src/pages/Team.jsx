@@ -80,9 +80,9 @@ const SCHOOLS = {
     Fallback: () => (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <text x="12" y="17" textAnchor="middle"
-              fontFamily="Playfair Display, Georgia, serif"
-              fontStyle="italic" fontWeight="700" fontSize="15"
-              letterSpacing="-1.4"
+              fontFamily="Inter, system-ui, sans-serif"
+              fontStyle="normal" fontWeight="700" fontSize="15"
+              letterSpacing="-1"
               fill="currentColor">NC</text>
       </svg>
     ),
@@ -218,7 +218,7 @@ function SchoolBanner({ schoolId }) {
           {s.name}
         </span>
         <span style={{
-          fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 600,
+          fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 600,
           fontSize: "13px", lineHeight: 1.2,
           color: s.accent,
           letterSpacing: "0.3px",
@@ -255,7 +255,7 @@ function BusinessCard({ data }) {
       </div>
 
       <div style={{
-        fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
+        fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
         fontSize: "clamp(24px, 4vw, 32px)", color: v("card-text"), letterSpacing: "1px",
         marginBottom: "4px", textAlign: "center",
       }}>{data.name}</div>
@@ -371,7 +371,7 @@ function FounderSpread({ member, index, onView }) {
       <div className="founder-copy" style={{ order: reverse ? 1 : 2 }}>
         <SchoolBanner schoolId={member.schoolId} />
         <h2 style={{
-          fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
+          fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
           fontSize: "clamp(36px, 5vw, 58px)", lineHeight: 1.18, letterSpacing: "-1px",
           color: v("text"), marginBottom: "8px",
         }}>
@@ -395,7 +395,7 @@ function FounderSpread({ member, index, onView }) {
           borderRadius: "0 10px 10px 0",
         }}>
           <p style={{
-            fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 500,
+            fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
             fontSize: "clamp(16px, 1.8vw, 20px)", lineHeight: 1.45, color: v("text"),
             letterSpacing: "-0.2px",
           }}>
@@ -492,7 +492,7 @@ export default function Team() {
         }}>
           Three founders.{" "}
           <span style={{
-            fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
+            fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
             background: C.gradientAccent, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
             backgroundClip: "text",
           }}>Building it ourselves.</span>

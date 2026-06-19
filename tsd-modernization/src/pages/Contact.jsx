@@ -235,7 +235,7 @@ function ContactForm() {
             </Button>
             <p style={{
               fontSize: "12px", color: v("text-dim"), textAlign: "center",
-              fontStyle: "italic", fontFamily: "var(--font-display)", marginTop: SPACE.sm,
+              fontStyle: "normal", fontFamily: "var(--font-body)", marginTop: SPACE.sm,
             }}>
               Free fit call · 48-hour written proposal · 100% money-back guarantee.
             </p>

@@ -132,7 +132,6 @@ const MF_ACCENT = "#7fc6e6";
 const MF_TEXT = "#dce8f5";
 const MF_DIM = "rgba(220,232,245,0.55)";
 const MF_FAINT = "rgba(220,232,245,0.30)";
-const MF_SERIF = '"Cormorant Garamond", "Playfair Display", Georgia, serif';
 const MF_SANS = 'Inter, "Helvetica Neue", system-ui, sans-serif';
 
 // ── Top bar ─────────────────────────────────────────────────────────────────
@@ -207,8 +206,8 @@ function ContactForm({ values, focused, submitFlash, submitPress }) {
         marginBottom: 8,
       }}>CONTACT</div>
       <div style={{
-        fontFamily: MF_SERIF, fontStyle: "italic",
-        fontSize: 32, fontWeight: 500,
+        fontFamily: MF_SANS, fontStyle: "normal",
+        fontSize: 32, fontWeight: 700,
         color: MF_TEXT, lineHeight: 1.05,
         letterSpacing: "-0.01em",
         marginBottom: 4,
@@ -347,8 +346,8 @@ function MakeScenario({ activeNodes, activeEdges, tokenPositions, captionOpacity
             letterSpacing: "0.24em", color: MF_ACCENT,
           }}>SCENARIO</div>
           <div style={{
-            fontFamily: MF_SERIF, fontStyle: "italic",
-            fontSize: 20, fontWeight: 500, color: MF_TEXT,
+            fontFamily: MF_SANS, fontStyle: "normal",
+            fontSize: 20, fontWeight: 700, color: MF_TEXT,
             marginTop: 2, letterSpacing: "-0.01em",
             whiteSpace: "nowrap",
           }}>Contact intake</div>
@@ -441,8 +440,8 @@ function MakeScenario({ activeNodes, activeEdges, tokenPositions, captionOpacity
         position: "absolute",
         left: 0, right: 0, bottom: 22,
         textAlign: "center",
-        fontFamily: MF_SERIF, fontStyle: "italic",
-        fontSize: 26, fontWeight: 500,
+        fontFamily: MF_SANS, fontStyle: "normal",
+        fontSize: 26, fontWeight: 700,
         color: MF_TEXT, letterSpacing: "-0.01em",
         opacity: captionOpacity,
         transform: `translateY(${(1 - captionOpacity) * 8}px)`,

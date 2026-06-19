@@ -108,7 +108,7 @@ export default function Book() {
         <p style={{
           marginTop: SPACE.xl, textAlign: "center",
           fontSize: "13px", color: v("text-dim"),
-          fontFamily: "var(--font-display)", fontStyle: "italic",
+          fontFamily: "var(--font-body)", fontStyle: "normal",
         }}>
           Prefer to write us a longer note?{" "}
           <a href="/contact" style={{

@@ -230,15 +230,17 @@ export function DoubleLine({ width = 200, style }) {
   );
 }
 
-/* Reusable text gradient — the accent italic on most headlines.
-   Inline-block so the bleed clipping doesn't crop descenders. */
-export function GradientText({ children, gradient = C.gradientAccent, italic = true, style }) {
+/* Reusable accent text — the gradient-filled emphasis on most headlines.
+   Bold sans (no italic serif); the gradient fill carries the emphasis.
+   Inline-block so the bleed clipping doesn't crop descenders. The `italic`
+   prop is accepted for back-compat but no longer renders cursive. */
+export function GradientText({ children, gradient = C.gradientAccent, style }) {
   return (
     <span style={{
       display: "inline-block",
-      fontFamily: italic ? "var(--font-display)" : "var(--font-body)",
-      fontStyle: italic ? "italic" : "normal",
-      fontWeight: 700,
+      fontFamily: "var(--font-body)",
+      fontStyle: "normal",
+      fontWeight: 800,
       background: gradient,
       WebkitBackgroundClip: "text",
       WebkitTextFillColor: "transparent",
@@ -551,7 +553,10 @@ export function Button({
       base: {
         background: C.gradientAccent,
         color: "#fff",
-        border: "1px solid transparent",
+        // Even glass rim. A transparent border let the diagonal gradient clamp
+        // into the 1px border ring (background-clip border-box), making the edge
+        // look muddy/uneven at the dark corner; a real rim is clean all around.
+        border: "1px solid rgba(255,255,255,0.25)",
         boxShadow: hovered
           ? "0 12px 28px rgba(75,156,211,0.42), inset 0 1px 0 rgba(255,255,255,0.18)"
           : "0 6px 18px rgba(75,156,211,0.32), inset 0 1px 0 rgba(255,255,255,0.18)",
@@ -562,7 +567,8 @@ export function Button({
       base: {
         background: C.gradientPrism,
         color: "#fff",
-        border: "1px solid transparent",
+        // Even glass rim (see primary above) — clean edge on the dark prism.
+        border: "1px solid rgba(255,255,255,0.25)",
         boxShadow: hovered
           ? "0 14px 32px rgba(19,41,75,0.42), inset 0 1px 0 rgba(255,255,255,0.18)"
           : "0 6px 18px rgba(19,41,75,0.32), inset 0 1px 0 rgba(255,255,255,0.18)",
@@ -701,9 +707,9 @@ export function StatTile({ value, label, note, large, fadeRef, style }) {
       }}>{label}</div>
       {note && (
         <div style={{
-          fontSize: "12px", fontStyle: "italic",
+          fontSize: "12px", fontStyle: "normal",
           color: v("text-dim"),
-          fontFamily: "var(--font-display)",
+          fontFamily: "var(--font-body)",
         }}>{note}</div>
       )}
     </div>

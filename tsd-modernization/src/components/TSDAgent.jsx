@@ -620,8 +620,8 @@ export default function TSDAgent() {
               </div>
               <div
                 style={{
-                  fontFamily: "var(--font-display)",
-                  fontStyle: "italic",
+                  fontFamily: "var(--font-body)",
+                  fontStyle: "normal",
                   fontWeight: 700,
                   fontSize: "18px",
                   lineHeight: 1.2,

@@ -39,7 +39,7 @@ function GuaranteeBlock() {
         pointerEvents: "none",
       }} />
       <div style={{
-        fontFamily: "var(--font-display)", fontStyle: "italic",
+        fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
         fontSize: "clamp(72px, 9vw, 120px)",
         lineHeight: 1.1, flexShrink: 0,
         background: C.gradientAccent, WebkitBackgroundClip: "text",
@@ -50,7 +50,7 @@ function GuaranteeBlock() {
       <div>
         <Eyebrow style={{ marginBottom: "12px" }}>Risk Reversal</Eyebrow>
         <p style={{
-          fontFamily: "var(--font-display)", fontStyle: "italic",
+          fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
           fontSize: "clamp(18px, 2vw, 22px)", lineHeight: 1.45, color: v("text"),
           letterSpacing: "-0.2px",
         }}>
@@ -99,7 +99,7 @@ function ProductLegend() {
               color: v("text"), marginBottom: SPACE.sm, letterSpacing: "-0.3px",
             }}>{p.name}</h3>
             <p style={{
-              fontFamily: "var(--font-display)", fontStyle: "italic",
+              fontFamily: "var(--font-body)", fontStyle: "normal",
               fontSize: "14px", lineHeight: 1.5, color: v("text-muted"), marginBottom: SPACE.md,
             }}>{p.tagline}</p>
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
