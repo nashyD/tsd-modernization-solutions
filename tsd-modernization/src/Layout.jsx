@@ -7,12 +7,14 @@ import { TSDLogo, SunIcon, MoonIcon, MenuIcon, XIcon, ArrowRightIcon } from "./i
 import { trackPageView } from "./analytics.js";
 import { ROUTE_JSONLD } from "./route-jsonld.js";
 import { SERVICES } from "./services-data";
+import { POSTS } from "./news-data.js";
 import TSDAgent from "./components/TSDAgent.jsx";
 import CallButton from "./components/CallButton.jsx";
 
 const NAV_ITEMS = [
   { label: "Services", to: "/services" },
   { label: "Live Demo", to: "/demo" },
+  { label: "News", to: "/news" },
   { label: "Why Us", to: "/why-us" },
   { label: "Process", to: "/process" },
   { label: "Pricing", to: "/pricing" },
@@ -115,6 +117,21 @@ SERVICES.forEach((s) => {
   ROUTE_META[`/sheets/${s.slug}`] = {
     title: `${s.title} — Savings Sheet | TSD Modernization Solutions`,
     description: s.saves,
+  };
+});
+
+/* News index + one entry per post, generated from the posts catalog so a
+   new post in news-data.js automatically gets its <title>/<meta> for link
+   previews. */
+ROUTE_META["/news"] = {
+  title: "News & Field Notes | TSD Modernization Solutions",
+  description:
+    "What we've been building for local businesses — short, honest updates on the websites and AI we ship across Gastonia and the Charlotte metro. Real numbers, no fluff.",
+};
+POSTS.forEach((p) => {
+  ROUTE_META[`/news/${p.slug}`] = {
+    title: `${p.title} | TSD Modernization Solutions`,
+    description: p.excerpt,
   };
 });
 

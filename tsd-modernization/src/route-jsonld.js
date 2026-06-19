@@ -10,6 +10,8 @@
    FAQPage, HowTo, etc.) that reference the business via that @id, so we
    don't duplicate org-level fields like address / telephone / founders. */
 
+import { POSTS } from "./news-data.js";
+
 const SITE = "https://tsd-modernization.com";
 const BUSINESS_ID = `${SITE}/#business`;
 const PROVIDER = { "@id": BUSINESS_ID };
@@ -383,6 +385,35 @@ const SERVICE_RESTAURANTS = service({
   audience: segmentAudience("Restaurants and Food Service"),
 });
 
+/* /news — a Blog node, plus one BlogPosting per post (appended below the
+   export). Generated from the posts catalog so a new post in news-data.js
+   gets its Article schema for search + AI crawlers automatically. */
+const NEWS_BLOG = {
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "@id": `${SITE}/news#blog`,
+  name: "TSD Modernization Solutions — Field Notes",
+  description:
+    "Short, honest updates on the websites and AI TSD Modernization Solutions ships for local Charlotte-metro businesses.",
+  url: `${SITE}/news`,
+  publisher: PROVIDER,
+};
+
+const blogPosting = (p) => ({
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "@id": `${SITE}/news/${p.slug}#post`,
+  headline: p.title,
+  description: p.excerpt,
+  datePublished: p.dateISO,
+  dateModified: p.dateISO,
+  url: `${SITE}/news/${p.slug}`,
+  mainEntityOfPage: `${SITE}/news/${p.slug}`,
+  author: PROVIDER,
+  publisher: PROVIDER,
+  isPartOf: { "@id": `${SITE}/news#blog` },
+});
+
 /* Routes mapped to the JSON-LD nodes that render on each one.
    Always an array — RouteMeta emits one <script> per node. */
 export const ROUTE_JSONLD = {
@@ -390,6 +421,7 @@ export const ROUTE_JSONLD = {
   "/process": [PROCESS_HOWTO],
   "/team": [TEAM_LIST],
   "/contact": [CONTACT_PAGE],
+  "/news": [NEWS_BLOG],
 
   "/services/front-desk": [SERVICE_FRONT_DESK],
   "/services/concierge": [SERVICE_CONCIERGE],
@@ -401,3 +433,9 @@ export const ROUTE_JSONLD = {
   "/auto-shops": [SERVICE_AUTO],
   "/restaurants": [SERVICE_RESTAURANTS],
 };
+
+/* One BlogPosting per news post — appended so a new post in news-data.js
+   automatically gets its Article schema. */
+POSTS.forEach((p) => {
+  ROUTE_JSONLD[`/news/${p.slug}`] = [blogPosting(p)];
+});

@@ -13,8 +13,11 @@ import Contact from "./pages/Contact";
 import RelationshipPage from "./pages/RelationshipPage";
 import { RELATIONSHIPS } from "./relationships-data";
 import { SERVICES } from "./services-data";
+import { POSTS } from "./news-data.js";
 import Book from "./pages/Book";
 import Demo from "./pages/Demo";
+import News from "./pages/News";
+import NewsDetail from "./pages/NewsDetail";
 import RootError from "./components/RootError";
 
 /* Relationship-channel landing pages — vertical-specific pages for warm
@@ -31,6 +34,7 @@ function RestaurantsPage() { return <RelationshipPage rel={RELATIONSHIPS.restaur
    process-modernization) and /ai-receptionist 301 in vercel.json. */
 const SERVICE_PATHS = SERVICES.map((s) => `services/${s.slug}`);
 const SHEET_PATHS = SERVICES.map((s) => `sheets/${s.slug}`);
+const NEWS_PATHS = POSTS.map((p) => `news/${p.slug}`);
 
 export const routes = [
   {
@@ -59,6 +63,12 @@ export const routes = [
       { path: "auto-shops", Component: AutoShopsPage },
       { path: "restaurants", Component: RestaurantsPage },
       { path: "testimonials", Component: Testimonials },
+      { path: "news", Component: News },
+      {
+        path: "news/:slug",
+        Component: NewsDetail,
+        getStaticPaths: () => NEWS_PATHS,
+      },
       { path: "team", Component: Team },
       { path: "book", Component: Book },
       { path: "demo", Component: Demo },
