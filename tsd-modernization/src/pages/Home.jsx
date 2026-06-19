@@ -168,10 +168,9 @@ function Hero() {
           <br />
           your business is leaking —
           <br />
-          <span style={{
-            fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
-            color: "var(--c-hero-text-strong)",
-          }}>and build what stops it.</span>
+          {/* Same bold sans as the rest of the headline; emphasis via the brand
+              accent instead of an italic serif (cleaner + far more legible). */}
+          <span style={{ color: "var(--c-accent)" }}>and build what stops it.</span>
         </h1>
 
         <DiamondDivider width={150} style={{ marginBottom: SPACE.md }} />
