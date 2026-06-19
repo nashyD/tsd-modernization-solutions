@@ -551,7 +551,10 @@ export function Button({
       base: {
         background: C.gradientAccent,
         color: "#fff",
-        border: "1px solid transparent",
+        // Even glass rim. A transparent border let the diagonal gradient clamp
+        // into the 1px border ring (background-clip border-box), making the edge
+        // look muddy/uneven at the dark corner; a real rim is clean all around.
+        border: "1px solid rgba(255,255,255,0.25)",
         boxShadow: hovered
           ? "0 12px 28px rgba(75,156,211,0.42), inset 0 1px 0 rgba(255,255,255,0.18)"
           : "0 6px 18px rgba(75,156,211,0.32), inset 0 1px 0 rgba(255,255,255,0.18)",
@@ -562,7 +565,8 @@ export function Button({
       base: {
         background: C.gradientPrism,
         color: "#fff",
-        border: "1px solid transparent",
+        // Even glass rim (see primary above) — clean edge on the dark prism.
+        border: "1px solid rgba(255,255,255,0.25)",
         boxShadow: hovered
           ? "0 14px 32px rgba(19,41,75,0.42), inset 0 1px 0 rgba(255,255,255,0.18)"
           : "0 6px 18px rgba(19,41,75,0.32), inset 0 1px 0 rgba(255,255,255,0.18)",
