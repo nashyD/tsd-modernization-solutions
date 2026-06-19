@@ -235,7 +235,7 @@ export default function Savings() {
               />
 
               <p style={{
-                fontFamily: "var(--font-display)", fontStyle: "italic",
+                fontFamily: "var(--font-body)", fontStyle: "normal",
                 fontSize: "13px", color: v("text-dim"), lineHeight: 1.6,
                 margin: `${SPACE.md} 0 0`,
               }}>

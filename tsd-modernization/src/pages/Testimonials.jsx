@@ -112,7 +112,7 @@ export default function Testimonials() {
                 pointerEvents: "none",
               }} />
               <div style={{
-                fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
+                fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
                 fontSize: "32px", letterSpacing: "-1px",
                 background: C.gradientAccent,
                 WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
@@ -122,8 +122,8 @@ export default function Testimonials() {
                 {num}
               </div>
               <div style={{
-                fontSize: "14px", color: v("text-dim"), fontStyle: "italic",
-                fontFamily: "var(--font-display)",
+                fontSize: "14px", color: v("text-dim"), fontStyle: "normal",
+                fontFamily: "var(--font-body)",
               }}>
                 Client name, outcome, and case study land here once the first builds wrap.
               </div>
@@ -211,7 +211,7 @@ function LedgerColumn({ col, delay }) {
           <Icon size={22} />
         </div>
         <div style={{
-          fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
+          fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
           fontSize: "44px", color: v("text-dim"), lineHeight: 0.9, letterSpacing: "-1.5px",
         }}>{col.number}</div>
       </div>
@@ -245,7 +245,7 @@ function LedgerColumn({ col, delay }) {
           {col.sampleLabel}
         </div>
         <div style={{
-          fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 500,
+          fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 400,
           fontSize: "14px", lineHeight: 1.5, color: v("text"),
         }}>
           {col.sample}

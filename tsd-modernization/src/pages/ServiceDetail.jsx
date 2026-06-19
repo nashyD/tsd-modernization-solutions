@@ -214,7 +214,7 @@ function SavesSection({ service }) {
           </p>
         </div>
         <p style={{
-          fontFamily: "var(--font-display)", fontStyle: "italic",
+          fontFamily: "var(--font-body)", fontStyle: "normal",
           fontSize: "13px", color: v("text-dim"), lineHeight: 1.6,
           margin: `${SPACE.md} 0 0`,
         }}>
@@ -249,7 +249,7 @@ function StepsSection({ steps }) {
         {steps.map((s, i) => (
           <Card key={s.num} delay={i * 100}>
             <div style={{
-              fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
+              fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
               fontSize: "26px",
               background: C.gradientAccent,
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
@@ -290,8 +290,8 @@ function ComparisonSection({ comparison }) {
             }}>
               <Eyebrow color={v("text-muted")} diamond={false}>{comparison.theirsLabel}</Eyebrow>
               <div style={{
-                fontSize: "12px", fontStyle: "italic", color: v("text-dim"),
-                marginTop: "6px", fontFamily: "var(--font-display)",
+                fontSize: "12px", fontStyle: "normal", color: v("text-dim"),
+                marginTop: "6px", fontFamily: "var(--font-body)",
               }}>{comparison.theirsNote}</div>
             </div>
             <div style={{
@@ -301,8 +301,8 @@ function ComparisonSection({ comparison }) {
             }}>
               <Eyebrow>TSD</Eyebrow>
               <div style={{
-                fontSize: "12px", fontStyle: "italic", color: v("text-muted"),
-                marginTop: "6px", fontFamily: "var(--font-display)",
+                fontSize: "12px", fontStyle: "normal", color: v("text-muted"),
+                marginTop: "6px", fontFamily: "var(--font-body)",
               }}>Charlotte metro</div>
             </div>
           </div>
@@ -457,7 +457,7 @@ export default function ServiceDetail() {
           </div>
           <p style={{
             fontSize: "13px", color: v("text-dim"), textAlign: "center",
-            marginTop: SPACE.lg, fontStyle: "italic", fontFamily: "var(--font-display)",
+            marginTop: SPACE.lg, fontStyle: "normal", fontFamily: "var(--font-body)",
           }}>
             Video demos are being produced — check back soon.
           </p>
@@ -503,7 +503,7 @@ export default function ServiceDetail() {
             lineHeight: 1.15,
           }}>
             Ready to <span style={{
-              fontFamily: "var(--font-display)", fontStyle: "italic",
+              fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
             }}>stop the leak?</span>
           </h3>
           <p style={{

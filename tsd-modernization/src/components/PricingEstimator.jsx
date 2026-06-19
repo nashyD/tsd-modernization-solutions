@@ -216,7 +216,7 @@ export default function PricingEstimator() {
             <div style={{ position: "relative" }}>
               <Eyebrow style={{ marginBottom: SPACE.md }}>Your estimate</Eyebrow>
               <p style={{
-                fontFamily: "var(--font-display)", fontStyle: "italic",
+                fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
                 fontSize: "19px", lineHeight: 1.5, color: v("text-muted"),
               }}>
                 Pick at least one thing you want running and your estimate appears here.

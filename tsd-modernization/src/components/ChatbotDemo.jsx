@@ -127,7 +127,6 @@ const BG = "#0a1628";
 const CARD_GRAD = "linear-gradient(165deg, #6fb3e8 0%, #4d8dc7 50%, #2f6aa3 100%)";
 const CARD_DARK = "#16202f";
 const MINT = "#5dd4a8";
-const SERIF = '"Cormorant Garamond", "Playfair Display", Georgia, serif';
 const SANS = 'Inter, "Helvetica Neue", system-ui, sans-serif';
 
 // ── Pricing page chrome (top bar, call-us button) ───────────────────────────
@@ -245,8 +244,8 @@ function PricingTier({ phase, title, oldPrice, price, rateLabel, badge, popular,
       {oldPrice && (
         <div style={{
           textAlign: "center", marginTop: 14,
-          fontFamily: SERIF, fontStyle: "italic",
-          fontSize: 22, fontWeight: 500,
+          fontFamily: "var(--font-body)", fontStyle: "normal",
+          fontSize: 22, fontWeight: 700,
           textDecoration: "line-through",
           color: isPopular ? "rgba(10,22,40,0.45)" : "rgba(220,232,245,0.35)",
         }}>{oldPrice}</div>
@@ -254,8 +253,8 @@ function PricingTier({ phase, title, oldPrice, price, rateLabel, badge, popular,
 
       <div style={{
         textAlign: "center",
-        fontFamily: SERIF, fontStyle: "italic",
-        fontSize: 64, fontWeight: 500,
+        fontFamily: "var(--font-body)", fontStyle: "normal",
+        fontSize: 64, fontWeight: 700,
         lineHeight: 1,
         color: isPopular ? "#0a1628" : "#dce8f5",
         marginTop: oldPrice ? 4 : 18,
@@ -333,7 +332,7 @@ function PricingTier({ phase, title, oldPrice, price, rateLabel, badge, popular,
         }}>
           {footer.italic && (
             <div style={{
-              fontFamily: SERIF, fontStyle: "italic", fontSize: 10.5,
+              fontFamily: "var(--font-body)", fontStyle: "normal", fontSize: 10.5,
               textAlign: "center", marginBottom: 4,
               color: isPopular ? "rgba(10,22,40,0.55)" : "rgba(220,232,245,0.4)",
             }}>{footer.italic}</div>
@@ -365,7 +364,7 @@ function PricingPage({ shift }) {
       <CallUsButton />
       <div style={{
         position: "absolute", top: 84, left: 0, right: 0,
-        textAlign: "center", fontFamily: SERIF, fontStyle: "italic",
+        textAlign: "center", fontFamily: "var(--font-body)", fontStyle: "normal",
         fontSize: 13, color: "rgba(220,232,245,0.4)",
       }}>
         match your reputation.
@@ -550,8 +549,8 @@ function ChatWidget({ openProgress, messages, typing, inputText, sendingFlash })
         </div>
         <div style={{
           marginTop: 4,
-          fontFamily: SERIF, fontStyle: "italic",
-          fontSize: 22, fontWeight: 500, color: "#dce8f5",
+          fontFamily: "var(--font-body)", fontStyle: "normal",
+          fontSize: 22, fontWeight: 700, color: "#dce8f5",
           letterSpacing: "-0.01em",
         }}>
           TSD Modernization

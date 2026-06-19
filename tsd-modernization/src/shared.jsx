@@ -230,15 +230,17 @@ export function DoubleLine({ width = 200, style }) {
   );
 }
 
-/* Reusable text gradient — the accent italic on most headlines.
-   Inline-block so the bleed clipping doesn't crop descenders. */
-export function GradientText({ children, gradient = C.gradientAccent, italic = true, style }) {
+/* Reusable accent text — the gradient-filled emphasis on most headlines.
+   Bold sans (no italic serif); the gradient fill carries the emphasis.
+   Inline-block so the bleed clipping doesn't crop descenders. The `italic`
+   prop is accepted for back-compat but no longer renders cursive. */
+export function GradientText({ children, gradient = C.gradientAccent, style }) {
   return (
     <span style={{
       display: "inline-block",
-      fontFamily: italic ? "var(--font-display)" : "var(--font-body)",
-      fontStyle: italic ? "italic" : "normal",
-      fontWeight: 700,
+      fontFamily: "var(--font-body)",
+      fontStyle: "normal",
+      fontWeight: 800,
       background: gradient,
       WebkitBackgroundClip: "text",
       WebkitTextFillColor: "transparent",
@@ -705,9 +707,9 @@ export function StatTile({ value, label, note, large, fadeRef, style }) {
       }}>{label}</div>
       {note && (
         <div style={{
-          fontSize: "12px", fontStyle: "italic",
+          fontSize: "12px", fontStyle: "normal",
           color: v("text-dim"),
-          fontFamily: "var(--font-display)",
+          fontFamily: "var(--font-body)",
         }}>{note}</div>
       )}
     </div>

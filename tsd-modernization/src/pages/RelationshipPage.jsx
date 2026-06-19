@@ -157,7 +157,7 @@ function ClosingCTA({ rel }) {
     }}>
       <DiamondDivider width={120} style={{ marginBottom: SPACE.lg }} />
       <p style={{
-        fontFamily: "var(--font-display)", fontStyle: "italic",
+        fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
         fontSize: "22px", lineHeight: 1.45, color: v("text"),
         marginBottom: SPACE.sm,
       }}>

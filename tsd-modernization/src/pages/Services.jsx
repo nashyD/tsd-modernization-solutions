@@ -83,7 +83,7 @@ function ServiceCard({ service, delay, badge }) {
             color: v("text-muted"), marginBottom: SPACE.sm,
           }}>{service.desc}</p>
           <p style={{
-            fontFamily: "var(--font-display)", fontStyle: "italic",
+            fontFamily: "var(--font-body)", fontStyle: "normal",
             fontSize: "15px", lineHeight: 1.6,
             color: v("accent-light"), marginBottom: SPACE.md,
           }}>{service.saves}</p>

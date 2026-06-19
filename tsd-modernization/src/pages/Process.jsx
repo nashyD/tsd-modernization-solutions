@@ -82,7 +82,7 @@ export default function Process() {
                   boxShadow: SHADOW.sm,
                 }}>
                   <span style={{
-                    fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
+                    fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
                     fontSize: "32px",
                     background: C.gradientAccent,
                     WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
@@ -102,7 +102,7 @@ export default function Process() {
                   }}>{s.desc}</p>
                   <p style={{
                     fontSize: "13px", lineHeight: 1.65, color: v("text-dim"),
-                    fontStyle: "italic", fontFamily: "var(--font-display)",
+                    fontStyle: "normal", fontFamily: "var(--font-body)",
                   }}>{s.detail}</p>
                 </div>
               </Card>

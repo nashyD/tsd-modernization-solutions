@@ -367,7 +367,7 @@ function SegmentStrip() {
         <div style={{
           display: "flex", flexWrap: "wrap", justifyContent: "center",
           alignItems: "center", rowGap: "4px",
-          fontFamily: "var(--font-display)", fontStyle: "italic",
+          fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
           fontSize: "clamp(15px, 2vw, 22px)", color: v("text"),
           lineHeight: 1.5, letterSpacing: "0.1px",
         }}>
@@ -432,7 +432,7 @@ function ServiceTicker() {
         {loop.map((item, i) => (
           <span key={i} style={{
             display: "inline-flex", alignItems: "center", gap: "56px",
-            fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 500,
+            fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
             fontSize: "clamp(22px, 3vw, 34px)",
             color: v("text-muted"), letterSpacing: "0.5px",
           }}>
@@ -505,7 +505,7 @@ function Stats() {
 
           <div style={{ position: "relative" }}>
             <div className="stats-hero-num" style={{
-              fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
+              fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
               fontSize: "clamp(96px, 13vw, 156px)", lineHeight: 1.05, letterSpacing: "-4px",
               background: C.gradientAccent,
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
@@ -599,8 +599,8 @@ function SupportStat({ forwardRef, value, label, note }) {
         {label}
       </div>
       <div style={{
-        fontSize: "13px", fontStyle: "italic", color: v("text-dim"),
-        marginTop: "6px", fontFamily: "var(--font-display)",
+        fontSize: "13px", fontStyle: "normal", color: v("text-dim"),
+        marginTop: "6px", fontFamily: "var(--font-body)",
       }}>
         — {note}
       </div>
@@ -800,7 +800,7 @@ function WhyCard({ beat, index }) {
           borderBottom: `1px solid ${v("divider-soft")}`,
         }}>
           <span style={{
-            fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
+            fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
             fontSize: "60px", lineHeight: 1.05,
             background: C.gradientAccent,
             WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
@@ -835,7 +835,7 @@ function WhyCard({ beat, index }) {
           borderBottom: `1px solid ${v("divider-soft")}`,
         }}>
           <div style={{
-            fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
+            fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
             fontSize: "78px", lineHeight: 0.9,
             color: v("accent"), opacity: 0.45,
             marginBottom: "4px",
@@ -910,13 +910,13 @@ function FoundersStrip() {
         alignItems: "center",
       }}>
         <div aria-hidden="true" style={{
-          fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
+          fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
           fontSize: "clamp(80px, 10vw, 152px)", lineHeight: 0.92,
           color: v("accent"), opacity: 0.4, marginTop: "-8px",
         }}>&ldquo;</div>
         <div>
           <p style={{
-            fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 400,
+            fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
             fontSize: "clamp(20px, 2.6vw, 28px)", lineHeight: 1.4, color: v("text"),
             marginBottom: SPACE.md, letterSpacing: "-0.3px",
           }}>
@@ -986,7 +986,7 @@ function FoundingClientOffer() {
           Make your digital side
           <br />
           <span style={{
-            fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700,
+            fontFamily: "var(--font-body)", fontStyle: "normal", fontWeight: 700,
           }}>match your reputation.</span>
         </h2>
         <p style={{
