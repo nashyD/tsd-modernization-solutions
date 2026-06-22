@@ -164,13 +164,11 @@ function Hero() {
           letterSpacing: "-2px", lineHeight: 1.04,
           color: "var(--c-hero-text)", marginBottom: SPACE.sm,
         }}>
-          We find the money
+          We find the leak.
           <br />
-          your business is leaking —
-          <br />
-          {/* Same bold sans as the rest of the headline; emphasis via the brand
-              accent instead of an italic serif (cleaner + far more legible). */}
-          <span style={{ color: "var(--c-accent)" }}>and build what stops it.</span>
+          {/* Empowerment payoff in the brand accent (cleaner + far more
+              legible than an italic serif). */}
+          <span style={{ color: "var(--c-accent)" }}>You outrun the franchise.</span>
         </h1>
 
         <DiamondDivider width={150} style={{ marginBottom: SPACE.md }} />
@@ -181,7 +179,7 @@ function Hero() {
           color: "var(--c-hero-text-soft)",
           maxWidth: "580px", margin: "0 auto 20px",
         }}>
-          Missed after-hours calls, slow quotes, forgotten subscriptions — one local bakery was losing $540 a month until we cut it. Custom websites and AI for established Charlotte businesses. <span style={{ fontWeight: 700, color: "var(--c-hero-text)" }}>Priced to your size — managed by us, or owned by you.</span>
+          We find the money your business is already leaking, missed calls, slow quotes, forgotten subscriptions, and build what stops it with the same AI the big players run. One local bakery was losing $540 a month until we cut it, and the saving covers the fee. Custom websites and AI for established Charlotte businesses. <span style={{ fontWeight: 700, color: "var(--c-hero-text)" }}>Priced to your size, managed by us or owned by you.</span>
         </p>
 
         <div ref={r4} style={{
@@ -719,19 +717,19 @@ function LeakCard({ leak, index }) {
 /* ── Why we do this ────────────────────────────────────────────── */
 const WHY_BEATS = [
   {
-    label: "The gap",
-    title: "Your reputation outgrew your website",
-    body: "You're the name people recommend — but a dated site, scattered booking, and an after-hours phone that rings out make you look smaller than you are. We make the digital side match the reputation you already earned.",
+    label: "Before you pay",
+    title: "We show you the leak in real dollars first",
+    body: "On a free fit call we read your missed calls, slow quotes, and recurring software spend, and put a real monthly number on what's leaking. You keep that number whether or not you hire us. No retainer to find out.",
   },
   {
-    label: "Off the critical path",
-    title: "The business shouldn't wait on you",
-    body: "When every quote, every booking, every after-hours call routes through one person, growth caps at that person's hours — and every miss has a dollar figure. We put AI on the repetitive work — answering, qualifying, scheduling — so the business keeps earning when you step away.",
+    label: "A capability, not a chore",
+    title: "We run it, so it actually gets used",
+    body: "The big franchises have an IT team and a marketing department. You don't, which is the real reason the little guy never gets the tech. We host it, tune it, and make every change for you. Want it in-house instead? Own the code and credentials outright. No lock-in either way.",
   },
   {
-    label: "Your way",
-    title: "Managed by us, or owned by you",
-    body: "Run it however fits. Managed: we host it and make every change for you — just text us. Owned: the source code, credentials, and runbook are yours from day one, with docs and a live training session. Either way it's yours — never a lock-in.",
+    label: "The real thing",
+    title: "The same AI the big players run",
+    body: "Current-generation Claude answering on your own documents with its sources shown, not a canned chatbot wearing an 'AI' sticker. The capability the chains pay enterprise money for, pointed at your shop.",
   },
 ];
 
@@ -760,7 +758,7 @@ function WhyWeDo() {
           fontSize: "18px", lineHeight: 1.6, color: v("text-muted"),
           maxWidth: "720px",
         }}>
-          Established local businesses spend years building trust — then a dated website and an owner who's become the bottleneck quietly tax it: missed calls, slow quotes, subscriptions nobody audits. We close the gap with modern websites and AI that pay for themselves.
+          Established local businesses spend years building trust, then a dated website and an owner who's become the bottleneck quietly tax it: missed calls, slow quotes, subscriptions nobody audits. We close the gap with the same modern websites and AI the big players run, built so they pay for themselves.
         </p>
       </div>
 

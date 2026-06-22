@@ -188,7 +188,13 @@ function SavesSection({ service }) {
     <section style={{ marginBottom: SPACE["3xl"] }}>
       <div style={glassPanel(true)}>
         {glassRim}
-        <Eyebrow style={{ marginBottom: SPACE.lg }}>What this saves you</Eyebrow>
+        <Eyebrow style={{ marginBottom: SPACE.md }}>What this saves you</Eyebrow>
+        <p style={{
+          fontSize: "15px", color: v("text-muted"), lineHeight: 1.6,
+          margin: `0 0 ${SPACE.lg}`, maxWidth: "52ch",
+        }}>
+          The same technology the big franchises run, sized to your shop. Here is what it puts back in your pocket.
+        </p>
         <div>
           {service.savesRows.map((row, i) => (
             <div key={i} style={{
