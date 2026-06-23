@@ -652,7 +652,7 @@ export default function Layout() {
                   );
                 })}
                 <div style={{ height: "1px", background: v("divider"), margin: "8px 14px" }} />
-                {/* Free audit + Client portal — both cross-app rewrites to the
+                {/* Free audit + TSD Portal — both cross-app rewrites to the
                     Next.js app. Plain <a> so the browser does a full nav
                     (react-router would client-side route and 404 since
                     /audit and /app aren't marketing-site routes). */}
@@ -694,7 +694,7 @@ export default function Layout() {
                     e.currentTarget.style.color = v("text-dim");
                   }}
                 >
-                  <span>Client portal</span>
+                  <span>TSD Portal</span>
                   <ArrowRightIcon size={13} />
                 </a>
                 <div style={{ height: "1px", background: v("divider"), margin: "8px 14px" }} />
