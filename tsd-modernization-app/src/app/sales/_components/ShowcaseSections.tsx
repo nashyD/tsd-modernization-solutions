@@ -223,7 +223,7 @@ export function AssetsCard({ assets }: { assets: Showcase["assets"] }) {
  * yet. (Bisque is a Belmont, NC wholesaler — same county as most prospects.)
  */
 export function ProofCard() {
-  const url = "https://bisque-imports.vercel.app";
+  const url = "https://clay.bisqueimports.com";
   const qr = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(url)}`;
   return (
     <section className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
