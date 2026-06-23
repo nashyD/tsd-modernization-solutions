@@ -1,15 +1,13 @@
-import { ListChecks, CheckCircle2, Clock, Circle } from "lucide-react";
-import {
-  requireUser,
-  getMemberships,
-  getActiveClient,
-} from "@/lib/auth/require";
+import { CheckCircle2, Clock, Circle } from "lucide-react";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import type { WorkItemStatus } from "@/lib/supabase/types";
-import { PageHeader } from "@/components/ui/PageHeader";
-import { EmptyState } from "@/components/ui/EmptyState";
 
-export const dynamic = "force-dynamic";
+/**
+ * "Progress" — the client's build board (Up next / In progress / Done), read
+ * from work_items. Self-contained server section: fetches its own data given a
+ * clientId so it can drop onto the portal Overview without the page wiring the
+ * query. Admin edits in /admin/clients revalidate "/app", which re-renders this.
+ */
 
 const COLUMNS: {
   key: WorkItemStatus;
@@ -22,27 +20,12 @@ const COLUMNS: {
   { key: "done", label: "Done", icon: CheckCircle2, iconClass: "text-[var(--success)]" },
 ];
 
-export default async function ProgressPage() {
-  const { user } = await requireUser();
-  const memberships = await getMemberships(user.id);
-  const active = await getActiveClient(memberships);
-  if (!active) {
-    return (
-      <div className="space-y-6">
-        <EmptyState
-          icon={<ListChecks size={20} />}
-          title="No client linked yet"
-          description="Once you're linked to a TSD client, your build progress shows up here."
-        />
-      </div>
-    );
-  }
-
+export async function ProgressSection({ clientId }: { clientId: string }) {
   const sb = supabaseAdmin();
   const { data: items } = await sb
     .from("work_items")
     .select("id,title,description,status,completed_at")
-    .eq("client_id", active.client_id)
+    .eq("client_id", clientId)
     .order("created_at", { ascending: false });
 
   type Item = NonNullable<typeof items>[number];
@@ -51,12 +34,18 @@ export default async function ProgressPage() {
   (items ?? []).forEach((it) => grouped[it.status as WorkItemStatus]?.push(it));
 
   return (
-    <div className="space-y-8 animate-fade-up">
-      <PageHeader
-        eyebrow="Progress"
-        title="What we&rsquo;re building"
-        description="The current state of your modernization. Updated as we ship."
-      />
+    <section className="space-y-5">
+      <div>
+        <h2 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--text-muted)]">
+          Progress
+        </h2>
+        <p className="mt-1 font-display text-2xl font-semibold tracking-tight text-[var(--text)]">
+          What we&rsquo;re building
+        </p>
+        <p className="mt-1 text-sm text-[var(--text-muted)]">
+          The current state of your modernization. Updated as we ship.
+        </p>
+      </div>
 
       <div className="grid gap-4 md:grid-cols-3">
         {COLUMNS.map(({ key, label, icon: Icon, iconClass }) => (
@@ -67,9 +56,9 @@ export default async function ProgressPage() {
             <header className="mb-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Icon size={16} strokeWidth={2} className={iconClass} aria-hidden />
-                <h2 className="text-sm font-semibold tracking-tight text-[var(--text)]">
+                <h3 className="text-sm font-semibold tracking-tight text-[var(--text)]">
                   {label}
-                </h2>
+                </h3>
               </div>
               <span className="text-xs font-medium text-[var(--text-subtle)]">
                 {grouped[key].length}
@@ -103,6 +92,6 @@ export default async function ProgressPage() {
           </section>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

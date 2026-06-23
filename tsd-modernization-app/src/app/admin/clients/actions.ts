@@ -109,7 +109,7 @@ export async function upsertWorkItem(formData: FormData) {
     });
   }
   revalidatePath(`/admin/clients/${parsed.client_id}`);
-  revalidatePath("/app/progress");
+  revalidatePath("/app");
 }
 
 export async function deleteWorkItem(formData: FormData) {
@@ -119,7 +119,7 @@ export async function deleteWorkItem(formData: FormData) {
   const sb = supabaseAdmin();
   await sb.from("work_items").delete().eq("id", id);
   revalidatePath(`/admin/clients/${clientId}`);
-  revalidatePath("/app/progress");
+  revalidatePath("/app");
 }
 
 const DeleteClientSchema = z.object({ id: z.string().uuid() });

@@ -4,7 +4,7 @@ import PasskeySignInButton from "./PasskeySignInButton";
 import { Logo } from "@/components/ui/Logo";
 
 export const metadata: Metadata = {
-  title: "Sign in · TSD Client Portal",
+  title: "Sign in · TSD Portal",
   robots: { index: false, follow: false },
 };
 
@@ -19,14 +19,14 @@ export default async function LoginPage({
       <div className="mb-8 flex items-center gap-2.5">
         <Logo height={26} />
         <span className="text-sm font-semibold tracking-tight text-[var(--text)]">
-          TSD Client Portal
+          TSD Portal
         </span>
       </div>
       <h1 className="font-display text-3xl font-semibold tracking-tight text-[var(--text)]">
         Sign in
       </h1>
       <p className="mt-2 text-[var(--text-muted)]">
-        Sign in to your client portal. No password required.
+        Sign in to your portal. No password required.
       </p>
       {error && error !== "missing_code" && (
         <p className="mt-4 rounded-[10px] border border-[var(--danger)]/30 bg-[var(--danger-soft)] px-4 py-3 text-sm text-[var(--danger)]">

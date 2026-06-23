@@ -1,16 +1,15 @@
 import { CloudUpload, ExternalLink } from "lucide-react";
-import {
-  requireUser,
-  getMemberships,
-  getActiveClient,
-} from "@/lib/auth/require";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { env } from "@/lib/env";
-import { PageHeader } from "@/components/ui/PageHeader";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Badge } from "@/components/ui/Badge";
 
-export const dynamic = "force-dynamic";
+/**
+ * "Production build" — the latest Vercel deployment of the client's site.
+ * Self-contained server section: fetches the client's vercel_project_id and the
+ * deployment given a clientId. Admins see a diagnostic line when the Vercel API
+ * call fails. Lives as a section so it can sit alongside the snapshot on /app/site.
+ */
 
 interface VercelDeployment {
   uid: string;
@@ -66,45 +65,39 @@ function stateTone(state: string): "emerald" | "amber" | "red" | "neutral" {
   return "neutral";
 }
 
-export default async function DeploymentPage() {
-  const { user } = await requireUser();
-  const memberships = await getMemberships(user.id);
-  const active = await getActiveClient(memberships);
-  if (!active) {
-    return (
-      <div className="space-y-6">
-        <EmptyState
-          icon={<CloudUpload size={20} />}
-          title="No client linked yet"
-          description="Once your project is linked, the latest deployment shows up here."
-        />
-      </div>
-    );
-  }
-
+export async function DeploymentSection({
+  clientId,
+  isAdmin,
+}: {
+  clientId: string;
+  isAdmin: boolean;
+}) {
   const sb = supabaseAdmin();
   const { data: client } = await sb
     .from("clients")
     .select("name,vercel_project_id,website_url")
-    .eq("id", active.client_id)
+    .eq("id", clientId)
     .single();
 
-  const isAdmin = memberships.some((m) => m.role === "admin");
   const fetchResult = client?.vercel_project_id
     ? await fetchLatestDeployment(client.vercel_project_id)
     : null;
   const deployment = fetchResult?.ok ? fetchResult.deployment : null;
-  const fetchError =
-    fetchResult && !fetchResult.ok ? fetchResult.reason : null;
+  const fetchError = fetchResult && !fetchResult.ok ? fetchResult.reason : null;
 
   return (
-    <div className="space-y-8 animate-fade-up">
-
-      <PageHeader
-        eyebrow="Deployment"
-        title="Production build"
-        description="The latest version of your site, live on Vercel."
-      />
+    <section className="space-y-5">
+      <div>
+        <h2 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--text-muted)]">
+          Deployment
+        </h2>
+        <p className="mt-1 font-display text-2xl font-semibold tracking-tight text-[var(--text)]">
+          Production build
+        </p>
+        <p className="mt-1 text-sm text-[var(--text-muted)]">
+          The latest version of your site, live on Vercel.
+        </p>
+      </div>
 
       {!client?.vercel_project_id && (
         <EmptyState
@@ -135,12 +128,12 @@ export default async function DeploymentPage() {
       )}
 
       {deployment && (
-        <section className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
+        <div className="rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <h2 className="text-base font-semibold tracking-tight text-[var(--text)]">
+              <h3 className="text-base font-semibold tracking-tight text-[var(--text)]">
                 Latest deployment
-              </h2>
+              </h3>
               <p className="mt-1 text-sm text-[var(--text-subtle)]">
                 {new Date(deployment.created).toLocaleString()}
               </p>
@@ -176,8 +169,8 @@ export default async function DeploymentPage() {
               </div>
             )}
           </dl>
-        </section>
+        </div>
       )}
-    </div>
+    </section>
   );
 }

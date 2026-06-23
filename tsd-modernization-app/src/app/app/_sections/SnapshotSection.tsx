@@ -1,39 +1,22 @@
-import { LineChart, ArrowUp, ArrowDown, Minus } from "lucide-react";
-import {
-  requireUser,
-  getMemberships,
-  getActiveClient,
-} from "@/lib/auth/require";
+import { ArrowUp, ArrowDown, Minus } from "lucide-react";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { AuditScoresSchema } from "@/lib/audit/types";
 import type { AuditScores } from "@/lib/audit/types";
-import { PageHeader } from "@/components/ui/PageHeader";
-import { EmptyState } from "@/components/ui/EmptyState";
 
-export const dynamic = "force-dynamic";
+/**
+ * "Monthly snapshot" — the client's presence score and its month-over-month
+ * delta, from the two most recent ready audits. Self-contained server section:
+ * fetches its own audits given a clientId so it can sit alongside the deployment
+ * card on /app/site.
+ */
 
-export default async function SnapshotPage() {
-  const { user } = await requireUser();
-  const memberships = await getMemberships(user.id);
-  const active = await getActiveClient(memberships);
-  if (!active) {
-    return (
-      <div className="space-y-6">
-        <EmptyState
-          icon={<LineChart size={20} />}
-          title="No client linked yet"
-          description="Your monthly snapshot diff appears here once you have a TSD client account."
-        />
-      </div>
-    );
-  }
-
+export async function SnapshotSection({ clientId }: { clientId: string }) {
   const sb = supabaseAdmin();
   const { data: audits } = await sb
     .from("audits")
     .select("id,scores,created_at,status")
     .eq("owner_type", "client")
-    .eq("owner_id", active.client_id)
+    .eq("owner_id", clientId)
     .eq("status", "ready")
     .order("created_at", { ascending: false })
     .limit(2);
@@ -41,15 +24,27 @@ export default async function SnapshotPage() {
   const latest = audits?.[0];
   const previous = audits?.[1];
 
+  const header = (subtitle: string) => (
+    <div>
+      <h2 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--text-muted)]">
+        Monthly snapshot
+      </h2>
+      <p className="mt-1 font-display text-2xl font-semibold tracking-tight text-[var(--text)]">
+        {latest
+          ? `Latest audit · ${new Date(latest.created_at).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}`
+          : "How your presence is trending"}
+      </p>
+      <p className="mt-1 text-sm text-[var(--text-muted)]">{subtitle}</p>
+    </div>
+  );
+
   if (!latest) {
     return (
-      <div className="space-y-8 animate-fade-up">
-        <PageHeader
-          eyebrow="Monthly snapshot"
-          title="No snapshot yet"
-          description="We'll re-run your audit on a monthly cadence and show the diff here. The first one lands within 30 days of your build going live."
-        />
-      </div>
+      <section className="space-y-5">
+        {header(
+          "We'll re-run your audit on a monthly cadence and show the diff here. The first one lands within 30 days of your build going live.",
+        )}
+      </section>
     );
   }
 
@@ -58,26 +53,23 @@ export default async function SnapshotPage() {
 
   if (!latestScores.success) {
     return (
-      <div className="space-y-6">
+      <section className="space-y-5">
+        {header("How your online presence is trending.")}
         <div className="rounded-[14px] border border-[var(--warning)]/30 bg-[var(--warning-soft)] p-5 text-[var(--warning)]">
           Snapshot data is malformed. The TSD team has been notified.
         </div>
-      </div>
+      </section>
     );
   }
 
   return (
-    <div className="space-y-8 animate-fade-up">
-      <PageHeader
-        eyebrow="Monthly snapshot"
-        title={`Latest audit · ${new Date(latest.created_at).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}`}
-        description="How your online presence is trending. We re-run the audit every 30 days."
-      />
+    <section className="space-y-5">
+      {header("How your online presence is trending. We re-run the audit every 30 days.")}
       <ScoreSummary
         latest={latestScores.data}
         previous={prevScores?.success ? prevScores.data : null}
       />
-    </div>
+    </section>
   );
 }
 

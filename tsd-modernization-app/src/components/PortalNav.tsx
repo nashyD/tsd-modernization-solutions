@@ -10,11 +10,8 @@ import {
   Inbox,
   TicketPercent,
   Building2,
-  Package,
-  ListChecks,
-  Rocket,
+  Globe,
   Phone,
-  Camera,
   ArrowUpRight,
   KeyRound,
   type LucideIcon,
@@ -24,7 +21,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { SignOutButton } from "@/components/SignOutButton";
 
 /**
- * Single shared header for the whole internal portal (Sales, Admin, Client
+ * Single shared header for the whole internal portal (Sales, Admin, TSD
  * Portal). Replaces three drifting bespoke navs with one app-shell:
  *   row 1 — brand + workspace switcher (Sales / Admin / Portal, role-gated) + utility cluster
  *   row 2 — the current workspace's section tabs as a horizontally-scrollable
@@ -71,16 +68,13 @@ const WORKSPACES: Workspace[] = [
   },
   {
     key: "portal",
-    label: "Client Portal",
+    label: "TSD Portal",
     href: "/app",
     adminOnly: false,
     sections: [
       { label: "Overview", href: "/app", icon: LayoutDashboard, exact: true },
-      { label: "Package", href: "/app/package", icon: Package },
-      { label: "Progress", href: "/app/progress", icon: ListChecks },
-      { label: "Deployment", href: "/app/deployment", icon: Rocket },
+      { label: "Site", href: "/app/site", icon: Globe },
       { label: "Voice", href: "/app/voice", icon: Phone },
-      { label: "Snapshot", href: "/app/snapshot", icon: Camera },
     ],
   },
 ];

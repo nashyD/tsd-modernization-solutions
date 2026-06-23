@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/Card";
 import PasskeyManager from "./PasskeyManager";
 
 export const metadata: Metadata = {
-  title: "Account · TSD Client Portal",
+  title: "Account · TSD Portal",
   robots: { index: false, follow: false },
 };
 
