@@ -448,7 +448,9 @@ export default function Layout() {
           .site-nav-brand-text-2 { font-size: 8px !important; letter-spacing: 3.5px !important; }
           .site-nav-menu-btn { padding: 9px 14px !important; }
         }
-        @media (max-width: 360px) {
+        @media (max-width: 480px) {
+          /* On phones, hide the wordmark text so the always-visible "Book a fit
+             call" CTA and the Menu button have room without crowding. */
           .site-nav-brand-text { display: none !important; }
         }
 
@@ -594,6 +596,7 @@ export default function Layout() {
 
           <Link to="/book" style={{ textDecoration: "none" }}>
             <Button as="span" variant="secondary" size="sm" style={{
+              whiteSpace: "nowrap",
               filter: scrolled ? "none" : "drop-shadow(0 4px 14px rgba(0,0,0,0.35))",
             }}>
               Book a fit call
