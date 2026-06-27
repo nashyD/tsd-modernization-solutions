@@ -7,7 +7,7 @@ import {
 import PageShell from "./PageShell";
 
 const STEPS = [
-  { num: "01", title: "Fit call", desc: "A 1-2 hour conversation where we walk through your business, your operations, and what you'd want modernized. You leave with a clear read on whether we're the right fit.", detail: "In-person or remote. Free, no commitment. If we're a match, the next step is a fixed-price proposal for a custom build scoped to your business." },
+  { num: "01", title: "Fit call", desc: "A 30-minute conversation where we walk through your business, your operations, and what you'd want modernized. You leave with a clear read on whether we're the right fit.", detail: "In-person or remote. Free, no commitment. If we're a match, the next step is a fixed-price proposal for a custom build scoped to your business." },
   { num: "02", title: "Proposal", desc: "Within 48 hours, you receive a written modernization roadmap with clear scope, timeline, and pricing. No surprises.", detail: "Typically 2-4 pages. Includes technical approach, deliverables, and payment schedule." },
   { num: "03", title: "Build", desc: "We execute the project on a 2-4 week timeline with regular check-ins. You see progress throughout, not just at the end.", detail: "Weekly updates. Revisions included. We don't disappear." },
   { num: "04", title: "Launch, your way", desc: "Go live Managed — we host it and make every change for you, just text us — or Owned, where the source code, credentials, and deployment are yours with documentation and a live training session.", detail: "Managed plans from $49/mo (site) or $73/mo (AI) keep it sharp after launch — cancel anytime." },

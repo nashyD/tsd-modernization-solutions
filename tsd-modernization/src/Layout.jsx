@@ -29,7 +29,7 @@ const NAV_ITEMS = [
    vite-react-ssg build this emits real <title>/<meta>/<link> tags
    into the static HTML shell so non-JS link-preview bots (LinkedIn,
    iMessage, Slack) see the right content per URL. */
-const SITE_URL = "https://tsd-modernization.com";
+const SITE_URL = "https://www.tsd-modernization.com";
 const ROUTE_META = {
   "/": {
     title: "Charlotte Websites + AI That Pay for Themselves | TSD Modernization Solutions",
@@ -168,6 +168,7 @@ export default function Layout() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
+  const menuBtnRef = useRef(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -190,7 +191,7 @@ export default function Layout() {
     const fn = (e) => { if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false); };
     document.addEventListener("mousedown", fn);
     /* Escape key closes dropdown — keyboard parity with the close button. */
-    const onKey = (e) => { if (e.key === "Escape") setMenuOpen(false); };
+    const onKey = (e) => { if (e.key === "Escape") { setMenuOpen(false); menuBtnRef.current?.focus(); } };
     document.addEventListener("keydown", onKey);
     return () => {
       document.removeEventListener("mousedown", fn);
@@ -601,7 +602,7 @@ export default function Layout() {
 
           {/* Menu dropdown trigger */}
           <div ref={menuRef} style={{ position: "relative" }}>
-            <button onClick={() => setMenuOpen(!menuOpen)} className="site-nav-menu-btn" style={{
+            <button ref={menuBtnRef} onClick={() => setMenuOpen(!menuOpen)} className="site-nav-menu-btn" style={{
               background: menuOpen ? v("surface") : C.gradientAccent,
               border: "none",
               cursor: "pointer",
@@ -614,14 +615,14 @@ export default function Layout() {
               lineHeight: 1,
               WebkitAppearance: "none",
               MozAppearance: "none",
-            }} aria-label="Navigation menu" aria-expanded={menuOpen}>
+            }} aria-label="Navigation menu" aria-haspopup="true" aria-controls="nav-menu-panel" aria-expanded={menuOpen}>
               {menuOpen ? <XIcon size={14} /> : <MenuIcon size={14} />}
               Menu
             </button>
 
             {/* Dropdown panel */}
             {menuOpen && (
-              <div style={{
+              <div id="nav-menu-panel" style={{
                 position: "absolute", top: "calc(100% + 14px)", right: 0,
                 minWidth: "260px", padding: "10px",
                 background: v("nav-bg"),

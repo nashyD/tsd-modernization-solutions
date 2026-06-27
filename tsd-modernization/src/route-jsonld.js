@@ -12,7 +12,7 @@
 
 import { POSTS } from "./news-data.js";
 
-const SITE = "https://tsd-modernization.com";
+const SITE = "https://www.tsd-modernization.com";
 const BUSINESS_ID = `${SITE}/#business`;
 const PROVIDER = { "@id": BUSINESS_ID };
 const AREA_SERVED = [

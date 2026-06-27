@@ -13,7 +13,7 @@ import { readdirSync, writeFileSync } from "fs";
 import { join, relative } from "path";
 
 const DIST_DIR = "dist";
-const BASE_URL = "https://tsd-modernization.com";
+const BASE_URL = "https://www.tsd-modernization.com";
 
 const PRIORITY_META = {
   "/": { priority: 1.0, changefreq: "weekly" },

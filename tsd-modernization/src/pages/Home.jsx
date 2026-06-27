@@ -242,6 +242,7 @@ function Hero() {
           ref={videoRef}
           key={isMobile ? "mobile" : "desktop"}
           className="hero-video"
+          width={1920} height={1080}
           autoPlay muted loop playsInline
           disablePictureInPicture
           disableRemotePlayback
@@ -266,6 +267,7 @@ function Hero() {
           src={isMobile ? "/hero-loop-mobile-poster.webp" : "/hero-loop-poster.webp"}
           alt=""
           aria-hidden="true"
+          width={1920} height={1080}
           style={{
             position: "absolute", inset: 0,
             width: "100%", height: "100%",
@@ -464,7 +466,7 @@ function Stats() {
         alignItems: "stretch",
       }} className="stats-grid">
         <style>{`
-          @media (max-width: 760px) {
+          @media (max-width: 768px) {
             .stats-grid { grid-template-columns: 1fr !important; }
             .stats-hero { padding: 32px !important; }
             .stats-hero-num { font-size: clamp(96px, 22vw, 140px) !important; }
