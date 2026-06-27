@@ -52,7 +52,7 @@ export default function Process() {
         padding: `${SPACE.xl} clamp(20px, 4vw, 48px) ${SPACE.lg}`,
         maxWidth: "920px", margin: "0 auto",
       }}>
-        <SectionHeader center label="How It Works" title="Our" titleAccent="process"
+        <SectionHeader as="h1" center label="How It Works" title="Our" titleAccent="process"
           sub="From first meeting to final handoff, here's how every engagement works." />
 
         <div style={{ position: "relative" }}>

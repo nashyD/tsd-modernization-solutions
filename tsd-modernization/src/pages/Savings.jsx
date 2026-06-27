@@ -175,7 +175,7 @@ export default function Savings() {
         padding: `${SPACE.xl} clamp(20px, 4vw, 48px) ${SPACE["4xl"]}`,
         maxWidth: "1140px", margin: "0 auto",
       }}>
-        <SectionHeader center label="The Calculator" title="What you're" titleAccent="losing"
+        <SectionHeader as="h1" center label="The Calculator" title="What you're" titleAccent="losing"
           sub="Four questions, sixty seconds, deliberately conservative math. The number at the end is monthly — brace for the annual one." />
 
         <section ref={ref} style={{ ...fade, maxWidth: "1000px", margin: "0 auto" }}>

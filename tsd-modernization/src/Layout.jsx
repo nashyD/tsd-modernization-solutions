@@ -592,7 +592,7 @@ export default function Layout() {
             {theme === "dark" ? <SunIcon /> : <MoonIcon />}
           </button>
 
-          <Link to="/book" className="hide-mobile" style={{ textDecoration: "none" }}>
+          <Link to="/book" style={{ textDecoration: "none" }}>
             <Button as="span" variant="secondary" size="sm" style={{
               filter: scrolled ? "none" : "drop-shadow(0 4px 14px rgba(0,0,0,0.35))",
             }}>

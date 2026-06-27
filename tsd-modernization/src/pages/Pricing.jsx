@@ -225,6 +225,7 @@ export default function Pricing() {
       }}>
         <PricingMasthead />
         <SectionHeader
+          as="h1"
           center
           label="Estimate"
           title="Build an estimate,"

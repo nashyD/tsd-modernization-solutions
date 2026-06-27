@@ -15,12 +15,14 @@ export default function Book() {
   const [r3, f3] = useFadeIn(500);
   const calendlyRef = useRef(null);
   const [mounted, setMounted] = useState(false);
+  const [loadFailed, setLoadFailed] = useState(false);
 
   useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     if (!mounted || !calendlyRef.current) return;
     let cancelled = false;
+    let tries = 0;
 
     function tryInit() {
       if (cancelled) return;
@@ -30,8 +32,14 @@ export default function Book() {
           url: CALENDLY_URL,
           parentElement: calendlyRef.current,
         });
-      } else {
+      } else if (tries < 100) {
+        // Retry for ~10s while Calendly's script finishes loading.
+        tries += 1;
         setTimeout(tryInit, 100);
+      } else {
+        // Script never arrived (blocked/offline) — surface a real fallback
+        // instead of an empty box that spins forever.
+        setLoadFailed(true);
       }
     }
 
@@ -82,6 +90,17 @@ export default function Book() {
           Every fit call includes a free <span style={{ color: v("accent") }}>cost-cut audit</span> — we tear down your software and vendor bills and show you what to cut before you spend a dollar. The kill list is yours to keep either way.
         </p>
 
+        <p style={{
+          ...f3, textAlign: "center", maxWidth: "760px",
+          margin: `0 auto ${SPACE.lg}`,
+          fontSize: "13px", fontWeight: 600, color: v("text-muted"),
+        }}>
+          Free 30-minute call{" "}
+          <span aria-hidden="true" style={{ color: v("accent") }}>·</span> A cost-cut audit you keep{" "}
+          <span aria-hidden="true" style={{ color: v("accent") }}>·</span> 48-hour written proposal{" "}
+          <span aria-hidden="true" style={{ color: v("accent") }}>·</span> 100% money-back guarantee
+        </p>
+
         <div
           ref={calendlyRef}
           style={{
@@ -104,6 +123,18 @@ export default function Book() {
             boxShadow: "var(--glass-shadow)",
           }}
         />
+
+        {loadFailed && (
+          <p style={{
+            marginTop: SPACE.md, textAlign: "center",
+            fontSize: "15px", lineHeight: 1.6, color: v("text"),
+            maxWidth: "560px", marginLeft: "auto", marginRight: "auto",
+          }}>
+            Calendar slow to load? Call{" "}
+            <a href="tel:+19808905815" style={{ color: v("accent"), fontWeight: 600 }}>(980) 890-5815</a>{" "}
+            or use the contact form below and we&apos;ll get you booked.
+          </p>
+        )}
 
         <p style={{
           marginTop: SPACE.xl, textAlign: "center",

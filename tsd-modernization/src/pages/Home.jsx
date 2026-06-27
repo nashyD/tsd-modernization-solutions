@@ -187,7 +187,7 @@ function Hero() {
           color: "var(--c-hero-text-soft)",
           maxWidth: "580px", margin: "0 auto 20px",
         }}>
-          We find the money your business is already leaking, missed calls, slow quotes, forgotten subscriptions, and build what stops it with the same AI the big players run. One local bakery was losing $540 a month until we cut it, and the saving covers the fee. Custom websites and AI for established Charlotte businesses. <span style={{ fontWeight: 700, color: "var(--c-hero-text)" }}>Priced to your size, managed by us or owned by you.</span>
+          We find the money your business is leaking from missed calls, slow quotes, and forgotten subscriptions, then build the websites and AI that stop it. One local bakery was losing $540 a month until we cut it, and the savings cover the fee. <span style={{ fontWeight: 700, color: "var(--c-hero-text)" }}>Priced to your size, managed by us or owned by you.</span>
         </p>
 
         <div ref={r4} style={{

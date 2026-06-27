@@ -155,7 +155,7 @@ export default function Services() {
         padding: `${SPACE.xl} clamp(20px, 4vw, 48px) ${SPACE["4xl"]}`,
         maxWidth: "1140px", margin: "0 auto",
       }}>
-        <SectionHeader center label="What We Build" title="Four services." titleAccent="Each one stops a leak."
+        <SectionHeader as="h1" center label="What We Build" title="Four services." titleAccent="Each one stops a leak."
           sub="Missed calls, repeated answers, leads gone cold, a site that undersells you — every service below exists because a real business was losing real money there. Fixed-price proposal in 48 hours; managed by us, or owned by you." />
         <div style={{ display: "flex", flexDirection: "column", gap: SPACE.lg }} className="services-list">
           {SERVICES.filter((s) => !s.gridHidden).map((s, i) => (

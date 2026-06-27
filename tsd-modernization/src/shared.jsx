@@ -405,7 +405,7 @@ export function PillBadge({ children, tone = "accent", style }) {
   );
 }
 
-export function SectionHeader({ label, num, title, titleAccent, sub, center, style }) {
+export function SectionHeader({ label, num, title, titleAccent, sub, center, style, as: As = "h2" }) {
   const [ref, fade] = useFadeIn(0);
   const align = center ? "center" : "left";
   return (
@@ -440,7 +440,7 @@ export function SectionHeader({ label, num, title, titleAccent, sub, center, sty
           <ChapterRule label={label} num={num} style={{ marginBottom: SPACE.lg }} />
         )
       )}
-      <h2 style={{
+      <As style={{
         fontFamily: "var(--font-body)", fontWeight: 800,
         fontSize: "clamp(28px, 4vw, 44px)",
         letterSpacing: "-0.5px", lineHeight: 1.15,
@@ -454,7 +454,7 @@ export function SectionHeader({ label, num, title, titleAccent, sub, center, sty
             <GradientText>{titleAccent}</GradientText>
           </>
         )}
-      </h2>
+      </As>
       {sub && (
         <p style={{
           fontSize: "17px", lineHeight: 1.65,

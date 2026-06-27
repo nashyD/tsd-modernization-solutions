@@ -6,7 +6,7 @@ Seeded by **Cycle 1 (2026-06-27)**: 7 lenses, an independent verifier on every f
 
 ---
 
-## In Review — branch `loop/cycle-2026-06-27` (awaiting Nash)
+## In Review — branch `loop/cycle-2026-06-27` (MERGED to main + deployed to production 2026-06-27 — now live)
 
 Verified, safe-to-automate wins, each `npm run build` green and runtime-checked. No production deploy until you merge.
 
@@ -140,7 +140,7 @@ _empty — the 6:53am `tsd-loop-daily` run appends here_
 
 ## Shipped
 
-_none yet — moves here when Nash merges `loop/cycle-2026-06-27`_
+All 12 wins from cycles 1-4 were merged to `main` and deployed to production on 2026-06-27 (live on www.tsd-modernization.com). The apex→www redirect was also made permanent (308) in Vercel the same day.
 
 ## Rejected — verifier killed (kept so we do not re-litigate)
 
