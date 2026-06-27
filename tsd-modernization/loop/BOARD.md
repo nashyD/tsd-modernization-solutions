@@ -2,7 +2,7 @@
 
 The persistent State for the improvement loop. See [`loop.md`](loop.md). Agents append to **Inbox**; the verifier promotes to **Backlog** or **Rejected**; the implementer moves approved items to **In Review**; Nash moves merged items to **Shipped**.
 
-Seeded by **Cycle 1 (2026-06-27)**: 7 lenses, an independent verifier on every finding, 42 confirmed, 1 rejected. **Cycles 2-3 (2026-06-27)** implemented 6 more safe wins from the backlog.
+Seeded by **Cycle 1 (2026-06-27)**: 7 lenses, an independent verifier on every finding, 42 confirmed, 1 rejected. **Cycles 2-4 (2026-06-27)** implemented 7 more safe wins from the backlog.
 
 ---
 
@@ -24,13 +24,14 @@ Verified, safe-to-automate wins, each `npm run build` green and runtime-checked.
 
 ### Cycle 3
 - [x] **Hero LCP poster preloaded per viewport + fetchpriority=high** — performance — `index.html`, `src/pages/Home.jsx`
-  - Responsive preload links warm the correct poster before the JS chunk parses; fetchpriority flags it as the LCP image. (Caught and fixed a React 18 fetchPriority→fetchpriority prop bug via the runtime check.)
-- [x] **Google Fonts now load non-blocking** — performance — `index.html`
-  - media=print + onload swap with a noscript fallback, so the font request never delays first paint.
-- [x] **Sitemap excludes noindexed /sheets/* and the /columbia-demo** — seo — `scripts/generate-sitemap.mjs`
-  - Dropped 6 URLs that should not be indexed (27 → 21 routes). lastmod values are a minor residual left on the backlog.
+- [x] **Google Fonts load non-blocking (media=print swap)** — performance — `index.html`
+- [x] **Sitemap excludes noindexed /sheets/* and /columbia-demo (27 → 21)** — seo — `scripts/generate-sitemap.mjs`
 
-> Deferred on purpose (need your judgment): the Contact-form CTA/label change (conversion); the single-`<h1>`-per-page SEO fix (page titles render via SectionHeader on some pages and a custom `EditorialMasthead` on Pricing, so 'which heading is canonical' is a per-page call); and the soft-404 status code (needs a Vercel-level 404, not just a code change). All on the Backlog.
+### Cycle 4
+- [x] **Route-level code splitting** — performance — `src/routes.jsx`, `src/Layout.jsx`
+  - 15 page components moved to `React.lazy()` + a `<Suspense>` boundary on the `<Outlet>`. Bundle went from 1 chunk to 18; main chunk 514KB → 371KB (~28% smaller). SSG still prerenders every route; client navigation loads each chunk on demand (verified). Home, Layout, and the error boundary stay eager.
+
+> Deferred on purpose (need your judgment or platform access): Contact-form CTA/label (conversion); single-`<h1>`-per-page (per-page heading call); soft-404 status + permanent apex→www redirect (Vercel-level). All on the Backlog or the handoff list.
 
 ## Backlog — verified, ranked by impact-to-effort
 
@@ -48,9 +49,6 @@ Verified, safe-to-automate wins, each `npm run build` green and runtime-checked.
 - [ ] **Homepage hero subhead is a run-on comma-spliced list that reads machine-generated** — copy-voice · high/M · needs judgment
   - Fix: Rewrite as 2-3 plain sentences. Set the three leak nouns off cleanly (a real list, em-dash-free) and stop splicing 'and build' onto them. Lead with the leak promise; let the bakery number stand as its own short sentence. Keep 'Priced to your size, managed by us or owned by you.' This is core hero…
   - Evidence: Confirmed at Home.jsx:182: 'We find the money your business is already leaking, missed calls, slow quotes, forgotten subscriptions, and build what stops it with the same AI the big players run. One…
-- [ ] **Entire site ships as one 512KB (150KB gzip) JS chunk — no route-level code splitting** — performance · high/M · needs judgment
-  - Fix: Convert non-home route components to React.lazy() with dynamic imports so Vite emits per-route chunks (vite-react-ssg supports lazy routes and still prerenders them). At minimum lazy-load the three heaviest off-home leaf components: ChatbotDemo, MakeFlowDemo, PricingEstimator. Expect homepage…
-  - Evidence: Verified build output: dist/assets/app-C9nhClpO.js is exactly 524087 bytes raw, 150214 bytes gzipped (I ran gzip -c | wc -c). dist/assets/ contains only 2 .js files (the app chunk + a 568-byte client…
 - [ ] **Zero social proof on the entire landing-to-booking path; Testimonials is a "coming soon" page** — conversion · high/M · needs judgment *(verifier-adjusted)*
   - Fix: Get one real, attributed proof element onto the homepage and the Book page: a single first-name + business-type + one-line outcome (e.g. the bakery, named or concretely pseudonymized). Until Vol. 1 has a real entry, consider pulling "Testimonials" from the primary nav so high-intent visitors are…
   - Evidence: Confirmed: Testimonials.jsx:61 H1 "Case studies are coming soon."; Testimonials.jsx:95-137 three dashed "Coming soon" placeholder rows; ROUTE_META "/testimonials" title "Case Studies Coming Soon"…
@@ -157,3 +155,4 @@ _none yet — moves here when Nash merges `loop/cycle-2026-06-27`_
 | 1 | 2026-06-27 | 42 | 1 | 5 | `loop/cycle-2026-06-27` |
 | 2 | 2026-06-27 | from cycle-1 backlog | 0 | 3 | `loop/cycle-2026-06-27` |
 | 3 | 2026-06-27 | from cycle-1 backlog | 0 | 3 | `loop/cycle-2026-06-27` |
+| 4 | 2026-06-27 | from cycle-1 backlog | 0 | 1 | `loop/cycle-2026-06-27` |

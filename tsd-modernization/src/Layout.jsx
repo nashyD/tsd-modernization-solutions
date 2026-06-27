@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import { Head } from "vite-react-ssg";
 import { Analytics } from "@vercel/analytics/react";
@@ -718,7 +718,11 @@ export default function Layout() {
       </nav>
 
       {/* ── Content ─────────────────────────── */}
-      <main id="main" tabIndex={-1}><Outlet /></main>
+      <main id="main" tabIndex={-1}>
+        <Suspense fallback={<div style={{ minHeight: "70vh" }} aria-hidden="true" />}>
+          <Outlet />
+        </Suspense>
+      </main>
 
       {/* ── Footer ──────────────────────────── */}
       <footer style={{

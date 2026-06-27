@@ -1,24 +1,32 @@
+import { lazy } from "react";
 import Layout from "./Layout";
 import Home from "./pages/Home";
-import Services from "./pages/Services";
-import ServiceDetail from "./pages/ServiceDetail";
-import WhyUs from "./pages/WhyUs";
-import Process from "./pages/Process";
-import Pricing from "./pages/Pricing";
-import Savings from "./pages/Savings";
-import Sheet from "./pages/Sheet";
-import Testimonials from "./pages/Testimonials";
-import Team from "./pages/Team";
-import Contact from "./pages/Contact";
-import RelationshipPage from "./pages/RelationshipPage";
+import RootError from "./components/RootError";
 import { RELATIONSHIPS } from "./relationships-data";
 import { SERVICES } from "./services-data";
 import { POSTS } from "./news-data.js";
-import Book from "./pages/Book";
-import Demo from "./pages/Demo";
-import News from "./pages/News";
-import NewsDetail from "./pages/NewsDetail";
-import RootError from "./components/RootError";
+
+/* Route components are code-split: each lazy() becomes its own chunk, so a
+   visitor downloads only the page they land on instead of the whole site.
+   Layout (the shell), Home (the index + "*" fallback + LCP page), and RootError
+   (the error boundary) stay eager. vite-react-ssg still prerenders every lazy
+   route at build time; the <Outlet> is wrapped in <Suspense> in Layout.jsx so
+   client-side navigation to a not-yet-loaded chunk has a fallback. */
+const Services = lazy(() => import("./pages/Services"));
+const ServiceDetail = lazy(() => import("./pages/ServiceDetail"));
+const WhyUs = lazy(() => import("./pages/WhyUs"));
+const Process = lazy(() => import("./pages/Process"));
+const Pricing = lazy(() => import("./pages/Pricing"));
+const Savings = lazy(() => import("./pages/Savings"));
+const Sheet = lazy(() => import("./pages/Sheet"));
+const Testimonials = lazy(() => import("./pages/Testimonials"));
+const Team = lazy(() => import("./pages/Team"));
+const Contact = lazy(() => import("./pages/Contact"));
+const RelationshipPage = lazy(() => import("./pages/RelationshipPage"));
+const Book = lazy(() => import("./pages/Book"));
+const Demo = lazy(() => import("./pages/Demo"));
+const News = lazy(() => import("./pages/News"));
+const NewsDetail = lazy(() => import("./pages/NewsDetail"));
 
 /* Relationship-channel landing pages — vertical-specific pages for warm
    leads who arrived via founder DM or word-of-mouth. Wrapper functions let
