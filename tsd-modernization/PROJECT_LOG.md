@@ -121,6 +121,21 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-06-27 — Loop Engineering: a self-improving agent loop, plus cycle-1 wins
+
+**What.** Stood up a continuous improvement loop for the site, following Osmani's Loop Engineering framework. The six primitives now live under [`loop/`](loop/): the loop spec ([loop.md](loop/loop.md)), a persistent site Skill ([SKILL.md](loop/SKILL.md)), the State board ([BOARD.md](loop/BOARD.md)), three subagents (explorer / verifier / implementer in [`.claude/agents/`](.claude/agents/)), the runnable cycle engine ([cycle.workflow.js](loop/cycle.workflow.js)), and a runbook. A daily propose-only heartbeat (`tsd-loop-daily`, 6:53am) deposits verified findings into the board and never edits the site. Cycle 1 ran seven specialist lenses, had an independent verifier open every citation (42 confirmed, 1 rejected), and shipped five safe wins to branch `loop/cycle-2026-06-27` (awaiting review). The other 36 verified items sit on the board.
+
+**Why.** Closes descendants of the first-iteration audit at the top of this log: the canonical host-of-record gap (every canonical pointed at the apex, which 307-redirects to www), autoplay/contrast a11y debt, and CLS hygiene. It deliberately leaves the judgment-heavy items as proposals for Nash: the mobile sticky CTA, the Book-page risk-reversal strip, the hero-subhead rewrite, and the site-wide em-dash voice-rule sweep. The loop turns "audit once, drift later" into "audit every morning, ship on review."
+
+**Files touched.**
+- [Process.jsx](src/pages/Process.jsx) — fit-call length 1-2 hours → 30 minutes (matched the 30-min canon used everywhere else; it was the lone outlier).
+- [Layout.jsx](src/Layout.jsx) — `SITE_URL` apex → www; nav dropdown gains `aria-haspopup`/`aria-controls`, and Escape returns focus to the trigger.
+- [route-jsonld.js](src/route-jsonld.js), [index.html](index.html), [public/robots.txt](public/robots.txt), [scripts/generate-sitemap.mjs](scripts/generate-sitemap.mjs) — canonical / og:url / JSON-LD / sitemap / robots host → www.
+- [Home.jsx](src/pages/Home.jsx) — stats grid breakpoint 760 → 768px; hero `<img>`/`<video>` intrinsic `width`/`height` for CLS.
+- [loop/](loop/), [.claude/agents/](.claude/agents/) — the loop mechanism itself.
+
+**Principle reinforced.** *The human stays the ceiling.* Agents draft and an independent agent verifies, but only safe, build-green, positioning-neutral changes ship, and they ship to a branch, never to production unread.
+
 ### 2026-06-19 — Public News / Field Notes page with an inaugural post
 
 **What.** Added a public `/news` index and `/news/:slug` post page (React Router + `vite-react-ssg` prerender), driven by a `src/news-data.js` posts catalog. First post — "Field Notes #001 — Here's What We've Been Building" — recaps shipped work (the dog-fooded AI receptionist, the cited Concierge, the free cost-cut audit, demo-first builds) using only the anonymized client references already published on the site ("a Charlotte wholesale importer", "one local bakery $540/mo"). "News" added to `Layout.jsx` NAV_ITEMS (and so to the footer); per-post `<title>/<meta>` plus a `Blog` + `BlogPosting` JSON-LD generated from the catalog. SSG build prerenders both routes; sitemap now 27 routes.
