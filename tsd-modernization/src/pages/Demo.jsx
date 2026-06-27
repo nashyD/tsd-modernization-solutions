@@ -11,19 +11,19 @@ import {
 const DEMO_URL = import.meta.env.VITE_DEMO_URL || "https://tsd-rag-demo1.vercel.app";
 
 const STEPS = [
-  { n: "01", title: "Ask in plain English", body: "A visitor types or speaks a real question — pricing, hours, what's gluten-free, which service they need." },
-  { n: "02", title: "It retrieves the real docs", body: "The question is matched against that business's own menu, pricing, FAQs and policies with vector search — not guessed." },
+  { n: "01", title: "Ask in plain English", body: "A visitor types or speaks a real question, pricing, hours, what's gluten-free, which service they need." },
+  { n: "02", title: "It retrieves the real docs", body: "The question is matched against that business's own menu, pricing, FAQs and policies with vector search. Not guessed." },
   { n: "03", title: "It answers, with sources", body: "A grounded, conversational answer comes back with the exact source documents cited and clickable. No made-up facts." },
 ];
 
 const FEATURES = [
-  ["Grounded & cited", "Every answer links the source it came from — open it and verify."],
+  ["Grounded & cited", "Every answer links the source it came from. Open it and verify."],
   ["Voice + multilingual", "Speak to it and hear it back in English, Spanish, or Chinese."],
   ["Visual search", "Snap a photo of a part or a product and find the match."],
   ["Show-the-work panel", "A live look at the chunks retrieved and their similarity scores."],
   ["Embeddable anywhere", "One line of script drops it onto an existing site."],
   ["Captures leads", "Interested visitors get routed to a real conversation with you."],
-  ["Bring your own doc", "Upload a PDF or paste a link — it's indexed live and the assistant answers from your real content."],
+  ["Bring your own doc", "Upload a PDF or paste a link. It's indexed live and the assistant answers from your real content."],
 ];
 
 export default function Demo() {
@@ -43,7 +43,7 @@ export default function Demo() {
             See an AI assistant <GradientText>trained on a business like yours</GradientText>
           </h1>
           <p style={{ fontSize: "18px", lineHeight: 1.6, color: v("text-muted"), maxWidth: "640px", margin: "0 auto" }}>
-            Pick a sample business below — auto shop, salon, restaurant, law firm, or store — and talk to its assistant.
+            Pick a sample business below, auto shop, salon, restaurant, law firm, or store, and talk to its assistant.
             It answers only from that business's own documents, cites its sources, and speaks your language. This is exactly
             what TSD builds for clients.
           </p>

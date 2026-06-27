@@ -27,7 +27,7 @@ import { trackEvent } from "../analytics.js";
  */
 
 const INITIAL_GREETING =
-  "Hi — I'm the chat agent for TSD Modernization Solutions. Ask me about pricing, what we build, or whether we're a fit for your business. If you want to talk to a founder, just say so.";
+  "Hi. I'm the chat agent for TSD Modernization Solutions. Ask me about pricing, what we build, or whether we're a fit for your business. If you want to talk to a founder, just say so.";
 
 const STORAGE_KEY = "tsd-agent-conversation";
 const STORAGE_VERSION = 1;
@@ -692,7 +692,7 @@ export default function TSDAgent() {
               }}
             >
               <span style={{ color: C.success, fontSize: "10px" }}>{"◆"}</span>
-              Lead submitted — a founder will reach out within 24 hours.
+              Lead submitted. A founder will reach out within 24 hours.
             </div>
           )}
 

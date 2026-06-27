@@ -33,79 +33,79 @@ const SITE_URL = "https://www.tsd-modernization.com";
 const ROUTE_META = {
   "/": {
     title: "Charlotte Websites + AI That Pay for Themselves | TSD Modernization Solutions",
-    description: "We find the money your business is leaking — missed after-hours calls, slow quotes, forgotten subscriptions — and build what stops it. Custom websites and AI for established Charlotte businesses; one bakery saved $540/mo. Managed by us, or owned by you.",
+    description: "We find the money your business is leaking, like missed after-hours calls, slow quotes, and forgotten subscriptions, and build what stops it. Custom websites and AI for established Charlotte businesses; one bakery saved $540/mo. Managed by us, or owned by you.",
   },
   "/services": {
     title: "Websites + AI That Stop the Leak | TSD Modernization Solutions",
-    description: "Four services for established Charlotte businesses: TSD Front Desk, TSD Concierge, TSD Lead Engine, and custom websites — each priced by what it saves. Every free fit call includes a cost-cut audit. Managed by us, or owned by you.",
+    description: "Four services for established Charlotte businesses: TSD Front Desk, TSD Concierge, TSD Lead Engine, and custom websites, each priced by what it saves. Every free fit call includes a cost-cut audit. Managed by us, or owned by you.",
   },
   "/services/front-desk": {
-    title: "TSD Front Desk — AI Receptionist That Books Jobs | TSD Modernization Solutions",
-    description: "An AI receptionist on your existing phone line and chat: answers 24/7, qualifies the caller, and books real calendar slots — for a fraction of a $1,500–2,500/mo front-desk hire. From $73/mo managed; free if it books nothing in your first 30 days.",
+    title: "TSD Front Desk: AI Receptionist That Books Jobs | TSD Modernization Solutions",
+    description: "An AI receptionist on your existing phone line and chat: answers 24/7, qualifies the caller, and books real calendar slots, for a fraction of a $1,500–2,500/mo front-desk hire. From $73/mo managed; free if it books nothing in your first 30 days.",
   },
   "/services/concierge": {
-    title: "TSD Concierge — Site Assistant Trained on Your Catalog | TSD Modernization Solutions",
-    description: "Visitors ask in plain English; it answers from your real products, docs, and policies with the source linked — 24/7. Running for a Charlotte wholesale importer at $73/mo. Saves the hours your staff burns repeating the same answers.",
+    title: "TSD Concierge: Site Assistant Trained on Your Catalog | TSD Modernization Solutions",
+    description: "Visitors ask in plain English; it answers from your real products, docs, and policies with the source linked, 24/7. Running for a Charlotte wholesale importer at $73/mo. Saves the hours your staff burns repeating the same answers.",
   },
   "/services/websites": {
     title: "Custom Website Design & Redesign | Charlotte Business Web Developer",
-    description: "Fast, mobile-first custom websites with on-page SEO and analytics wired in, launched in 2-4 weeks. Saves the agency retainer: Managed hosting + edits from $49/mo, or own it outright — source code, credentials, and runbook from day one.",
+    description: "Fast, mobile-first custom websites with on-page SEO and analytics wired in, launched in 2-4 weeks. Saves the agency retainer: Managed hosting + edits from $49/mo, or own it outright with source code, credentials, and runbook from day one.",
   },
   "/services/lead-engine": {
-    title: "TSD Lead Engine — Landing Funnel + Lead Dashboard | TSD Modernization Solutions",
-    description: "A conversion-built landing funnel plus a dashboard your team actually works leads from — capture, qualify, follow up, close. Stops referrals and ad clicks from dying in an unread inbox. Running live for a Carolina insurance agency.",
+    title: "TSD Lead Engine: Landing Funnel + Lead Dashboard | TSD Modernization Solutions",
+    description: "A conversion-built landing funnel plus a dashboard your team actually works leads from: capture, qualify, follow up, close. Stops referrals and ad clicks from dying in an unread inbox. Running live for a Carolina insurance agency.",
   },
   "/services/cost-cut-audit": {
-    title: "TSD Cost-Cut Audit — Free With Your Fit Call | TSD Modernization Solutions",
+    title: "TSD Cost-Cut Audit: Free With Your Fit Call | TSD Modernization Solutions",
     description: "The free diagnostic inside every 30-minute fit call: a line-by-line teardown of your software, subscription, and vendor bills, with a kill list and a switch plan for every cut. $540/mo found at one local bakery. Yours to keep whether or not you hire us.",
   },
   "/savings": {
-    title: "Savings Calculator — What Your Business Is Losing | TSD Modernization Solutions",
-    description: "Four questions, sixty seconds: missed calls, ticket size, software spend, and your admin hours — priced with deliberately conservative math. See the monthly leak, then get a fixed-price proposal to stop it within 48 hours.",
+    title: "Savings Calculator: What Your Business Is Losing | TSD Modernization Solutions",
+    description: "Four questions, sixty seconds: missed calls, ticket size, software spend, and your admin hours, priced with deliberately conservative math. See the monthly leak, then get a fixed-price proposal to stop it within 48 hours.",
   },
   "/demo": {
-    title: "Live AI Demo — Try a RAG Assistant Trained on Your Business | TSD Modernization Solutions",
-    description: "Talk to a live AI assistant trained on a sample business — auto shop, salon, restaurant, law firm, or store. Grounded answers with cited sources, voice, and English/Spanish/Chinese. The exact concierge TSD builds for clients.",
+    title: "Live AI Demo: Try a RAG Assistant Trained on Your Business | TSD Modernization Solutions",
+    description: "Talk to a live AI assistant trained on a sample business: auto shop, salon, restaurant, law firm, or store. Grounded answers with cited sources, voice, and English/Spanish/Chinese. The exact concierge TSD builds for clients.",
   },
   "/why-us": {
-    title: "Why Us — Local, Accountable, Managed or Owned | TSD Modernization Solutions",
+    title: "Why Us: Local, Accountable, Managed or Owned | TSD Modernization Solutions",
     description: "Why established Charlotte businesses choose TSD: a local team you can reach directly, every build managed by us or owned by you, and recurring plans you can cancel anytime. See how we compare to agencies and freelancers.",
   },
   "/process": {
-    title: "Our Process — From Fit Call to Launch | TSD Modernization Solutions",
-    description: "How we work: free fit call, written proposal within 48 hours, hands-on build, then your kind of handoff — we keep it managed and current, or you take it over with source code, credentials, and runbook in hand.",
+    title: "Our Process: From Fit Call to Launch | TSD Modernization Solutions",
+    description: "How we work: free fit call, written proposal within 48 hours, hands-on build, then your kind of handoff. We keep it managed and current, or you take it over with source code, credentials, and runbook in hand.",
   },
   "/pricing": {
-    title: "Pricing & Estimate — Custom Websites + AI | TSD Modernization Solutions",
+    title: "Pricing & Estimate: Custom Websites + AI | TSD Modernization Solutions",
     description: "Build a real estimate in three clicks: your size, what you want running, and whether we manage it or you own it. Managed starts lower with a monthly you can cancel anytime ($49/mo site, $73/mo AI); Owned runs higher one-time with the full handoff included. Exact fixed price from a free fit call.",
   },
   "/salons": {
     title: "Custom Website + AI for Charlotte Salons & Spas | TSD Modernization Solutions",
-    description: "Websites and AI for established Charlotte salons and spas — consolidated booking, after-hours chat that answers from your services, and an AI front desk that books while you're with a client. Managed by us, or owned by you.",
+    description: "Websites and AI for established Charlotte salons and spas: consolidated booking, after-hours chat that answers from your services, and an AI front desk that books while you're with a client. Managed by us, or owned by you.",
   },
   "/auto-shops": {
     title: "Custom Website + AI for Charlotte Specialty Auto Shops | TSD Modernization Solutions",
-    description: "Websites and AI for established Charlotte specialty automotive shops — online quote requests, service and parts catalog lookup, and an AI front desk that captures the call you'd have missed. Managed by us, or owned by you.",
+    description: "Websites and AI for established Charlotte specialty automotive shops: online quote requests, service and parts catalog lookup, and an AI front desk that captures the call you'd have missed. Managed by us, or owned by you.",
   },
   "/restaurants": {
     title: "Custom Website + AI for Charlotte Restaurants | TSD Modernization Solutions",
-    description: "Websites and AI for established Charlotte restaurants — reservations, online ordering, and an AI assistant that answers menu and hours questions from your own content. Managed by us, or owned by you.",
+    description: "Websites and AI for established Charlotte restaurants: reservations, online ordering, and an AI assistant that answers menu and hours questions from your own content. Managed by us, or owned by you.",
   },
   "/testimonials": {
     title: "Case Studies Coming Soon | TSD Modernization Solutions",
-    description: "We're shipping our first client projects now. Real results, real outcomes, documented here — coming soon.",
+    description: "We're shipping our first client projects now. Real results, real outcomes, documented here, coming soon.",
   },
   "/team": {
-    title: "Our Team — Nash Davis, Bishop Switzer, Grant Tadlock | TSD Modernization Solutions",
-    description: "Meet the founders of TSD Modernization Solutions — a Charlotte-metro web and AI studio. When something breaks at 7pm, you talk to the person who built it.",
+    title: "Our Team: Nash Davis, Bishop Switzer, Grant Tadlock | TSD Modernization Solutions",
+    description: "Meet the founders of TSD Modernization Solutions, a Charlotte-metro web and AI studio. When something breaks at 7pm, you talk to the person who built it.",
   },
   "/book": {
-    title: "Book a Fit Call — 30 Minutes with TSD | TSD Modernization Solutions",
-    description: "Pick a 30-minute slot with one of the three founders — Nash, Bishop, or Grant. Walk through what you're trying to fix and we'll tell you honestly whether we can help. No slide deck, no commitment.",
+    title: "Book a Fit Call: 30 Minutes with TSD | TSD Modernization Solutions",
+    description: "Pick a 30-minute slot with one of the three founders: Nash, Bishop, or Grant. Walk through what you're trying to fix and we'll tell you honestly whether we can help. No slide deck, no commitment.",
   },
   "/contact": {
-    title: "Contact Us — Start a Project | TSD Modernization Solutions",
-    description: "Tell us what you're trying to fix. Free fit call, then a written proposal within 48 hours. Custom websites and AI for established Charlotte-metro businesses — managed by us, or owned by you.",
+    title: "Contact Us: Start a Project | TSD Modernization Solutions",
+    description: "Tell us what you're trying to fix. Free fit call, then a written proposal within 48 hours. Custom websites and AI for established Charlotte-metro businesses, managed by us, or owned by you.",
   },
 };
 
@@ -115,7 +115,7 @@ const ROUTE_META = {
    service pages). */
 SERVICES.forEach((s) => {
   ROUTE_META[`/sheets/${s.slug}`] = {
-    title: `${s.title} — Savings Sheet | TSD Modernization Solutions`,
+    title: `${s.title}: Savings Sheet | TSD Modernization Solutions`,
     description: s.saves,
   };
 });
@@ -126,7 +126,7 @@ SERVICES.forEach((s) => {
 ROUTE_META["/news"] = {
   title: "News & Field Notes | TSD Modernization Solutions",
   description:
-    "What we've been building for local businesses — short, honest updates on the websites and AI we ship across Gastonia and the Charlotte metro. Real numbers, no fluff.",
+    "What we've been building for local businesses. Short, honest updates on the websites and AI we ship across Gastonia and the Charlotte metro. Real numbers, no fluff.",
 };
 POSTS.forEach((p) => {
   ROUTE_META[`/news/${p.slug}`] = {

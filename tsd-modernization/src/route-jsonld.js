@@ -96,7 +96,7 @@ const BUILD_OFFER = offer({
   name: "Custom Website + AI Build",
   minPrice: "3000",
   description:
-    "Custom website plus AI — TSD Front Desk receptionist, TSD Concierge site assistant, or TSD Lead Engine funnel, mixed to fit. On-page SEO, analytics wiring, and your choice of managed or owned. Custom, fixed-price builds — get a real range from the /pricing estimator, exact price from a free fit call. 100% money-back guarantee, 48-hour written proposal.",
+    "Custom website plus AI. TSD Front Desk receptionist, TSD Concierge site assistant, or TSD Lead Engine funnel, mixed to fit. On-page SEO, analytics wiring, and your choice of managed or owned. Custom, fixed-price builds. Get a real range from the /pricing estimator, exact price from a free fit call. 100% money-back guarantee, 48-hour written proposal.",
   url: `${SITE}/pricing`,
 });
 
@@ -129,7 +129,7 @@ const PRICING_FAQ = {
       name: "What's Managed AI, and is it required?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "AI tools drift if nobody tends them — new content to index, prompts to tune, models that keep improving. Managed AI keeps yours sharp: re-indexing, prompt and model upkeep, monitoring, and a monthly report, from $73/mo. It's optional, starts after launch, and you can cancel anytime. A website-only build doesn't need it.",
+        text: "AI tools drift if nobody tends them. New content to index, prompts to tune, models that keep improving. Managed AI keeps yours sharp: re-indexing, prompt and model upkeep, monitoring, and a monthly report, from $73/mo. It's optional, starts after launch, and you can cancel anytime. A website-only build doesn't need it.",
       },
     },
     {
@@ -137,7 +137,7 @@ const PRICING_FAQ = {
       name: "Do I own it, or do you manage it?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Your choice, and the estimator prices both. Owned carries a higher one-time fee with nothing recurring — source code, credentials, a runbook, written and video docs, and a live training session are yours from day one, and the full handoff is in the number. Managed starts lower and adds a monthly: we host it and handle every change for you, from $49/mo for a site or $73/mo for AI, cancel anytime. Never a lock-in either way.",
+        text: "Your choice, and the estimator prices both. Owned carries a higher one-time fee with nothing recurring. Source code, credentials, a runbook, written and video docs, and a live training session are yours from day one, and the full handoff is in the number. Managed starts lower and adds a monthly: we host it and handle every change for you, from $49/mo for a site or $73/mo for AI, cancel anytime. Never a lock-in either way.",
       },
     },
     {
@@ -145,7 +145,7 @@ const PRICING_FAQ = {
       name: "How long does a build take?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Most websites and AI builds run 2-4 weeks from approved scope to launch. Larger, multi-system engagements — big catalogs, multiple integrations — are scoped individually.",
+        text: "Most websites and AI builds run 2-4 weeks from approved scope to launch. Larger, multi-system engagements, like big catalogs or multiple integrations, are scoped individually.",
       },
     },
     {
@@ -153,7 +153,7 @@ const PRICING_FAQ = {
       name: "What kinds of businesses do you work with?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Established local businesses whose digital presence has fallen behind their reputation — salons and spas, specialty automotive, wholesale and supply, studios and makers, professional services, specialty retail. If the business runs on the owner's hours, that's exactly what we fix.",
+        text: "Established local businesses whose digital presence has fallen behind their reputation. Salons and spas, specialty automotive, wholesale and supply, studios and makers, professional services, specialty retail. If the business runs on the owner's hours, that's exactly what we fix.",
       },
     },
     {
@@ -161,7 +161,7 @@ const PRICING_FAQ = {
       name: "What's the first step?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "A free fit call — 30 minutes, in person or remote. We'll tell you honestly whether we can help, and if so, send a fixed-price proposal within 48 hours.",
+        text: "A free fit call, 30 minutes, in person or remote. We'll tell you honestly whether we can help, and if so, send a fixed-price proposal within 48 hours.",
       },
     },
     {
@@ -191,7 +191,7 @@ const PROCESS_HOWTO = {
   "@id": `${SITE}/process#howto`,
   name: "How TSD Modernization Solutions runs an engagement",
   description:
-    "Our four-step process: free fit call, written proposal within 48 hours, 2-4 week build with weekly check-ins, and launch your way — managed by us, or a full handoff with docs and training.",
+    "Our four-step process: free fit call, written proposal within 48 hours, 2-4 week build with weekly check-ins, and launch your way. Managed by us, or a full handoff with docs and training.",
   totalTime: "P28D",
   step: [
     {
@@ -216,7 +216,7 @@ const PROCESS_HOWTO = {
       "@type": "HowToStep",
       position: 4,
       name: "Launch",
-      text: "Go live your way: Managed — we host it and make every change for you, just text us (from $49/mo) — or Owned, where the source code, credentials, and deployment are yours from day one with a live training session. Cancel Managed anytime; never a lock-in.",
+      text: "Go live your way. Managed means we host it and make every change for you, just text us (from $49/mo). Owned means the source code, credentials, and deployment are yours from day one with a live training session. Cancel Managed anytime; never a lock-in.",
     },
   ],
 };
@@ -226,7 +226,7 @@ const TEAM_LIST = {
   "@context": "https://schema.org",
   "@type": "ItemList",
   "@id": `${SITE}/team#founders`,
-  name: "TSD Modernization Solutions — Founders",
+  name: "TSD Modernization Solutions Founders",
   itemListOrder: "https://schema.org/ItemListUnordered",
   itemListElement: [
     {
@@ -280,7 +280,7 @@ const CONTACT_PAGE = {
    mirror the estimator's per-product lows (placeholders pending Nash's
    pricing sign-off — change them together). */
 const SERVICE_FRONT_DESK = service({
-  name: "TSD Front Desk — AI Receptionist",
+  name: "TSD Front Desk AI Receptionist",
   description:
     "An AI receptionist on your existing phone line and website chat: answers 24/7, qualifies the caller, and books real calendar slots, then texts you a summary. Replaces a $1,500–2,500/mo front-desk hire for a fraction of the cost. Free if it books nothing in your first 30 days.",
   serviceType: "AI Phone Answering Service",
@@ -289,7 +289,7 @@ const SERVICE_FRONT_DESK = service({
     offer({
       name: "TSD Front Desk Setup",
       minPrice: "1200",
-      description: "Custom AI receptionist built on your real intake and voice — phone + chat, calendar booking, SMS summaries. 30-day booked-appointment guarantee.",
+      description: "Custom AI receptionist built on your real intake and voice. Phone + chat, calendar booking, SMS summaries. 30-day booked-appointment guarantee.",
       url: `${SITE}/services/front-desk`,
     }),
     MANAGED_AI_OFFER,
@@ -297,9 +297,9 @@ const SERVICE_FRONT_DESK = service({
 });
 
 const SERVICE_CONCIERGE = service({
-  name: "TSD Concierge — Site Assistant",
+  name: "TSD Concierge Site Assistant",
   description:
-    "A site assistant trained on your own catalog, documents, and policies. Visitors ask in plain English; it answers from your real products and pages with the source linked, 24/7 — and saves the hours your staff spends repeating the same answers.",
+    "A site assistant trained on your own catalog, documents, and policies. Visitors ask in plain English; it answers from your real products and pages with the source linked, 24/7, and saves the hours your staff spends repeating the same answers.",
   serviceType: "AI Site Assistant and Catalog Search",
   slug: "/services/concierge",
   offers: [
@@ -322,15 +322,15 @@ const SERVICE_WEB = service({
   offers: offer({
     name: "Custom Website Build",
     minPrice: "2900",
-    description: "Custom-designed, mobile-first website with SEO, analytics, and AI chat integration — managed by us from $49/mo, or owned by you outright.",
+    description: "Custom-designed, mobile-first website with SEO, analytics, and AI chat integration. Managed by us from $49/mo, or owned by you outright.",
     url: `${SITE}/services/websites`,
   }),
 });
 
 const SERVICE_LEAD_ENGINE = service({
-  name: "TSD Lead Engine — Landing Funnel + Lead Dashboard",
+  name: "TSD Lead Engine Landing Funnel + Lead Dashboard",
   description:
-    "A conversion-built landing funnel plus a lead dashboard your team actually works from — capture, qualify, follow up, close. Stops referrals and ad clicks from dying in an unread inbox. Running live for a Carolina insurance agency.",
+    "A conversion-built landing funnel plus a lead dashboard your team actually works from: capture, qualify, follow up, close. Stops referrals and ad clicks from dying in an unread inbox. Running live for a Carolina insurance agency.",
   serviceType: "Lead Generation Funnel and CRM Tooling",
   slug: "/services/lead-engine",
   offers: offer({
@@ -349,7 +349,7 @@ const SERVICE_AUDIT = service({
   slug: "/services/cost-cut-audit",
   offers: offer({
     name: "TSD Cost-Cut Audit",
-    description: "Included free in every 30-minute fit call. We tear down your software and vendor bills and hand over a kill list — no fee, no obligation.",
+    description: "Included free in every 30-minute fit call. We tear down your software and vendor bills and hand over a kill list. No fee, no obligation.",
     url: `${SITE}/services/cost-cut-audit`,
   }),
 });
@@ -392,7 +392,7 @@ const NEWS_BLOG = {
   "@context": "https://schema.org",
   "@type": "Blog",
   "@id": `${SITE}/news#blog`,
-  name: "TSD Modernization Solutions — Field Notes",
+  name: "TSD Modernization Solutions Field Notes",
   description:
     "Short, honest updates on the websites and AI TSD Modernization Solutions ships for local Charlotte-metro businesses.",
   url: `${SITE}/news`,

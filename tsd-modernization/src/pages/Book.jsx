@@ -87,7 +87,7 @@ export default function Book() {
           maxWidth: "640px", margin: `0 auto ${SPACE["2xl"]}`,
           textAlign: "center", fontWeight: 600,
         }}>
-          Every fit call includes a free <span style={{ color: v("accent") }}>cost-cut audit</span> — we tear down your software and vendor bills and show you what to cut before you spend a dollar. The kill list is yours to keep either way.
+          Every fit call includes a free <span style={{ color: v("accent") }}>cost-cut audit</span>. We tear down your software and vendor bills and show you what to cut before you spend a dollar. The kill list is yours to keep either way.
         </p>
 
         <p style={{

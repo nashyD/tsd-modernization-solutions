@@ -150,7 +150,7 @@ export default function Sheet() {
           fontSize: "13px", color: v("text-dim"), textAlign: "center",
           marginTop: SPACE.lg, lineHeight: 1.6,
         }}>
-          One sheet per service — swap the slug in the URL, or start from{" "}
+          One sheet per service. Swap the slug in the URL, or start from{" "}
           <Link to="/services" style={{ color: v("accent"), fontWeight: 600 }}>the catalog</Link>.
         </p>
       </div>

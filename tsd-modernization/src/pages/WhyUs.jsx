@@ -4,7 +4,7 @@ import PageShell from "./PageShell";
 
 const ROWS = [
   { feature: "Founder direct support (no ticket queue)", tsd: true, agency: false, freelancer: "varies", diy: "n/a" },
-  { feature: "Managed for you, or full source-code ownership — your call", tsd: true, agency: "extra", freelancer: "varies", diy: false },
+  { feature: "Managed for you, or full source-code ownership, your call", tsd: true, agency: "extra", freelancer: "varies", diy: false },
   { feature: "Claude + GitHub continuity (no vendor lock-in)", tsd: true, agency: false, freelancer: false, diy: false },
   { feature: "48-hour written proposal", tsd: true, agency: false, freelancer: "varies", diy: "n/a" },
   { feature: "Money-back if we miss the mark", tsd: true, agency: false, freelancer: false, diy: "n/a" },
@@ -50,7 +50,7 @@ export default function WhyUs() {
         maxWidth: "1080px", margin: "0 auto",
       }}>
         <SectionHeader as="h1" center label="Why Choose Us" title="How we" titleAccent="compare"
-          sub="You earned the reputation; your tech should carry it. We build for established local businesses where the owner has become the bottleneck — and we stay accountable for what we ship." />
+          sub="You earned the reputation; your tech should carry it. We build for established local businesses where the owner has become the bottleneck, and we stay accountable for what we ship." />
 
         <div ref={ref} style={{
           ...fade,

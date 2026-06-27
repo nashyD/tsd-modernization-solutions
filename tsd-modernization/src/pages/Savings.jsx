@@ -85,7 +85,7 @@ function EmailBreakdown({ summary }) {
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
           access_key: import.meta.env.VITE_WEB3FORMS_KEY,
-          subject: "Your savings breakdown — TSD Modernization Solutions",
+          subject: "Your savings breakdown, TSD Modernization Solutions",
           from_name: "TSD savings calculator",
           email,
           message: summary,
@@ -107,7 +107,7 @@ function EmailBreakdown({ summary }) {
         background: "rgba(6,214,160,0.10)", border: `1px solid ${v("divider")}`,
         margin: 0,
       }}>
-        Sent. Check your inbox — and when you're ready, the fit call is free.
+        Sent. Check your inbox. And when you're ready, the fit call is free.
       </p>
     );
   }
@@ -135,7 +135,7 @@ function EmailBreakdown({ summary }) {
       </Button>
       {status === "error" && (
         <p style={{ fontSize: "12px", color: v("text-dim"), width: "100%", margin: "4px 0 0" }}>
-          That didn't send — try again, or just book the free fit call below.
+          That didn't send. Try again, or just book the free fit call below.
         </p>
       )}
     </form>
@@ -164,9 +164,9 @@ export default function Savings() {
     `Cuttable software spend: ${fmt$(r.soft)}/mo (a quarter of ${fmt$(swSpend)}/mo)`,
     `Owner hours on quotes + scheduling: ${fmt$(r.hrs)}/mo (${ownerHrs} hrs/wk at $${OWNER_RATE}/hr)`,
     "",
-    `Total: ${fmt$(r.monthly)}/mo — about ${fmt$(r.annual)} a year.`,
+    `Total: ${fmt$(r.monthly)}/mo, about ${fmt$(r.annual)} a year.`,
     "",
-    "Stop the leak: book a free fit call at https://tsd-modernization.com/book — fixed-price proposal in 48 hours, 100% money-back guarantee.",
+    "Stop the leak: book a free fit call at https://tsd-modernization.com/book. Fixed-price proposal in 48 hours, 100% money-back guarantee.",
   ].join("\n");
 
   return (
@@ -176,7 +176,7 @@ export default function Savings() {
         maxWidth: "1140px", margin: "0 auto",
       }}>
         <SectionHeader as="h1" center label="The Calculator" title="What you're" titleAccent="losing"
-          sub="Four questions, sixty seconds, deliberately conservative math. The number at the end is monthly — brace for the annual one." />
+          sub="Four questions, sixty seconds, deliberately conservative math. The number at the end is monthly. Brace for the annual one." />
 
         <section ref={ref} style={{ ...fade, maxWidth: "1000px", margin: "0 auto" }}>
           <div style={{
@@ -293,7 +293,7 @@ export default function Savings() {
                   <Link to="/services/cost-cut-audit" style={{ textDecoration: "none" }}
                     onClick={() => trackEvent("savings_calc_audit_click")}>
                     <Button as="span" variant="secondary" fullWidth>
-                      Have us find it — free on your fit call
+                      Have us find it, free on your fit call
                     </Button>
                   </Link>
                 </div>
@@ -309,7 +309,7 @@ export default function Savings() {
             textAlign: "center", maxWidth: "660px", margin: `${SPACE.lg} auto 0`,
           }}>
             <strong style={{ color: v("text-muted"), fontWeight: 700 }}>This is an estimate built to understate.</strong>{" "}
-            The fix is priced on the <Link to="/pricing" style={{ color: v("accent"), fontWeight: 600 }}>estimator</Link> and quoted fixed after a free fit call — which includes a cost-cut audit that finds what you're overpaying for before you spend a dollar.
+            The fix is priced on the <Link to="/pricing" style={{ color: v("accent"), fontWeight: 600 }}>estimator</Link> and quoted fixed after a free fit call, which includes a cost-cut audit that finds what you're overpaying for before you spend a dollar.
           </p>
         </section>
       </div>

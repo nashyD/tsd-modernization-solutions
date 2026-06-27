@@ -86,8 +86,8 @@ export default function RootError() {
           margin: 0,
         }}
       >
-        We hit an unexpected error loading this page. A refresh usually clears it
-        — and we&apos;ve been notified either way.
+        We hit an unexpected error loading this page. A refresh usually clears it,
+        and we&apos;ve been notified either way.
       </p>
       <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", justifyContent: "center" }}>
         <button

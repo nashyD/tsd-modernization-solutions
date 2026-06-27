@@ -543,7 +543,7 @@ function Stats() {
             <div style={{
               fontSize: "14px", lineHeight: 1.7, color: v("text-muted"), maxWidth: "480px",
             }}>
-              A website vendor and a domain middleman, gone in one audit — $6,480 a year back on the P&amp;L. The audit's part of your free fit call.
+              A website vendor and a domain middleman, gone in one audit. That's $6,480 a year back on the P&amp;L. The audit's part of your free fit call.
             </div>
           </div>
         </div>
@@ -566,13 +566,13 @@ function Stats() {
           <SupportStat
             value="24/7"
             label="AI that answers when you can't"
-            note="Phone, chat, after-hours — from $73/mo."
+            note="Phone, chat, after-hours, from $73/mo."
           />
           <SupportStat
             forwardRef={ref100}
             value={`${count100}%`}
             label="Money-back guarantee on every engagement"
-            note="The audit goes further — free if it can't pay for itself."
+            note="The audit goes further. Free if it can't pay for itself."
           />
         </div>
       </div>
@@ -611,7 +611,7 @@ function SupportStat({ forwardRef, value, label, note }) {
         fontSize: "13px", fontStyle: "normal", color: v("text-dim"),
         marginTop: "6px", fontFamily: "var(--font-body)",
       }}>
-        — {note}
+        {note}
       </div>
     </div>
   );
@@ -620,17 +620,17 @@ function SupportStat({ forwardRef, value, label, note }) {
 /* ── The math — three leaks, priced ────────────────────────────── */
 const LEAKS = [
   {
-    label: "Leak 01 — The missed call",
+    label: "Leak 01. The missed call",
     value: "≈ $1,350 /mo",
     body: "Five missed calls a week, a $250 average ticket, and winning just one in four of them. That's the cost of voicemail.",
   },
   {
-    label: "Leak 02 — The front desk",
+    label: "Leak 02. The front desk",
     value: "$1,500–2,500 /mo",
     body: "What part-time desk coverage actually costs, loaded. TSD Front Desk answers the same calls from $73 a month, managed.",
   },
   {
-    label: "Leak 03 — Subscription creep",
+    label: "Leak 03. Subscription creep",
     value: "$540 /mo",
     body: "A website vendor, a domain middleman, a tool from 2019 nobody opens. That's what one audit found at a local bakery.",
   },
@@ -660,7 +660,7 @@ function TheMath() {
           fontSize: "18px", lineHeight: 1.6, color: v("text-muted"),
           maxWidth: "720px",
         }}>
-          Conservative arithmetic on purpose — your numbers will differ. The calculator takes sixty seconds and shows you where yours go.
+          Conservative arithmetic on purpose. Your numbers will differ. The calculator takes sixty seconds and shows you where yours go.
         </p>
       </div>
 
@@ -682,7 +682,7 @@ function TheMath() {
         </Link>
         <Link to="/services/cost-cut-audit" style={{ textDecoration: "none" }}>
           <Button as="span" variant="ghost">
-            Or have us find it — free on your fit call
+            Or have us find it, free on your fit call
           </Button>
         </Link>
       </div>
@@ -1003,7 +1003,7 @@ function FoundingClientOffer() {
           color: "rgba(255,255,255,0.92)",
           maxWidth: "680px", margin: "0 auto 36px",
         }}>
-          Custom websites, AI that runs the busywork, and an audit that cuts what you stopped needing. Direct founder access; managed by us, or owned by you. Sixty seconds on the calculator shows what the leaks cost — a free fit call prices the fix.
+          Custom websites, AI that runs the busywork, and an audit that cuts what you stopped needing. Direct founder access; managed by us, or owned by you. Sixty seconds on the calculator shows what the leaks cost. A free fit call prices the fix.
         </p>
         <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
           <Link to="/book" style={{ textDecoration: "none" }}>

@@ -70,12 +70,12 @@ const PRODUCT_LEGEND = [
   },
   {
     name: "TSD Front Desk",
-    tagline: "Your AI receptionist — answers phone and chat, qualifies, and books, day or night.",
+    tagline: "Your AI receptionist. Answers phone and chat, qualifies, and books, day or night.",
     points: ["Captures the call you'd have missed", "Texts you a one-paragraph summary", "Built on your real intake flow"],
   },
   {
     name: "TSD Concierge",
-    tagline: "Your site assistant — answers visitor questions from your content and catalog.",
+    tagline: "Your site assistant. Answers visitor questions from your content and catalog.",
     points: ["Search across your docs, videos, products", "Image + semantic catalog lookup", "Your expertise, on every page"],
   },
   {
@@ -128,7 +128,7 @@ function ProductLegend() {
 const UNIVERSAL_GUARANTEES = [
   "100% money-back guarantee",
   "48-hour written proposal",
-  "Managed by us or owned by you — cancel anytime",
+  "Managed by us or owned by you, cancel anytime",
 ];
 
 function GuaranteeStrip() {
@@ -151,11 +151,11 @@ function GuaranteeStrip() {
 
 const FAQS = [
   { q: "How does pricing work?", a: "Every build is a fixed price, quoted in a written proposal within 48 hours of a free fit call. The estimator above gives you a realistic range; the exact number depends on your content, your catalog, and the systems you already run." },
-  { q: "What's Managed AI, and is it required?", a: "AI tools drift if nobody tends them — new content to index, prompts to tune, models that keep improving. Managed AI keeps yours sharp: re-indexing, prompt and model upkeep, monitoring, and a monthly report. It's optional, starts after launch, and you can cancel anytime. A website-only build doesn't need it." },
-  { q: "Do I own it, or do you manage it?", a: "Your choice, and the estimator prices both. Owned carries a higher one-time fee with nothing recurring — source code, credentials, a runbook, written + video docs, and a live training session are yours from day one, and the full handoff is in the number. Managed starts lower and adds a monthly: we host it and handle every change for you — just text us, from $49/mo for a site or $73/mo for AI, cancel anytime. Never a lock-in either way." },
-  { q: "How long does a build take?", a: "Most websites and AI builds run 2–4 weeks from approved scope to launch. Larger, multi-system engagements — big catalogs, multiple integrations — are scoped individually." },
-  { q: "What kinds of businesses do you work with?", a: "Established local businesses whose digital presence has fallen behind their reputation — salons and spas, specialty automotive, wholesale and supply, studios and makers, professional services, specialty retail. If the business runs on the owner's hours, that's exactly what we fix." },
-  { q: "What's the first step?", a: "A free fit call — 30 minutes, in person or remote. We'll tell you honestly whether we can help, and if so, send a fixed-price proposal within 48 hours." },
+  { q: "What's Managed AI, and is it required?", a: "AI tools drift if nobody tends them. New content to index, prompts to tune, models that keep improving. Managed AI keeps yours sharp: re-indexing, prompt and model upkeep, monitoring, and a monthly report. It's optional, starts after launch, and you can cancel anytime. A website-only build doesn't need it." },
+  { q: "Do I own it, or do you manage it?", a: "Your choice, and the estimator prices both. Owned carries a higher one-time fee with nothing recurring: source code, credentials, a runbook, written + video docs, and a live training session are yours from day one, and the full handoff is in the number. Managed starts lower and adds a monthly: we host it and handle every change for you. Just text us, from $49/mo for a site or $73/mo for AI, cancel anytime. Never a lock-in either way." },
+  { q: "How long does a build take?", a: "Most websites and AI builds run 2–4 weeks from approved scope to launch. Larger, multi-system engagements (big catalogs, multiple integrations) are scoped individually." },
+  { q: "What kinds of businesses do you work with?", a: "Established local businesses whose digital presence has fallen behind their reputation: salons and spas, specialty automotive, wholesale and supply, studios and makers, professional services, specialty retail. If the business runs on the owner's hours, that's exactly what we fix." },
+  { q: "What's the first step?", a: "A free fit call: 30 minutes, in person or remote. We'll tell you honestly whether we can help, and if so, send a fixed-price proposal within 48 hours." },
 ];
 
 function FAQSection() {
@@ -230,7 +230,7 @@ export default function Pricing() {
           label="Estimate"
           title="Build an estimate,"
           titleAccent="then talk to a human."
-          sub="Tell us your size, what you want running, and how you want it run. You'll get a realistic range in three clicks — the exact, fixed price comes from a free fit call."
+          sub="Tell us your size, what you want running, and how you want it run. You'll get a realistic range in three clicks. The exact, fixed price comes from a free fit call."
         />
         <GuaranteeBlock />
         <PricingEstimator />
@@ -240,7 +240,7 @@ export default function Pricing() {
             label="What's in a build"
             title="The products,"
             titleAccent="mixed to fit."
-            sub="Start with what hurts most. Add the rest when you're ready — the website is the storefront, the AI is what runs once you've gone home."
+            sub="Start with what hurts most. Add the rest when you're ready. The website is the storefront, the AI is what runs once you've gone home."
           />
         </div>
         <ProductLegend />

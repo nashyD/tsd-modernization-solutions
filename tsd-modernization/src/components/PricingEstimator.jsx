@@ -27,9 +27,9 @@ const SIZES = [
    the sales pitch page and this public estimator must agree to the dollar.
    Pinned by estimator.test.ts in the app; change both files together. */
 const PRODUCTS = [
-  { id: "website",   label: "A new website",      detail: "Custom, fast — managed or owned",     low: 2900, high: 4000, ai: false },
-  { id: "frontDesk", label: "TSD Front Desk",     detail: "AI receptionist — phone + chat, books work", low: 1200, high: 1600, ai: true },
-  { id: "concierge", label: "TSD Concierge",      detail: "Site assistant — answers from your content + catalog", low: 4100, high: 5800, ai: true },
+  { id: "website",   label: "A new website",      detail: "Custom, fast, managed or owned",     low: 2900, high: 4000, ai: false },
+  { id: "frontDesk", label: "TSD Front Desk",     detail: "AI receptionist, phone + chat, books work", low: 1200, high: 1600, ai: true },
+  { id: "concierge", label: "TSD Concierge",      detail: "Site assistant, answers from your content + catalog", low: 4100, high: 5800, ai: true },
   { id: "leadEngine", label: "TSD Lead Engine",   detail: "Landing funnel + a lead dashboard your team works", low: 2400, high: 3400, ai: false },
 ];
 
@@ -44,8 +44,8 @@ const MANAGED = { 0: 0, 1: 73, 2: 147, 3: 222, 4: 297, 5: 373 };
 const OWNED_MULT = 1.25;
 
 const OWNERSHIP = [
-  { id: "managed", label: "Managed by us", detail: "Lower setup — we host, maintain, and make your changes; monthly, cancel anytime" },
-  { id: "owned", label: "Owned by you", detail: "Higher setup — source code, credentials + runbook at handoff; nothing monthly" },
+  { id: "managed", label: "Managed by us", detail: "Lower setup. We host, maintain, and make your changes; monthly, cancel anytime" },
+  { id: "owned", label: "Owned by you", detail: "Higher setup. Source code, credentials + runbook at handoff; nothing monthly" },
 ];
 
 const round100 = (n) => Math.round(n / 100) * 100;
@@ -140,7 +140,7 @@ export default function PricingEstimator() {
           }} />
 
           <div style={{ marginBottom: SPACE.xl }}>
-            <Eyebrow style={{ marginBottom: SPACE.md }}>01 — How big is your team?</Eyebrow>
+            <Eyebrow style={{ marginBottom: SPACE.md }}>01. How big is your team?</Eyebrow>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
               {SIZES.map((s) => (
                 <OptionButton
@@ -155,7 +155,7 @@ export default function PricingEstimator() {
           </div>
 
           <div style={{ marginBottom: SPACE.xl }}>
-            <Eyebrow style={{ marginBottom: SPACE.md }}>02 — What do you want running?</Eyebrow>
+            <Eyebrow style={{ marginBottom: SPACE.md }}>02. What do you want running?</Eyebrow>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
               {PRODUCTS.map((p) => (
                 <OptionButton
@@ -171,7 +171,7 @@ export default function PricingEstimator() {
           </div>
 
           <div>
-            <Eyebrow style={{ marginBottom: SPACE.md }}>03 — How should it run?</Eyebrow>
+            <Eyebrow style={{ marginBottom: SPACE.md }}>03. How should it run?</Eyebrow>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
               {OWNERSHIP.map((o) => (
                 <OptionButton
@@ -230,10 +230,10 @@ export default function PricingEstimator() {
                 textTransform: "uppercase", fontWeight: 700, marginBottom: SPACE.md,
               }}>
                 {isLarger
-                  ? "Custom build — typically from"
+                  ? "Custom build, typically from"
                   : result.owned
-                    ? "One-time build — owned outright"
-                    : "One-time build — managed"}
+                    ? "One-time build, owned outright"
+                    : "One-time build, managed"}
               </div>
               <div style={{
                 fontFamily: "var(--font-body)", fontWeight: 800,
@@ -258,10 +258,10 @@ export default function PricingEstimator() {
               </div>
               <p style={{ fontSize: "12px", color: v("text-dim"), lineHeight: 1.5, marginTop: "6px" }}>
                 {result.owned
-                  ? "Owned outright — source code, credentials, and a runbook at handoff, with docs and a live training session baked into the setup price. Nothing recurring."
+                  ? "Owned outright. Source code, credentials, and a runbook at handoff, with docs and a live training session baked into the setup price. Nothing recurring."
                   : result.managed > 0
-                    ? "Keeps your AI current — re-indexing, prompt + model upkeep, monitoring, a monthly report. Cancel anytime."
-                    : "We host + maintain your site and make changes on request — Managed Website from $49/mo, set on your fit call."}
+                    ? "Keeps your AI current. Re-indexing, prompt + model upkeep, monitoring, a monthly report. Cancel anytime."
+                    : "We host + maintain your site and make changes on request. Managed Website from $49/mo, set on your fit call."}
               </p>
 
               <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: SPACE.lg }}>
@@ -286,7 +286,7 @@ export default function PricingEstimator() {
         textAlign: "center", maxWidth: "660px", margin: `${SPACE.lg} auto 0`,
       }}>
         <strong style={{ color: v("text-muted"), fontWeight: 700 }}>This is an estimate, not a quote.</strong>{" "}
-        Real scope depends on your content, catalog, and the systems you already run. You get an exact, fixed price in a free 48-hour proposal after your fit call. Managed starts lower and carries a monthly you can cancel anytime ($49/mo for a site, $73/mo per AI tier). Owned carries a higher one-time price and nothing recurring — the full handoff (source code, credentials, runbook, live training) is in the number.
+        Real scope depends on your content, catalog, and the systems you already run. You get an exact, fixed price in a free 48-hour proposal after your fit call. Managed starts lower and carries a monthly you can cancel anytime ($49/mo for a site, $73/mo per AI tier). Owned carries a higher one-time price and nothing recurring. The full handoff (source code, credentials, runbook, live training) is in the number.
       </p>
 
       <style>{`

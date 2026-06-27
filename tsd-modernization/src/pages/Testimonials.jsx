@@ -14,7 +14,7 @@ const LEDGER_COLUMNS = [
     icon: ClockIcon,
     label: "What we measure",
     headline: "Hours reclaimed and minutes saved.",
-    body: "Every engagement begins with a before-measurement — the manual process, the load time, the weekly hours spent. We log the baseline, ship the fix, and measure again four weeks later. The delta is the case study.",
+    body: "Every engagement begins with a before-measurement, the manual process, the load time, the weekly hours spent. We log the baseline, ship the fix, and measure again four weeks later. The delta is the case study.",
     sampleLabel: "Sample metric",
     sample: "34 hrs/week of manual invoicing → 4 hrs/week after automation",
   },
@@ -22,10 +22,10 @@ const LEDGER_COLUMNS = [
     number: "2",
     icon: ClipboardIcon,
     label: "How we report",
-    headline: "Problem, build, outcome — in that order.",
-    body: "Each case study follows the same three-part structure. First: what was wrong, in the owner's own words. Second: what we built and why that approach. Third: what changed — numbers, screenshots, before/after comparisons.",
+    headline: "Problem, build, outcome, in that order.",
+    body: "Each case study follows the same three-part structure. First: what was wrong, in the owner's own words. Second: what we built and why that approach. Third: what changed, numbers, screenshots, before/after comparisons.",
     sampleLabel: "Sample format",
-    sample: "Problem ▸ Build ▸ Outcome — documented, linkable, dated.",
+    sample: "Problem ▸ Build ▸ Outcome, documented, linkable, dated.",
   },
   {
     number: "3",
@@ -48,7 +48,7 @@ export default function Testimonials() {
         padding: `${SPACE.xl} clamp(20px, 4vw, 48px) ${SPACE["4xl"]}`,
         maxWidth: "1140px", margin: "0 auto",
       }}>
-        <ChapterRule label="The Ledger" num="Vol. 1 — Opening Entries" style={{ marginBottom: SPACE.lg }} />
+        <ChapterRule label="The Ledger" num="Vol. 1, Opening Entries" style={{ marginBottom: SPACE.lg }} />
 
         <div ref={introRef} style={{ ...introFade, marginBottom: SPACE["3xl"] }}>
           <h1 style={{
@@ -65,7 +65,7 @@ export default function Testimonials() {
             fontSize: "18px", lineHeight: 1.6, color: v("text-muted"),
             maxWidth: "700px",
           }}>
-            Instead of a placeholder, here's the method. This is exactly how every engagement will be documented when our first case studies land — so you can hold the receipts before we have any.
+            Instead of a placeholder, here's the method. This is exactly how every engagement will be documented when our first case studies land, so you can hold the receipts before we have any.
           </p>
         </div>
 

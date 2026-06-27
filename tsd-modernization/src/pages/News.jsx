@@ -33,7 +33,7 @@ export default function News() {
             fontSize: "18px", lineHeight: 1.6, color: v("text-muted"),
             maxWidth: "700px",
           }}>
-            Short, honest updates on what we ship for local businesses — the wins, the real numbers, and what we learned. The same way we'd tell you over coffee.
+            Short, honest updates on what we ship for local businesses: the wins, the real numbers, and what we learned. The same way we'd tell you over coffee.
           </p>
         </div>
 

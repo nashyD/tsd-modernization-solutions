@@ -123,7 +123,7 @@ function AddonsStrip() {
     }}>
       <Eyebrow style={{ marginBottom: SPACE.md }}>Add-ons</Eyebrow>
       <p style={{ fontSize: "14px", color: v("text-muted"), lineHeight: 1.6, marginBottom: SPACE.lg, maxWidth: "640px" }}>
-        Smaller pieces that ride along with a build — scoped and quoted on your
+        Smaller pieces that ride along with a build, scoped and quoted on your
         {" "}<Link to="/book" style={{ color: v("accent"), fontWeight: 600 }}>free fit call</Link>.
       </p>
       <div className="card-grid" style={{
@@ -156,7 +156,7 @@ export default function Services() {
         maxWidth: "1140px", margin: "0 auto",
       }}>
         <SectionHeader as="h1" center label="What We Build" title="Four services." titleAccent="Each one stops a leak."
-          sub="Missed calls, repeated answers, leads gone cold, a site that undersells you — every service below exists because a real business was losing real money there. Fixed-price proposal in 48 hours; managed by us, or owned by you." />
+          sub="Missed calls, repeated answers, leads gone cold, a site that undersells you. Every service below exists because a real business was losing real money there. Fixed-price proposal in 48 hours; managed by us, or owned by you." />
         <div style={{ display: "flex", flexDirection: "column", gap: SPACE.lg }} className="services-list">
           {SERVICES.filter((s) => !s.gridHidden).map((s, i) => (
             <ServiceCard
@@ -185,7 +185,7 @@ export default function Services() {
               Not sure where the leak is? Start with a free fit call.
             </div>
             <div style={{ fontSize: "14px", color: v("text-muted"), lineHeight: 1.55 }}>
-              Every 30-minute fit call includes a <Link to="/services/cost-cut-audit" style={{ color: v("accent"), fontWeight: 600 }}>cost-cut audit</Link> — we tear down your software and vendor bills and show you what to cut before you spend a dollar.
+              Every 30-minute fit call includes a <Link to="/services/cost-cut-audit" style={{ color: v("accent"), fontWeight: 600 }}>cost-cut audit</Link>. We tear down your software and vendor bills and show you what to cut before you spend a dollar.
             </div>
           </div>
           <Link to="/book" style={{ textDecoration: "none", flexShrink: 0 }}>

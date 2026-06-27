@@ -13,7 +13,7 @@ const TEAM = [
     number: "01",
     initials: "ND", name: "Nash Davis", role: "CEO & Head of Modernization",
     school: "UNC Chapel Hill", schoolId: "chapelhill",
-    pullQuote: "When it breaks, you call me — not a ticket queue.",
+    pullQuote: "When it breaks, you call me. No ticket queue.",
     bio: "AI and technology strategy. Leads technical delivery, client engagement, and custom solution architecture.",
     ships: ["Custom AI chatbots & integrations", "Site architecture & build", "Solution scoping and delivery"],
     image: "/nash-davis.png",
@@ -26,7 +26,7 @@ const TEAM = [
   },
   {
     number: "02",
-    initials: "BS", name: "Bishop Switzer", role: "COO \u2014 Operations",
+    initials: "BS", name: "Bishop Switzer", role: "COO, Operations",
     school: "UNC Wilmington", schoolId: "wilmington",
     pullQuote: "Every proposal is documented. Every handoff is yours to keep.",
     bio: "Operations and process management. Oversees project tracking, proposals, invoicing, and handoff documentation.",
@@ -483,7 +483,7 @@ export default function Team() {
             <span style={{ fontSize: "7px" }}>{"\u25C6"}</span>  The Masthead
           </span>
           <span style={{ flex: 1, height: "1px", background: v("divider"), minWidth: "40px" }} />
-          <span style={{ fontSize: "11px", color: v("text-dim"), letterSpacing: "2px" }}>Vol. 1 — Charlotte</span>
+          <span style={{ fontSize: "11px", color: v("text-dim"), letterSpacing: "2px" }}>Vol. 1, Charlotte</span>
         </div>
 
         <h1 style={{
@@ -501,7 +501,7 @@ export default function Team() {
           fontSize: "18px", lineHeight: 1.65, color: v("text-muted"),
           maxWidth: "640px", marginBottom: "56px",
         }}>
-          We go to different UNC-system schools but grew up within twenty minutes of each other. When you hire TSD, you hire these three people — no account managers, no offshoring, no handoffs.
+          We go to different UNC-system schools but grew up within twenty minutes of each other. When you hire TSD, you hire these three people. No account managers, no offshoring, no handoffs.
         </p>
 
         <DiamondDivider width={200} style={{ marginBottom: "8px" }} />

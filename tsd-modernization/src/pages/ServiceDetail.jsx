@@ -465,7 +465,7 @@ export default function ServiceDetail() {
             fontSize: "13px", color: v("text-dim"), textAlign: "center",
             marginTop: SPACE.lg, fontStyle: "normal", fontFamily: "var(--font-body)",
           }}>
-            Video demos are being produced — check back soon.
+            Video demos are being produced. Check back soon.
           </p>
         </section>
 
