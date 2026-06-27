@@ -2,7 +2,7 @@
 
 The persistent State for the improvement loop. See [`loop.md`](loop.md). Agents append to **Inbox**; the verifier promotes to **Backlog** or **Rejected**; the implementer moves approved items to **In Review**; Nash moves merged items to **Shipped**.
 
-Seeded by **Cycle 1 (2026-06-27)**: 7 specialist lenses, an independent verifier on every finding, 42 confirmed, 1 rejected. **Cycle 2 (2026-06-27)** implemented 3 more safe wins from the backlog.
+Seeded by **Cycle 1 (2026-06-27)**: 7 lenses, an independent verifier on every finding, 42 confirmed, 1 rejected. **Cycles 2-3 (2026-06-27)** implemented 6 more safe wins from the backlog.
 
 ---
 
@@ -18,14 +18,19 @@ Verified, safe-to-automate wins, each `npm run build` green and runtime-checked.
 - [x] **Hero poster img/video intrinsic width/height (CLS safeguard)** — performance — `src/pages/Home.jsx`
 
 ### Cycle 2
-- [x] **Hero autoplay now respects prefers-reduced-motion** — accessibility — `src/pages/Home.jsx`
-  - Pauses the timelapse and skips every play trigger when the user asks for reduced motion.
-- [x] **Sentry dynamic-imported, out of the main bundle** — performance — `src/sentry.js`, `src/components/RootError.jsx`
-  - @sentry/react now loads as its own async chunk only when a DSN is set (tree-shaken away otherwise); main chunk ~10KB smaller.
-- [x] **Google Fonts trimmed to what is used** — performance — `index.html`
-  - Dropped the unused Cormorant Garamond family and all italic axes; kept Inter 400-800 and Playfair 400-700.
+- [x] **Hero autoplay respects prefers-reduced-motion** — accessibility — `src/pages/Home.jsx`
+- [x] **@sentry/react dynamic-imported, out of the main bundle** — performance — `src/sentry.js`, `src/components/RootError.jsx`
+- [x] **Google Fonts trimmed (dropped unused Cormorant + italic axes)** — performance — `index.html`
 
-> Deferred on purpose (need your judgment): the Contact-form CTA/label change (conversion) and the single-`<h1>`-per-page SEO fix (some page titles render via PageShell, so 'which heading is canonical' is a per-page call). Both are in the Backlog.
+### Cycle 3
+- [x] **Hero LCP poster preloaded per viewport + fetchpriority=high** — performance — `index.html`, `src/pages/Home.jsx`
+  - Responsive preload links warm the correct poster before the JS chunk parses; fetchpriority flags it as the LCP image. (Caught and fixed a React 18 fetchPriority→fetchpriority prop bug via the runtime check.)
+- [x] **Google Fonts now load non-blocking** — performance — `index.html`
+  - media=print + onload swap with a noscript fallback, so the font request never delays first paint.
+- [x] **Sitemap excludes noindexed /sheets/* and the /columbia-demo** — seo — `scripts/generate-sitemap.mjs`
+  - Dropped 6 URLs that should not be indexed (27 → 21 routes). lastmod values are a minor residual left on the backlog.
+
+> Deferred on purpose (need your judgment): the Contact-form CTA/label change (conversion); the single-`<h1>`-per-page SEO fix (page titles render via SectionHeader on some pages and a custom `EditorialMasthead` on Pricing, so 'which heading is canonical' is a per-page call); and the soft-404 status code (needs a Vercel-level 404, not just a code change). All on the Backlog.
 
 ## Backlog — verified, ranked by impact-to-effort
 
@@ -61,9 +66,6 @@ Verified, safe-to-automate wins, each `npm run build` green and runtime-checked.
 - [ ] **Em dashes saturate the copy despite a hard NO-em-dash rule, including SEO titles and meta descriptions** — copy-voice · high/L · needs judgment
   - Fix: Do a reviewed pass replacing em dashes in all VISIBLE copy and SEO/structured-data strings: Layout.jsx ROUTE_META titles/descriptions, route-jsonld.js, index.html JSON-LD/OG/Twitter, services-data.js, relationships-data.js, news-data.js, and every page headline/subhead/body. Use periods, commas, or…
   - Evidence: Confirmed in source: Layout.jsx:36 home meta description '...the money your business is leaking — missed after-hours calls, slow quotes, forgotten subscriptions — and build...'; Layout.jsx:43 title…
-- [ ] **Hero LCP poster is not preloaded or prioritized; mobile poster source is JS-gated so it can't paint correctly before hydration** — performance · high/M · needs judgment *(verifier-adjusted)*
-  - Fix: Add <link rel="preload" as="image" href="/hero-loop-poster.webp"> (with imagesrcset/media so mobile preloads the mobile poster) in index.html so the LCP image downloads before the JS chunk parses, and add fetchpriority="high" to the hero <img>. Separately, decouple the poster/source from the JS…
-  - Evidence: Home.jsx:26-27 derives isMobile from window.matchMedia (JS only); Home.jsx:249/262/266 pick the video poster, <source>, and <img> src from isMobile. BUT the prerendered dist/index.html DOES contain…
 
 ### Medium impact
 
@@ -94,9 +96,6 @@ Verified, safe-to-automate wins, each `npm run build` green and runtime-checked.
 - [ ] **Contact form fields have only sr-only labels plus a sub-4.5:1 placeholder, leaving the visible field identity hard to read** — accessibility · medium/M · needs judgment
   - Fix: Add persistent visible labels above each input (or a floating-label pattern) so the field identity survives typing and autofill. Separately raise the placeholder/dim contrast: a light-mode --c-text-dim of navy@0.72 clears 4.5:1 on every cream tier (5.0–5.6:1). At minimum lift the placeholder…
   - Evidence: src/pages/Contact.jsx:193/201/210/218 each pair a className="sr-only" label with a placeholder-only input; the bot honeypot at line 187 is not a real field, so 'four inputs' is correct. inputStyle at…
-- [ ] **sitemap.xml is hand-maintained, has no <lastmod>, includes a stray demo URL and noindexed sheets, and uses the redirecting apex host** — seo · medium/M · needs judgment *(verifier-adjusted)*
-  - Fix: Generate sitemap.xml at build time from the same catalogs routes.jsx uses (SERVICES, POSTS), add <lastmod> from news dateISO, switch all <loc> to the www host, drop /columbia-demo, and exclude the noindexed /sheets/* pages (they are currently wrongly included, not merely 'kept out'). This keeps it…
-  - Evidence: grep -c '<loc>' = 27; grep -c lastmod = 0. sitemap.xml lines 18-22 list /columbia-demo (priority 0.5); vercel.json shows that route is permanent:false (a 302). All <loc> use apex (grep 'www.' = 0).…
 - [ ] **Unknown URLs return HTTP 200 with the homepage (soft-404) instead of a 404** — correctness · medium/M · needs judgment
   - Fix: Add a dedicated NotFound component for the * route (clear 'page not found' UI with a link home) instead of Home, register it in vite-react-ssg's static paths, and configure Vercel so unmatched routes serve it with a 404 status. This stops soft-404 indexing and gives lost visitors an honest signal.
   - Evidence: src/routes.jsx:76 { path: "*", Component: Home }; vercel.json last rewrite { "source": "/(.*)", "destination": "/index.html" }. Live: curl -sI…
@@ -156,4 +155,5 @@ _none yet — moves here when Nash merges `loop/cycle-2026-06-27`_
 | Cycle | Date | Verified | Rejected | Implemented | Branch |
 |---|---|---|---|---|---|
 | 1 | 2026-06-27 | 42 | 1 | 5 | `loop/cycle-2026-06-27` |
-| 2 | 2026-06-27 | (from cycle-1 backlog) | 0 | 3 | `loop/cycle-2026-06-27` |
+| 2 | 2026-06-27 | from cycle-1 backlog | 0 | 3 | `loop/cycle-2026-06-27` |
+| 3 | 2026-06-27 | from cycle-1 backlog | 0 | 3 | `loop/cycle-2026-06-27` |

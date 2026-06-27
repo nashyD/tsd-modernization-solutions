@@ -7,10 +7,17 @@
          og:title/description/url, twitter:title/description are injected per
          route at SSG build time via <Head> in Layout.jsx. See ROUTE_META. -->
 
-    <!-- Web fonts: Inter (body) + Playfair Display (display headings) -->
+    <!-- Preload the hero LCP poster per viewport so it paints before the JS chunk parses -->
+    <link rel="preload" as="image" href="/hero-loop-poster.webp" type="image/webp" media="(min-width: 769px)" fetchpriority="high" />
+    <link rel="preload" as="image" href="/hero-loop-mobile-poster.webp" type="image/webp" media="(max-width: 768px)" fetchpriority="high" />
+
+    <!-- Web fonts: Inter (body) + Playfair Display (display headings). Loaded non-blocking
+         (media=print swap) so the font request never delays first paint; system fallbacks
+         show until it resolves, then swap in. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" /></noscript>
 
     <!-- Favicons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

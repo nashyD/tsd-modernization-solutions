@@ -16,11 +16,6 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://www.tsd-modernization.com/columbia-demo</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://www.tsd-modernization.com/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -94,31 +89,6 @@
     <loc>https://www.tsd-modernization.com/services/websites</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.tsd-modernization.com/sheets/concierge</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.tsd-modernization.com/sheets/cost-cut-audit</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.tsd-modernization.com/sheets/front-desk</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.tsd-modernization.com/sheets/lead-engine</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.tsd-modernization.com/sheets/websites</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://www.tsd-modernization.com/team</loc>
