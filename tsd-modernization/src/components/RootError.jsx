@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useRouteError, Link } from "react-router-dom";
-import * as Sentry from "@sentry/react";
+import { captureException } from "../sentry.js";
 
 /* Router-level error boundary. Without an `errorElement`, any render-time throw
    anywhere in the tree falls through to vite-react-ssg's bare "Unexpected
@@ -24,11 +24,7 @@ export default function RootError() {
   const error = useRouteError();
 
   useEffect(() => {
-    try {
-      Sentry.captureException(error);
-    } catch {
-      /* Sentry not configured — fine. */
-    }
+    captureException(error);
     // eslint-disable-next-line no-console
     console.error("[RootError]", error);
 

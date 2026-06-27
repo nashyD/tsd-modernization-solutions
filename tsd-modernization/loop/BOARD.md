@@ -2,26 +2,30 @@
 
 The persistent State for the improvement loop. See [`loop.md`](loop.md). Agents append to **Inbox**; the verifier promotes to **Backlog** or **Rejected**; the implementer moves approved items to **In Review**; Nash moves merged items to **Shipped**.
 
-Seeded by **Cycle 1 (2026-06-27)**: 7 specialist lenses, an independent verifier on every finding, 42 confirmed, 1 rejected.
+Seeded by **Cycle 1 (2026-06-27)**: 7 specialist lenses, an independent verifier on every finding, 42 confirmed, 1 rejected. **Cycle 2 (2026-06-27)** implemented 3 more safe wins from the backlog.
 
 ---
 
 ## In Review — branch `loop/cycle-2026-06-27` (awaiting Nash)
 
-Five verified, safe-to-automate wins, implemented and `npm run build` verified. No production deploy until you merge.
+Verified, safe-to-automate wins, each `npm run build` green and runtime-checked. No production deploy until you merge.
 
-- [x] **Fit-call length now says 30 minutes on Process** — correctness/copy — `src/pages/Process.jsx:10`
-  - Was "A 1-2 hour conversation", the lone outlier against the 30-minute canon used on every other surface and the Calendly event.
-- [x] **Nav dropdown a11y: aria-haspopup/aria-controls + Escape returns focus** — accessibility — `src/Layout.jsx` (trigger, panel, Escape handler)
-  - Menu trigger now exposes the popup relationship; Escape closes the menu and returns focus to the trigger instead of dropping it to the top of the document.
-- [x] **Canonical / og:url / JSON-LD / sitemap / robots → www host** — seo + correctness — `src/Layout.jsx:32`, `src/route-jsonld.js:15`, `index.html`, `public/robots.txt`, `scripts/generate-sitemap.mjs`
-  - Every self-referential URL pointed at the apex host, which 307-redirects to www, so canonicals pointed at a redirect on a different host. Now all agree with the live www serving host.
-- [x] **Stats grid breakpoint 760px → 768px** — design-ux — `src/pages/Home.jsx:469`
-  - Removes the 761-768px dead zone where the stats grid stayed two-column while the rest of the site had switched to mobile.
-- [x] **Hero poster img/video intrinsic width/height (CLS safeguard)** — performance — `src/pages/Home.jsx` (hero video + img)
-  - Adds width=1920 height=1080 so the 16:9 box is reserved from raw HTML before the JS aspect-ratio resolves.
+### Cycle 1
+- [x] **Fit-call length now says 30 minutes on Process** — correctness/copy — `src/pages/Process.jsx`
+- [x] **Nav dropdown a11y: aria-haspopup/aria-controls + Escape returns focus** — accessibility — `src/Layout.jsx`
+- [x] **Canonical / og:url / JSON-LD / sitemap / robots → www host** — seo + correctness — `Layout.jsx`, `route-jsonld.js`, `index.html`, `robots.txt`, `generate-sitemap.mjs`
+- [x] **Stats grid breakpoint 760px → 768px** — design-ux — `src/pages/Home.jsx`
+- [x] **Hero poster img/video intrinsic width/height (CLS safeguard)** — performance — `src/pages/Home.jsx`
 
-> Deferred from this batch on purpose (needs your judgment): the Contact-form submit-label / textarea-friction change (conversion). It is in the Backlog below.
+### Cycle 2
+- [x] **Hero autoplay now respects prefers-reduced-motion** — accessibility — `src/pages/Home.jsx`
+  - Pauses the timelapse and skips every play trigger when the user asks for reduced motion.
+- [x] **Sentry dynamic-imported, out of the main bundle** — performance — `src/sentry.js`, `src/components/RootError.jsx`
+  - @sentry/react now loads as its own async chunk only when a DSN is set (tree-shaken away otherwise); main chunk ~10KB smaller.
+- [x] **Google Fonts trimmed to what is used** — performance — `index.html`
+  - Dropped the unused Cormorant Garamond family and all italic axes; kept Inter 400-800 and Playfair 400-700.
+
+> Deferred on purpose (need your judgment): the Contact-form CTA/label change (conversion) and the single-`<h1>`-per-page SEO fix (some page titles render via PageShell, so 'which heading is canonical' is a per-page call). Both are in the Backlog.
 
 ## Backlog — verified, ranked by impact-to-effort
 
@@ -48,9 +52,6 @@ Five verified, safe-to-automate wins, implemented and `npm run build` verified. 
 - [ ] **Gradient-clipped accent text fails AA contrast in light mode (carolina→carolinaLight on cream)** — accessibility · high/M · needs judgment
   - Fix: Introduce a per-theme --c-gradient-accent CSS var set in both [data-theme] blocks in Layout.jsx; light mode should use a darker steel-anchored ramp (e.g. steel #2c5f8a, which measures ~5.9:1 on cream, ramping toward carolina) with every stop at or above 3:1 for these large runs (4.5:1 is safer…
   - Evidence: src/shared.jsx:27 defines gradientAccent. Consumed theme-blind at src/pages/Home.jsx:508 (stat), :706 (LeakCard), :803 (step numeral), :646 & :755 (GradientText headlines), src/pages/Book.jsx:61…
-- [ ] **Autoplaying hero timelapse video ignores prefers-reduced-motion and has no pause control** — accessibility · high/M · needs judgment
-  - Fix: In the Hero video effect, read window.matchMedia('(prefers-reduced-motion: reduce)'); when it matches, skip tryPlay() and skip attaching the gesture/lifecycle replay listeners so the poster image remains. For users without the preference, either keep autoplay plus a visible pause/play toggle over…
-  - Evidence: src/pages/Home.jsx:241-263 (video element, autoPlay muted loop, pointerEvents:none, no controls); src/pages/Home.jsx:47-71 (tryPlay re-attached to lifecycle + gestureEvents). grep for…
 - [ ] **Six core indexable pages render zero <h1> — main page title ships as an <h2>** — seo · high/M · needs judgment
   - Fix: Give each of the six pages exactly one <h1> carrying its primary keyword. Add an optional level/as prop (or isPageTitle flag) to SectionHeader so the lead header on a page renders <h1> instead of <h2>, then pass it on the top header of each page; demote rather than add a second heading. Keep copy…
   - Evidence: grep -c '<h1' on all six page sources = 0. Live: curl https://www.tsd-modernization.com/pricing | grep -c '<h1' = 0. shared.jsx:443 SectionHeader renders a hardcoded <h2> (signature is { label, num,…
@@ -69,12 +70,6 @@ Five verified, safe-to-automate wins, implemented and `npm run build` verified. 
 - [ ] **Banned three-part closer in the News post and 'X, not Y' contrastive construction in service copy** — copy-voice · medium/S · needs judgment *(verifier-adjusted)*
   - Fix: Rewrite the News closer to drop the tricolon (state the pattern in one or two flat sentences). Recast the 'not X' tails as positive statements: e.g. 'It shows its sources on every answer.' and 'Answers come from vector search over the real docs.' While in the file, also fix the Home.jsx:725…
   - Evidence: Confirmed: news-data.js:59 closer 'That's the pattern. Build what pays for itself, run it on our own business first, then show the numbers.' (the file's own header at news-data.js:11 explicitly bans…
-- [ ] **Sentry SDK is statically bundled into the main chunk even though init is env-gated** — performance · medium/S · needs judgment
-  - Fix: Inside initSentry(), gate on DSN first, then 'const Sentry = await import("@sentry/react")' so the SDK becomes its own async chunk that only loads when a DSN is set. Apply the same dynamic-import pattern to RootError's capture path. No behavior change when monitoring is enabled; large dependency…
-  - Evidence: src/sentry.js:15 'import * as Sentry from "@sentry/react";' with sentry.js:19-20 'export function initSentry() { if (!DSN) return; ...'. main.jsx:18 calls initSentry() eagerly on client init.…
-- [ ] **Render-blocking Google Fonts stylesheet requests 18 font-axis combinations across 3 families, including a font (Cormorant) that is never used** — performance · medium/S · needs judgment *(verifier-adjusted)*
-  - Fix: First, drop Cormorant Garamond entirely from the URL — it is dead weight (no code path uses it). Drop all italic axes for both remaining families since nothing renders italic. Keep Inter 400-800 and the Playfair non-italic weights actually used. Then make the trimmed Google stylesheet non-blocking…
-  - Evidence: index.html:13 loads the combined css2 URL with the exact axes described. Font variables are defined only at Layout.jsx:226-227: --font-display: 'Playfair Display' and --font-body: 'Inter'. Cormorant…
 - [ ] **Apex→www redirect is a 307 (temporary), not a 308/301 permanent** — seo · medium/S · needs judgment
   - Fix: Make the host redirect permanent (308 to preserve method, or 301). Easiest path is Vercel Domains settings (set apex to permanently redirect to www); alternatively add an explicit host-matched permanent:true redirect in vercel.json. Coordinate with finding 1 so both agree on www as the host of…
   - Evidence: curl -s -o /dev/null -w '%{http_code} -> %{redirect_url}' https://tsd-modernization.com/pricing returned '307 -> https://www.tsd-modernization.com/pricing'. vercel.json defines explicit…
@@ -152,8 +147,7 @@ _none yet — moves here when Nash merges `loop/cycle-2026-06-27`_
 
 ## Rejected — verifier killed (kept so we do not re-litigate)
 
-- ~~Dim/footnote text drops below AA on the deeper cream section backgrounds in light mode~~ — accessibility — Rejected because the central premise is factually wrong: I confirmed by reading the footer and Book containers that the relevant text sits on glass-bg-strong (composites lighter than cream, 4.80:1), and a repo-wide grep shows bg-deep…
-- *(merged)* Every canonical URL points to the non-www apex host, which 307-redirects to www — seo — same issue as the canonical→www fix now In Review.
+- *(merged)* the SEO-lens duplicate of the canonical→www finding — same fix, shipped in cycle 1.
 
 ---
 
@@ -162,3 +156,4 @@ _none yet — moves here when Nash merges `loop/cycle-2026-06-27`_
 | Cycle | Date | Verified | Rejected | Implemented | Branch |
 |---|---|---|---|---|---|
 | 1 | 2026-06-27 | 42 | 1 | 5 | `loop/cycle-2026-06-27` |
+| 2 | 2026-06-27 | (from cycle-1 backlog) | 0 | 3 | `loop/cycle-2026-06-27` |

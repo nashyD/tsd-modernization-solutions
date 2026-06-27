@@ -43,6 +43,14 @@ function Hero() {
   useEffect(() => {
     const el = videoRef.current;
     if (!el) return undefined;
+    /* Respect prefers-reduced-motion: pause the timelapse and skip every play
+       trigger so the hero stays still for users who ask for less motion. */
+    if (typeof window !== "undefined" && window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.pause();
+      try { el.removeAttribute("autoplay"); } catch (e) { /* no-op */ }
+      return undefined;
+    }
     let cancelled = false;
     const tryPlay = () => {
       if (cancelled || !el) return;

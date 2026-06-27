@@ -12,15 +12,31 @@
      tracesSampleRate: 0.1   — 10% of transactions traced for perf
 */
 
-import * as Sentry from "@sentry/react";
-
 const DSN = import.meta.env.VITE_SENTRY_DSN;
 
-export function initSentry() {
-  if (!DSN) return;
+/* Load @sentry/react as its own async chunk, and only when a DSN is set, so the
+   SDK never ships in the main bundle for the common no-monitoring build. */
+let sentryPromise = null;
+function loadSentry() {
+  if (!DSN) return null;
+  if (!sentryPromise) sentryPromise = import("@sentry/react");
+  return sentryPromise;
+}
+
+export async function initSentry() {
+  const mod = loadSentry();
+  if (!mod) return;
+  const Sentry = await mod;
   Sentry.init({
     dsn: DSN,
     environment: import.meta.env.MODE || "production",
     tracesSampleRate: 0.1,
   });
+}
+
+export async function captureException(error) {
+  const mod = loadSentry();
+  if (!mod) return;
+  const Sentry = await mod;
+  Sentry.captureException(error);
 }
