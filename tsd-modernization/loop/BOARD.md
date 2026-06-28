@@ -2,7 +2,7 @@
 
 The persistent State for the improvement loop. See [`loop.md`](loop.md). Agents append to **Inbox**; the verifier promotes to **Backlog** or **Rejected**; the implementer moves approved items to **In Review**; Nash moves merged items to **Shipped**.
 
-Seeded by **Cycle 1 (2026-06-27)**: 7 lenses, an independent verifier on every finding, 42 confirmed, 1 rejected. **Cycles 2-4 (2026-06-27)** implemented 7 more safe wins from the backlog.
+Seeded by **Cycle 1 (2026-06-27)**: 7 lenses, an independent verifier on every finding, 42 confirmed, 1 rejected. **Cycles 2-5 (2026-06-27)** implemented 11 more safe wins. All cycles 1-5 are merged to `main` and deployed to production.
 
 ---
 
@@ -30,6 +30,13 @@ Verified, safe-to-automate wins, each `npm run build` green and runtime-checked.
 ### Cycle 4
 - [x] **Route-level code splitting** — performance — `src/routes.jsx`, `src/Layout.jsx`
   - 15 page components moved to `React.lazy()` + a `<Suspense>` boundary on the `<Outlet>`. Bundle went from 1 chunk to 18; main chunk 514KB → 371KB (~28% smaller). SSG still prerenders every route; client navigation loads each chunk on demand (verified). Home, Layout, and the error boundary stay eager.
+
+### Cycle 5
+- [x] **Mobile "Book a fit call" stays in the nav on phones** — conversion — `src/Layout.jsx`
+- [x] **Book page trust strip + Calendly-failure fallback** — conversion — `src/pages/Book.jsx`
+- [x] **Hero subhead rewritten from a run-on into three clean sentences** — copy — `src/pages/Home.jsx`
+- [x] **Single `<h1>` on Services, Why Us, Process, Savings, Contact, Pricing** — seo — `src/shared.jsx` + pages
+- [x] **Site-wide em-dash voice sweep: 168 removed from rendered + meta copy, 0 visible** — copy — page/data/meta/JSON-LD files
 
 > Deferred on purpose (need your judgment or platform access): Contact-form CTA/label (conversion); single-`<h1>`-per-page (per-page heading call); soft-404 status + permanent apex→www redirect (Vercel-level). All on the Backlog or the handoff list.
 
@@ -156,3 +163,4 @@ All 12 wins from cycles 1-4 were merged to `main` and deployed to production on 
 | 2 | 2026-06-27 | from cycle-1 backlog | 0 | 3 | `loop/cycle-2026-06-27` |
 | 3 | 2026-06-27 | from cycle-1 backlog | 0 | 3 | `loop/cycle-2026-06-27` |
 | 4 | 2026-06-27 | from cycle-1 backlog | 0 | 1 | `loop/cycle-2026-06-27` |
+| 5 | 2026-06-27 | judgment batch (Nash-approved) | 0 | 5 | `loop/cycle-2026-06-27b` |
