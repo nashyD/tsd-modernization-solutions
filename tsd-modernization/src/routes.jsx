@@ -27,6 +27,7 @@ const Book = lazy(() => import("./pages/Book"));
 const Demo = lazy(() => import("./pages/Demo"));
 const News = lazy(() => import("./pages/News"));
 const NewsDetail = lazy(() => import("./pages/NewsDetail"));
+const DataRoom = lazy(() => import("./pages/DataRoom"));
 
 /* Relationship-channel landing pages — vertical-specific pages for warm
    leads who arrived via founder DM or word-of-mouth. Wrapper functions let
@@ -81,6 +82,15 @@ export const routes = [
       { path: "book", Component: Book },
       { path: "demo", Component: Demo },
       { path: "contact", Component: Contact },
+      {
+        path: "plan/:slug",
+        Component: DataRoom,
+        getStaticPaths: () => [
+          "plan/sbtdc-9fbcf7d5bf50ccb7acd8",
+          "plan/legal-865714de00f8f07b3075",
+          "plan/insurance-b82769c73aea16c74f25",
+        ],
+      },
       { path: "*", Component: Home },
     ],
   },

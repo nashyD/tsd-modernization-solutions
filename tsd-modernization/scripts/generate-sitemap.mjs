@@ -58,7 +58,7 @@ function findRoutes(rootDir) {
 
 const routes = findRoutes(DIST_DIR)
   // Keep noindexed printable sheets and the static columbia demo out of the sitemap.
-  .filter((r) => !r.startsWith("/sheets/") && r !== "/columbia-demo");
+  .filter((r) => !r.startsWith("/sheets/") && !r.startsWith("/plan/") && r !== "/columbia-demo");
 const urlNodes = routes
   .map((r) => {
     const meta = PRIORITY_META[r] || DEFAULT_META;
