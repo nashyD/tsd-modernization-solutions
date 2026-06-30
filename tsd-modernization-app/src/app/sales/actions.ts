@@ -6,6 +6,24 @@ import { requireRole } from "@/lib/auth/require";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { PACKAGE_TIERS } from "@/lib/packages";
 import { env } from "@/lib/env";
+import type {
+  Database,
+  ProspectStatus,
+  StageDisposition,
+} from "@/lib/supabase/types";
+
+// Funnel statuses (additive on the legacy new/pitched/won/lost — see migration
+// 0012). 'won' is set by the Square webhook, never a rep.
+const PROSPECT_STATUSES = [
+  "new",
+  "contacted",
+  "demo_shown",
+  "fit_call",
+  "proposal",
+  "pitched",
+  "won",
+  "lost",
+] as const;
 
 const urlField = z
   .string()
@@ -106,9 +124,7 @@ export async function updateProspect(formData: FormData) {
 export async function setProspectStatus(formData: FormData) {
   await requireRole("admin");
   const id = z.string().uuid().parse(formData.get("id"));
-  const status = z
-    .enum(["new", "pitched", "won", "lost"])
-    .parse(formData.get("status"));
+  const status = z.enum(PROSPECT_STATUSES).parse(formData.get("status"));
   const sb = supabaseAdmin();
   const { error } = await sb.from("prospects").update({ status }).eq("id", id);
   if (error) throw new Error(error.message);
@@ -121,11 +137,11 @@ export async function recordVisit(formData: FormData) {
   const id = z.string().uuid().parse(formData.get("id"));
   const statusRaw = formData.get("status");
   const status = statusRaw
-    ? z.enum(["new", "pitched", "won", "lost"]).parse(statusRaw)
+    ? z.enum(PROSPECT_STATUSES).parse(statusRaw)
     : undefined;
   const notesRaw = formData.get("notes");
   const update: {
-    status?: "new" | "pitched" | "won" | "lost";
+    status?: ProspectStatus;
     notes?: string | null;
   } = {};
   if (status) update.status = status;
@@ -136,6 +152,140 @@ export async function recordVisit(formData: FormData) {
   if (error) throw new Error(error.message);
   revalidatePath("/sales");
   revalidatePath(`/sales/${id}`);
+}
+
+// ---------------------------------------------------------------------------
+// One-tap field disposition — the load-bearing input for the whole funnel.
+// A rep taps ONE button after a knock/call; this records the stage transition
+// (the source of truth for every conversion ratio), bumps the cadence fields
+// the loop owns, captures owner/email on an owner-out, and mirrors the event
+// into the human-readable notes log. The loop never writes here; only a signed-
+// in admin does, and the actor is taken from the session, never the form.
+
+const DISPOSITIONS = [
+  "knocked",
+  "answered",
+  "demo_shown",
+  "owner_out",
+  "fit_call",
+  "proposal_sent",
+  "dead",
+] as const;
+
+// Disposition -> the stage it advances to. null = a logged touch that does not
+// move the stage (a no-answer knock, or an owner-out we capture and revisit).
+const DISPOSITION_TO_STATUS: Record<StageDisposition, ProspectStatus | null> = {
+  knocked: null,
+  answered: "contacted",
+  demo_shown: "demo_shown",
+  owner_out: null,
+  fit_call: "fit_call",
+  proposal_sent: "proposal",
+  dead: "lost",
+};
+
+const DISPOSITION_LABEL: Record<StageDisposition, string> = {
+  knocked: "Knocked, no answer",
+  answered: "Reached a person",
+  demo_shown: "Demo shown",
+  owner_out: "Owner out",
+  fit_call: "Fit call booked",
+  proposal_sent: "Proposal sent",
+  dead: "Marked dead",
+};
+
+const DispositionSchema = z.object({
+  prospect_id: z.string().uuid(),
+  disposition: z.enum(DISPOSITIONS),
+  channel: z.string().trim().max(40).optional().or(z.literal("")),
+  detail: z.string().trim().max(2000).optional().or(z.literal("")),
+  owner_name: z.string().trim().max(200).optional().or(z.literal("")),
+  email: z.string().email().optional().or(z.literal("")),
+  owner: z
+    .enum(["grant", "bishop", "nash", "unassigned"])
+    .optional()
+    .or(z.literal("")),
+  next_action_days: z.coerce.number().int().min(0).max(60).optional(),
+});
+
+export async function logDisposition(formData: FormData) {
+  const { user } = await requireRole("admin");
+  const d = DispositionSchema.parse({
+    prospect_id: clean(formData.get("prospect_id")),
+    disposition: clean(formData.get("disposition")),
+    channel: clean(formData.get("channel")),
+    detail: clean(formData.get("detail")),
+    owner_name: clean(formData.get("owner_name")),
+    email: clean(formData.get("email")),
+    owner: clean(formData.get("owner")),
+    next_action_days: clean(formData.get("next_action_days")) || undefined,
+  });
+
+  const sb = supabaseAdmin();
+  const { data: cur, error: curErr } = await sb
+    .from("prospects")
+    .select("status,touch_count")
+    .eq("id", d.prospect_id)
+    .single();
+  if (curErr || !cur) throw new Error(curErr?.message ?? "Prospect not found.");
+
+  const fromStatus = cur.status;
+  const target = DISPOSITION_TO_STATUS[d.disposition];
+  const nowIso = new Date().toISOString();
+
+  const update: Database["public"]["Tables"]["prospects"]["Update"] = {
+    touch_count: (cur.touch_count ?? 0) + 1,
+    last_touch_at: nowIso,
+  };
+  if (target && target !== fromStatus) {
+    update.status = target;
+    update.stage_entered_at = nowIso;
+  }
+  if (d.disposition === "dead") {
+    update.next_action_at = null;
+  } else {
+    const days = d.next_action_days ?? 2;
+    update.next_action_at = new Date(
+      Date.now() + days * 86_400_000,
+    ).toISOString();
+  }
+  if (d.owner_name) update.contact_name = d.owner_name;
+  if (d.email) update.email = d.email;
+  if (d.owner) update.owner = d.owner;
+
+  const { error: upErr } = await sb
+    .from("prospects")
+    .update(update)
+    .eq("id", d.prospect_id);
+  if (upErr) throw new Error(upErr.message);
+
+  const { error: evErr } = await sb.from("prospect_stage_events").insert({
+    prospect_id: d.prospect_id,
+    from_status: fromStatus,
+    to_status: target ?? fromStatus,
+    disposition: d.disposition,
+    channel: d.channel || null,
+    detail: d.detail || null,
+    actor_user_id: user.id,
+    actor_email: user.email ?? null,
+  });
+  if (evErr) throw new Error(evErr.message);
+
+  // Mirror into the canonical visit log so the human-readable record stays whole.
+  const noteBits = [DISPOSITION_LABEL[d.disposition]];
+  if (d.owner_name) noteBits.push(`owner: ${d.owner_name}`);
+  if (d.email) noteBits.push(`email: ${d.email}`);
+  if (d.detail) noteBits.push(d.detail);
+  await sb.from("prospect_notes").insert({
+    prospect_id: d.prospect_id,
+    body: noteBits.join(" · "),
+    author_user_id: user.id,
+    author_email: user.email ?? null,
+  });
+
+  revalidatePath("/sales");
+  revalidatePath("/sales/today");
+  revalidatePath(`/sales/${d.prospect_id}`);
 }
 
 // ---------------------------------------------------------------------------

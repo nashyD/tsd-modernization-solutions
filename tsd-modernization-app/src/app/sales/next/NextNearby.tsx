@@ -11,6 +11,7 @@ import {
   LocateFixed,
 } from "lucide-react";
 import { recordVisit } from "../actions";
+import type { ProspectStatus } from "@/lib/supabase/types";
 
 export type FieldProspect = {
   id: string;
@@ -21,7 +22,7 @@ export type FieldProspect = {
   lat: number;
   lng: number;
   place_id: string | null;
-  status: "new" | "pitched" | "won" | "lost";
+  status: ProspectStatus;
   primary_product: "website" | "front_desk" | "booking_bridge" | "concierge" | null;
   gap_summary: string | null;
   rating: number | null;
@@ -37,9 +38,24 @@ const PRODUCT_LABEL: Record<NonNullable<FieldProspect["primary_product"]>, strin
     concierge: "Concierge",
   };
 
-const STATUSES = ["new", "pitched", "won", "lost"] as const;
-const STATUS_LABEL: Record<(typeof STATUSES)[number], string> = {
+// Quick-set buttons for the field tool. The one-tap DispositionBar is the
+// primary path now; these stay as a manual override. STATUS_LABEL is exhaustive
+// over ProspectStatus so a prospect already at a sub-stage still renders.
+const STATUSES = [
+  "new",
+  "contacted",
+  "demo_shown",
+  "fit_call",
+  "proposal",
+  "won",
+  "lost",
+] as const;
+const STATUS_LABEL: Record<ProspectStatus, string> = {
   new: "New",
+  contacted: "Contacted",
+  demo_shown: "Demo shown",
+  fit_call: "Fit call",
+  proposal: "Proposal",
   pitched: "Pitched",
   won: "Won",
   lost: "Lost",
@@ -82,8 +98,7 @@ export function NextNearby({
   const [locating, setLocating] = useState(true);
   const [skipped, setSkipped] = useState<Set<string>>(new Set());
   const [pending, startTransition] = useTransition();
-  const [draftStatus, setDraftStatus] =
-    useState<(typeof STATUSES)[number]>("new");
+  const [draftStatus, setDraftStatus] = useState<ProspectStatus>("new");
   const [draftNotes, setDraftNotes] = useState("");
   const [saved, setSaved] = useState(false);
   const [prevId, setPrevId] = useState<string | undefined>(undefined);

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   BookOpen,
+  CalendarCheck,
   LayoutGrid,
   LayoutDashboard,
   MapPin,
@@ -49,6 +50,7 @@ const WORKSPACES: Workspace[] = [
     adminOnly: true,
     sections: [
       { label: "Board", href: "/sales", icon: LayoutGrid, exact: true },
+      { label: "Today", href: "/sales/today", icon: CalendarCheck },
       { label: "Playbook", href: "/sales/playbook", icon: BookOpen },
       { label: "Near me", href: "/sales/next", icon: MapPin },
       { label: "Demos", href: "/sales/demos", icon: MonitorSmartphone },

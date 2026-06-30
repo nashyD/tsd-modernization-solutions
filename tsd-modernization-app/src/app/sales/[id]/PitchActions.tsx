@@ -4,9 +4,21 @@ import { Check } from "lucide-react";
 import { setProspectStatus, toggleShare } from "../actions";
 import type { ProspectStatus } from "@/lib/supabase/types";
 
-const STATUSES: ProspectStatus[] = ["new", "pitched", "won", "lost"];
+const STATUSES: ProspectStatus[] = [
+  "new",
+  "contacted",
+  "demo_shown",
+  "fit_call",
+  "proposal",
+  "won",
+  "lost",
+];
 const LABEL: Record<ProspectStatus, string> = {
   new: "New",
+  contacted: "Contacted",
+  demo_shown: "Demo shown",
+  fit_call: "Fit call",
+  proposal: "Proposal",
   pitched: "Pitched",
   won: "Won",
   lost: "Lost",

@@ -25,6 +25,7 @@ import {
   deleteAsset,
 } from "../estimate-actions";
 import PitchActions from "./PitchActions";
+import DispositionBar from "../_components/DispositionBar";
 import { NoteComposer } from "../_components/PitchNotes";
 import { WorkspaceTabs } from "./WorkspaceTabs";
 import AuditRunner from "./AuditRunner";
@@ -322,6 +323,9 @@ export default async function ProspectWorkspace({
         shareEnabled={p.share_enabled}
         shareUrl={shareUrl}
       />
+
+      {/* One-tap field disposition — logs the stage event + cadence the loop owns. */}
+      <DispositionBar prospectId={p.id} />
 
       <WorkspaceTabs
         tabs={[
