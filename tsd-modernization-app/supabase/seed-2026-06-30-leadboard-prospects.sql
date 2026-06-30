@@ -1,0 +1,68 @@
+-- seed-2026-06-30-leadboard-prospects.sql
+-- Loads the 50 grant-leadboard leads into prospects with researched phone + email,
+-- the verified leak as gap_summary, the personalization hook as notes, owner = grant
+-- (door-to-door lane), discovery_source = 'leadboard'. Insert-if-not-exists by
+-- business_name so it never duplicates an existing prospect. Custom email drafts
+-- live in the vault outreach pack and can be attached as prospect_notes separately.
+-- Run AFTER migration 0012 (needs the owner column). Safe to re-run.
+
+insert into public.prospects
+  (business_name, business_url, phone, email, city, primary_product, selected_services, gap_summary, notes, owner, discovery_source, status)
+select v.business_name, v.business_url, v.phone, v.email, v.city, v.primary_product,
+       array[v.primary_product], v.gap_summary, v.notes, 'grant', 'leadboard', 'new'
+from (values
+  ('The String Bean', 'https://www.google.com/search?q=The+String+Bean%2C+Belmont+NC', '(980) 283-7300', null, 'Belmont', 'website', '~$300-450/mo SpotHopper rented microsite', 'In-house ground burgers; Wine Spectator award. No public email.'),
+  ('Old Stone Steakhouse', 'https://www.google.com/search?q=Old+Stone+Steakhouse%2C+Belmont+NC', '(704) 825-9995', 'oldstonebookinginfo@gmail.com', 'Belmont', 'website', '~$300-450/mo SpotHopper x2 (Cornerstone next door, same owner)', 'Old police-station building; pan rolls. Two storefronts one owner.'),
+  ('Akahana Asian Bistro', 'https://www.google.com/search?q=Akahana+Asian+Bistro%2C+Belmont+NC', '(704) 829-8069', 'akahanabistro@yahoo.com', 'Belmont', 'website', '~$300-450/mo SpotHopper', 'Pho is the draw; opened Mar 2018.'),
+  ('iColor Nail Bar', 'https://www.google.com/search?q=iColor+Nail+Bar%2C+Belmont+NC', '(704) 675-0078', 'icolornailbarbelmont@gmail.com', 'Belmont', 'website', '~$200-400/mo ZOTA, site (c)2021', 'Cleanest-salon reviews; dated site. Owner Steve Nie.'),
+  ('Marrelli''s Italian Restaurant', 'https://www.google.com/search?q=Marrelli%27s+Italian+Restaurant%2C+Belmont+NC', '(704) 829-8232', 'info@marrellis.com', 'Belmont', 'website', '~$300-500/mo + per-order Owner.com', 'Ravioli of the week; chicken parm. Owner.com per-order cut.'),
+  ('Stone Fired Social', 'https://www.google.com/search?q=Stone+Fired+Social%2C+Belmont+NC', '(980) 283-7500', 'sfsocial22@gmail.com', 'Belmont', 'website', '~$300-600/mo SpotHopper', 'Red Corvette pizza; pinball. Shares 106 N Main with The String Bean.'),
+  ('The Everyday Market', 'https://www.google.com/search?q=The+Everyday+Market%2C+Belmont+NC', '(980) 283-7170', null, 'Belmont', 'website', 'Rented site (live site is Square, not SpotHopper)', 'Cronuts sell out by 10:30. No public email.'),
+  ('The Lodge Tavern & Tap', 'https://www.google.com/search?q=The+Lodge+Tavern+%26+Tap%2C+Belmont+NC', '(704) 461-8044', null, 'Belmont', 'website', '~$200-400/mo SpotHopper', 'Wild-game menu; venison burger. No public email.'),
+  ('Sammy''s Deli & Neighborhood Pub', 'https://www.google.com/search?q=Sammy%27s+Deli+%26+Neighborhood+Pub%2C+Belmont+NC', '(704) 825-4266', 'sammyspub@gmail.com', 'Belmont', 'website', '~$200-400/mo SpotHopper', 'Since 1994; 37 taps; wings.'),
+  ('Traust Brewing', 'https://www.google.com/search?q=Traust+Brewing%2C+Mount+Holly+NC', '(833) 566-5563', 'info@traustbrewing.com', 'Mount Holly', 'website', '~$300-450/mo SpotHopper', 'Woman/veteran-owned; 5-year party Jul 11 2026.'),
+  ('Brown Shugah Nail Bar', 'https://www.google.com/search?q=Brown+Shugah+Nail+Bar%2C+Mount+Holly+NC', '(704) 248-8008', 'brownshugahnailbar@gmail.com', 'Mount Holly', 'website', '~$50-80/mo Wix+GlossGenius', 'Nextdoor Faves 2024; owner Renee; added brows.'),
+  ('Garage Door Express', 'https://www.google.com/search?q=Garage+Door+Express%2C+Mount+Holly+NC', '(980) 259-9618', 'garagedoorexpress1@gmail.com', 'Mount Holly', 'booking_bridge', '~$150-400/mo Thumbtack; own domain dead', 'Dead garagedoorexpressnc.com; since 2010.'),
+  ('Accentuate Med Spa', 'https://www.google.com/search?q=Accentuate+Med+Spa%2C+Mount+Holly+NC', '(980) 277-8600', null, 'Mount Holly', 'website', '~$50-115/mo Vagaro+GoDaddy', 'Peptides/HRT/IV; Vagaro-only. No public email.'),
+  ('One19 North Main', 'https://www.google.com/search?q=One19+North+Main%2C+Mount+Holly+NC', '(704) 812-8009', 'info@one19northmain.com', 'Mount Holly', 'website', '~$249-400/mo SpotHopper', 'July 4 closing; 97 health score; sushi/Thai/hibachi.'),
+  ('Vasileio''s Italian Kitchen', 'https://www.google.com/search?q=Vasileio%27s+Italian+Kitchen%2C+Mount+Holly+NC', '(704) 820-8490', 'vasbakas@gmail.com', 'Mount Holly', 'website', '~$300-500/mo SpotHopper', 'Italian-Greek; gyro + moussaka.'),
+  ('Mount Holly Heating and Air', 'https://www.google.com/search?q=Mount+Holly+Heating+and+Air%2C+Mount+Holly+NC', '(704) 827-3421', 'mhhac@bellsouth.net', 'Mount Holly', 'booking_bridge', '~$99-159/mo Hibu; footer broken', 'Since 1955; broken {{placeholder}} on contact page.'),
+  ('Friends Heating & Air', 'https://www.google.com/search?q=Friends+Heating+%26+Air%2C+Mount+Holly+NC', '(704) 718-9262', 'friendsheatingandair@gmail.com', 'Mount Holly', 'booking_bridge', '~$150-400/mo Consumr Buzz', 'Since 2018; 24/7 emergency.'),
+  ('Terra Mia Ristorante & Bar', 'https://www.google.com/search?q=Terra+Mia+Ristorante+%26+Bar%2C+McAdenville+NC', '(704) 879-4023', 'terramiamcadenvillecatering@gmail.com', 'McAdenville', 'website', '~$300/mo SpotHopper', 'Florence owner; fresh pasta. Catering inbox only.'),
+  ('Avalon Salon', 'https://www.google.com/search?q=Avalon+Salon%2C+Gastonia+NC', '(704) 897-8891', 'sophia@avalonsalonsgastonia.com', 'Gastonia', 'website', '~$200-400/mo ZOTA, (c)2022', 'Nail salon (not hair); dated site; Eastridge Mall.'),
+  ('Milano Restaurant', 'https://www.google.com/search?q=Milano+Restaurant%2C+Gastonia+NC', '(704) 854-3946', null, 'Gastonia', 'website', '~$600/mo SpotHopper', 'Now takeout/catering only Tue-Fri 11-4. No public email.'),
+  ('Gaston Pour House', 'https://www.google.com/search?q=Gaston+Pour+House%2C+Gastonia+NC', '(704) 671-4023', 'gph@gastonpourhouse.com', 'Gastonia', 'website', '~$249-400/mo SpotHopper', 'Fri/Sat rotating smoker menu; live music.'),
+  ('Barrister''s at The Esquire Hotel', 'https://www.google.com/search?q=Barrister%27s+at+The+Esquire+Hotel%2C+Gastonia+NC', '(980) 888-1502', 'dining@esquirehotel.com', 'Gastonia', 'website', '~$350-600/mo SpotHopper', 'Events in The Notary; rooftop; catering.'),
+  ('La Fuente Mexican Bar & Grill', 'https://www.google.com/search?q=La+Fuente+Mexican+Bar+%26+Grill%2C+Gastonia+NC', '(704) 866-7744', 'lafuentetexmexgrill@gmail.com', 'Gastonia', 'website', '~$200-500/mo SpotHopper', 'Family-run since 1993.'),
+  ('Spa South Salon', 'https://www.google.com/search?q=Spa+South+Salon%2C+Gastonia+NC', '(704) 824-8569', null, 'Gastonia', 'website', '~$70/mo Vagaro; own site dead', '~40 yrs; spasouthsalon.com down. No public email.'),
+  ('Sugar Salon and Spa', 'https://www.google.com/search?q=Sugar+Salon+and+Spa%2C+Gastonia+NC', '(980) 888-4255', null, 'Gastonia', 'website', '~$50-84/mo Vagaro+Square', 'Hosts Verity Wellness med spa. No public email.'),
+  ('J Adams Salon', 'https://www.google.com/search?q=J+Adams+Salon%2C+Gastonia+NC', null, null, 'Gastonia', 'website', '~$24-50/mo Vagaro, no site', 'Moved to The Mark of Excellence. PHONE UNVERIFIED.'),
+  ('Marin Lawn Care & Landscape', 'https://www.google.com/search?q=Marin+Lawn+Care+%26+Landscape%2C+Gastonia+NC', '(704) 860-7219', 'marinlawncareandlanscape7219@yahoo.com', 'Gastonia', 'booking_bridge', '~$35-80/mo Constant Contact, no site', 'Fall aeration email; does the work.'),
+  ('EM Electric', 'https://www.google.com/search?q=EM+Electric%2C+Gastonia+NC', '(704) 550-1444', 'evanmillerelectrical@gmail.com', 'Gastonia', 'booking_bridge', '~$300-600/mo Thumbtack, no website', 'Evan; price-match promise; ask for Evan.'),
+  ('Affordable Auto Repair & Service', 'https://www.google.com/search?q=Affordable+Auto+Repair+%26+Service%2C+Gastonia+NC', '(704) 867-1754', null, 'Gastonia', 'website', '~$300-400/mo Demandforce; no real site', 'Carfax Top-Rated 2025; since 2006; ask for Tim. No public email.'),
+  ('Bwrights Detail Service', 'https://www.google.com/search?q=Bwrights+Detail+Service%2C+Gastonia+NC', '(704) 879-6098', 'bwright@bwrightdetail.com', 'Gastonia', 'booking_bridge', 'Detailers Roadmap booking/CRM sub (already owns a site)', 'PPF/ceramic since 2005.'),
+  ('Georgio''s', 'https://www.google.com/search?q=Georgio%27s%2C+Cramerton+NC', '(704) 824-2220', 'georgioscramerton@gmail.com', 'Cramerton', 'website', '~$300-600/mo SpotHopper', 'Catering for corporate/weddings.'),
+  ('Mayworth''s Public House', 'https://www.google.com/search?q=Mayworth%27s+Public+House%2C+Cramerton+NC', '(704) 879-4726', 'justin@mayworths.com', 'Cramerton', 'website', '~$300-500/mo + per-order Owner.com', 'Shrimp & grits; Powered by Owner.'),
+  ('Dallas Tavern and Taphouse', 'https://www.google.com/search?q=Dallas+Tavern+and+Taphouse%2C+Dallas+NC', '(704) 215-7181', 'dallastavernandtaphouse@gmail.com', 'Dallas', 'website', '~$200-500/mo SpotHopper', 'Toast takeout; private parties/catering.'),
+  ('Front Porch and Provisions', 'https://www.google.com/search?q=Front+Porch+and+Provisions%2C+Dallas+NC', '(704) 215-7166', 'frontporchandprovisions@gmail.com', 'Dallas', 'website', '~$200-300/mo SpotHopper', 'New breakfast 8-11; local goods (Riverbend Creamery).'),
+  ('MAXX Pest Control & Lawn Care', 'https://www.google.com/search?q=MAXX+Pest+Control+%26+Lawn+Care%2C+Dallas+NC', '(980) 925-6299', 'info@maxxpestandlawn.com', 'Dallas', 'booking_bridge', '~$300-600/mo Thumbtack+Angi+Porch+Networx, Wix', '28+ yrs, 350+ customers.'),
+  ('Whiskey Mill Bar & Grill', 'https://www.google.com/search?q=Whiskey+Mill+Bar+%26+Grill%2C+Bessemer+City+NC', '(704) 629-2325', 'whiskeymillbarandgrill@gmail.com', 'Bessemer City', 'website', '~$300-500/mo SpotHopper', 'Two locations on one site (Gastonia + Bessemer City).'),
+  ('Bryan Gamble Auto & Diesel', 'https://www.google.com/search?q=Bryan+Gamble+Auto+%26+Diesel%2C+Bessemer+City+NC', '(704) 864-5508', null, 'Bessemer City', 'website', '~$150-300/mo Repair Shop Websites', 'Since 1983; NAPA AutoCare. No public email (contact form).'),
+  ('Deluxe Nail Bar', 'https://www.google.com/search?q=Deluxe+Nail+Bar%2C+Bessemer+City+NC', '(704) 964-5516', 'shadeah.reid23@yahoo.com', 'Bessemer City', 'website', '~$200-400/mo ZOTA', 'Pick service/time/tech booking. (Personal-looking inbox.)'),
+  ('Reece Jade Salon & Co', 'https://www.google.com/search?q=Reece+Jade+Salon+%26+Co%2C+Dallas+NC', '(704) 214-0753', null, 'Dallas', 'website', '~$45/mo Vagaro, no site', 'Ashlyn extensions/color. No public email; phone from lead.'),
+  ('Tinsley Stylez n Cutz', 'https://www.google.com/search?q=Tinsley+Stylez+n+Cutz%2C+Stanley+NC', '(980) 287-7328', null, 'Stanley', 'website', '~$25/mo TheCut, no site', '5.0; hot-towel/straight-razor. No public email.'),
+  ('Sanitary Barbershop', 'https://www.google.com/search?q=Sanitary+Barbershop%2C+Cherryville+NC', null, null, 'Cherryville', 'website', '~$30/mo Booksy, no site', 'Jay 5.0. PHONE UNVERIFIED (Shelby number floating).'),
+  ('J&J Mobile Detailing', 'https://www.google.com/search?q=J%26J+Mobile+Detailing%2C+Gastonia+NC', '(704) 674-1536', 'jjmobiledetailing17@aol.com', 'Gastonia', 'website', '~$20-60/mo Weebly; domain dead-redirects', '100+ 5-star since 2017; egg-farm redirect. Owner Joseph.'),
+  ('FreeMore Tavern', 'https://www.google.com/search?q=FreeMore+Tavern%2C+Charlotte+NC', '(980) 237-9687', 'tina@freemoretavern.com', 'Charlotte', 'website', '~$300-600/mo SpotHopper', 'From Ed''s Tavern; Music Bingo/Thursday trivia.'),
+  ('McKoy''s Smokehouse & Saloon', 'https://www.google.com/search?q=McKoy%27s+Smokehouse+%26+Saloon%2C+Charlotte+NC', '(704) 523-6330', 'manager@mckoys.net', 'Charlotte', 'website', '~$300-600/mo SpotHopper', 'Registers since 2006; pecan-smoked ribs.'),
+  ('Luigi''s Pizza', 'https://www.google.com/search?q=Luigi%27s+Pizza%2C+Charlotte+NC', '(704) 587-6010', 'luigispizza704@yahoo.com', 'Charlotte', 'website', '~$200-500/mo SpotHopper', 'Oversized Steelecroft slices; catering.'),
+  ('Mago''s Taqueria & Bar', 'https://www.google.com/search?q=Mago%27s+Taqueria+%26+Bar%2C+Charlotte+NC', '(980) 433-2115', 'magostaqueriabar@gmail.com', 'Charlotte', 'website', '~$300-700/mo SpotHopper', 'Birria/molcajetes; $10.99 lunch.'),
+  ('Wetpaint Nail Bar', 'https://www.google.com/search?q=Wetpaint+Nail+Bar%2C+Charlotte+NC', '(704) 817-9394', null, 'Charlotte', 'website', '~$150-250/mo Mac Marketing+ABC Salon', 'VIP/Royal pedicure tiers. No public email.'),
+  ('Glo Nail Lounge', 'https://www.google.com/search?q=Glo+Nail+Lounge%2C+Charlotte+NC', '(704) 588-8226', 'glonailoungestryon@gmail.com', 'Charlotte', 'website', '~$50-100/mo Bukkii+Wix; default info@mysite.com still live', 'Group/party bookings on S Tryon.'),
+  ('Kolapasi Indian Canteen', 'https://www.google.com/search?q=Kolapasi+Indian+Canteen%2C+Charlotte+NC', '(980) 771-1002', 'kolapasicharlotte@gmail.com', 'Charlotte', 'website', '~$249-499/mo + per-order Owner.com', 'Taste Before You Buy; rewards. Owner.com per-order cut.'),
+  ('Zodiac Bar & Grill', 'https://www.google.com/search?q=Zodiac+Bar+%26+Grill%2C+Charlotte+NC', '(980) 215-0247', 'cltzodiac@gmail.com', 'Charlotte', 'website', '~$200-400/mo SpotHopper', 'Hookah/DJ nights; Tuscan pasta/egg rolls.')
+) as v(business_name, business_url, phone, email, city, primary_product, gap_summary, notes)
+where not exists (
+  select 1 from public.prospects p
+  where lower(p.business_name) = lower(v.business_name)
+);
