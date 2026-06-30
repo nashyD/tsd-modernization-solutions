@@ -9,7 +9,7 @@
 insert into public.prospects
   (business_name, business_url, phone, email, city, primary_product, selected_services, gap_summary, notes, owner, discovery_source, status)
 select v.business_name, v.business_url, v.phone, v.email, v.city, v.primary_product,
-       array[v.primary_product], v.gap_summary, v.notes, 'grant', 'leadboard', 'new'
+       jsonb_build_array(v.primary_product), v.gap_summary, v.notes, 'grant', 'leadboard', 'new'
 from (values
   ('The String Bean', 'https://www.google.com/search?q=The+String+Bean%2C+Belmont+NC', '(980) 283-7300', null, 'Belmont', 'website', '~$300-450/mo SpotHopper rented microsite', 'In-house ground burgers; Wine Spectator award. No public email.'),
   ('Old Stone Steakhouse', 'https://www.google.com/search?q=Old+Stone+Steakhouse%2C+Belmont+NC', '(704) 825-9995', 'oldstonebookinginfo@gmail.com', 'Belmont', 'website', '~$300-450/mo SpotHopper x2 (Cornerstone next door, same owner)', 'Old police-station building; pan rolls. Two storefronts one owner.'),
