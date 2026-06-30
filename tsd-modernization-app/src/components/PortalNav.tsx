@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import {
   BookOpen,
   CalendarCheck,
+  Dumbbell,
   LayoutGrid,
   LayoutDashboard,
   MapPin,
@@ -51,6 +52,7 @@ const WORKSPACES: Workspace[] = [
     sections: [
       { label: "Board", href: "/sales", icon: LayoutGrid, exact: true },
       { label: "Today", href: "/sales/today", icon: CalendarCheck },
+      { label: "Practice", href: "/sales/practice", icon: Dumbbell },
       { label: "Playbook", href: "/sales/playbook", icon: BookOpen },
       { label: "Near me", href: "/sales/next", icon: MapPin },
       { label: "Demos", href: "/sales/demos", icon: MonitorSmartphone },
