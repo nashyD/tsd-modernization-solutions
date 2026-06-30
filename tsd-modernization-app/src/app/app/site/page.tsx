@@ -3,6 +3,7 @@ import {
   requireUser,
   getMemberships,
   getActiveClient,
+  isUserAppAdmin,
 } from "@/lib/auth/require";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -14,7 +15,7 @@ export const dynamic = "force-dynamic";
 export default async function SitePage() {
   const { user } = await requireUser();
   const memberships = await getMemberships(user.id);
-  const active = await getActiveClient(memberships);
+  const active = await getActiveClient(memberships, user.id);
 
   if (!active) {
     return (
@@ -28,7 +29,7 @@ export default async function SitePage() {
     );
   }
 
-  const isAdmin = memberships.some((m) => m.role === "admin");
+  const isAdmin = await isUserAppAdmin(user.id);
 
   return (
     <div className="space-y-12 animate-fade-up">

@@ -182,7 +182,9 @@ export async function updateClient(formData: FormData) {
 const InviteOwnerSchema = z.object({
   client_id: z.string().uuid(),
   email: z.string().email(),
-  role: z.enum(["owner", "manager", "admin"] as const).default("owner"),
+  // 'admin' is intentionally NOT invitable here: app-admin is the app_admins
+  // allowlist (migration 0013), never a per-client membership role.
+  role: z.enum(["owner", "manager"] as const).default("owner"),
 });
 
 export async function inviteOwner(formData: FormData) {

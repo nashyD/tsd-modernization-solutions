@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 export default async function VoicePage() {
   const { user } = await requireUser();
   const memberships = await getMemberships(user.id);
-  const active = await getActiveClient(memberships);
+  const active = await getActiveClient(memberships, user.id);
   if (!active) {
     return (
       <div className="space-y-6">

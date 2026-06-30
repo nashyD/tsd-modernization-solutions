@@ -272,7 +272,6 @@ export default async function AdminClientDetail({
               >
                 <option value="owner">owner</option>
                 <option value="manager">manager</option>
-                <option value="admin">admin</option>
               </Select>
               <Button
                 type="submit"
