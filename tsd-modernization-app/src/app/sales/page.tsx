@@ -12,15 +12,32 @@ import { promoteLead } from "./actions";
 
 export const dynamic = "force-dynamic";
 
-const ORDER: ProspectStatus[] = ["new", "pitched", "won", "lost"];
+const ORDER: ProspectStatus[] = [
+  "new",
+  "contacted",
+  "demo_shown",
+  "fit_call",
+  "proposal",
+  "pitched",
+  "won",
+  "lost",
+];
 const LABEL: Record<ProspectStatus, string> = {
   new: "New",
+  contacted: "Contacted",
+  demo_shown: "Demo shown",
+  fit_call: "Fit call",
+  proposal: "Proposal",
   pitched: "Pitched",
   won: "Won",
   lost: "Lost",
 };
 const TONE: Record<ProspectStatus, "amber" | "blue" | "emerald" | "neutral"> = {
   new: "amber",
+  contacted: "blue",
+  demo_shown: "blue",
+  fit_call: "blue",
+  proposal: "blue",
   pitched: "blue",
   won: "emerald",
   lost: "neutral",

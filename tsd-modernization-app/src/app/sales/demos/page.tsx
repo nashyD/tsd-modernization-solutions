@@ -15,12 +15,20 @@ export const dynamic = "force-dynamic";
 
 const STATUS_LABEL: Record<ProspectStatus, string> = {
   new: "On the shelf",
+  contacted: "Contacted",
+  demo_shown: "Demo shown",
+  fit_call: "Fit call",
+  proposal: "Proposal",
   pitched: "Pitched",
   won: "Won",
   lost: "Passed",
 };
 const STATUS_TONE: Record<ProspectStatus, "amber" | "blue" | "emerald" | "neutral"> = {
   new: "amber",
+  contacted: "blue",
+  demo_shown: "blue",
+  fit_call: "blue",
+  proposal: "blue",
   pitched: "blue",
   won: "emerald",
   lost: "neutral",

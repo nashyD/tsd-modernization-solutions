@@ -19,7 +19,26 @@ export type WorkItemStatus = "todo" | "doing" | "done";
 
 export type ClientUserRole = "owner" | "manager" | "admin";
 
-export type ProspectStatus = "new" | "pitched" | "won" | "lost";
+export type ProspectStatus =
+  | "new"
+  | "contacted"
+  | "demo_shown"
+  | "fit_call"
+  | "proposal"
+  | "pitched"
+  | "won"
+  | "lost";
+export type ProspectOwner = "grant" | "bishop" | "nash" | "unassigned";
+export type SmsConsent = "none" | "verbal" | "written";
+// One-tap field dispositions a rep logs; the loop maps each to a stage + cadence.
+export type StageDisposition =
+  | "knocked"
+  | "answered"
+  | "demo_shown"
+  | "owner_out"
+  | "fit_call"
+  | "proposal_sent"
+  | "dead";
 export type ProspectAssetKind = "image" | "pdf" | "other";
 export type EstimateServiceKey =
   | "website"
@@ -178,6 +197,14 @@ export interface Database {
           fit_score: number | null;
           source_url: string | null;
           discovery_source: string | null;
+          owner: ProspectOwner;
+          touch_count: number;
+          last_touch_at: string | null;
+          next_action_at: string | null;
+          stage_entered_at: string;
+          sms_consent: SmsConsent;
+          consent_source: string | null;
+          consent_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -216,10 +243,48 @@ export interface Database {
           fit_score?: number | null;
           source_url?: string | null;
           discovery_source?: string | null;
+          owner?: ProspectOwner;
+          touch_count?: number;
+          last_touch_at?: string | null;
+          next_action_at?: string | null;
+          stage_entered_at?: string;
+          sms_consent?: SmsConsent;
+          consent_source?: string | null;
+          consent_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["prospects"]["Insert"]>;
+        Relationships: [];
+      };
+      prospect_stage_events: {
+        Row: {
+          id: string;
+          prospect_id: string;
+          from_status: string | null;
+          to_status: string;
+          disposition: string;
+          channel: string | null;
+          detail: string | null;
+          actor_user_id: string | null;
+          actor_email: string | null;
+          occurred_at: string;
+        };
+        Insert: {
+          id?: string;
+          prospect_id: string;
+          from_status?: string | null;
+          to_status: string;
+          disposition: string;
+          channel?: string | null;
+          detail?: string | null;
+          actor_user_id?: string | null;
+          actor_email?: string | null;
+          occurred_at?: string;
+        };
+        Update: Partial<
+          Database["public"]["Tables"]["prospect_stage_events"]["Insert"]
+        >;
         Relationships: [];
       };
       prospect_candidates: {
