@@ -8,6 +8,7 @@ import { LinkButton } from "@/components/ui/Button";
 import { usd } from "@/lib/sales/services";
 import { estimate } from "@/lib/sales/estimator";
 import type { ProspectStatus, EstimateServiceKey } from "@/lib/supabase/types";
+import { fitBand, fitLabel, FIT_BAND_TONE } from "@/lib/sales/fit";
 import { promoteLead } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -79,7 +80,7 @@ export default async function SalesBoard({
   const { data: prospects } = await sb
     .from("prospects")
     .select(
-      "id,business_name,business_url,status,package_tier,team_size,selected_services,updated_at,primary_product,gap_summary,rating,review_count,city",
+      "id,business_name,business_url,status,package_tier,team_size,selected_services,updated_at,primary_product,gap_summary,rating,review_count,city,fit_score",
     )
     .order("updated_at", { ascending: false });
   const all = prospects ?? [];
@@ -241,6 +242,11 @@ export default async function SalesBoard({
                             <span className="font-mono text-sm text-[var(--text)]">
                               {usd(low)}+
                             </span>
+                          ) : null}
+                          {p.fit_score != null ? (
+                            <Badge tone={FIT_BAND_TONE[fitBand(p.fit_score)]}>
+                              {fitLabel(p.fit_score)}
+                            </Badge>
                           ) : null}
                           <Badge tone={TONE[p.status]}>{LABEL[p.status]}</Badge>
                         </div>
