@@ -89,6 +89,20 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["client_users"]["Insert"]>;
         Relationships: [];
       };
+      app_admins: {
+        Row: {
+          user_id: string;
+          note: string | null;
+          created_at: string;
+        };
+        Insert: {
+          user_id: string;
+          note?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["app_admins"]["Insert"]>;
+        Relationships: [];
+      };
       leads: {
         Row: {
           id: string;

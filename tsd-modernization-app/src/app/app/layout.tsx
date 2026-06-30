@@ -3,6 +3,7 @@ import {
   requireUser,
   getMemberships,
   getActiveClient,
+  isUserAppAdmin,
 } from "@/lib/auth/require";
 import { PortalNav } from "@/components/PortalNav";
 import { exitClientView } from "@/app/admin/view-as-actions";
@@ -14,8 +15,8 @@ export default async function PortalLayout({
 }) {
   const { user } = await requireUser();
   const memberships = await getMemberships(user.id);
-  const isAdmin = memberships.some((m) => m.role === "admin");
-  const active = await getActiveClient(memberships);
+  const isAdmin = await isUserAppAdmin(user.id);
+  const active = await getActiveClient(memberships, user.id);
   const impersonating = active?.impersonating ?? false;
 
   return (

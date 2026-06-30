@@ -51,10 +51,32 @@ export async function getMemberships(
   }));
 }
 
+/**
+ * Global app-admin check. The ONLY source of truth for app-admin is the
+ * `app_admins` allowlist (migration 0013). This is deliberately NOT the
+ * per-client `client_users.role`, which only ever means a user's role WITHIN
+ * one client and must never grant cross-tenant access.
+ */
+export async function isUserAppAdmin(userId: string): Promise<boolean> {
+  const admin = supabaseAdmin();
+  const { data } = await admin
+    .from("app_admins")
+    .select("user_id")
+    .eq("user_id", userId)
+    .maybeSingle();
+  return !!data;
+}
+
 export async function requireRole(role: ClientUserRole) {
   const { user, sb } = await requireUser();
   const memberships = await getMemberships(user.id);
-  const hasRole = memberships.some((m) => m.role === role);
+  // "admin" is the global app-admin gate; resolve it from the app_admins
+  // allowlist, never from a per-client membership role. Other roles stay
+  // client-scoped membership checks.
+  const hasRole =
+    role === "admin"
+      ? await isUserAppAdmin(user.id)
+      : memberships.some((m) => m.role === role);
   if (!hasRole) {
     redirect("/app");
   }
@@ -74,8 +96,7 @@ export async function isApiAdmin(): Promise<boolean> {
     data: { user },
   } = await sb.auth.getUser();
   if (!user) return false;
-  const memberships = await getMemberships(user.id);
-  return memberships.some((m) => m.role === "admin");
+  return isUserAppAdmin(user.id);
 }
 
 export interface ActiveClient {
@@ -94,9 +115,11 @@ export interface ActiveClient {
  * or signed-in user with no memberships at all).
  */
 export async function getActiveClient(
-  memberships: MembershipWithClient[]
+  memberships: MembershipWithClient[],
+  userId: string
 ): Promise<ActiveClient | null> {
-  const isAdmin = memberships.some((m) => m.role === "admin");
+  // Only a real app-admin (allowlist) may impersonate via the view-as cookie.
+  const isAdmin = await isUserAppAdmin(userId);
   if (isAdmin) {
     const jar = await cookies();
     const viewAsId = jar.get(VIEW_AS_COOKIE)?.value;
