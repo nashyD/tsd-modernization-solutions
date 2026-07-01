@@ -1,8 +1,16 @@
 "use client";
 import { useState, useTransition } from "react";
 import { Check } from "lucide-react";
-import { setProspectStatus, toggleShare } from "../actions";
-import type { ProspectStatus } from "@/lib/supabase/types";
+import { setProspectStatus, setProspectOwner, toggleShare } from "../actions";
+import type { ProspectStatus, ProspectOwner } from "@/lib/supabase/types";
+
+const OWNERS: ProspectOwner[] = ["grant", "bishop", "nash", "unassigned"];
+const OWNER_LABEL: Record<ProspectOwner, string> = {
+  grant: "Grant",
+  bishop: "Bishop",
+  nash: "Nash",
+  unassigned: "Unassigned",
+};
 
 const STATUSES: ProspectStatus[] = [
   "new",
@@ -26,18 +34,24 @@ const LABEL: Record<ProspectStatus, string> = {
 export default function PitchActions({
   id,
   status,
+  owner,
   shareEnabled,
   shareUrl,
 }: {
   id: string;
   status: ProspectStatus;
+  owner: ProspectOwner;
   shareEnabled: boolean;
   shareUrl: string;
 }) {
   const [copied, setCopied] = useState(false);
   const [pending, startTransition] = useTransition();
   const [optimistic, setOptimistic] = useState<ProspectStatus | null>(null);
+  const [optimisticOwner, setOptimisticOwner] = useState<ProspectOwner | null>(
+    null,
+  );
   const current = optimistic ?? status;
+  const currentOwner = optimisticOwner ?? owner;
 
   function setStatus(s: ProspectStatus) {
     if (s === current) return;
@@ -47,6 +61,16 @@ export default function PitchActions({
     fd.set("status", s);
     startTransition(async () => {
       await setProspectStatus(fd);
+    });
+  }
+
+  function assign(o: ProspectOwner) {
+    setOptimisticOwner(o);
+    const fd = new FormData();
+    fd.set("id", id);
+    fd.set("owner", o);
+    startTransition(async () => {
+      await setProspectOwner(fd);
     });
   }
 
@@ -72,7 +96,22 @@ export default function PitchActions({
           </button>
         );
       })}
-      <div className="ml-auto flex items-center gap-2">
+      <label className="ml-auto inline-flex items-center gap-2 text-xs text-[var(--text-subtle)]">
+        Owner
+        <select
+          value={currentOwner}
+          onChange={(e) => assign(e.target.value as ProspectOwner)}
+          disabled={pending}
+          className="min-h-11 rounded-md border border-[var(--border-strong)] bg-[var(--surface)] px-2 text-sm text-[var(--text)] disabled:opacity-60"
+        >
+          {OWNERS.map((o) => (
+            <option key={o} value={o}>
+              {OWNER_LABEL[o]}
+            </option>
+          ))}
+        </select>
+      </label>
+      <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={() => {

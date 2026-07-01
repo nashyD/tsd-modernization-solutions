@@ -7,7 +7,11 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { LinkButton } from "@/components/ui/Button";
 import { usd } from "@/lib/sales/services";
 import { estimate } from "@/lib/sales/estimator";
-import type { ProspectStatus, EstimateServiceKey } from "@/lib/supabase/types";
+import type {
+  ProspectStatus,
+  ProspectOwner,
+  EstimateServiceKey,
+} from "@/lib/supabase/types";
 import { fitBand, fitLabel, FIT_BAND_TONE } from "@/lib/sales/fit";
 import { promoteLead } from "./actions";
 
@@ -65,19 +69,39 @@ function isProductKey(v: string | undefined): v is ProductKey {
   );
 }
 
+const OWNER_ORDER: ProspectOwner[] = ["grant", "bishop", "nash", "unassigned"];
+const OWNER_LABEL: Record<ProspectOwner, string> = {
+  grant: "Grant",
+  bishop: "Bishop",
+  nash: "Nash",
+  unassigned: "Unassigned",
+};
+function isOwner(v: string | undefined): v is ProspectOwner {
+  return OWNER_ORDER.includes(v as ProspectOwner);
+}
+// Build a /sales href preserving whichever of product/owner isn't being changed.
+function salesHref(next: { product?: ProductKey | null; owner?: ProspectOwner | null }) {
+  const qs = new URLSearchParams();
+  if (next.product) qs.set("product", next.product);
+  if (next.owner) qs.set("owner", next.owner);
+  const s = qs.toString();
+  return s ? `/sales?${s}` : "/sales";
+}
+
 export default async function SalesBoard({
   searchParams,
 }: {
-  searchParams: Promise<{ product?: string }>;
+  searchParams: Promise<{ product?: string; owner?: string }>;
 }) {
-  const { product: productParam } = await searchParams;
+  const { product: productParam, owner: ownerParam } = await searchParams;
   const product = isProductKey(productParam) ? productParam : null;
+  const owner = isOwner(ownerParam) ? ownerParam : null;
 
   const sb = supabaseAdmin();
   const { data: prospects } = await sb
     .from("prospects")
     .select(
-      "id,business_name,business_url,status,package_tier,team_size,selected_services,updated_at,primary_product,gap_summary,rating,review_count,city,fit_score",
+      "id,business_name,business_url,status,owner,package_tier,team_size,selected_services,updated_at,primary_product,gap_summary,rating,review_count,city,fit_score",
     )
     .order("updated_at", { ascending: false });
   const all = prospects ?? [];
@@ -90,10 +114,19 @@ export default async function SalesBoard({
     },
     {} as Record<ProductKey, number>,
   );
+  const ownerCounts = OWNER_ORDER.reduce(
+    (acc, key) => {
+      acc[key] = all.filter((r) => (r.owner ?? "unassigned") === key).length;
+      return acc;
+    },
+    {} as Record<ProspectOwner, number>,
+  );
 
-  const rows = product
-    ? all.filter((r) => r.primary_product === product)
-    : all;
+  const rows = all.filter(
+    (r) =>
+      (!product || r.primary_product === product) &&
+      (!owner || (r.owner ?? "unassigned") === owner),
+  );
 
   const counts = {
     new: rows.filter((r) => r.status === "new").length,
@@ -107,12 +140,27 @@ export default async function SalesBoard({
     href: string;
     count: number;
   }[] = [
-    { key: "all", label: "All", href: "/sales", count: all.length },
+    { key: "all", label: "All", href: salesHref({ owner }), count: all.length },
     ...PRODUCT_ORDER.map((key) => ({
       key,
       label: PRODUCT_LABEL[key],
-      href: `/sales?product=${key}`,
+      href: salesHref({ product: key, owner }),
       count: productCounts[key],
+    })),
+  ];
+
+  const ownerFilters: {
+    key: ProspectOwner | "all";
+    label: string;
+    href: string;
+    count: number;
+  }[] = [
+    { key: "all", label: "Everyone", href: salesHref({ product }), count: all.length },
+    ...OWNER_ORDER.map((key) => ({
+      key,
+      label: OWNER_LABEL[key],
+      href: salesHref({ product, owner: key }),
+      count: ownerCounts[key],
     })),
   ];
 
@@ -129,10 +177,48 @@ export default async function SalesBoard({
         }
       />
 
-      {/* One toolbar: product filter (left) + a compact pipeline summary (right).
-          Per-status counts live in the grouped section headers below, so there's
-          no separate stat-card grid duplicating them. */}
-      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+      {/* Two filter rows: rep (owner) then product, plus a compact pipeline
+          summary. Per-status counts live in the grouped section headers below. */}
+      <div className="space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+          <div className="flex flex-wrap gap-2">
+            {ownerFilters.map((f) => {
+              const active = (f.key === "all" && !owner) || f.key === owner;
+              return (
+                <Link
+                  key={f.key}
+                  href={f.href}
+                  className={
+                    active
+                      ? "inline-flex items-center gap-1.5 rounded-full border border-[var(--accent)] bg-[var(--accent)] px-3 py-1.5 text-sm font-medium text-white"
+                      : "inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-sm text-[var(--text-muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                  }
+                >
+                  {f.label}
+                  <span
+                    className={
+                      active
+                        ? "font-mono text-xs text-white/80"
+                        : "font-mono text-xs text-[var(--text-subtle)]"
+                    }
+                  >
+                    {f.count}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+          <div className="flex items-center gap-4 px-1 text-xs text-[var(--text-subtle)]">
+            <span>
+              <span className="font-mono text-sm text-[var(--text)]">{counts.all}</span>{" "}
+              shown
+            </span>
+            <span>
+              <span className="font-mono text-sm text-[var(--success)]">{counts.won}</span>{" "}
+              won
+            </span>
+          </div>
+        </div>
         <div className="flex flex-wrap gap-2">
           {filters.map((f) => {
             const active = (f.key === "all" && !product) || f.key === product;
@@ -160,27 +246,23 @@ export default async function SalesBoard({
             );
           })}
         </div>
-        <div className="flex items-center gap-4 px-1 text-xs text-[var(--text-subtle)]">
-          <span>
-            <span className="font-mono text-sm text-[var(--text)]">{counts.all}</span>{" "}
-            total
-          </span>
-          <span>
-            <span className="font-mono text-sm text-[var(--success)]">{counts.won}</span>{" "}
-            won
-          </span>
-        </div>
       </div>
 
       {rows.length === 0 ? (
         <EmptyState
           title={
-            product ? `No ${PRODUCT_LABEL[product]} prospects` : "No prospects yet"
+            owner
+              ? `No leads assigned to ${OWNER_LABEL[owner]} yet`
+              : product
+                ? `No ${PRODUCT_LABEL[product]} prospects`
+                : "No prospects yet"
           }
           description={
-            product
-              ? "Clear the filter, or tag prospects with this product."
-              : "Add your first prospect to start pitching."
+            owner
+              ? "Open a prospect and set its Owner here, or approve a candidate (Concierge and non-corridor leads route to Bishop automatically)."
+              : product
+                ? "Clear the filter, or tag prospects with this product."
+                : "Add your first prospect to start pitching."
           }
         />
       ) : (
