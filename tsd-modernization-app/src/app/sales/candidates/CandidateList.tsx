@@ -6,11 +6,13 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { approveCandidate, rejectCandidate } from "../actions";
+import { suggestOwner } from "@/lib/sales/routing";
 
 export type Candidate = {
   id: string;
   business_name: string;
   city: string | null;
+  lng: number | null;
   website: string | null;
   phone: string | null;
   rating: number | null;
@@ -23,6 +25,14 @@ export type Candidate = {
     | null;
   gap_summary: string | null;
   fit_score: number | null;
+};
+
+type OwnerChoice = "grant" | "bishop" | "nash" | "unassigned";
+const OWNER_LABEL: Record<OwnerChoice, string> = {
+  grant: "Grant",
+  bishop: "Bishop",
+  nash: "Nash",
+  unassigned: "Unassigned",
 };
 
 type Product = NonNullable<Candidate["primary_product"]>;
@@ -45,14 +55,17 @@ export function CandidateList({ initial }: { initial: Candidate[] }) {
   const [, startTransition] = useTransition();
   const [query, setQuery] = useState("");
   const [product, setProduct] = useState<Product | "all">("all");
+  // Owner override per card; absent means "use the suggestion".
+  const [owners, setOwners] = useState<Record<string, OwnerChoice>>({});
 
   // Optimistically drop the row so the list never re-renders/scroll-jumps under
   // the salesman; the server action (approve→prospect / reject) runs in the
   // background.
-  function act(id: string, kind: "approve" | "reject") {
+  function act(id: string, kind: "approve" | "reject", owner?: OwnerChoice) {
     setItems((cur) => cur.filter((c) => c.id !== id));
     const fd = new FormData();
     fd.set("id", id);
+    if (kind === "approve" && owner) fd.set("owner", owner);
     startTransition(async () => {
       await (kind === "approve" ? approveCandidate(fd) : rejectCandidate(fd));
     });
@@ -151,6 +164,8 @@ export function CandidateList({ initial }: { initial: Candidate[] }) {
       ) : (
         <ul className="space-y-3">
           {visible.map((c) => {
+            const suggested = suggestOwner(c) as OwnerChoice;
+            const owner = owners[c.id] ?? suggested;
             const meta = [
               c.fit_score != null ? `fit ${c.fit_score}` : null,
               c.city,
@@ -204,6 +219,24 @@ export function CandidateList({ initial }: { initial: Candidate[] }) {
                     )}
                   </div>
                   <div className="flex shrink-0 items-center gap-2">
+                    <select
+                      value={owner}
+                      onChange={(e) =>
+                        setOwners((cur) => ({
+                          ...cur,
+                          [c.id]: e.target.value as OwnerChoice,
+                        }))
+                      }
+                      aria-label={`Route ${c.business_name} to`}
+                      className="min-h-11 rounded-md border border-[var(--border-strong)] bg-[var(--surface)] px-2 text-sm text-[var(--text-muted)]"
+                    >
+                      {(Object.keys(OWNER_LABEL) as OwnerChoice[]).map((o) => (
+                        <option key={o} value={o}>
+                          {OWNER_LABEL[o]}
+                          {o === suggested ? " ✓" : ""}
+                        </option>
+                      ))}
+                    </select>
                     <Button
                       type="button"
                       variant="secondary"
@@ -218,7 +251,7 @@ export function CandidateList({ initial }: { initial: Candidate[] }) {
                       size="sm"
                       className="min-h-11"
                       rightIcon={<ArrowRight size={14} aria-hidden />}
-                      onClick={() => act(c.id, "approve")}
+                      onClick={() => act(c.id, "approve", owner)}
                     >
                       Approve
                     </Button>

@@ -56,7 +56,6 @@ const STATUS_LABEL: Record<ProspectStatus, string> = {
   demo_shown: "Demo shown",
   fit_call: "Fit call",
   proposal: "Proposal",
-  pitched: "Pitched",
   won: "Won",
   lost: "Lost",
 };

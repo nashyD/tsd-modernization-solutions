@@ -12,6 +12,7 @@ import {
 } from "@/app/sales/_components/ShowcaseSections";
 import PitchBody from "@/app/sales/_components/PitchBody";
 import BookCallCard from "@/app/sales/_components/BookCallCard";
+import { calendlyUrlFor } from "@/lib/sales/calendly";
 import { PresentModeNote } from "@/app/sales/_components/PitchNotes";
 import VoiceWidget from "@/app/app/voice/VoiceWidget";
 import { Logo } from "@/components/ui/Logo";
@@ -98,7 +99,11 @@ export default async function PresentPitch({
           depositPct={prospect.deposit_pct ?? 10}
           estimates={estimates}
         >
-          <BookCallCard name={prospect.contact_name} email={prospect.email} />
+          <BookCallCard
+            name={prospect.contact_name}
+            email={prospect.email}
+            url={calendlyUrlFor(prospect.owner)}
+          />
           <OutlineCard md={prospect.outline_md} />
           <AssetsCard assets={assets} />
         </PitchBody>

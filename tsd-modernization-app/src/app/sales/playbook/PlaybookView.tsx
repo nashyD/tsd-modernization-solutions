@@ -70,7 +70,29 @@ const PRICING: string[] = [
   "Every estimator figure is a placeholder until Nash signs off — quote ranges, never hard numbers.",
 ];
 
+// The daily operating rhythm (canonical page: wiki/plays/sales-process.md,
+// decided 2026-07-01). Today is the one surface; every outcome is one tap.
+const RHYTHM: { t: string; d: string }[] = [
+  {
+    t: "Open Today, work top to bottom",
+    d: "Due follow-ups first, then the ranked doors the loop prepped overnight — each with its knock window, the leak, and a 30-second brief.",
+  },
+  {
+    t: "One tap per outcome",
+    d: "Knocked / answered / demo shown / owner out / fit call / dead. That single tap sets your follow-up date, feeds tonight's queue, and builds the funnel numbers. No other logging exists.",
+  },
+  {
+    t: "Hot door: close the loop in the room",
+    d: "Present-mode demo → book the fit call on the spot → Square deposit when they're ready. Deposit flips the deal to won automatically.",
+  },
+  {
+    t: "Never chase your memory",
+    d: "Owner out? Tap it with a back-in-N-days and forget it — it resurfaces on the right morning with a drafted follow-up. 5 touches minimum before anything goes dead.",
+  },
+];
+
 const NAV: { id: string; label: string }[] = [
+  { id: "rhythm", label: "Daily rhythm" },
   { id: "sells", label: "What we sell" },
   { id: "icp", label: "Who we're for" },
   { id: "motion", label: "The motion" },
@@ -129,6 +151,22 @@ export function PlaybookView() {
           </a>
         ))}
       </nav>
+
+      {/* Daily rhythm */}
+      <section id="rhythm" className="scroll-mt-6">
+        <SectionTitle>Daily rhythm</SectionTitle>
+        <ul className="grid gap-3 sm:grid-cols-2">
+          {RHYTHM.map((s) => (
+            <li key={s.t} className={CARD}>
+              <p className="font-semibold text-[var(--text)]">{s.t}</p>
+              <p className="mt-1 text-sm leading-relaxed text-[var(--text-muted)]">{s.d}</p>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-3 text-sm text-[var(--text-subtle)]">
+          Your whole day lives on the Today tab. If it isn&apos;t logged with a tap, it didn&apos;t happen.
+        </p>
+      </section>
 
       {/* What we sell */}
       <section id="sells" className="scroll-mt-6">

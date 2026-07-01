@@ -121,6 +121,16 @@ Below: the gaps found, grouped by category, with the underlying principle for ea
 
 Newest entries at the top. Each entry: what changed, why, files touched, and the principle reinforced.
 
+### 2026-07-01 — Proxy /api/loop/* to the Next app (sales-OS wiring, PR #31)
+
+**What.** One rewrite line in [vercel.json](vercel.json): `/api/loop/:path*` → the Next app, matching the existing `/api/sales` and `/api/square` proxies. Part of the sales-OS branch `feat/sales-os-wiring` (the substance lives in `tsd-modernization-app`: the nightly sales loop's funnel-read/queue-write/candidate-import routes).
+
+**Why.** The loop's helpers call `https://www.tsd-modernization.com/api/loop/*`; without the rewrite the SPA catch-all served them `index.html` (found live during a supervised loop run — the helper degraded gracefully, which is how it surfaced).
+
+**Files touched.** [vercel.json](vercel.json).
+
+**Principle reinforced.** *A new API namespace on the Next app is invisible until the marketing proxy knows about it.* Check vercel.json whenever `tsd-modernization-app` grows a route the domain must serve.
+
 ### 2026-06-27 — Loop cycles 2-5: perf, SEO, a11y, conversion, and a site-wide voice sweep, shipped to prod
 
 **What.** Ran the improvement loop through four more cycles and merged all of it to `main` (live on www.tsd-modernization.com). Cycle 2: hero respects `prefers-reduced-motion`, `@sentry/react` dynamic-imported out of the main bundle, Google Fonts trimmed. Cycle 3: hero LCP poster preloaded + `fetchpriority`, non-blocking fonts, sitemap drops the noindexed `/sheets/*` and the `/columbia-demo`. Cycle 4: route-level code splitting (15 pages to `React.lazy` + `Suspense`; one ~514KB chunk to 18, main chunk down to 371KB). Cycle 5 (the judgment batch I green-lit): mobile "Book a fit call" stays in the nav on phones, a `/book` trust strip + Calendly fallback, the hero subhead rewritten, a single `<h1>` on six pages, and a site-wide em-dash sweep (168 removed from rendered + meta copy, 0 left visible). Also made the apex→www redirect permanent (308) in Vercel.

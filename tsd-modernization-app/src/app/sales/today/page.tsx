@@ -26,7 +26,6 @@ const STATUS_LABEL: Record<ProspectStatus, string> = {
   demo_shown: "Demo shown",
   fit_call: "Fit call",
   proposal: "Proposal",
-  pitched: "Pitched",
   won: "Won",
   lost: "Lost",
 };
@@ -45,6 +44,15 @@ type Row = {
   contact_name: string | null;
 };
 
+type QueueSlot = {
+  prospect_id: string;
+  rank: number;
+  kind: "first_touch" | "follow_up";
+  reason: string | null;
+  brief_md: string | null;
+  knock_window: string | null;
+};
+
 function dueLabel(nextActionAt: string | null): { text: string; due: boolean } {
   if (!nextActionAt) return { text: "First touch", due: true };
   const when = new Date(nextActionAt).getTime();
@@ -54,21 +62,56 @@ function dueLabel(nextActionAt: string | null): { text: string; due: boolean } {
   return { text: `In ${days}d`, due: false };
 }
 
+function todayET(): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/New_York",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+}
+
 export default async function TodayBoard() {
   const sb = supabaseAdmin();
-  const { data } = await sb
-    .from("prospects")
-    .select(
-      "id,business_name,status,owner,next_action_at,touch_count,demo_site_url,gap_summary,city,phone,contact_name",
-    )
-    .not("status", "in", "(won,lost)")
-    .order("next_action_at", { ascending: true, nullsFirst: true });
+  const [{ data }, slotsRes] = await Promise.all([
+    sb
+      .from("prospects")
+      .select(
+        "id,business_name,status,owner,next_action_at,touch_count,demo_site_url,gap_summary,city,phone,contact_name",
+      )
+      .not("status", "in", "(won,lost)")
+      .order("next_action_at", { ascending: true, nullsFirst: true }),
+    // The loop's ranked morning queue. Tolerate absence (pre-migration, or a
+    // night the loop didn't run): the page just falls back to cadence order.
+    sb
+      .from("queue_slots")
+      .select("prospect_id,rank,kind,reason,brief_md,knock_window")
+      .eq("queue_date", todayET()),
+  ]);
   const rows = (data ?? []) as Row[];
+  const slots = new Map(
+    ((slotsRes.data ?? []) as QueueSlot[]).map((s) => [s.prospect_id, s]),
+  );
 
   const dueCount = rows.filter((r) => dueLabel(r.next_action_at).due).length;
+  // Within each owner group: due follow-ups first (cadence order), then the
+  // loop's ranked first-touches, then everything else.
+  const orderKey = (r: Row): [number, number] => {
+    const due = dueLabel(r.next_action_at).due;
+    const slot = slots.get(r.id);
+    if (due) return [0, r.next_action_at ? new Date(r.next_action_at).getTime() : 0];
+    if (slot) return [1, slot.rank];
+    return [2, 0];
+  };
   const byOwner = OWNER_ORDER.map((owner) => ({
     owner,
-    items: rows.filter((r) => r.owner === owner),
+    items: rows
+      .filter((r) => r.owner === owner)
+      .sort((a, b) => {
+        const [ba, ka] = orderKey(a);
+        const [bb, kb] = orderKey(b);
+        return ba - bb || ka - kb;
+      }),
   })).filter((g) => g.items.length > 0);
 
   return (
@@ -104,7 +147,8 @@ export default async function TodayBoard() {
             <ul className="space-y-3">
               {group.items.map((p) => {
                 const due = dueLabel(p.next_action_at);
-                const leak = p.gap_summary || p.city || "";
+                const slot = slots.get(p.id);
+                const leak = slot?.reason || p.gap_summary || p.city || "";
                 return (
                   <li
                     key={p.id}
@@ -113,6 +157,11 @@ export default async function TodayBoard() {
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
+                          {slot ? (
+                            <span className="inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-[var(--accent)] px-1.5 font-mono text-xs font-bold text-white">
+                              {slot.rank}
+                            </span>
+                          ) : null}
                           <Link
                             href={`/sales/${p.id}`}
                             className="font-semibold text-[var(--text)] hover:text-[var(--accent)]"
@@ -124,6 +173,9 @@ export default async function TodayBoard() {
                             {p.demo_site_url ? "Demo ready" : "No demo"}
                           </Badge>
                           <Badge tone={due.due ? "blue" : "neutral"}>{due.text}</Badge>
+                          {slot?.knock_window ? (
+                            <Badge tone="neutral">{slot.knock_window}</Badge>
+                          ) : null}
                         </div>
                         {leak ? (
                           <p className="mt-1 truncate text-sm text-[var(--text-muted)]">
@@ -134,6 +186,16 @@ export default async function TodayBoard() {
                           {p.touch_count} touch{p.touch_count === 1 ? "" : "es"}
                           {p.contact_name ? ` · ${p.contact_name}` : ""}
                         </p>
+                        {slot?.brief_md ? (
+                          <details className="mt-2">
+                            <summary className="cursor-pointer text-xs font-semibold text-[var(--accent)]">
+                              30-second brief
+                            </summary>
+                            <p className="mt-1 whitespace-pre-wrap rounded-md bg-[var(--surface-2,rgba(0,0,0,0.03))] p-3 text-sm text-[var(--text-muted)]">
+                              {slot.brief_md}
+                            </p>
+                          </details>
+                        ) : null}
                       </div>
                       <div className="flex shrink-0 items-center gap-2">
                         {p.phone ? (
