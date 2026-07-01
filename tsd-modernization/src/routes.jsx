@@ -13,12 +13,12 @@ import { POSTS } from "./news-data.js";
    route at build time; the <Outlet> is wrapped in <Suspense> in Layout.jsx so
    client-side navigation to a not-yet-loaded chunk has a fallback. */
 const Services = lazy(() => import("./pages/Services"));
-const ServiceDetail = lazy(() => import("./pages/ServiceDetail"));
+const ServiceDetailLazy = lazy(() => import("./pages/ServiceDetail"));
 const WhyUs = lazy(() => import("./pages/WhyUs"));
 const Process = lazy(() => import("./pages/Process"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const Savings = lazy(() => import("./pages/Savings"));
-const Sheet = lazy(() => import("./pages/Sheet"));
+const SheetLazy = lazy(() => import("./pages/Sheet"));
 const Testimonials = lazy(() => import("./pages/Testimonials"));
 const Team = lazy(() => import("./pages/Team"));
 const Contact = lazy(() => import("./pages/Contact"));
@@ -26,8 +26,27 @@ const RelationshipPage = lazy(() => import("./pages/RelationshipPage"));
 const Book = lazy(() => import("./pages/Book"));
 const Demo = lazy(() => import("./pages/Demo"));
 const News = lazy(() => import("./pages/News"));
-const NewsDetail = lazy(() => import("./pages/NewsDetail"));
-const DataRoom = lazy(() => import("./pages/DataRoom"));
+const NewsDetailLazy = lazy(() => import("./pages/NewsDetail"));
+const DataRoomLazy = lazy(() => import("./pages/DataRoom"));
+
+/* Multi-path routes — those whose getStaticPaths returns more than one path
+   (services/:slug, sheets/:slug, news/:slug) — must NOT hand a bare lazy() to
+   the route as its `Component`. All of a route's static paths share the one
+   lazy() singleton, and vite-react-ssg's build-time asset collector calls
+   `Component._payload._result.toString()` to sniff the chunk name for a
+   modulepreload hint. Under concurrency, once path A renders and resolves the
+   lazy, path B's collector finds the resolved ES-module namespace (null
+   prototype, no .toString) and the whole SSG build crashes — a race that roams
+   to whichever multi-path page loses (vite-react-ssg 0.9.1-beta.1). Wrapping the
+   lazy in a plain component hides _payload from the collector so it's skipped.
+   The chunk is still code-split and lazy-loaded through Layout's <Suspense>;
+   only the preload hint is forgone on these deep pages. Single-path lazy routes
+   above are safe (nothing resolves their singleton before their own collector
+   runs) and keep the bare lazy. */
+function ServiceDetail() { return <ServiceDetailLazy />; }
+function Sheet() { return <SheetLazy />; }
+function NewsDetail() { return <NewsDetailLazy />; }
+function DataRoom() { return <DataRoomLazy />; }
 
 /* Relationship-channel landing pages — vertical-specific pages for warm
    leads who arrived via founder DM or word-of-mouth. Wrapper functions let
@@ -82,14 +101,16 @@ export const routes = [
       { path: "book", Component: Book },
       { path: "demo", Component: Demo },
       { path: "contact", Component: Contact },
+      /* Private data-room pages (/plan/:token) are client-rendered only — NOT
+         prerendered. They're token-gated and <meta robots noindex>, so SSG buys
+         nothing here. Omitting getStaticPaths keeps the route out of the build-
+         time crawl entirely (vite-react-ssg filters the literal ":" path). Direct
+         token links still resolve: the "/(.*) -> /index.html" SPA fallback rewrite
+         in vercel.json serves the shell and DataRoom renders client-side. The
+         DataRoom wrapper above also keeps it clear of the collectAssets race. */
       {
         path: "plan/:slug",
         Component: DataRoom,
-        getStaticPaths: () => [
-          "plan/sbtdc-9fbcf7d5bf50ccb7acd8",
-          "plan/legal-865714de00f8f07b3075",
-          "plan/insurance-b82769c73aea16c74f25",
-        ],
       },
       { path: "*", Component: Home },
     ],
