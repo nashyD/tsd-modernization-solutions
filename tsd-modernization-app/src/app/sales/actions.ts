@@ -131,6 +131,20 @@ export async function setProspectStatus(formData: FormData) {
   revalidatePath(`/sales/${id}`);
 }
 
+export async function setProspectOwner(formData: FormData) {
+  await requireRole("admin");
+  const id = z.string().uuid().parse(formData.get("id"));
+  const owner = z
+    .enum(["grant", "bishop", "nash", "unassigned"])
+    .parse(formData.get("owner"));
+  const sb = supabaseAdmin();
+  const { error } = await sb.from("prospects").update({ owner }).eq("id", id);
+  if (error) throw new Error(error.message);
+  revalidatePath("/sales");
+  revalidatePath("/sales/today");
+  revalidatePath(`/sales/${id}`);
+}
+
 export async function recordVisit(formData: FormData) {
   await requireRole("admin");
   const id = z.string().uuid().parse(formData.get("id"));

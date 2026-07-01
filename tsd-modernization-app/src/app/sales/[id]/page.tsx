@@ -320,6 +320,7 @@ export default async function ProspectWorkspace({
       <PitchActions
         id={p.id}
         status={p.status}
+        owner={p.owner}
         shareEnabled={p.share_enabled}
         shareUrl={shareUrl}
       />

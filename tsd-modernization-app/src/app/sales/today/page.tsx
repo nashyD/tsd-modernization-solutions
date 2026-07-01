@@ -7,6 +7,10 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import DispositionBar from "../_components/DispositionBar";
 import type { ProspectOwner, ProspectStatus } from "@/lib/supabase/types";
 
+function isOwner(v: string | undefined): v is ProspectOwner {
+  return v === "grant" || v === "bishop" || v === "nash" || v === "unassigned";
+}
+
 export const dynamic = "force-dynamic";
 
 // The rep's one screen. Built from what is actually logged in Supabase — no
@@ -71,7 +75,13 @@ function todayET(): string {
   }).format(new Date());
 }
 
-export default async function TodayBoard() {
+export default async function TodayBoard({
+  searchParams,
+}: {
+  searchParams: Promise<{ owner?: string }>;
+}) {
+  const { owner: ownerParam } = await searchParams;
+  const ownerFilter = isOwner(ownerParam) ? ownerParam : null;
   const sb = supabaseAdmin();
   const [{ data }, slotsRes] = await Promise.all([
     sb
@@ -103,16 +113,28 @@ export default async function TodayBoard() {
     if (slot) return [1, slot.rank];
     return [2, 0];
   };
-  const byOwner = OWNER_ORDER.map((owner) => ({
-    owner,
-    items: rows
-      .filter((r) => r.owner === owner)
-      .sort((a, b) => {
-        const [ba, ka] = orderKey(a);
-        const [bb, kb] = orderKey(b);
-        return ba - bb || ka - kb;
-      }),
-  })).filter((g) => g.items.length > 0);
+  const ownerCounts = Object.fromEntries(
+    OWNER_ORDER.map((o) => [o, rows.filter((r) => r.owner === o).length]),
+  ) as Record<ProspectOwner, number>;
+  const byOwner = OWNER_ORDER.filter((o) => !ownerFilter || o === ownerFilter)
+    .map((owner) => ({
+      owner,
+      items: rows
+        .filter((r) => r.owner === owner)
+        .sort((a, b) => {
+          const [ba, ka] = orderKey(a);
+          const [bb, kb] = orderKey(b);
+          return ba - bb || ka - kb;
+        }),
+    }))
+    .filter((g) => g.items.length > 0);
+  const ownerTabs: { key: ProspectOwner | "all"; label: string; count: number }[] = [
+    { key: "all", label: "Everyone", count: rows.length },
+    { key: "grant", label: "Grant", count: ownerCounts.grant },
+    { key: "bishop", label: "Bishop", count: ownerCounts.bishop },
+    { key: "nash", label: "Nash", count: ownerCounts.nash },
+    { key: "unassigned", label: "Unassigned", count: ownerCounts.unassigned },
+  ];
 
   return (
     <div className="space-y-8 animate-fade-up">
@@ -121,6 +143,37 @@ export default async function TodayBoard() {
         title="Today"
         description="Your live queue, ranked by what is due. Tap one button after each knock or call — that single tap feeds the whole funnel."
       />
+
+      {/* Rep filter — jump straight to your own leads instead of scrolling
+          past everyone else's. Counts reflect the whole active book. */}
+      <div className="flex flex-wrap gap-2">
+        {ownerTabs.map((t) => {
+          const active = (t.key === "all" && !ownerFilter) || t.key === ownerFilter;
+          const href = t.key === "all" ? "/sales/today" : `/sales/today?owner=${t.key}`;
+          return (
+            <Link
+              key={t.key}
+              href={href}
+              className={
+                active
+                  ? "inline-flex items-center gap-1.5 rounded-full border border-[var(--accent)] bg-[var(--accent)] px-3 py-1.5 text-sm font-medium text-white"
+                  : "inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-sm text-[var(--text-muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+              }
+            >
+              {t.label}
+              <span
+                className={
+                  active
+                    ? "font-mono text-xs text-white/80"
+                    : "font-mono text-xs text-[var(--text-subtle)]"
+                }
+              >
+                {t.count}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
 
       <div className="flex items-center gap-4 px-1 text-xs text-[var(--text-subtle)]">
         <span>
@@ -133,10 +186,14 @@ export default async function TodayBoard() {
         </span>
       </div>
 
-      {rows.length === 0 ? (
+      {byOwner.length === 0 ? (
         <EmptyState
-          title="Nothing queued"
-          description="Promote a lead or add a prospect, then log a disposition to start the cadence."
+          title={ownerFilter ? `Nothing queued for ${ownerTabs.find((t) => t.key === ownerFilter)?.label}` : "Nothing queued"}
+          description={
+            ownerFilter
+              ? "Assign a prospect to this rep from its page (the Owner control), or approve a candidate to route one here."
+              : "Promote a lead or add a prospect, then log a disposition to start the cadence."
+          }
         />
       ) : (
         byOwner.map((group) => (
