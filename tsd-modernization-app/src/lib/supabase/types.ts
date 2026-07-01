@@ -25,7 +25,6 @@ export type ProspectStatus =
   | "demo_shown"
   | "fit_call"
   | "proposal"
-  | "pitched"
   | "won"
   | "lost";
 export type ProspectOwner = "grant" | "bishop" | "nash" | "unassigned";
@@ -301,10 +300,40 @@ export interface Database {
         >;
         Relationships: [];
       };
+      queue_slots: {
+        Row: {
+          id: string;
+          queue_date: string;
+          owner: "grant" | "bishop" | "nash";
+          prospect_id: string;
+          rank: number;
+          kind: "first_touch" | "follow_up";
+          reason: string | null;
+          brief_md: string | null;
+          knock_window: string | null;
+          source: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          queue_date: string;
+          owner: "grant" | "bishop" | "nash";
+          prospect_id: string;
+          rank: number;
+          kind?: "first_touch" | "follow_up";
+          reason?: string | null;
+          brief_md?: string | null;
+          knock_window?: string | null;
+          source?: string;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["queue_slots"]["Insert"]>;
+        Relationships: [];
+      };
       prospect_candidates: {
         Row: {
           id: string;
-          place_id: string;
+          place_id: string | null;
           business_name: string;
           address: string | null;
           city: string | null;
@@ -312,6 +341,7 @@ export interface Database {
           lng: number | null;
           website: string | null;
           phone: string | null;
+          email: string | null;
           rating: number | null;
           review_count: number | null;
           price_level: string | null;
@@ -321,13 +351,16 @@ export interface Database {
           fit_score: number | null;
           signals: Json | null;
           status: "pending" | "approved" | "rejected";
+          source: "places" | "leadscout" | "manual";
+          source_ref: string | null;
+          dedupe_key: string | null;
           promoted_prospect_id: string | null;
           created_at: string;
           updated_at: string;
         };
         Insert: {
           id?: string;
-          place_id: string;
+          place_id?: string | null;
           business_name: string;
           address?: string | null;
           city?: string | null;
@@ -335,6 +368,7 @@ export interface Database {
           lng?: number | null;
           website?: string | null;
           phone?: string | null;
+          email?: string | null;
           rating?: number | null;
           review_count?: number | null;
           price_level?: string | null;
@@ -344,6 +378,8 @@ export interface Database {
           fit_score?: number | null;
           signals?: Json | null;
           status?: "pending" | "approved" | "rejected";
+          source?: "places" | "leadscout" | "manual";
+          source_ref?: string | null;
           promoted_prospect_id?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -481,6 +517,10 @@ export interface Database {
       claim_showcase_voice_call: {
         Args: { p_prospect_id: string; p_cap: number };
         Returns: boolean;
+      };
+      replace_queue_slots: {
+        Args: { p_date: string; p_items: Json };
+        Returns: number;
       };
     };
     Enums: { [key: string]: never };

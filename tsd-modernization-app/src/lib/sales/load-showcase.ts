@@ -66,8 +66,10 @@ export async function loadShowcaseById(id: string): Promise<Showcase | null> {
 // page actually renders. Keeps internal columns (notes, email, gap_summary,
 // fit_score, source_url, max_discount_pct, deposit_target, firmographics) out of
 // the server payload entirely, so a careless future prop-pass can't leak them.
+// owner is included only to pick the right Calendly booking link server-side;
+// it never renders.
 const PUBLIC_PROSPECT_COLS =
-  "id,business_name,demo_site_url,vapi_assistant_id,outline_md,share_token,team_size,selected_services,deposit_pct,primary_product,contact_name";
+  "id,business_name,demo_site_url,vapi_assistant_id,outline_md,share_token,team_size,selected_services,deposit_pct,primary_product,contact_name,owner";
 
 export async function loadShowcaseByToken(
   token: string,

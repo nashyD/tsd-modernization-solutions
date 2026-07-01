@@ -13,7 +13,7 @@ export default async function NextNearbyPage() {
     .select(
       "id,business_name,business_url,phone,city,lat,lng,place_id,status,primary_product,gap_summary,rating,review_count,notes",
     )
-    .in("status", ["new", "pitched"])
+    .in("status", ["new", "contacted", "demo_shown"])
     .order("updated_at", { ascending: false });
   const active = data ?? [];
   const located = active

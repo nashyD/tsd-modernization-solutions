@@ -59,6 +59,23 @@ export async function POST(req: NextRequest) {
     .single();
   if (!prospect) return NextResponse.json({ ok: true });
 
+  // The deposit IS the stage move: record it in the event log (the funnel's
+  // proposal→deposit denominator) before flipping status. Best-effort — a
+  // logging hiccup must never bounce a payment webhook.
+  const recordWonEvent = async () => {
+    const { error } = await sb.from("prospect_stage_events").insert({
+      prospect_id: prospect.id,
+      from_status: prospect.status,
+      to_status: "won",
+      disposition: "deposit_paid",
+      channel: "square",
+      detail: `deposit ${payment?.id ?? orderId}`,
+      actor_user_id: null,
+      actor_email: "square-webhook@system",
+    });
+    if (error) console.error("[square/webhook] stage event insert failed", error);
+  };
+
   if (!prospect.converted_client_id) {
     const { data: client } = await sb
       .from("clients")
@@ -72,8 +89,13 @@ export async function POST(req: NextRequest) {
       .single();
     await sb
       .from("prospects")
-      .update({ status: "won", converted_client_id: client?.id ?? null })
+      .update({
+        status: "won",
+        converted_client_id: client?.id ?? null,
+        stage_entered_at: new Date().toISOString(),
+      })
       .eq("id", prospect.id);
+    await recordWonEvent();
     if (prospect.source_lead_id && client) {
       await sb
         .from("leads")
@@ -92,7 +114,11 @@ export async function POST(req: NextRequest) {
       }
     }
   } else {
-    await sb.from("prospects").update({ status: "won" }).eq("id", prospect.id);
+    await sb
+      .from("prospects")
+      .update({ status: "won", stage_entered_at: new Date().toISOString() })
+      .eq("id", prospect.id);
+    await recordWonEvent();
   }
 
   return NextResponse.json({ ok: true });

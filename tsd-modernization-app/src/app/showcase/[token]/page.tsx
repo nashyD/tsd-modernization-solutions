@@ -9,6 +9,7 @@ import {
 } from "@/app/sales/_components/ShowcaseSections";
 import PitchBody from "@/app/sales/_components/PitchBody";
 import BookCallCard from "@/app/sales/_components/BookCallCard";
+import { calendlyUrlFor } from "@/lib/sales/calendly";
 import PublicVoiceCard from "@/app/sales/_components/PublicVoiceCard";
 import { Logo } from "@/components/ui/Logo";
 import { DEFAULT_SIZE } from "@/lib/sales/estimator";
@@ -63,7 +64,7 @@ export default async function ShowcasePage({
           {/* Public surface: don't prefill (serialize) the prospect's email into
               the client bundle — they know their own email. Internal present mode
               still prefills it. */}
-          <BookCallCard name={prospect.contact_name} />
+          <BookCallCard name={prospect.contact_name} url={calendlyUrlFor(prospect.owner)} />
           <OutlineCard md={prospect.outline_md} />
           <AssetsCard assets={assets} />
         </PitchBody>

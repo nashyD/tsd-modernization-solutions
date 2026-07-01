@@ -19,7 +19,6 @@ const ORDER: ProspectStatus[] = [
   "demo_shown",
   "fit_call",
   "proposal",
-  "pitched",
   "won",
   "lost",
 ];
@@ -29,7 +28,6 @@ const LABEL: Record<ProspectStatus, string> = {
   demo_shown: "Demo shown",
   fit_call: "Fit call",
   proposal: "Proposal",
-  pitched: "Pitched",
   won: "Won",
   lost: "Lost",
 };
@@ -39,7 +37,6 @@ const TONE: Record<ProspectStatus, "amber" | "blue" | "emerald" | "neutral"> = {
   demo_shown: "blue",
   fit_call: "blue",
   proposal: "blue",
-  pitched: "blue",
   won: "emerald",
   lost: "neutral",
 };
@@ -100,7 +97,6 @@ export default async function SalesBoard({
 
   const counts = {
     new: rows.filter((r) => r.status === "new").length,
-    pitched: rows.filter((r) => r.status === "pitched").length,
     won: rows.filter((r) => r.status === "won").length,
     all: rows.length,
   };

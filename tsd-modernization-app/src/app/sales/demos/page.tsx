@@ -19,7 +19,6 @@ const STATUS_LABEL: Record<ProspectStatus, string> = {
   demo_shown: "Demo shown",
   fit_call: "Fit call",
   proposal: "Proposal",
-  pitched: "Pitched",
   won: "Won",
   lost: "Passed",
 };
@@ -29,7 +28,6 @@ const STATUS_TONE: Record<ProspectStatus, "amber" | "blue" | "emerald" | "neutra
   demo_shown: "blue",
   fit_call: "blue",
   proposal: "blue",
-  pitched: "blue",
   won: "emerald",
   lost: "neutral",
 };
@@ -159,7 +157,9 @@ export default async function DemoShelf() {
 
   const converted = rows.filter((r) => r.converted_client_id != null);
   const active = rows.filter(
-    (r) => r.converted_client_id == null && (r.status === "new" || r.status === "pitched"),
+    (r) =>
+      r.converted_client_id == null &&
+      ["new", "contacted", "demo_shown"].includes(r.status),
   );
   const won = rows.filter(
     (r) => r.converted_client_id == null && r.status === "won",

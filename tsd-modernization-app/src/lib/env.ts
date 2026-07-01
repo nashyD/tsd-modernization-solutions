@@ -14,6 +14,10 @@ const serverSchema = z.object({
   UPSTASH_REDIS_REST_URL: z.string().url().optional(),
   UPSTASH_REDIS_REST_TOKEN: z.string().min(1).optional(),
   INTERNAL_API_SECRET: z.string().min(16),
+  // Bearer for the nightly sales loop's three /api/loop/* routes (read funnel,
+  // write queue_slots, insert leadscout candidates). Optional so the app runs
+  // without it; the loop routes 503 until it is set.
+  LOOP_API_SECRET: z.string().min(16).optional(),
   VERCEL_API_TOKEN: z.string().min(1).optional(),
   WORKER_URL: z.string().url().optional(),
   WORKER_SECRET: z.string().min(1).optional(),

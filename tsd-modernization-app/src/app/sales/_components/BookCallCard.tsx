@@ -2,7 +2,9 @@
 import { useEffect, useRef } from "react";
 import Script from "next/script";
 
-// Nash's existing 30-min fit-call event (same as the marketing /book page).
+// Default: Nash's existing 30-min fit-call event (same as the marketing /book
+// page). Pages pass `url` from calendlyUrlFor(prospect.owner) so bookings
+// carry per-rep attribution, or a rep's own calendar once its env var is set.
 const CALENDLY_URL = "https://calendly.com/nashdavis-tsd-ventures/30min";
 
 declare global {
@@ -20,11 +22,14 @@ declare global {
 export default function BookCallCard({
   name,
   email,
+  url,
 }: {
   name?: string | null;
   email?: string | null;
+  url?: string;
 }) {
   const ref = useRef<HTMLDivElement | null>(null);
+  const bookingUrl = url || CALENDLY_URL;
 
   useEffect(() => {
     let cancelled = false;
@@ -35,7 +40,7 @@ export default function BookCallCard({
       if (name) prefill.name = name;
       if (email) prefill.email = email;
       window.Calendly.initInlineWidget({
-        url: `${CALENDLY_URL}?hide_gdpr_banner=1`,
+        url: `${bookingUrl}${bookingUrl.includes("?") ? "&" : "?"}hide_gdpr_banner=1`,
         parentElement: ref.current,
         prefill,
       });
@@ -56,7 +61,7 @@ export default function BookCallCard({
     return () => {
       cancelled = true;
     };
-  }, [name, email]);
+  }, [name, email, bookingUrl]);
 
   return (
     <section className="rounded-[14px] border border-[var(--accent)]/40 bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">

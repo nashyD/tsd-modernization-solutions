@@ -6,21 +6,20 @@ import { requireRole } from "@/lib/auth/require";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { PACKAGE_TIERS } from "@/lib/packages";
 import { env } from "@/lib/env";
+import { suggestOwner } from "@/lib/sales/routing";
 import type {
   Database,
   ProspectStatus,
   StageDisposition,
 } from "@/lib/supabase/types";
 
-// Funnel statuses (additive on the legacy new/pitched/won/lost — see migration
-// 0012). 'won' is set by the Square webhook, never a rep.
+// Funnel statuses (legacy 'pitched' retired in migration 0016). 'won' is set by the Square webhook, never a rep.
 const PROSPECT_STATUSES = [
   "new",
   "contacted",
   "demo_shown",
   "fit_call",
   "proposal",
-  "pitched",
   "won",
   "lost",
 ] as const;
@@ -453,6 +452,13 @@ export async function promoteLead(formData: FormData) {
 export async function approveCandidate(formData: FormData) {
   await requireRole("admin");
   const id = z.string().uuid().parse(formData.get("id"));
+  // Owner comes from the card's routing chip; absent (or tampered), fall back
+  // to the same suggestOwner rule server-side.
+  const ownerChoice = z
+    .enum(["grant", "bishop", "nash", "unassigned"])
+    .nullable()
+    .catch(null)
+    .parse(formData.get("owner"));
   const sb = supabaseAdmin();
   // Only act on a still-pending candidate; a double-fire / network retry then
   // finds nothing and no-ops instead of inserting a second prospect.
@@ -473,12 +479,22 @@ export async function approveCandidate(formData: FormData) {
   // primary_product is already a canonical service key, so it doubles as the
   // pre-selected service on the pitch.
   const svc = c.primary_product || null;
+  const owner =
+    ownerChoice ??
+    suggestOwner({
+      city: c.city,
+      lng: c.lng,
+      primary_product: c.primary_product,
+      phone: c.phone,
+      email: c.email ?? null,
+    });
   const { data: prospect, error: pErr } = await sb
     .from("prospects")
     .insert({
       business_name: c.business_name,
       business_url: businessUrl,
       phone: c.phone,
+      email: c.email ?? null,
       city: c.city,
       lat: c.lat,
       lng: c.lng,
@@ -488,8 +504,9 @@ export async function approveCandidate(formData: FormData) {
       primary_product: c.primary_product,
       gap_summary: c.gap_summary,
       source_url: c.website,
-      discovery_source: "places",
+      discovery_source: c.source === "leadscout" ? "leadscout" : "places",
       selected_services: svc ? [svc] : [],
+      owner,
     })
     .select("id")
     .single();

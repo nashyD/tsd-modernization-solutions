@@ -9,7 +9,7 @@ export default async function CandidatesPage() {
   const { data } = await sb
     .from("prospect_candidates")
     .select(
-      "id,business_name,city,website,phone,rating,review_count,primary_product,gap_summary,fit_score",
+      "id,business_name,city,lng,website,phone,rating,review_count,primary_product,gap_summary,fit_score",
     )
     .eq("status", "pending")
     .order("fit_score", { ascending: false })
